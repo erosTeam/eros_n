@@ -1,0 +1,40 @@
+name: eros_n
+description: An unofficial n-hentai app.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  get: ^4.6.5
+  dio: ^4.0.6
+  pretty_dio_logger: ^1.2.0-beta-1
+  dio_http_cache: ^0.3.0
+  dio_cookie_manager: ^2.0.0
+  cookie_jar: ^3.0.1
+  collection: ^1.16.0
+  logger: ^1.1.0
+  path_provider: ^2.0.11
+  intl: ^0.17.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+flutter_intl:
+  enabled: true
+  class_name: L10n
