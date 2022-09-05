@@ -49,6 +49,16 @@ class L10n {
   static L10n? maybeOf(BuildContext context) {
     return Localizations.of<L10n>(context, L10n);
   }
+
+  /// `Eros-N`
+  String get app_title {
+    return Intl.message(
+      'Eros-N',
+      name: 'app_title',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {
@@ -57,6 +67,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
     ];
   }
 
