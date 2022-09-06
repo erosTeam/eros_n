@@ -16,7 +16,6 @@ class Global {
   static String dbPath = '';
 
   static Future<void> init() async {
-    //statusBar设置为透明，去除半透明遮罩
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.transparent,
       systemNavigationBarDividerColor: Colors.transparent,

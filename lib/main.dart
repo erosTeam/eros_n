@@ -1,5 +1,10 @@
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:eros_n/pages/tab/home/view.dart';
+import 'package:eros_n/routes/app_pages.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
@@ -11,74 +16,105 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+bool _isDemoUsingDynamicColors = false;
+
+// Fictitious brand color.
+const _brandBlue = Color(0xFF1E88E5);
+
+CustomColors lightCustomColors = const CustomColors(danger: Color(0xFFE53935));
+CustomColors darkCustomColors = const CustomColors(danger: Color(0xFFEF9A9A));
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      localizationsDelegates: const [
-        // 本地化的代理类
-        L10n.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-    );
-  }
-}
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        ColorScheme lightColorScheme;
+        ColorScheme darkColorScheme;
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+        if (lightDynamic != null && darkDynamic != null) {
+          // On Android S+ devices, use the provided dynamic color scheme.
+          // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
+          lightColorScheme = lightDynamic.harmonized();
+          // (Optional) Customize the scheme as desired. For example, one might
+          // want to use a brand color to override the dynamic [ColorScheme.secondary].
+          lightColorScheme = lightColorScheme.copyWith(secondary: _brandBlue);
+          // (Optional) If applicable, harmonize custom colors.
+          lightCustomColors = lightCustomColors.harmonized(lightColorScheme);
 
-  final String title;
+          // Repeat for the dark color scheme.
+          darkColorScheme = darkDynamic.harmonized();
+          darkColorScheme = darkColorScheme.copyWith(secondary: _brandBlue);
+          darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+          _isDemoUsingDynamicColors = true; // ignore, only for demo purposes
+        } else {
+          // Otherwise, use fallback schemes.
+          lightColorScheme = ColorScheme.fromSeed(
+            seedColor: _brandBlue,
+          );
+          darkColorScheme = ColorScheme.fromSeed(
+            seedColor: _brandBlue,
+            brightness: Brightness.dark,
+          );
+        }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+        return GetMaterialApp(
+          onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: lightColorScheme,
+            extensions: [lightCustomColors],
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: darkColorScheme,
+            extensions: [darkCustomColors],
+            useMaterial3: true,
+          ),
+          initialRoute: NHRoutes.root,
+          getPages: AppPages.routes,
+          localizationsDelegates: const [
+            // 本地化的代理类
+            L10n.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+        );
+      },
     );
+  }
+}
+
+@immutable
+class CustomColors extends ThemeExtension<CustomColors> {
+  const CustomColors({
+    required this.danger,
+  });
+
+  final Color? danger;
+
+  @override
+  CustomColors copyWith({Color? danger}) {
+    return CustomColors(
+      danger: danger ?? this.danger,
+    );
+  }
+
+  @override
+  CustomColors lerp(ThemeExtension<CustomColors>? other, double t) {
+    if (other is! CustomColors) {
+      return this;
+    }
+    return CustomColors(
+      danger: Color.lerp(danger, other.danger, t),
+    );
+  }
+
+  CustomColors harmonized(ColorScheme dynamic) {
+    return copyWith(danger: danger!.harmonizeWith(dynamic.primary));
   }
 }

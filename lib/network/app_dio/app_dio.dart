@@ -26,9 +26,9 @@ class AppDio with DioMixin implements Dio {
       sendTimeout: dioConfig?.sendTimeout,
       receiveTimeout: dioConfig?.receiveTimeout,
       headers: <String, String>{
-        'User-Agent': NHConst.CHROME_USER_AGENT,
-        'Accept': NHConst.CHROME_ACCEPT,
-        'Accept-Language': NHConst.CHROME_ACCEPT_LANGUAGE,
+        'User-Agent': NHConst.chromeUserAgent,
+        'Accept': NHConst.chromeAccept,
+        'Accept-Language': NHConst.chromeAcceptLanguage,
       },
     );
     this.options = options;
