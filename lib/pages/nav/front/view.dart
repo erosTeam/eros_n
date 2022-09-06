@@ -10,20 +10,20 @@ class FrontPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final words = generateWordPairs().take(300);
+    final words = generateWordPairs().take(300).toList();
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
       body: RefreshIndicator(
-        onRefresh: logic.getGalleryData,
+        onRefresh: () => logic.getGalleryData(context),
         child: ListView.builder(
           itemBuilder: (context, index) {
             final _word = words.elementAt(index);
             return Text(
               _word.toString(),
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 36),
             );
           },
           itemCount: words.length,

@@ -26,9 +26,9 @@ class AppDio with DioMixin implements Dio {
       sendTimeout: dioConfig?.sendTimeout,
       receiveTimeout: dioConfig?.receiveTimeout,
       headers: <String, String>{
-        'User-Agent': NHConst.chromeUserAgent,
-        'Accept': NHConst.chromeAccept,
-        'Accept-Language': NHConst.chromeAcceptLanguage,
+        'User-Agent': NHConst.userAgent,
+        // 'Accept': NHConst.accept,
+        // 'Accept-Language': NHConst.acceptLanguage,
       },
     );
     this.options = options;
@@ -47,18 +47,21 @@ class AppDio with DioMixin implements Dio {
     if (dioConfig?.cookiesPath?.isNotEmpty ?? false) {
       interceptors.add(CookieManager(
           PersistCookieJar(storage: FileStorage(dioConfig!.cookiesPath))));
+    } else {
+      interceptors.add(CookieManager(Global.cookieJar));
     }
 
-    // interceptors.add(PrettyDioLogger(
-    //   requestHeader: true,
-    //   requestBody: true,
-    //   responseHeader: true,
-    //   responseBody: false,
-    //   maxWidth: 120,
-    //   logPrint: (_) {},
-    //   // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
-    //   // logPrint: loggerSimpleOnlyFile.d,
-    // ));
+    interceptors.add(PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: false,
+      error: true,
+      maxWidth: 120,
+      // logPrint: (_) {},
+      // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
+      logPrint: loggerSimpleOnlyFile.d,
+    ));
 
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);

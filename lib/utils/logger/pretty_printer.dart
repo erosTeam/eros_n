@@ -4,6 +4,8 @@ import 'package:logger/src/ansi_color.dart';
 import 'package:logger/src/log_printer.dart';
 import 'package:logger/src/logger.dart';
 
+const kDiscardOwnStacktraceLineText = 'package:eros_n/utils/logger/';
+
 class EhPrettyPrinter extends LogPrinter {
   // static const topLeftCorner = '┌';
   // static const bottomLeftCorner = '└';
@@ -137,7 +139,7 @@ class EhPrettyPrinter extends LogPrinter {
       if (_discardDeviceStacktraceLine(line) ||
           _discardWebStacktraceLine(line) ||
           _discardBrowserStacktraceLine(line) ||
-          _discardEHStacktraceLine(line) ||
+          _discardOwnStacktraceLine(line) ||
           line.isEmpty) {
         continue;
       }
@@ -180,12 +182,12 @@ class EhPrettyPrinter extends LogPrinter {
         match.group(1)!.startsWith('dart:');
   }
 
-  bool _discardEHStacktraceLine(String line) {
+  bool _discardOwnStacktraceLine(String line) {
     var match = _deviceStackTraceRegex.matchAsPrefix(line);
     if (match == null) {
       return false;
     }
-    return match.group(2)!.startsWith('package:fehviewer/utils/logger/');
+    return match.group(2)!.startsWith(kDiscardOwnStacktraceLineText);
   }
 
   String getTime() {
@@ -281,7 +283,9 @@ class EhPrettyPrinter extends LogPrinter {
     }
 
     if (time != null) {
-      buffer..add(color('$verticalLine $time'))..add(color(_middleBorder));
+      buffer
+        ..add(color('$verticalLine $time'))
+        ..add(color(_middleBorder));
     }
 
     var emoji = _getEmoji(level);

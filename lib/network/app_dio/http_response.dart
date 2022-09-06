@@ -64,7 +64,6 @@ FutureOr<DioHttpResponse> handleResponse(
 
 DioHttpResponse<T> handleException<T>(Exception exception, {dynamic data}) {
   final parseException = _parseException(exception, data: data);
-  // logger.d('${parseException.runtimeType}');
   return DioHttpResponse.failureFromError(parseException);
 }
 

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:eros_n/common/global.dart';
 import 'package:eros_n/utils/logger/pretty_printer.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';

@@ -28,6 +28,8 @@ dependencies:
   dynamic_color: ^1.5.4
   english_words: ^4.0.0
   flutter_inappwebview: ^5.4.3+7
+  http: ^0.13.5
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_test:
