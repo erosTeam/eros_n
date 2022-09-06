@@ -34,8 +34,11 @@ class DioHttpResponse<T> {
   HttpException? error;
 }
 
-FutureOr<DioHttpResponse> handleResponse(Response? response,
-    {HttpTransformer? httpTransformer}) async {
+FutureOr<DioHttpResponse> handleResponse(
+  Response? response, {
+  HttpTransformer? httpTransformer,
+  ValidateStatus? validateStatus,
+}) async {
   httpTransformer ??= DefaultHttpTransformer.getInstance();
 
   // 返回值异常
@@ -49,7 +52,7 @@ FutureOr<DioHttpResponse> handleResponse(Response? response,
         UnauthorisedException(message: '没有权限', code: response.statusCode));
   }
   // 接口调用成功
-  if (_isRequestSuccess(response.statusCode)) {
+  if ((validateStatus ?? _isRequestSuccess)(response.statusCode)) {
     return await httpTransformer.parse(response);
   } else {
     // 接口调用失败
@@ -60,7 +63,8 @@ FutureOr<DioHttpResponse> handleResponse(Response? response,
 }
 
 DioHttpResponse<T> handleException<T>(Exception exception, {dynamic data}) {
-  var parseException = _parseException(exception, data: data);
+  final parseException = _parseException(exception, data: data);
+  // logger.d('${parseException.runtimeType}');
   return DioHttpResponse.failureFromError(parseException);
 }
 
@@ -75,6 +79,7 @@ bool _isRequestSuccess(int? statusCode) {
 }
 
 HttpException _parseException(Exception error, {dynamic data}) {
+  logger.e('_parseException');
   if (error is DioError) {
     switch (error.type) {
       case DioErrorType.connectTimeout:
@@ -86,6 +91,7 @@ HttpException _parseException(Exception error, {dynamic data}) {
       case DioErrorType.response:
         try {
           int? errCode = error.response?.statusCode;
+          logger.e('errCode $errCode');
           switch (errCode) {
             case 400:
               return BadRequestException(

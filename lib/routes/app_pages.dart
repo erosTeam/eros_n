@@ -1,5 +1,5 @@
 import 'package:eros_n/pages/splash/view.dart';
-import 'package:eros_n/pages/tab/home/view.dart';
+import 'package:eros_n/pages/nav/home/view.dart';
 import 'package:get/get.dart';
 
 import 'routes.dart';

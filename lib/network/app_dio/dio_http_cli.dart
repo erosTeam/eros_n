@@ -30,7 +30,11 @@ class DioHttpClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-      return handleResponse(response, httpTransformer: httpTransformer);
+      return handleResponse(
+        response,
+        httpTransformer: httpTransformer,
+        validateStatus: options?.validateStatus,
+      );
     } on DioError catch (e, stack) {
       // logger.e('DioError:\n$e\n$stack');
       return handleException(e, data: e.response?.data);
@@ -58,7 +62,11 @@ class DioHttpClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return handleResponse(response, httpTransformer: httpTransformer);
+      return handleResponse(
+        response,
+        httpTransformer: httpTransformer,
+        validateStatus: options?.validateStatus,
+      );
     } on Exception catch (e) {
       logger.e('error post $e');
       return handleException(e);
@@ -83,7 +91,11 @@ class DioHttpClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return handleResponse(response, httpTransformer: httpTransformer);
+      return handleResponse(
+        response,
+        httpTransformer: httpTransformer,
+        validateStatus: options?.validateStatus,
+      );
     } on Exception catch (e) {
       return handleException(e);
     }
@@ -103,7 +115,11 @@ class DioHttpClient {
         options: options,
         cancelToken: cancelToken,
       );
-      return handleResponse(response, httpTransformer: httpTransformer);
+      return handleResponse(
+        response,
+        httpTransformer: httpTransformer,
+        validateStatus: options?.validateStatus,
+      );
     } on Exception catch (e) {
       return handleException(e);
     }
@@ -123,7 +139,11 @@ class DioHttpClient {
         options: options,
         cancelToken: cancelToken,
       );
-      return handleResponse(response, httpTransformer: httpTransformer);
+      return handleResponse(
+        response,
+        httpTransformer: httpTransformer,
+        validateStatus: options?.validateStatus,
+      );
     } on Exception catch (e) {
       return handleException(e);
     }

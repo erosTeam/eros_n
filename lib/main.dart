@@ -1,18 +1,21 @@
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:eros_n/pages/tab/home/view.dart';
 import 'package:eros_n/routes/app_pages.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 import 'generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Global.init();
+
+  initLogger();
   runApp(const MyApp());
 }
 
@@ -77,7 +80,6 @@ class MyApp extends StatelessWidget {
           initialRoute: NHRoutes.root,
           getPages: AppPages.routes,
           localizationsDelegates: const [
-            // 本地化的代理类
             L10n.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,

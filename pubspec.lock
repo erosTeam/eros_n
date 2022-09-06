@@ -148,6 +148,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.5.4"
+  english_words:
+    dependency: "direct main"
+    description:
+      name: english_words
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -174,6 +181,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_inappwebview:
+    dependency: "direct main"
+    description:
+      name: flutter_inappwebview
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.4.3+7"
   flutter_lints:
     dependency: "direct dev"
     description:

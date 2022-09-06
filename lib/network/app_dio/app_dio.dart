@@ -49,15 +49,16 @@ class AppDio with DioMixin implements Dio {
           PersistCookieJar(storage: FileStorage(dioConfig!.cookiesPath))));
     }
 
-    interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: false,
-      maxWidth: 120,
-      // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
-      logPrint: loggerSimpleOnlyFile.d,
-    ));
+    // interceptors.add(PrettyDioLogger(
+    //   requestHeader: true,
+    //   requestBody: true,
+    //   responseHeader: true,
+    //   responseBody: false,
+    //   maxWidth: 120,
+    //   logPrint: (_) {},
+    //   // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
+    //   // logPrint: loggerSimpleOnlyFile.d,
+    // ));
 
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);

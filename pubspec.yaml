@@ -26,6 +26,8 @@ dependencies:
   path_provider: ^2.0.11
   intl: ^0.17.0
   dynamic_color: ^1.5.4
+  english_words: ^4.0.0
+  flutter_inappwebview: ^5.4.3+7
 
 dev_dependencies:
   flutter_test:
