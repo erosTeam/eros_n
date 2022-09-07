@@ -26,7 +26,7 @@ class AppDio with DioMixin implements Dio {
       sendTimeout: dioConfig?.sendTimeout,
       receiveTimeout: dioConfig?.receiveTimeout,
       headers: <String, String>{
-        'User-Agent': NHConst.userAgent,
+        'User-Agent': Global.userAgent,
         // 'Accept': NHConst.accept,
         // 'Accept-Language': NHConst.acceptLanguage,
       },

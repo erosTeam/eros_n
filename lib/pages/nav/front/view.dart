@@ -17,7 +17,7 @@ class FrontPage extends StatelessWidget {
         title: Text('Home'),
       ),
       body: RefreshIndicator(
-        onRefresh: () => logic.getGalleryData(context),
+        onRefresh: logic.reloadData,
         child: ListView.builder(
           itemBuilder: (context, index) {
             final _word = words.elementAt(index);

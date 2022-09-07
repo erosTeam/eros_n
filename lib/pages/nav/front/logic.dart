@@ -41,20 +41,13 @@ class FrontLogic extends GetxController {
     }
   }
 
-  Future<void> getGalleryData(BuildContext context) async {
-    // try {
-    //   await testWeb();
-    // } catch (e) {
-    //   logger.e('$e');
-    // }
-
+  Future<void> getGalleryData({bool refresh = false}) async {
     final rCookies =
         await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
     logger.d('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
 
     try {
-      final r = await getGalleryList(refresh: true);
-      // await showInAppWebViewDialog();
+      final r = await getGalleryList(refresh: refresh);
     } on HttpException catch (e) {
       if (e.code == 403 || e.code == 503) {
         logger.e('code ${e.code}');
@@ -63,6 +56,10 @@ class FrontLogic extends GetxController {
         rethrow;
       }
     }
+  }
+
+  Future<void> reloadData() async {
+    await getGalleryData(refresh: true);
   }
 }
 
@@ -75,13 +72,14 @@ Future<void> showInAppWebViewDialog({int? statusCode}) async {
         Widget iw() => InAppWebView(
               initialUrlRequest: URLRequest(
                 url: Uri.parse(NHConst.baseUrl),
-                headers: {
-                  'User-Agent': NHConst.userAgent,
-                  // 'Accept': NHConst.accept,
-                  // 'Accept-Language': NHConst.acceptLanguage,
-                },
               ),
-              // initialOptions: inAppWebViewOptions,
+              onWebViewCreated: (controller) async {
+                final option = await controller.getOptions();
+                logger.d(
+                    'onWebViewCreated UA = ${option?.crossPlatform.userAgent}');
+                Global.userAgent = option?.crossPlatform.userAgent ?? '';
+              },
+              initialOptions: inAppWebViewOptions,
               shouldOverrideUrlLoading: (controller, navigationAction) async {
                 final uri = navigationAction.request.url!;
 
@@ -98,14 +96,12 @@ Future<void> showInAppWebViewDialog({int? statusCode}) async {
                 final cookies = await cookieManager.getCookies(url: uri);
                 logger.d(
                     'cookies:\n${cookies.map((e) => e.toString()).join('\n')}');
-                if (cookies.length >= 2) {
+                if (cookies.length >= 2 &&
+                    cookies.any((element) => element.name == 'csrftoken')) {
                   final ioCookies = cookies
                       .map((e) => io.Cookie(e.name, '${e.value}'))
                       .toList();
-                  // await cookieJar.saveFromResponse(
-                  //     Uri.parse(NHConst.baseUrl), ioCookies);
 
-                  // Get.back();
                   Get.back<List<io.Cookie>>(result: ioCookies);
                 }
               },
@@ -113,7 +109,6 @@ Future<void> showInAppWebViewDialog({int? statusCode}) async {
 
         Widget wvf() => wf.WebView(
               initialUrl: NHConst.baseUrl,
-              userAgent: NHConst.userAgent,
               onPageFinished: (url) async {
                 logger.d('onPageFinished $url');
                 final cookies =
@@ -137,7 +132,7 @@ Future<void> showInAppWebViewDialog({int? statusCode}) async {
             children: [
               // Text('获取数据中'),
               Container(
-                height: 300,
+                height: 0.1,
                 child: iw(),
               ),
             ],
@@ -163,6 +158,7 @@ final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(
   crossPlatform: InAppWebViewOptions(
     useShouldOverrideUrlLoading: true,
     mediaPlaybackRequiresUserGesture: false,
+    // userAgent: NHConst.userAgent,
   ),
   android: AndroidInAppWebViewOptions(
     useHybridComposition: true,
