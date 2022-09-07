@@ -18,17 +18,20 @@ class FrontPage extends StatelessWidget {
   ) {
     final galleryProvider = galleryProviders.elementAt(index);
     return Container(
-      height: 200,
+      height: 180,
       child: Card(
         clipBehavior: Clip.antiAlias,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Row(
           children: [
             Container(
-              width: 140,
+              width: 120,
               child: ErosCachedNetworkImage(
                 imageUrl: galleryProvider.thumbUrl ?? '',
-                fit: BoxFit.cover,
+                fit: BoxFit.scaleDown,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
             Expanded(
@@ -41,6 +44,8 @@ class FrontPage extends StatelessWidget {
                     Text(
                       galleryProvider.title ?? '',
                       textAlign: TextAlign.start,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
                       // style: TextStyle(fontSize: 20),
                     ),
                     Spacer(),
@@ -57,39 +62,45 @@ class FrontPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text('FrontPage'),
-            floating: true,
-            snap: true,
-            expandedHeight: kToolbarHeight,
-            // flexibleSpace: FlexibleSpaceBar(
-            //   background: ErosCachedNetworkImage(
-            //     imageUrl: 'https://picsum.photos/250?image=9',
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
-          ),
-          Obx(() {
-            final galleryProviders = state.galleryProviders;
-            if (galleryProviders.isEmpty) {
-              return SliverToBoxAdapter(
-                child: Center(
-                  child: Text('No Data'),
+      body: RefreshIndicator(
+        onRefresh: logic.reloadData,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: Text('FrontPage'),
+              floating: true,
+              snap: true,
+              expandedHeight: kToolbarHeight,
+              // flexibleSpace: FlexibleSpaceBar(
+              //   background: ErosCachedNetworkImage(
+              //     imageUrl: 'https://picsum.photos/250?image=9',
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
+            ),
+            Obx(() {
+              final galleryProviders = state.galleryProviders;
+              if (galleryProviders.isEmpty) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Text('No Data'),
+                  ),
+                );
+              }
+              return SliverSafeArea(
+                top: false,
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return itemBuilder(context, index, galleryProviders);
+                    },
+                    childCount: galleryProviders.length,
+                  ),
                 ),
               );
-            }
-            return SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return itemBuilder(context, index, galleryProviders);
-                },
-                childCount: galleryProviders.length,
-              ),
-            );
-          }),
-        ],
+            }),
+          ],
+        ),
       ),
     );
   }
