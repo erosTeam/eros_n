@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/models/gallety_provider.dart';
+import 'package:eros_n/models/index.dart';
 
 import '../common/const/const.dart';
 import '../common/parser/parse_gallery_list.dart';
@@ -17,7 +17,7 @@ Options getCacheOptions({bool forceRefresh = false, Options? options}) {
   );
 }
 
-Future<List<GalletyProvider>> getGalleryList({
+Future<List<GalleryProvider>> getGalleryList({
   bool refresh = false,
   CancelToken? cancelToken,
   String? referer,
@@ -36,7 +36,7 @@ Future<List<GalletyProvider>> getGalleryList({
       (response) {
         logger.d('statusCode ${response.statusCode}');
         final list = parseGalleryList(response.data as String);
-        return DioHttpResponse<List<GalletyProvider>>.success(list);
+        return DioHttpResponse<List<GalleryProvider>>.success(list);
       },
     ),
     options: getCacheOptions(forceRefresh: refresh)
@@ -48,8 +48,8 @@ Future<List<GalletyProvider>> getGalleryList({
     cancelToken: cancelToken,
   );
 
-  if (httpResponse.ok && httpResponse.data is List<GalletyProvider>) {
-    return httpResponse.data as List<GalletyProvider>;
+  if (httpResponse.ok && httpResponse.data is List<GalleryProvider>) {
+    return httpResponse.data as List<GalleryProvider>;
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryList error');

@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 
 
 @immutable
-class GalletyProvider {
+class GalleryProvider {
   
-  const GalletyProvider({
+  const GalleryProvider({
     this.gid,
     this.title,
     this.url,
@@ -16,7 +16,7 @@ class GalletyProvider {
   final String? url;
   final String? thumbUrl;
 
-  factory GalletyProvider.fromJson(Map<String,dynamic> json) => GalletyProvider(
+  factory GalleryProvider.fromJson(Map<String,dynamic> json) => GalleryProvider(
     gid: json['gid'] != null ? json['gid'] as String : null,
     title: json['title'] != null ? json['title'] as String : null,
     url: json['url'] != null ? json['url'] as String : null,
@@ -30,7 +30,7 @@ class GalletyProvider {
     'thumbUrl': thumbUrl
   };
 
-  GalletyProvider clone() => GalletyProvider(
+  GalleryProvider clone() => GalleryProvider(
     gid: gid,
     title: title,
     url: url,
@@ -38,12 +38,12 @@ class GalletyProvider {
   );
 
     
-  GalletyProvider copyWith({
+  GalleryProvider copyWith({
     String? gid,
     String? title,
     String? url,
     String? thumbUrl
-  }) => GalletyProvider(
+  }) => GalleryProvider(
     gid: gid ?? this.gid,
     title: title ?? this.title,
     url: url ?? this.url,
@@ -52,7 +52,7 @@ class GalletyProvider {
 
   @override
   bool operator ==(Object other) => identical(this, other) 
-    || other is GalletyProvider && gid == other.gid && title == other.title && url == other.url && thumbUrl == other.thumbUrl;
+    || other is GalleryProvider && gid == other.gid && title == other.title && url == other.url && thumbUrl == other.thumbUrl;
 
   @override
   int get hashCode => gid.hashCode ^ title.hashCode ^ url.hashCode ^ thumbUrl.hashCode;

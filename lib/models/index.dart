@@ -1,1 +1,1 @@
-export 'gallety_provider.dart';
+export 'gallery_provider.dart';

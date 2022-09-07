@@ -6,5 +6,5 @@ class FrontState {
     ///Initialize variables
   }
 
-  final galleryProviders = <GalletyProvider>[].obs;
+  final galleryProviders = <GalleryProvider>[].obs;
 }

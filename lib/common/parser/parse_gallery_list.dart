@@ -3,7 +3,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' show parse;
 
-List<GalletyProvider> parseGalleryList(String html) {
+List<GalleryProvider> parseGalleryList(String html) {
   final dom.Document document = parse(html);
 
   const selectorPopular =
@@ -27,19 +27,20 @@ List<GalletyProvider> parseGalleryList(String html) {
   logger.d('galleryElmListOfPopular ${galleryElmListOfPopular.length}');
   logger.d('galleryElmList ${galleryElmList.length}');
 
-  final List<GalletyProvider> galleryList = parseGalleryListElm(galleryElmList);
+  final List<GalleryProvider> galleryList = parseGalleryListElm(galleryElmList);
   return galleryList;
 }
 
-List<GalletyProvider> parseGalleryListElm(List<dom.Element> galleryElmList) {
-  final List<GalletyProvider> galleryList = [];
+List<GalleryProvider> parseGalleryListElm(List<dom.Element> galleryElmList) {
+  final List<GalleryProvider> galleryList = [];
   for (final dom.Element elm in galleryElmList) {
     final title = elm.querySelector('.caption')?.text ?? '';
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
-    final thumbUrl = elm.querySelector('.lazyload')?.attributes['src'] ?? '';
+    final thumbUrl =
+        elm.querySelector('.lazyload')?.attributes['data-src'] ?? '';
     final gid = RegExp(r'\d+').firstMatch(url)?.group(0) ?? '';
 
-    final GalletyProvider gallery = GalletyProvider(
+    final GalleryProvider gallery = GalleryProvider(
       gid: gid,
       title: title,
       url: url,
