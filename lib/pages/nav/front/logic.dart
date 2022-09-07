@@ -19,6 +19,7 @@ class FrontLogic extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getGalleryData();
   }
 
   Future<void> testWeb() async {
@@ -41,17 +42,26 @@ class FrontLogic extends GetxController {
     }
   }
 
-  Future<void> getGalleryData({bool refresh = false}) async {
+  Future<void> getGalleryData({
+    bool refresh = false,
+    bool showWebviewDialogOnFail = true,
+  }) async {
     final rCookies =
         await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
     logger.d('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
 
     try {
-      final r = await getGalleryList(refresh: refresh);
+      final galleryList = await getGalleryList(refresh: refresh, page: 1);
+      if (refresh) {
+        state.galleryProviders.assignAll(galleryList);
+      } else {
+        state.galleryProviders.addAll(galleryList);
+      }
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
+      if (showWebviewDialogOnFail && (e.code == 403 || e.code == 503)) {
         logger.e('code ${e.code}');
         await showInAppWebViewDialog(statusCode: e.code);
+        await getGalleryData(refresh: refresh, showWebviewDialogOnFail: false);
       } else {
         rethrow;
       }
@@ -66,7 +76,7 @@ class FrontLogic extends GetxController {
 Future<void> showInAppWebViewDialog({int? statusCode}) async {
   final CookieManager cookieManager = CookieManager.instance();
   await cookieManager.deleteAllCookies();
-  final cookies = await showDialog(
+  final cookies = await showDialog<List<io.Cookie>>(
       context: Get.context!,
       builder: (_) {
         Widget iw() => InAppWebView(
@@ -150,10 +160,14 @@ Future<void> showInAppWebViewDialog({int? statusCode}) async {
         );
       });
 
-  await Global.cookieJar.saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
-  final rCookies =
-      await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-  logger.d('rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+  if (cookies != null) {
+    await Global.cookieJar
+        .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+    final rCookies =
+        await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    logger.d('rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+  }
+  ;
 }
 
 final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(

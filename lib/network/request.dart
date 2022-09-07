@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/models/gallety_provider.dart';
 
 import '../common/const/const.dart';
+import '../common/parser/parse_gallery_list.dart';
 import '../utils/logger.dart';
 import 'app_dio/pdio.dart';
 
@@ -15,33 +17,39 @@ Options getCacheOptions({bool forceRefresh = false, Options? options}) {
   );
 }
 
-Future getGalleryList({
+Future<List<GalletyProvider>> getGalleryList({
   bool refresh = false,
   CancelToken? cancelToken,
+  String? referer,
+  int? page,
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
+  final params = <String, dynamic>{
+    'page': page ?? 1,
+  };
+
   DioHttpResponse httpResponse = await dioHttpClient.get(
     '/',
+    queryParameters: params,
     httpTransformer: HttpTransformerBuilder(
       (response) {
         logger.d('statusCode ${response.statusCode}');
-        return DioHttpResponse<bool>.success(true);
+        final list = parseGalleryList(response.data as String);
+        return DioHttpResponse<List<GalletyProvider>>.success(list);
       },
     ),
     options: getCacheOptions(forceRefresh: refresh)
       ..followRedirects = true
       ..headers = {
-        'referer': NHConst.baseUrl,
-        // 'cookie':
-        //     'csrftoken=PMMs3EuNZIDDx8bo9n0x06dkqqbphsQiyUk8pT0KbJ2gbQEWiSHf4FrwQj1chMgq;cf_clearance=HxXGMxwGki0vutcNrSlLVucXZB3oFJJAizhDLOVwyQI-1662486110-0-150'
+        'referer': referer ?? NHConst.baseUrl,
       },
     // ..validateStatus = (status) => (status ?? 0) <= 503,
     cancelToken: cancelToken,
   );
 
-  if (httpResponse.ok && httpResponse.data is bool) {
-    return httpResponse.data as bool;
+  if (httpResponse.ok && httpResponse.data is List<GalletyProvider>) {
+    return httpResponse.data as List<GalletyProvider>;
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryList error');

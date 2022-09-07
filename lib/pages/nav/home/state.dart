@@ -6,6 +6,6 @@ class HomeState {
   }
 
   final _selectedIndex = 0.obs;
-  get selectedIndex => _selectedIndex.value;
-  set selectedIndex(val) => _selectedIndex.value = val;
+  int get selectedIndex => _selectedIndex.value;
+  set selectedIndex(int val) => _selectedIndex.value = val;
 }
