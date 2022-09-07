@@ -28,7 +28,7 @@ jobs:
             os: macos-latest
             flutter_version: '3.3.0'
             artifact_name: release-ios
-            artifact_path: build/ios/ipa/*.ipa
+            artifact_path: build/**/*.ipa
           - target: macos
             os: macos-latest
             flutter_version: '3.0.5'
