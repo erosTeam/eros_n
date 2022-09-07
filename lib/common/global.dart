@@ -33,7 +33,7 @@ class Global {
 
   static late PersistCookieJar cookieJar;
 
-  static late String userAgent;
+  static String? userAgent;
 
   static Future<void> init() async {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

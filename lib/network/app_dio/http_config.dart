@@ -13,6 +13,7 @@ class DioHttpConfig {
     this.receiveTimeout = Duration.millisecondsPerMinute,
     this.maxConnectionsPerHost,
     this.contentType = Headers.formUrlEncodedContentType,
+    this.userAgent,
   });
 
   final String? baseUrl;
@@ -25,6 +26,7 @@ class DioHttpConfig {
   final bool? domainFronting;
   final int? maxConnectionsPerHost;
   final String? contentType;
+  final String? userAgent;
 
   DioHttpConfig copyWith({
     String? baseUrl,
@@ -37,6 +39,7 @@ class DioHttpConfig {
     bool? domainFronting,
     int? maxConnectionsPerHost,
     String? contentType,
+    String? userAgent,
   }) {
     return DioHttpConfig(
       baseUrl: baseUrl ?? this.baseUrl,
@@ -50,11 +53,43 @@ class DioHttpConfig {
       maxConnectionsPerHost:
           maxConnectionsPerHost ?? this.maxConnectionsPerHost,
       contentType: contentType ?? this.contentType,
+      userAgent: userAgent ?? this.userAgent,
     );
   }
 
   @override
   String toString() {
-    return 'DioHttpConfig{baseUrl: $baseUrl, proxy: $proxy, cookiesPath: $cookiesPath, interceptors: $interceptors, connectTimeout: $connectTimeout, sendTimeout: $sendTimeout, receiveTimeout: $receiveTimeout, domainFronting: $domainFronting, maxConnectionsPerHost: $maxConnectionsPerHost, contentType: $contentType}';
+    return 'DioHttpConfig{baseUrl: $baseUrl, proxy: $proxy, cookiesPath: $cookiesPath, interceptors: $interceptors, connectTimeout: $connectTimeout, sendTimeout: $sendTimeout, receiveTimeout: $receiveTimeout, domainFronting: $domainFronting, maxConnectionsPerHost: $maxConnectionsPerHost, contentType: $contentType, userAgent: $userAgent}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DioHttpConfig &&
+          runtimeType == other.runtimeType &&
+          baseUrl == other.baseUrl &&
+          proxy == other.proxy &&
+          cookiesPath == other.cookiesPath &&
+          interceptors == other.interceptors &&
+          connectTimeout == other.connectTimeout &&
+          sendTimeout == other.sendTimeout &&
+          receiveTimeout == other.receiveTimeout &&
+          domainFronting == other.domainFronting &&
+          maxConnectionsPerHost == other.maxConnectionsPerHost &&
+          contentType == other.contentType &&
+          userAgent == other.userAgent;
+
+  @override
+  int get hashCode =>
+      baseUrl.hashCode ^
+      proxy.hashCode ^
+      cookiesPath.hashCode ^
+      interceptors.hashCode ^
+      connectTimeout.hashCode ^
+      sendTimeout.hashCode ^
+      receiveTimeout.hashCode ^
+      domainFronting.hashCode ^
+      maxConnectionsPerHost.hashCode ^
+      contentType.hashCode ^
+      userAgent.hashCode;
 }

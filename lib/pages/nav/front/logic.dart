@@ -77,7 +77,9 @@ Future<void> showInAppWebViewDialog({int? statusCode}) async {
                 final option = await controller.getOptions();
                 logger.d(
                     'onWebViewCreated UA = ${option?.crossPlatform.userAgent}');
-                Global.userAgent = option?.crossPlatform.userAgent ?? '';
+                Global.userAgent = option?.crossPlatform.userAgent;
+                globalDioConfig =
+                    globalDioConfig.copyWith(userAgent: Global.userAgent);
               },
               initialOptions: inAppWebViewOptions,
               shouldOverrideUrlLoading: (controller, navigationAction) async {

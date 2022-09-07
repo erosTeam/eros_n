@@ -18,22 +18,27 @@ import 'http_config.dart';
 export 'http_config.dart';
 
 class AppDio with DioMixin implements Dio {
-  AppDio({BaseOptions? options, DioHttpConfig? dioConfig}) {
+  AppDio({BaseOptions? options, this.dioConfig}) {
     options ??= BaseOptions(
       baseUrl: dioConfig?.baseUrl ?? '',
       contentType: dioConfig?.contentType ?? Headers.formUrlEncodedContentType,
       connectTimeout: dioConfig?.connectTimeout,
       sendTimeout: dioConfig?.sendTimeout,
       receiveTimeout: dioConfig?.receiveTimeout,
-      headers: <String, String>{
-        'User-Agent': Global.userAgent,
-        // 'Accept': NHConst.accept,
-        // 'Accept-Language': NHConst.acceptLanguage,
-      },
+      // headers: <String, String>{
+      //   if (Global.userAgent != null) 'User-Agent': Global.userAgent!,
+      //   // 'Accept': NHConst.accept,
+      //   // 'Accept-Language': NHConst.acceptLanguage,
+      // },
     );
     this.options = options;
 
     logger.v('dioConfig ${dioConfig?.toString()}');
+
+    if (dioConfig?.userAgent?.isNotEmpty ?? false) {
+      logger.d('set userAgent from dioConfig');
+      this.options.headers['User-Agent'] = dioConfig?.userAgent;
+    }
 
     // DioCacheManager
     final cacheOptions = CacheConfig(
@@ -56,7 +61,7 @@ class AppDio with DioMixin implements Dio {
       requestBody: true,
       responseHeader: true,
       responseBody: false,
-      error: true,
+      error: false,
       maxWidth: 120,
       // logPrint: (_) {},
       // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
@@ -79,6 +84,8 @@ class AppDio with DioMixin implements Dio {
       ;
     });
   }
+
+  DioHttpConfig? dioConfig;
 
   void setProxy(String proxy) {
     logger.d('setProxy $proxy');
