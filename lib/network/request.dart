@@ -1,20 +1,34 @@
 import 'package:dio/dio.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/models/index.dart';
 
-import '../common/const/const.dart';
 import '../common/parser/parse_gallery_list.dart';
 import '../utils/logger.dart';
+import 'app_dio/api.dart';
 import 'app_dio/pdio.dart';
 
-Options getCacheOptions({bool forceRefresh = false, Options? options}) {
-  return buildCacheOptions(
-    const Duration(days: 5),
-    maxStale: const Duration(days: 7),
-    forceRefresh: forceRefresh,
-    options: options,
-  );
+// Options getCacheOptions({bool forceRefresh = false, Options? options}) {
+//   logger.d('forceRefresh: $forceRefresh');
+//   return buildCacheOptions(
+//     const Duration(days: 3),
+//     maxStale: const Duration(days: 7),
+//     forceRefresh: forceRefresh,
+//     options: options,
+//   );
+// }
+
+Options getOptions({bool forceRefresh = false}) {
+  final options = Api.cacheOption
+      .copyWith(
+        policy: forceRefresh ? CachePolicy.noCache : null,
+      )
+      .toOptions();
+  // if (forceRefresh) {
+  //   options.validateStatus = (status) => status == 200 || status == 304;
+  // }
+
+  return options;
 }
 
 Future<List<GalleryProvider>> getGalleryList({
@@ -26,7 +40,7 @@ Future<List<GalleryProvider>> getGalleryList({
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
   final params = <String, dynamic>{
-    'page': page ?? 1,
+    if (page != null) 'page': page,
   };
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
@@ -39,12 +53,7 @@ Future<List<GalleryProvider>> getGalleryList({
         return DioHttpResponse<List<GalleryProvider>>.success(list);
       },
     ),
-    options: getCacheOptions(forceRefresh: refresh)
-      ..followRedirects = true
-      ..headers = {
-        'referer': referer ?? NHConst.baseUrl,
-      },
-    // ..validateStatus = (status) => (status ?? 0) <= 503,
+    options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
   );
 

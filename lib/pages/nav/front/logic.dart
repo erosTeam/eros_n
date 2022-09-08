@@ -47,14 +47,16 @@ class FrontLogic extends GetxController {
     logger.d('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
 
     try {
-      final galleryList = await getGalleryList(refresh: refresh, page: 1);
+      final galleryList = await getGalleryList(refresh: refresh);
+      logger.d('get first gid ${galleryList.first.gid}');
       if (refresh) {
         state.galleryProviders.assignAll(galleryList);
       } else {
         state.galleryProviders.addAll(galleryList);
       }
     } on HttpException catch (e) {
-      if (showWebViewDialogOnFail && (e.code == 403 || e.code == 503)) {
+      if (showWebViewDialogOnFail &&
+          (e.code == 403 || e.code == 503 || e.code == 304)) {
         logger.e('code ${e.code}');
         await showInAppWebViewDialog(
           statusCode: e.code,

@@ -24,8 +24,8 @@ List<GalleryProvider> parseGalleryList(String html) {
   final List<dom.Element> galleryElmList =
       galleryListElm?.querySelectorAll(selectorGallery) ?? [];
 
-  logger.d('galleryElmListOfPopular ${galleryElmListOfPopular.length}');
-  logger.d('galleryElmList ${galleryElmList.length}');
+  // logger.d('galleryElmListOfPopular ${galleryElmListOfPopular.length}');
+  // logger.d('galleryElmList ${galleryElmList.length}');
 
   final List<GalleryProvider> galleryList = parseGalleryListElm(galleryElmList);
   return galleryList;

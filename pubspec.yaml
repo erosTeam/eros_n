@@ -39,6 +39,8 @@ dependencies:
   font_awesome_flutter: ^9.1.0
   flutter_cache_manager: ^3.1.1
   octo_image: ^1.0.2
+  dio_cache_interceptor: ^3.3.1
+  dio_cache_interceptor_hive_store: ^3.2.0
 
 dev_dependencies:
   # flutter pub run apn_json2model

@@ -23,40 +23,79 @@ class _FrontPageState extends State<FrontPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    logger.d('build');
+    logger.d('${context.mediaQueryPadding.top}');
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: logic.reloadData,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text('FrontPage'),
-              floating: true,
-              snap: true,
-              expandedHeight: kToolbarHeight,
-            ),
-            Obx(() {
-              final galleryProviders = state.galleryProviders;
-              if (galleryProviders.isEmpty) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: Text('No Data'),
+        child: Scrollbar(
+          controller: PrimaryScrollController.of(context),
+          child: CustomScrollView(
+            primary: true,
+            slivers: [
+              SliverAppBar(
+                title: Text('FrontPage'),
+                floating: true,
+                pinned: true,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(0),
+                  child: SizedBox(height: 0),
+                  // child: Container(
+                  //   height: 48,
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: Container(
+                  //           margin: const EdgeInsets.symmetric(horizontal: 8),
+                  //           decoration: BoxDecoration(
+                  //             // color: Colors.grey[200],
+                  //             borderRadius: BorderRadius.circular(8),
+                  //           ),
+                  //           child: TextField(
+                  //             decoration: InputDecoration(
+                  //               border: InputBorder.none,
+                  //               hintText: 'Search',
+                  //               prefixIcon: Icon(Icons.search),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       IconButton(
+                  //         icon: Icon(Icons.filter_list),
+                  //         onPressed: () {},
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                ),
+                // expandedHeight: 0.0,
+                // toolbarHeight: 0.0,
+                // collapsedHeight: 0.0,
+              ),
+              Obx(() {
+                final galleryProviders = state.galleryProviders;
+                if (galleryProviders.isEmpty) {
+                  return SliverFillRemaining(
+                    child: Center(
+                      child: Text('No Data'),
+                    ),
+                  );
+                }
+                // logger.d('first gid ${galleryProviders.first.gid}');
+                return SliverSafeArea(
+                  top: false,
+                  sliver: SliverList(
+                    // key: ValueKey(galleryProviders.map((e) => e.gid).join(',')),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return itemBuilder(context, index, galleryProviders);
+                      },
+                      childCount: galleryProviders.length,
+                    ),
                   ),
                 );
-              }
-              return SliverSafeArea(
-                top: false,
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return itemBuilder(context, index, galleryProviders);
-                    },
-                    childCount: galleryProviders.length,
-                  ),
-                ),
-              );
-            }),
-          ],
+              }),
+            ],
+          ),
         ),
       ),
     );

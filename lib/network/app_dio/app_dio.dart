@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
+// import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 
@@ -41,12 +43,43 @@ class AppDio with DioMixin implements Dio {
     }
 
     // DioCacheManager
-    final cacheOptions = CacheConfig(
-      databasePath: Global.appSupportPath,
-      baseUrl: dioConfig?.baseUrl,
-      defaultRequestMethod: 'GET',
+    // final cacheOptions = CacheConfig(
+    //   databasePath: Global.appSupportPath,
+    //   // baseUrl: dioConfig?.baseUrl,
+    //   // defaultRequestMethod: 'GET',
+    // );
+    // interceptors.add(DioCacheManager(cacheOptions).interceptor as Interceptor);
+
+    final cacheOptions = CacheOptions(
+      store: BackupCacheStore(
+        primary: MemCacheStore(),
+        secondary: HiveCacheStore(Global.appSupportPath),
+      ),
+      policy: CachePolicy.forceCache,
+      // hitCacheOnErrorExcept: [401, 403],
+      maxStale: const Duration(days: 7),
+      priority: CachePriority.normal,
+      cipher: null,
+      keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+      allowPostMethod: false,
     );
-    interceptors.add(DioCacheManager(cacheOptions).interceptor as Interceptor);
+
+    // interceptors.add(InterceptorsWrapper(
+    //   onRequest: (RequestOptions options, handler) async {
+    //     final key = cacheOptions.keyBuilder(options);
+    //     logger.d('cache key: $key');
+    //     final cache = await cacheOptions.store?.get(key);
+    //     if (cache != null &&
+    //         DateTime.now().difference(cache.responseDate).inMinutes < 5) {
+    //       logger.d('cache hit');
+    //       // return handler.resolve(cache.toResponse(options, fromNetwork: false));
+    //     }
+    //
+    //     return handler.next(options);
+    //   },
+    // ));
+
+    interceptors.add(DioCacheInterceptor(options: cacheOptions));
 
     // Cookie管理
     if (dioConfig?.cookiesPath?.isNotEmpty ?? false) {

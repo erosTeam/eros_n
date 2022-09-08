@@ -22,6 +22,7 @@ final DioHttpConfig nhDioConfig = DioHttpConfig(
   sendTimeout: 8000,
   receiveTimeout: 20000,
   maxConnectionsPerHost: null,
+  userAgent: kDebugMode ? NHConst.userAgent : null,
 );
 
 class Global {
@@ -63,5 +64,9 @@ class Global {
           true);
       WebView.platform = AndroidWebView();
     }
+
+    // if (kDebugMode) {
+    //   userAgent = NHConst.userAgent;
+    // }
   }
 }

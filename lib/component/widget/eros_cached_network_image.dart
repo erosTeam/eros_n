@@ -76,6 +76,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
       // progressIndicatorBuilder: progressIndicatorBuilder,
     );
 
+    return image;
     return Opacity(opacity: 0.03, child: image);
   }
 }
