@@ -27,8 +27,11 @@ Future<void> showInAppWebViewDialog({
                 logger.d(
                     'onWebViewCreated UA = ${option?.crossPlatform.userAgent}');
                 Global.userAgent = option?.crossPlatform.userAgent;
+
                 globalDioConfig =
                     globalDioConfig.copyWith(userAgent: Global.userAgent);
+
+                hiveHelper.setUserAgent(Global.userAgent!);
               },
               initialOptions: inAppWebViewOptions,
               shouldOverrideUrlLoading: (controller, navigationAction) async {
@@ -83,7 +86,6 @@ Future<void> showInAppWebViewDialog({
 
     onComplete?.call();
   }
-
 }
 
 final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(

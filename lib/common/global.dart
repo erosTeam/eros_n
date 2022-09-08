@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:eros_n/network/app_dio/app_dio.dart';
+import 'package:eros_n/store/kv/hive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,13 +17,14 @@ import 'const/const.dart';
 
 DioHttpConfig globalDioConfig = nhDioConfig;
 
+final HiveHelper hiveHelper = HiveHelper();
+
 final DioHttpConfig nhDioConfig = DioHttpConfig(
   baseUrl: NHConst.baseUrl,
   connectTimeout: 10000,
   sendTimeout: 8000,
   receiveTimeout: 20000,
   maxConnectionsPerHost: null,
-  userAgent: kDebugMode ? NHConst.userAgent : null,
 );
 
 class Global {
@@ -64,6 +66,11 @@ class Global {
           true);
       WebView.platform = AndroidWebView();
     }
+
+    await HiveHelper.init();
+
+    userAgent = hiveHelper.getUserAgent();
+    globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);
 
     // if (kDebugMode) {
     //   userAgent = NHConst.userAgent;
