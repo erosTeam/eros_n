@@ -5,8 +5,6 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
   <group>
-    <clip-path
-        android:pathData="M108,0L108,108L0,108L0,0L108,0Z"/>
     <path
         android:pathData="M0,0l108,0l0,108l-108,0l0,-108z"
         android:strokeColor="#00000000">

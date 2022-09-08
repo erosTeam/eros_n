@@ -6,10 +6,61 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'logic.dart';
+import 'state.dart';
 
-class FrontPage extends StatelessWidget {
-  final logic = Get.put(FrontLogic());
-  final state = Get.find<FrontLogic>().state;
+class FrontPage extends StatefulWidget {
+  const FrontPage({super.key});
+
+  @override
+  State<FrontPage> createState() => _FrontPageState();
+}
+
+class _FrontPageState extends State<FrontPage>
+    with AutomaticKeepAliveClientMixin {
+  final FrontLogic logic = Get.put(FrontLogic());
+  final FrontState state = Get.find<FrontLogic>().state;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    logger.d('build');
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: logic.reloadData,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: Text('FrontPage'),
+              floating: true,
+              snap: true,
+              expandedHeight: kToolbarHeight,
+            ),
+            Obx(() {
+              final galleryProviders = state.galleryProviders;
+              if (galleryProviders.isEmpty) {
+                return SliverFillRemaining(
+                  child: Center(
+                    child: Text('No Data'),
+                  ),
+                );
+              }
+              return SliverSafeArea(
+                top: false,
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return itemBuilder(context, index, galleryProviders);
+                    },
+                    childCount: galleryProviders.length,
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget itemBuilder(
     BuildContext context,
@@ -53,52 +104,6 @@ class FrontPage extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: logic.reloadData,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text('FrontPage'),
-              floating: true,
-              snap: true,
-              expandedHeight: kToolbarHeight,
-              // flexibleSpace: FlexibleSpaceBar(
-              //   background: ErosCachedNetworkImage(
-              //     imageUrl: 'https://picsum.photos/250?image=9',
-              //     fit: BoxFit.cover,
-              //   ),
-              // ),
-            ),
-            Obx(() {
-              final galleryProviders = state.galleryProviders;
-              if (galleryProviders.isEmpty) {
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Text('No Data'),
-                  ),
-                );
-              }
-              return SliverSafeArea(
-                top: false,
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return itemBuilder(context, index, galleryProviders);
-                    },
-                    childCount: galleryProviders.length,
-                  ),
-                ),
-              );
-            }),
           ],
         ),
       ),
@@ -166,4 +171,7 @@ class FrontPage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

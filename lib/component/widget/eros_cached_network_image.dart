@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart' as retry;
@@ -61,11 +62,13 @@ class ErosCachedNetworkImage extends StatelessWidget {
 
     final image = CachedNetworkImage(
       cacheManager: imageCacheManager,
-      imageBuilder: imageWidgetBuilder,
+      // imageBuilder: imageWidgetBuilder,
       httpHeaders: defHttpHeaders,
       width: width,
       height: height,
       fit: fit,
+      // color: Color.fromARGB(240, 255, 255, 255),
+      // colorBlendMode: BlendMode.lighten,
       // imageUrl: imageUrl.handleUrl,
       imageUrl: imageUrl,
       // placeholder: placeholder,
@@ -73,7 +76,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
       // progressIndicatorBuilder: progressIndicatorBuilder,
     );
 
-    return image;
+    return Opacity(opacity: 0.03, child: image);
   }
 }
 
