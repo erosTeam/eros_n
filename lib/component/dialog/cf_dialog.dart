@@ -16,6 +16,7 @@ Future<void> showInAppWebViewDialog({
 }) async {
   final CookieManager cookieManager = CookieManager.instance();
   await cookieManager.deleteAllCookies();
+  final showWebview = GetPlatform.isIOS || !kReleaseMode;
   final cookies = await showDialog<List<io.Cookie>>(
       context: Get.context!,
       barrierDismissible: false,
@@ -68,10 +69,9 @@ Future<void> showInAppWebViewDialog({
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Text('获取数据中'),
-              if (kReleaseMode) const CircularProgressIndicator(),
+              if (!showWebview) const CircularProgressIndicator(),
               SizedBox(
-                height: kReleaseMode ? 0.1 : 300,
+                height: showWebview ? 300 : 0.1,
                 child: iw(),
               ),
             ],
@@ -94,7 +94,6 @@ final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(
   crossPlatform: InAppWebViewOptions(
     useShouldOverrideUrlLoading: true,
     mediaPlaybackRequiresUserGesture: false,
-    // userAgent: NHConst.userAgent,
   ),
   android: AndroidInAppWebViewOptions(
     useHybridComposition: true,
