@@ -3,7 +3,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' show parse;
 
-List<GalleryProvider> parseGalleryList(String html) {
+GalleryList parseGalleryList(String html) {
   final dom.Document document = parse(html);
 
   const selectorPopular =
@@ -13,6 +13,7 @@ List<GalleryProvider> parseGalleryList(String html) {
       '#content > div.container.index-container:not(.index-popular)';
 
   const selectorGallery = '.gallery';
+  const selectorMaxPage = '.last';
 
   final dom.Element? popularElm = document.querySelector(selectorPopular);
   final dom.Element? galleryListElm =
@@ -27,8 +28,19 @@ List<GalleryProvider> parseGalleryList(String html) {
   // logger.d('galleryElmListOfPopular ${galleryElmListOfPopular.length}');
   // logger.d('galleryElmList ${galleryElmList.length}');
 
-  final List<GalleryProvider> galleryList = parseGalleryListElm(galleryElmList);
-  return galleryList;
+  final maxPage = RegExp(r'\d+')
+          .firstMatch(
+              document.querySelector(selectorMaxPage)?.attributes['href'] ?? '')
+          ?.group(0) ??
+      '1';
+
+  final galleryList = parseGalleryListElm(galleryElmList);
+  final popularList = parseGalleryListElm(galleryElmListOfPopular);
+  return GalleryList(
+    gallerys: galleryList,
+    populars: popularList,
+    maxPage: int.parse(maxPage),
+  );
 }
 
 List<GalleryProvider> parseGalleryListElm(List<dom.Element> galleryElmList) {

@@ -44,21 +44,24 @@ class FrontLogic extends GetxController {
         refresh: refresh || next || prev,
         page: page,
       );
-      logger.d('get first gid ${galleryList.first.gid}');
+      final provides = galleryList.gallerys ?? [];
+      logger.d('get first gid ${provides.first.gid}');
 
       if (next) {
         state.status = LoadStatus.loadingMore;
-        state.galleryProviders.addAll(galleryList);
+        state.galleryProviders.addAll(provides);
       } else if (prev) {
-        state.galleryProviders.insertAll(0, galleryList);
+        state.galleryProviders.insertAll(0, provides);
       } else {
-        if (galleryList.isEmpty) {
+        if (provides.isEmpty) {
           state.status = LoadStatus.empty;
         } else {
-          state.galleryProviders.assignAll(galleryList);
+          state.galleryProviders.assignAll(provides);
           state.status = LoadStatus.success;
         }
       }
+
+      state.maxPage = galleryList.maxPage ?? 1;
     } on HttpException catch (e) {
       if (showWebViewDialogOnFail && (e.code == 403 || e.code == 503)) {
         logger.e('code ${e.code}');
@@ -84,15 +87,15 @@ class FrontLogic extends GetxController {
   }
 
   Future<void> loadNextPage() async {
-    final toPage = state.currentPage + 1;
+    final toPage = state.curPage + 1;
     await getGalleryData(next: true, page: toPage);
-    state.currentPage = toPage;
+    state.curPage = toPage;
   }
 
   Future<void> loadPrevPage() async {
-    final toPage = state.currentPage - 1;
+    final toPage = state.curPage - 1;
     await getGalleryData(prev: true, page: toPage);
-    state.currentPage = toPage;
+    state.curPage = toPage;
   }
 
   Future<void> loadFromPage(int page) async {

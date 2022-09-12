@@ -31,7 +31,7 @@ Options getOptions({bool forceRefresh = false}) {
   return options;
 }
 
-Future<List<GalleryProvider>> getGalleryList({
+Future<GalleryList> getGalleryList({
   bool refresh = false,
   CancelToken? cancelToken,
   String? referer,
@@ -50,15 +50,15 @@ Future<List<GalleryProvider>> getGalleryList({
       (response) {
         logger.d('statusCode ${response.statusCode}');
         final list = parseGalleryList(response.data as String);
-        return DioHttpResponse<List<GalleryProvider>>.success(list);
+        return DioHttpResponse<GalleryList>.success(list);
       },
     ),
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
   );
 
-  if (httpResponse.ok && httpResponse.data is List<GalleryProvider>) {
-    return httpResponse.data as List<GalleryProvider>;
+  if (httpResponse.ok && httpResponse.data is GalleryList) {
+    return httpResponse.data as GalleryList;
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryList error');

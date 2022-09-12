@@ -13,8 +13,8 @@ class GallerySliverListView extends StatelessWidget {
     Key? key,
     required this.galleryProviders,
     this.tabTag,
-    this.maxPage,
-    this.curPage = 0,
+    this.maxPage = 1,
+    this.curPage = 1,
     this.lastComplete,
     this.lastTopitemIndex,
     this.keepPosition = false,
@@ -22,7 +22,7 @@ class GallerySliverListView extends StatelessWidget {
 
   final List<GalleryProvider> galleryProviders;
   final dynamic tabTag;
-  final int? maxPage;
+  final int maxPage;
   final int curPage;
   final VoidCallback? lastComplete;
   final int? lastTopitemIndex;
@@ -33,7 +33,7 @@ class GallerySliverListView extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    if (index == galleryProviders.length - 1) {
+    if (index == galleryProviders.length - 1 && curPage < maxPage) {
       // 加载完成最后一项的回调
       SchedulerBinding.instance
           .addPostFrameCallback((_) => lastComplete?.call());

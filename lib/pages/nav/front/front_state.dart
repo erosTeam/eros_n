@@ -9,9 +9,13 @@ class FrontState {
 
   final galleryProviders = <GalleryProvider>[].obs;
 
-  final _currentPage = 1.obs;
-  int get currentPage => _currentPage.value;
-  set currentPage(int val) => _currentPage.value = val;
+  final _curPage = 1.obs;
+  int get curPage => _curPage.value;
+  set curPage(int val) => _curPage.value = val;
+
+  final _maxPage = 1.obs;
+  int get maxPage => _maxPage.value;
+  set maxPage(int val) => _maxPage.value = val;
 
   final _status = LoadStatus.loading.obs;
   LoadStatus get status => _status.value;

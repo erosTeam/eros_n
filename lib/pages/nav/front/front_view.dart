@@ -87,6 +87,8 @@ class _FrontPageState extends State<FrontPage>
                     galleryProviders: galleryProviders,
                     lastComplete: logic.loadNextPage,
                     keepPosition: true,
+                    curPage: state.curPage,
+                    maxPage: state.maxPage,
                   ),
                 );
               }
