@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'logic.dart';
+import 'history_logic.dart';
 
 class HistoryPage extends StatelessWidget {
   final logic = Get.put(HistoryLogic());

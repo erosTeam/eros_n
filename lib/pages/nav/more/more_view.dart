@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'logic.dart';
+import 'more_logic.dart';
 
 class MorePage extends StatelessWidget {
   final logic = Get.put(MoreLogic());

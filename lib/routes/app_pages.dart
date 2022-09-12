@@ -1,7 +1,8 @@
-import 'package:eros_n/pages/splash/view.dart';
-import 'package:eros_n/pages/nav/home/view.dart';
+import 'package:eros_n/pages/splash/splash_view.dart';
+import 'package:eros_n/pages/nav/home/home_view.dart';
 import 'package:get/get.dart';
 
+import '../pages/nav/front/front_view.dart';
 import 'routes.dart';
 
 class AppPages {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'logic.dart';
+import 'splash_logic.dart';
 
 class SplashPage extends StatelessWidget {
   final logic = Get.put(SplashLogic());

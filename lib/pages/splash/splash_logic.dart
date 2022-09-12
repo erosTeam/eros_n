@@ -1,7 +1,7 @@
 import 'package:eros_n/routes/routes.dart';
 import 'package:get/get.dart';
 
-import 'state.dart';
+import 'splash_state.dart';
 
 class SplashLogic extends GetxController {
   final SplashState state = SplashState();

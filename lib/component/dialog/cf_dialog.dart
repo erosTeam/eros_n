@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
@@ -10,7 +12,7 @@ import 'package:get/get.dart';
 // 使用请求nh主页，获取cookie更新到cookieJar
 Future<void> showInAppWebViewDialog({
   int? statusCode,
-  VoidCallback? onComplete,
+  FutureOr Function()? onComplete,
 }) async {
   final CookieManager cookieManager = CookieManager.instance();
   await cookieManager.deleteAllCookies();
@@ -67,9 +69,9 @@ Future<void> showInAppWebViewDialog({
             mainAxisSize: MainAxisSize.min,
             children: [
               // Text('获取数据中'),
-              const CircularProgressIndicator(),
+              if (kReleaseMode) const CircularProgressIndicator(),
               SizedBox(
-                height: 0.1,
+                height: kReleaseMode ? 0.1 : 300,
                 child: iw(),
               ),
             ],
@@ -84,7 +86,7 @@ Future<void> showInAppWebViewDialog({
         await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
     logger.d('rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
 
-    onComplete?.call();
+    await onComplete?.call();
   }
 }
 

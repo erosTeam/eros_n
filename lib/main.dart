@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
 
         return GetMaterialApp(
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
-          debugShowCheckedModeBanner: false,
+          // debugShowCheckedModeBanner: false,
           theme: ThemeData(
             colorScheme: lightColorScheme,
             extensions: [lightCustomColors],

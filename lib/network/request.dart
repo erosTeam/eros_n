@@ -5,7 +5,7 @@ import 'package:eros_n/models/index.dart';
 
 import '../common/parser/parse_gallery_list.dart';
 import '../utils/logger.dart';
-import 'app_dio/api.dart';
+import 'api.dart';
 import 'app_dio/pdio.dart';
 
 // Options getCacheOptions({bool forceRefresh = false, Options? options}) {
@@ -21,7 +21,7 @@ import 'app_dio/pdio.dart';
 Options getOptions({bool forceRefresh = false}) {
   final options = Api.cacheOption
       .copyWith(
-        policy: forceRefresh ? CachePolicy.noCache : null,
+        policy: forceRefresh ? CachePolicy.refresh : null,
       )
       .toOptions();
   // if (forceRefresh) {

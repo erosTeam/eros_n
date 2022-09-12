@@ -1,10 +1,10 @@
-import 'package:eros_n/pages/nav/front/view.dart';
-import 'package:eros_n/pages/nav/history/view.dart';
-import 'package:eros_n/pages/nav/more/view.dart';
+import 'package:eros_n/pages/nav/front/front_view.dart';
+import 'package:eros_n/pages/nav/history/history_view.dart';
+import 'package:eros_n/pages/nav/more/more_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'logic.dart';
+import 'home_logic.dart';
 
 class HomePage extends StatelessWidget {
   final logic = Get.put(HomeLogic());
@@ -19,8 +19,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
+      // extendBody: true,
+      // extendBodyBehindAppBar: true,
       body: PageView(
         controller: state.pageController,
         physics: const NeverScrollableScrollPhysics(),

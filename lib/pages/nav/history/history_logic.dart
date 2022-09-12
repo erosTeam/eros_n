@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'state.dart';
+import 'history_state.dart';
 
 class HistoryLogic extends GetxController {
   final HistoryState state = HistoryState();

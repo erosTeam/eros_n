@@ -71,8 +71,8 @@ class ErosCachedNetworkImage extends StatelessWidget {
       // colorBlendMode: BlendMode.lighten,
       // imageUrl: imageUrl.handleUrl,
       imageUrl: imageUrl,
-      // placeholder: placeholder,
-      // errorWidget: errorWidget,
+      placeholder: placeholder,
+      errorWidget: errorWidget,
       // progressIndicatorBuilder: progressIndicatorBuilder,
     );
 
