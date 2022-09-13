@@ -45,7 +45,7 @@ class FrontLogic extends GetxController {
         page: page,
       );
       final provides = galleryList.gallerys ?? [];
-      logger.d('get first gid ${provides.first.gid}');
+      logger.v('get first gid ${provides.first.gid}');
 
       if (next) {
         state.status = LoadStatus.loadingMore;

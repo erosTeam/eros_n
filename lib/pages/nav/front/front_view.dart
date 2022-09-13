@@ -25,6 +25,7 @@ class _FrontPageState extends State<FrontPage>
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: logic.reloadData,
+        edgeOffset: context.mediaQueryPadding.top + kToolbarHeight,
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -62,9 +63,6 @@ class _FrontPageState extends State<FrontPage>
                 //   ),
                 // ),
               ),
-              // expandedHeight: 0.0,
-              // toolbarHeight: 0.0,
-              // collapsedHeight: 0.0,
             ),
             // Listview Main
             Obx(() {
@@ -75,7 +73,7 @@ class _FrontPageState extends State<FrontPage>
                   child: Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(bottom: 50),
-                    child: CircularProgressIndicator(),
+                    child: const CircularProgressIndicator(),
                   ),
                 );
               }
@@ -83,7 +81,7 @@ class _FrontPageState extends State<FrontPage>
               if (galleryProviders.isNotEmpty) {
                 return SliverSafeArea(
                   top: false,
-                  sliver: GallerySliverListView(
+                  sliver: GalleryWaterfallFlowView(
                     galleryProviders: galleryProviders,
                     lastComplete: logic.loadNextPage,
                     keepPosition: true,

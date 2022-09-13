@@ -2,5 +2,7 @@
   "gid?": "123",
   "title?": "",
   "url?": "",
-  "thumbUrl?": ""
+  "thumbUrl?": "",
+  "imgHeight?": 200,
+  "imgWidth?": 200
 }

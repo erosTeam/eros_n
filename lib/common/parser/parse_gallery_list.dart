@@ -50,6 +50,10 @@ List<GalleryProvider> parseGalleryListElm(List<dom.Element> galleryElmList) {
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
     final thumbUrl =
         elm.querySelector('.lazyload')?.attributes['data-src'] ?? '';
+    final imageHeight =
+        elm.querySelector('.lazyload')?.attributes['height'] ?? '';
+    final imageWidth =
+        elm.querySelector('.lazyload')?.attributes['width'] ?? '';
     final gid = RegExp(r'\d+').firstMatch(url)?.group(0) ?? '';
 
     final GalleryProvider gallery = GalleryProvider(
@@ -57,6 +61,8 @@ List<GalleryProvider> parseGalleryListElm(List<dom.Element> galleryElmList) {
       title: title,
       url: url,
       thumbUrl: thumbUrl,
+      imgHeight: int.parse(imageHeight),
+      imgWidth: int.parse(imageWidth),
     );
     // logger.d('gallery ${gallery.toJson()}');
     galleryList.add(gallery);

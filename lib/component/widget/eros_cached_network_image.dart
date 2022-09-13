@@ -67,7 +67,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      // color: Color.fromARGB(240, 255, 255, 255),
+      // color: Color.fromARGB(220, 255, 255, 255),
       // colorBlendMode: BlendMode.lighten,
       // imageUrl: imageUrl.handleUrl,
       imageUrl: imageUrl,

@@ -1,6 +1,8 @@
+import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/models/index.dart';
 import 'package:eros_n/pages/gallery/gallery_view.dart';
+import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,32 +31,15 @@ class ItemCard extends StatelessWidget {
             children: [
               Container(
                 width: 120,
-                child: Stack(
-                  alignment: Alignment.topLeft,
-                  children: [
-                    ErosCachedNetworkImage(
-                      imageUrl: galleryProvider.thumbUrl ?? '',
-                      fit: BoxFit.scaleDown,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                child: BlurImage(
+                  blur: kDebugMode,
+                  child: ErosCachedNetworkImage(
+                    imageUrl: galleryProvider.thumbUrl ?? '',
+                    fit: BoxFit.scaleDown,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
                     ),
-                    if (kDebugMode)
-                      Text(
-                        '${index ?? 0}',
-                        style: TextStyle(
-                          fontSize: 40,
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black,
-                              offset: Offset(2, 2),
-                              blurRadius: 8,
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
+                  ),
                 ),
               ),
               Expanded(
