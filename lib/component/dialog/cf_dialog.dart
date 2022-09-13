@@ -16,7 +16,7 @@ Future<void> showInAppWebViewDialog({
 }) async {
   final CookieManager cookieManager = CookieManager.instance();
   await cookieManager.deleteAllCookies();
-  final showWebview = GetPlatform.isIOS || !kReleaseMode;
+  final showWebview = !kReleaseMode;
   final cookies = await showDialog<List<io.Cookie>>(
       context: Get.context!,
       barrierDismissible: false,
@@ -25,17 +25,6 @@ Future<void> showInAppWebViewDialog({
               initialUrlRequest: URLRequest(
                 url: Uri.parse(NHConst.baseUrl),
               ),
-              onWebViewCreated: (controller) async {
-                final option = await controller.getOptions();
-                logger.d(
-                    'onWebViewCreated UA = ${option?.crossPlatform.userAgent}');
-                Global.userAgent = option?.crossPlatform.userAgent;
-
-                globalDioConfig =
-                    globalDioConfig.copyWith(userAgent: Global.userAgent);
-
-                hiveHelper.setUserAgent(Global.userAgent!);
-              },
               initialOptions: inAppWebViewOptions,
               shouldOverrideUrlLoading: (controller, navigationAction) async {
                 final uri = navigationAction.request.url!;
@@ -45,10 +34,20 @@ Future<void> showInAppWebViewDialog({
                 return NavigationActionPolicy.ALLOW;
               },
               onLoadStop: (InAppWebViewController controller, Uri? uri) async {
-                logger.d('Page Finished loading: $uri');
+                logger.d('Page onLoadStop: $uri');
                 if (uri == null) {
                   return;
                 }
+
+                // 使用javascript获取Webview的userAgent
+                final resultJS = await controller.evaluateJavascript(
+                    source: 'navigator.userAgent;');
+                logger.d('resultJS $resultJS');
+                final userAgent = resultJS.toString();
+                Global.userAgent = userAgent;
+                globalDioConfig =
+                    globalDioConfig.copyWith(userAgent: Global.userAgent);
+                hiveHelper.setUserAgent(Global.userAgent!);
 
                 final cookies = await cookieManager.getCookies(url: uri);
                 logger.d(
@@ -94,6 +93,7 @@ final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(
   crossPlatform: InAppWebViewOptions(
     useShouldOverrideUrlLoading: true,
     mediaPlaybackRequiresUserGesture: false,
+    // userAgent: GetPlatform.isIOS ? (Global.userAgent ?? NHConst.userAgent) : '',
   ),
   android: AndroidInAppWebViewOptions(
     useHybridComposition: true,

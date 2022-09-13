@@ -106,15 +106,15 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     );
   }
 
+  static const gridDelegateWithMaxCrossAxisExtent =
+      SliverGridDelegateWithMaxCrossAxisExtent(
+    maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
+    crossAxisSpacing: NHConst.waterfallFlowLargeCrossAxisSpacing,
+    mainAxisSpacing: NHConst.waterfallFlowLargeMainAxisSpacing,
+  );
+
   @override
   Widget build(BuildContext context) {
-    final _gridDelegateWithMaxCrossAxisExtent =
-        SliverGridDelegateWithMaxCrossAxisExtent(
-      maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
-      crossAxisSpacing: NHConst.waterfallFlowLargeCrossAxisSpacing,
-      mainAxisSpacing: NHConst.waterfallFlowLargeMainAxisSpacing,
-    );
-
     final constraintsWith = context.width -
         context.mediaQueryPadding.left -
         context.mediaQueryPadding.right -
@@ -122,8 +122,11 @@ class GalleryWaterfallFlowView extends StatelessWidget {
 
     final _sgp = sliverGridDelegateWithMaxToCount(
       constraintsWith,
-      _gridDelegateWithMaxCrossAxisExtent,
+      gridDelegateWithMaxCrossAxisExtent,
     );
+    // log constraintsWith
+    logger
+        .v('context.width ${context.width}, constraintsWith $constraintsWith');
 
     final gridDelegate = _sgp.gridDelegate;
     final _crossAxisCount = gridDelegate.crossAxisCount;
@@ -131,6 +134,8 @@ class GalleryWaterfallFlowView extends StatelessWidget {
             (_crossAxisCount - 1) *
                 NHConst.waterfallFlowLargeCrossAxisSpacing) /
         _crossAxisCount;
+
+    logger.v('_crossAxisCount $_crossAxisCount');
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
@@ -150,8 +155,9 @@ class GalleryWaterfallFlowView extends StatelessWidget {
           (context, index) => itemCardBuilder(context, index, _itemWith),
           childCount: galleryProviders.length,
         ),
-        gridDelegate: SliverWaterfallFlowDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
+        gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+          // maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
+          crossAxisCount: _crossAxisCount,
           crossAxisSpacing: NHConst.waterfallFlowLargeCrossAxisSpacing,
           mainAxisSpacing: NHConst.waterfallFlowLargeMainAxisSpacing,
           lastChildLayoutTypeBuilder: (int index) =>
