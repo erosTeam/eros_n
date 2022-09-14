@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import 'history_logic.dart';
 
 class HistoryPage extends StatelessWidget {
-  final logic = Get.put(HistoryLogic());
-  final state = Get.find<HistoryLogic>().state;
+  const HistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {

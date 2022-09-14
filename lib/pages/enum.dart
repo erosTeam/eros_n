@@ -1,4 +1,5 @@
 enum LoadStatus {
+  none,
   loading,
   loadingMore,
   empty,

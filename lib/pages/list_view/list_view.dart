@@ -3,11 +3,11 @@ import 'package:eros_n/component/widget/sliver.dart';
 import 'package:eros_n/models/index.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/list_view/item/item_waterfall_flow_card.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_list_view/flutter_list_view.dart';
-import 'package:get/get.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 import 'item/item_card.dart';
@@ -17,8 +17,6 @@ class GallerySliverListView extends StatelessWidget {
     Key? key,
     required this.galleryProviders,
     this.tabTag,
-    this.maxPage = 1,
-    this.curPage = 1,
     this.lastComplete,
     this.lastTopitemIndex,
     this.keepPosition = false,
@@ -26,8 +24,6 @@ class GallerySliverListView extends StatelessWidget {
 
   final List<GalleryProvider> galleryProviders;
   final dynamic tabTag;
-  final int maxPage;
-  final int curPage;
   final VoidCallback? lastComplete;
   final int? lastTopitemIndex;
   final bool keepPosition;
@@ -37,7 +33,7 @@ class GallerySliverListView extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    if (index == galleryProviders.length - 1 && curPage < maxPage) {
+    if (index == galleryProviders.length - 1) {
       // 加载完成最后一项的回调
       SchedulerBinding.instance
           .addPostFrameCallback((_) => lastComplete?.call());
@@ -71,8 +67,6 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     Key? key,
     required this.galleryProviders,
     this.tabTag,
-    this.maxPage = 1,
-    this.curPage = 1,
     this.lastComplete,
     this.lastTopitemIndex,
     this.keepPosition = false,
@@ -80,8 +74,6 @@ class GalleryWaterfallFlowView extends StatelessWidget {
 
   final List<GalleryProvider> galleryProviders;
   final dynamic tabTag;
-  final int maxPage;
-  final int curPage;
   final VoidCallback? lastComplete;
   final int? lastTopitemIndex;
   final bool keepPosition;
@@ -91,7 +83,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    if (index == galleryProviders.length - 1 && curPage < maxPage) {
+    if (index == galleryProviders.length - 1) {
       // 加载完成最后一项的回调
       SchedulerBinding.instance
           .addPostFrameCallback((_) => lastComplete?.call());
@@ -186,6 +178,7 @@ class EndIndicator extends StatelessWidget {
               top: 50, bottom: 100.0 + context.mediaQueryPadding.bottom),
           child: () {
             switch (loadStatus) {
+              case LoadStatus.none:
               case LoadStatus.success:
                 return Container();
               case LoadStatus.loadingMore:
@@ -194,15 +187,14 @@ class EndIndicator extends StatelessWidget {
                 return GestureDetector(
                   onTap: loadDataMore,
                   child: Column(
-                    children: <Widget>[
-                      const Icon(
+                    children: const <Widget>[
+                      Icon(
                         Icons.error,
-                        size: 40,
-                        color: Colors.red,
+                        size: 60,
                       ),
                       Text(
                         'Load more fail',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                         ),
                       ),

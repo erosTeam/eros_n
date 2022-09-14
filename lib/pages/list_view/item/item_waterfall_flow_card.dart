@@ -3,7 +3,6 @@ import 'package:eros_n/pages/gallery/gallery_view.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ItemWaterfallFlowCard extends StatelessWidget {
   const ItemWaterfallFlowCard({
@@ -36,12 +35,12 @@ class ItemWaterfallFlowCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (true)
+    if (false)
       return LayoutBuilder(builder: (context, c) {
         // logger.d('${c.maxWidth}, $width');
         return GestureDetector(
           onTap: () {
-            Get.to(() => GalleryPage());
+            // Get.to(() => GalleryPage());
           },
           child: Container(
             child: Card(
@@ -81,7 +80,7 @@ class ItemWaterfallFlowCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Get.to(() => GalleryPage());
+        // Get.to(() => GalleryPage());
       },
       child: Container(
         child: Card(

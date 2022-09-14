@@ -15,7 +15,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  get: ^4.6.5
   dio: ^4.0.6
   pretty_dio_logger: ^1.2.0-beta-1
   dio_http_cache: ^0.3.0
@@ -44,6 +43,10 @@ dependencies:
   flutter_list_view: ^1.1.18
   tuple: ^2.0.0
   waterfall_flow: ^3.0.2
+  hooks_riverpod: ^1.0.4
+  auto_route: ^5.0.1
+  one_context: ^2.1.0
+
 
 dev_dependencies:
   # flutter pub run apn_json2model
@@ -55,6 +58,7 @@ dev_dependencies:
   json_annotation: ^4.3.0
   copy_with_extension_gen: ^4.0.0
   isar_generator: ^3.0.0-dev.14
+  auto_route_generator: ^5.0.2
   flutter_test:
     sdk: flutter
 

@@ -5,7 +5,6 @@ import 'package:eros_n/pages/gallery/gallery_view.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard(
@@ -20,7 +19,7 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => GalleryPage());
+        // Get.to(() => GalleryPage());
       },
       child: Container(
         height: 180,

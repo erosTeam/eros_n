@@ -1,15 +1,19 @@
+import 'package:eros_n/common/global.dart';
+import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import 'splash_logic.dart';
-
-class SplashPage extends StatelessWidget {
-  final logic = Get.put(SplashLogic());
-  final state = Get.find<SplashLogic>().state;
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
 
   @override
+  State<SplashPage> createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Text(
           'Eros-N',
@@ -17,5 +21,14 @@ class SplashPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    300
+        .milliseconds
+        .delay()
+        .then((value) => erosRouter.replaceNamed(NHRoutes.home));
   }
 }

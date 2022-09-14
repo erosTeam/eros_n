@@ -1,13 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:eros_n/routes/app_pages.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get/get.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:one_context/one_context.dart';
 
 import 'generated/l10n.dart';
 
@@ -16,7 +16,7 @@ Future<void> main() async {
   await Global.init();
 
   initLogger();
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 bool _isDemoUsingDynamicColors = false;
@@ -64,7 +64,17 @@ class MyApp extends StatelessWidget {
           );
         }
 
-        return GetMaterialApp(
+        return MaterialApp.router(
+          routeInformationParser: erosRouter.defaultRouteParser(),
+          routeInformationProvider: erosRouter.routeInfoProvider(),
+          routerDelegate: AutoRouterDelegate(
+            erosRouter,
+            navigatorObservers: () => [
+              AppRouteObserver(),
+              OneContext().heroController,
+            ],
+          ),
+          builder: OneContext().builder,
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -77,8 +87,6 @@ class MyApp extends StatelessWidget {
             extensions: [darkCustomColors],
             useMaterial3: true,
           ),
-          initialRoute: NHRoutes.root,
-          getPages: AppPages.routes,
           localizationsDelegates: const [
             L10n.delegate,
             GlobalMaterialLocalizations.delegate,

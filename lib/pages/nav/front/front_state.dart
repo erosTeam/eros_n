@@ -1,26 +1,31 @@
-import 'package:eros_n/models/index.dart';
 import 'package:eros_n/pages/enum.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
+@immutable
 class FrontState {
-  FrontState() {
-    ///Initialize variables
+  const FrontState({
+    this.status = LoadStatus.none,
+    this.curPage = 1,
+    this.maxPage = 1,
+  });
+
+  final LoadStatus status;
+  final int curPage;
+  final int maxPage;
+
+  FrontState copyWith({
+    LoadStatus? status,
+    int? curPage,
+    int? maxPage,
+  }) {
+    return FrontState(
+      status: status ?? this.status,
+      curPage: curPage ?? this.curPage,
+      maxPage: maxPage ?? this.maxPage,
+    );
   }
 
-  final galleryProviders = <GalleryProvider>[].obs;
-
-  final _curPage = 1.obs;
-  int get curPage => _curPage.value;
-  set curPage(int val) => _curPage.value = val;
-
-  final _maxPage = 1.obs;
-  int get maxPage => _maxPage.value;
-  set maxPage(int val) => _maxPage.value = val;
-
-  final _status = LoadStatus.loading.obs;
-  LoadStatus get status => _status.value;
-  set status(LoadStatus val) => _status.value = val;
-
+  bool get isNone => status == LoadStatus.none;
   bool get isLoadMore => status == LoadStatus.loadingMore;
   bool get isLoading => status == LoadStatus.loading;
   bool get isLoadEmpty => status == LoadStatus.empty;

@@ -1,16 +1,16 @@
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 
+@immutable
 class HomeState {
-  HomeState() {
-    ///Initialize variables
+  HomeState({this.selectedIndex = 0});
 
-    ever<int>(_selectedIndex, (val) => pageController.jumpToPage(val));
-  }
-
-  final _selectedIndex = 0.obs;
-  int get selectedIndex => _selectedIndex.value;
-  set selectedIndex(int val) => _selectedIndex.value = val;
+  final int selectedIndex;
 
   final PageController pageController = PageController();
+
+  HomeState cpoyWith({int? selectedIndex}) {
+    return HomeState(
+      selectedIndex: selectedIndex ?? this.selectedIndex,
+    );
+  }
 }

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:eros_n/utils/logger/pretty_printer.dart';
-import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 
@@ -129,14 +128,6 @@ final Logger loggerForGetx = Logger(
   printer: SimplePrinter(),
   filter: EHLogFilter(),
 );
-
-void loggerGetx(String text, {bool isError = false}) {
-  if (isError) {
-    // loggerSimple.e('[GETX] ==> $text');
-  } else if (Get.isLogEnable) {
-    loggerForGetx.d('[GETX] ==> $text');
-  }
-}
 
 /// Writes the log output to a file.
 class _FileOutput extends LogOutput {

@@ -7,12 +7,9 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-// import 'package:dio_http_cache/dio_http_cache.dart';
-import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 
 import 'package:eros_n/utils/logger.dart';
-import 'package:get/get.dart' hide Response;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'http_config.dart';
@@ -89,17 +86,17 @@ class AppDio with DioMixin implements Dio {
       interceptors.add(CookieManager(Global.cookieJar));
     }
 
-    interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: false,
-      error: false,
-      maxWidth: 120,
-      // logPrint: (_) {},
-      // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
-      logPrint: loggerSimpleOnlyFile.d,
-    ));
+    // interceptors.add(PrettyDioLogger(
+    //   requestHeader: true,
+    //   requestBody: true,
+    //   responseHeader: true,
+    //   responseBody: false,
+    //   error: false,
+    //   maxWidth: 120,
+    //   // logPrint: (_) {},
+    //   // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
+    //   logPrint: loggerSimpleOnlyFile.d,
+    // ));
 
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);
