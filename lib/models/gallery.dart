@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 
 
 @immutable
-class GalleryProvider {
+class Gallery {
   
-  const GalleryProvider({
+  const Gallery({
     this.gid,
     this.title,
     this.url,
@@ -20,7 +20,7 @@ class GalleryProvider {
   final int? imgHeight;
   final int? imgWidth;
 
-  factory GalleryProvider.fromJson(Map<String,dynamic> json) => GalleryProvider(
+  factory Gallery.fromJson(Map<String,dynamic> json) => Gallery(
     gid: json['gid'] != null ? json['gid'] as String : null,
     title: json['title'] != null ? json['title'] as String : null,
     url: json['url'] != null ? json['url'] as String : null,
@@ -38,7 +38,7 @@ class GalleryProvider {
     'imgWidth': imgWidth
   };
 
-  GalleryProvider clone() => GalleryProvider(
+  Gallery clone() => Gallery(
     gid: gid,
     title: title,
     url: url,
@@ -48,14 +48,14 @@ class GalleryProvider {
   );
 
     
-  GalleryProvider copyWith({
+  Gallery copyWith({
     String? gid,
     String? title,
     String? url,
     String? thumbUrl,
     int? imgHeight,
     int? imgWidth
-  }) => GalleryProvider(
+  }) => Gallery(
     gid: gid ?? this.gid,
     title: title ?? this.title,
     url: url ?? this.url,
@@ -66,7 +66,7 @@ class GalleryProvider {
 
   @override
   bool operator ==(Object other) => identical(this, other) 
-    || other is GalleryProvider && gid == other.gid && title == other.title && url == other.url && thumbUrl == other.thumbUrl && imgHeight == other.imgHeight && imgWidth == other.imgWidth;
+    || other is Gallery && gid == other.gid && title == other.title && url == other.url && thumbUrl == other.thumbUrl && imgHeight == other.imgHeight && imgWidth == other.imgWidth;
 
   @override
   int get hashCode => gid.hashCode ^ title.hashCode ^ url.hashCode ^ thumbUrl.hashCode ^ imgHeight.hashCode ^ imgWidth.hashCode;

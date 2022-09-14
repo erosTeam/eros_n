@@ -21,18 +21,23 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
           routeData: routeData, child: const SplashPage());
     },
-    HomeRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
+    IndexRoute.name: (routeData) {
+      final args = routeData.argsAs<IndexRouteArgs>(
+          orElse: () => const IndexRouteArgs());
       return MaterialPageX<dynamic>(
-          routeData: routeData, child: HomePage(key: args.key));
+          routeData: routeData, child: IndexPage(key: args.key));
+    },
+    GalleryRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+          routeData: routeData, child: const GalleryPage());
     }
   };
 
   @override
   List<RouteConfig> get routes => [
         RouteConfig(SplashRoute.name, path: '/'),
-        RouteConfig(HomeRoute.name, path: '/home')
+        RouteConfig(IndexRoute.name, path: '/home'),
+        RouteConfig(GalleryRoute.name, path: '/gallery')
       ];
 }
 
@@ -45,21 +50,29 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [HomePage]
-class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
-  HomeRoute({Key? key})
-      : super(HomeRoute.name, path: '/home', args: HomeRouteArgs(key: key));
+/// [IndexPage]
+class IndexRoute extends PageRouteInfo<IndexRouteArgs> {
+  IndexRoute({Key? key})
+      : super(IndexRoute.name, path: '/home', args: IndexRouteArgs(key: key));
 
-  static const String name = 'HomeRoute';
+  static const String name = 'IndexRoute';
 }
 
-class HomeRouteArgs {
-  const HomeRouteArgs({this.key});
+class IndexRouteArgs {
+  const IndexRouteArgs({this.key});
 
   final Key? key;
 
   @override
   String toString() {
-    return 'HomeRouteArgs{key: $key}';
+    return 'IndexRouteArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [GalleryPage]
+class GalleryRoute extends PageRouteInfo<void> {
+  const GalleryRoute() : super(GalleryRoute.name, path: '/gallery');
+
+  static const String name = 'GalleryRoute';
 }

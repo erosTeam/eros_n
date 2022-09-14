@@ -1,5 +1,5 @@
 {
-  "gallerys?": "$[]gallery_provider",
-  "populars?": "$[]gallery_provider",
+  "gallerys?": "$[]gallery",
+  "populars?": "$[]gallery",
   "maxPage?": 50
 }

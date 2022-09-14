@@ -43,8 +43,8 @@ GalleryList parseGalleryList(String html) {
   );
 }
 
-List<GalleryProvider> parseGalleryListElm(List<dom.Element> galleryElmList) {
-  final List<GalleryProvider> galleryList = [];
+List<Gallery> parseGalleryListElm(List<dom.Element> galleryElmList) {
+  final List<Gallery> galleryList = [];
   for (final dom.Element elm in galleryElmList) {
     final title = elm.querySelector('.caption')?.text ?? '';
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
@@ -56,7 +56,7 @@ List<GalleryProvider> parseGalleryListElm(List<dom.Element> galleryElmList) {
         elm.querySelector('.lazyload')?.attributes['width'] ?? '';
     final gid = RegExp(r'\d+').firstMatch(url)?.group(0) ?? '';
 
-    final GalleryProvider gallery = GalleryProvider(
+    final Gallery gallery = Gallery(
       gid: gid,
       title: title,
       url: url,

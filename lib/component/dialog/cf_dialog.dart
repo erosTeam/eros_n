@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io' as io;
-
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
@@ -8,8 +7,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:one_context/one_context.dart';
-// import 'package:get/get.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 // 使用请求nh主页，获取cookie更新到cookieJar
 Future<void> showInAppWebViewDialog({
@@ -58,49 +56,78 @@ Future<void> showInAppWebViewDialog({
               final ioCookies =
                   cookies.map((e) => io.Cookie(e.name, '${e.value}')).toList();
 
-              erosRouter.pop<List<io.Cookie>>(ioCookies);
-              // context.router.pop(ioCookies);
+              // erosRouter.pop<List<io.Cookie>>(ioCookies);
+              context.router.pop();
+              // Navigator.of(context).pop(ioCookies);
+              await Global.cookieJar
+                  .saveFromResponse(Uri.parse(NHConst.baseUrl), ioCookies);
+              final rCookies = await Global.cookieJar
+                  .loadForRequest(Uri.parse(NHConst.baseUrl));
+              logger.d(
+                  'rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+
+              await onComplete?.call();
             }
           },
         );
 
-    return AlertDialog(
-      // title: Text('获取数据中 $statusCode'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (!showWebview) const CircularProgressIndicator(),
-          SizedBox(
-            height: showWebview ? 200 : 0.1,
-            child: iw(),
-          ),
-        ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        color: Theme.of(context).colorScheme.surface,
+        alignment: Alignment.center,
+        width: 100,
+        height: 100,
+        child: Stack(
+          // mainAxisSize: MainAxisSize.min,
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              height: 100,
+              child: iw(),
+            ),
+            Container(
+              alignment: Alignment.center,
+              color: showWebview
+                  ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                  : Theme.of(context).colorScheme.surface,
+              child: const CircularProgressIndicator(),
+            ),
+          ],
+        ),
       ),
     );
+
+    // return AlertDialog(
+    //   content: Column(
+    //     mainAxisSize: MainAxisSize.min,
+    //     children: [
+    //       if (!showWebview) const CircularProgressIndicator(),
+    //       SizedBox(
+    //         height: showWebview ? 200 : 0.1,
+    //         child: iw(),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
-  final cookies = await OneContext().showDialog<List<io.Cookie>>(
-    barrierDismissible: false,
+  await SmartDialog.show<void>(
+    tag: 'showInAppWebViewDialog',
     builder: dialogBuilder,
-    useRootNavigator: false,
+    clickMaskDismiss: false,
+    useSystem: true,
   );
 
-  // final cookies = await showDialog<List<io.Cookie>>(
-  //   context: context,
-  //   barrierDismissible: false,
-  //   useRootNavigator: false,
-  //   builder: dialogBuilder,
-  // );
-
-  if (cookies != null) {
-    await Global.cookieJar
-        .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
-    final rCookies =
-        await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    logger.d('rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
-
-    await onComplete?.call();
-  }
+  // if (cookies != null) {
+  //   await Global.cookieJar
+  //       .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+  //   final rCookies =
+  //       await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+  //   logger.d('rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+  //
+  //   await onComplete?.call();
+  // }
 }
 
 final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(

@@ -45,7 +45,8 @@ dependencies:
   waterfall_flow: ^3.0.2
   hooks_riverpod: ^1.0.4
   auto_route: ^5.0.1
-  one_context: ^2.1.0
+  flutter_smart_dialog: ^4.5.5+2
+  sliver_tools: ^0.2.6
 
 
 dev_dependencies:

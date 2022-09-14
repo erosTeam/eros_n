@@ -7,11 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ItemCard extends StatelessWidget {
-  const ItemCard(
-      {Key? key, required this.galleryProvider, this.index, this.page})
+  const ItemCard({Key? key, required this.gallery, this.index, this.page})
       : super(key: key);
 
-  final GalleryProvider galleryProvider;
+  final Gallery gallery;
   final int? index;
   final int? page;
 
@@ -33,7 +32,7 @@ class ItemCard extends StatelessWidget {
                 child: BlurImage(
                   blur: kDebugMode,
                   child: ErosCachedNetworkImage(
-                    imageUrl: galleryProvider.thumbUrl ?? '',
+                    gallery.thumbUrl ?? '',
                     fit: BoxFit.scaleDown,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),
@@ -49,7 +48,7 @@ class ItemCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        galleryProvider.title ?? '',
+                        gallery.title ?? '',
                         textAlign: TextAlign.start,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,

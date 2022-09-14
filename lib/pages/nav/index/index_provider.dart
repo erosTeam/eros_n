@@ -1,10 +1,10 @@
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'home_state.dart';
+import 'index_state.dart';
 
-class HomeNotifier extends StateNotifier<HomeState> {
-  HomeNotifier() : super(HomeState());
+class IndexNotifier extends StateNotifier<IndexState> {
+  IndexNotifier() : super(IndexState());
 
   void setIndex(int index) {
     state.pageController.jumpToPage(index);
@@ -12,6 +12,6 @@ class HomeNotifier extends StateNotifier<HomeState> {
   }
 }
 
-final homeProvider = StateNotifierProvider<HomeNotifier, HomeState>((ref) {
-  return HomeNotifier();
+final homeProvider = StateNotifierProvider<IndexNotifier, IndexState>((ref) {
+  return IndexNotifier();
 });

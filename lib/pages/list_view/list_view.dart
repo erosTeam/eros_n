@@ -15,34 +15,34 @@ import 'item/item_card.dart';
 class GallerySliverListView extends StatelessWidget {
   const GallerySliverListView({
     Key? key,
-    required this.galleryProviders,
+    required this.gallerys,
     this.tabTag,
     this.lastComplete,
     this.lastTopitemIndex,
     this.keepPosition = false,
   }) : super(key: key);
 
-  final List<GalleryProvider> galleryProviders;
+  final List<Gallery> gallerys;
   final dynamic tabTag;
   final VoidCallback? lastComplete;
   final int? lastTopitemIndex;
   final bool keepPosition;
 
   Widget itemCardBuilder(BuildContext context, int index) {
-    if (galleryProviders.length - 1 < index) {
+    if (gallerys.length - 1 < index) {
       return const SizedBox.shrink();
     }
 
-    if (index == galleryProviders.length - 1) {
+    if (index == gallerys.length - 1) {
       // 加载完成最后一项的回调
       SchedulerBinding.instance
           .addPostFrameCallback((_) => lastComplete?.call());
     }
 
-    final GalleryProvider provider = galleryProviders[index];
+    final Gallery gallery = gallerys[index];
 
     return ItemCard(
-      galleryProvider: provider,
+      gallery: gallery,
       index: index,
     );
   }
@@ -52,8 +52,8 @@ class GallerySliverListView extends StatelessWidget {
     return FlutterSliverList(
       delegate: FlutterListViewDelegate(
         itemCardBuilder,
-        onItemKey: (index) => galleryProviders[index].gid ?? '',
-        childCount: galleryProviders.length,
+        onItemKey: (index) => gallerys[index].gid ?? '',
+        childCount: gallerys.length,
         keepPosition: keepPosition,
         // onItemHeight: (index) => 180,
         preferItemHeight: 180,
@@ -65,34 +65,34 @@ class GallerySliverListView extends StatelessWidget {
 class GalleryWaterfallFlowView extends StatelessWidget {
   const GalleryWaterfallFlowView({
     Key? key,
-    required this.galleryProviders,
+    required this.gallerys,
     this.tabTag,
     this.lastComplete,
     this.lastTopitemIndex,
     this.keepPosition = false,
   }) : super(key: key);
 
-  final List<GalleryProvider> galleryProviders;
+  final List<Gallery> gallerys;
   final dynamic tabTag;
   final VoidCallback? lastComplete;
   final int? lastTopitemIndex;
   final bool keepPosition;
 
   Widget itemCardBuilder(BuildContext context, int index, double width) {
-    if (galleryProviders.length - 1 < index) {
+    if (gallerys.length - 1 < index) {
       return const SizedBox.shrink();
     }
 
-    if (index == galleryProviders.length - 1) {
+    if (index == gallerys.length - 1) {
       // 加载完成最后一项的回调
       SchedulerBinding.instance
           .addPostFrameCallback((_) => lastComplete?.call());
     }
 
-    final GalleryProvider provider = galleryProviders[index];
+    final Gallery gallery = gallerys[index];
 
     return ItemWaterfallFlowCard(
-      galleryProvider: provider,
+      gallery: gallery,
       index: index,
       width: width,
     );
@@ -145,17 +145,16 @@ class GalleryWaterfallFlowView extends StatelessWidget {
         // ),
         delegate: SliverChildBuilderDelegate(
           (context, index) => itemCardBuilder(context, index, _itemWith),
-          childCount: galleryProviders.length,
+          childCount: gallerys.length,
         ),
         gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
           // maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
           crossAxisCount: _crossAxisCount,
           crossAxisSpacing: NHConst.waterfallFlowLargeCrossAxisSpacing,
           mainAxisSpacing: NHConst.waterfallFlowLargeMainAxisSpacing,
-          lastChildLayoutTypeBuilder: (int index) =>
-              index == galleryProviders.length
-                  ? LastChildLayoutType.foot
-                  : LastChildLayoutType.none,
+          lastChildLayoutTypeBuilder: (int index) => index == gallerys.length
+              ? LastChildLayoutType.foot
+              : LastChildLayoutType.none,
         ),
       ),
     );

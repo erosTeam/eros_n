@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:eros_n/common/global.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:eros_n/common/global.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:one_context/one_context.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'generated/l10n.dart';
 
@@ -16,7 +15,7 @@ Future<void> main() async {
   await Global.init();
 
   initLogger();
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 bool _isDemoUsingDynamicColors = false;
@@ -71,10 +70,10 @@ class MyApp extends StatelessWidget {
             erosRouter,
             navigatorObservers: () => [
               AppRouteObserver(),
-              OneContext().heroController,
+              FlutterSmartDialog.observer,
             ],
           ),
-          builder: OneContext().builder,
+          builder: FlutterSmartDialog.init(),
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,
           theme: ThemeData(

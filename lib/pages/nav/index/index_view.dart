@@ -4,10 +4,10 @@ import 'package:eros_n/pages/nav/more/more_view.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'home_provider.dart';
+import 'index_provider.dart';
 
-class HomePage extends HookConsumerWidget {
-  HomePage({super.key});
+class IndexPage extends HookConsumerWidget {
+  IndexPage({super.key});
 
   final pages = <Widget>[
     const FrontPage(),

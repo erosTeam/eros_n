@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'gallery_provider.dart';
-import 'gallery_provider.dart';
+import 'gallery.dart';
+import 'gallery.dart';
 
 @immutable
 class GalleryList {
@@ -11,13 +11,13 @@ class GalleryList {
     this.maxPage,
   });
 
-  final List<GalleryProvider>? gallerys;
-  final List<GalleryProvider>? populars;
+  final List<Gallery>? gallerys;
+  final List<Gallery>? populars;
   final int? maxPage;
 
   factory GalleryList.fromJson(Map<String,dynamic> json) => GalleryList(
-    gallerys: json['gallerys'] != null ? (json['gallerys'] as List? ?? []).map((e) => GalleryProvider.fromJson(e as Map<String, dynamic>)).toList() : null,
-    populars: json['populars'] != null ? (json['populars'] as List? ?? []).map((e) => GalleryProvider.fromJson(e as Map<String, dynamic>)).toList() : null,
+    gallerys: json['gallerys'] != null ? (json['gallerys'] as List? ?? []).map((e) => Gallery.fromJson(e as Map<String, dynamic>)).toList() : null,
+    populars: json['populars'] != null ? (json['populars'] as List? ?? []).map((e) => Gallery.fromJson(e as Map<String, dynamic>)).toList() : null,
     maxPage: json['maxPage'] != null ? json['maxPage'] as int : null
   );
   
@@ -35,8 +35,8 @@ class GalleryList {
 
     
   GalleryList copyWith({
-    List<GalleryProvider>? gallerys,
-    List<GalleryProvider>? populars,
+    List<Gallery>? gallerys,
+    List<Gallery>? populars,
     int? maxPage
   }) => GalleryList(
     gallerys: gallerys ?? this.gallerys,

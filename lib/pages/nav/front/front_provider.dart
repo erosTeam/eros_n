@@ -5,19 +5,20 @@ import 'package:eros_n/models/index.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../network/app_dio/pdio.dart';
 import 'front_state.dart';
 
-class GallerysNotifier extends StateNotifier<List<GalleryProvider>> {
+class GallerysNotifier extends StateNotifier<List<Gallery>> {
   GallerysNotifier(super.create);
 
-  void addGallerys(List<GalleryProvider> gallerys) {
+  void addGallerys(List<Gallery> gallerys) {
     state = [...state, ...gallerys];
   }
 
-  void insertGallerys(List<GalleryProvider> gallerys) {
+  void insertGallerys(List<Gallery> gallerys) {
     state = [...gallerys, ...state];
   }
 
@@ -27,7 +28,7 @@ class GallerysNotifier extends StateNotifier<List<GalleryProvider>> {
 }
 
 final gallerysProvider =
-    StateNotifierProvider<GallerysNotifier, List<GalleryProvider>>((ref) {
+    StateNotifierProvider<GallerysNotifier, List<Gallery>>((ref) {
   return GallerysNotifier([]);
 });
 
@@ -92,6 +93,9 @@ class FrontNotifier extends StateNotifier<FrontState> {
       state = state.copyWith(status: LoadStatus.none);
       if (showWebViewDialogOnFail && (e.code == 403 || e.code == 503)) {
         logger.e('code ${e.code}');
+        if (!mounted) {
+          return;
+        }
         await showInAppWebViewDialog(
           statusCode: e.code,
           onComplete: () async => await getGalleryData(

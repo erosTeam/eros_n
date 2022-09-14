@@ -9,9 +9,9 @@ import 'package:http/retry.dart' as retry;
 import 'package:octo_image/octo_image.dart';
 
 class ErosCachedNetworkImage extends StatelessWidget {
-  const ErosCachedNetworkImage({
+  const ErosCachedNetworkImage(
+    this.imageUrl, {
     Key? key,
-    required this.imageUrl,
     this.height,
     this.width,
     this.fit,

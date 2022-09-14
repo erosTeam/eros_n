@@ -1,4 +1,4 @@
-import 'package:eros_n/models/gallery_provider.dart';
+import 'package:eros_n/models/index.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +65,7 @@ class GalleryListView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.d('GalleryListView build');
-    final List<GalleryProvider> list = ref.watch(gallerysProvider);
+    final List<Gallery> list = ref.watch(gallerysProvider);
     final state = ref.watch(frontProvider);
 
     if (state.isLoading) {
@@ -76,7 +76,7 @@ class GalleryListView extends HookConsumerWidget {
       );
     }
     return GalleryWaterfallFlowView(
-      galleryProviders: list,
+      gallerys: list,
       lastComplete: () => ref.read(frontProvider.notifier).loadNextPage(),
       keepPosition: true,
     );

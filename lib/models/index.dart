@@ -1,2 +1,2 @@
-export 'gallery_provider.dart';
+export 'gallery.dart';
 export 'gallery_list.dart';
