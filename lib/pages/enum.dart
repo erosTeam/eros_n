@@ -6,3 +6,10 @@ enum LoadStatus {
   success,
   error,
 }
+
+enum PageStatus {
+  none,
+  loading,
+  empty,
+  error,
+}

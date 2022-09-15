@@ -11,15 +11,15 @@ class NHConst {
   static const String baseUrl = 'https://nhentai.net/';
 
   // 瀑布流视图参数
-  static const double waterfallFlowCrossAxisSpacing = 4.0;
-  static const double waterfallFlowMainAxisSpacing = 4.0;
-  static const double waterfallFlowMaxCrossAxisExtent = 150.0;
-  static const double waterfallFlowMaxCrossAxisExtentTablet = 220.0;
+  // static const double waterfallFlowCrossAxisSpacing = 4.0;
+  // static const double waterfallFlowMainAxisSpacing = 4.0;
+  // static const double waterfallFlowMaxCrossAxisExtent = 150.0;
+  // static const double waterfallFlowMaxCrossAxisExtentTablet = 220.0;
 
   // 瀑布流视图参数 large
   static const double waterfallFlowLargeCrossAxisSpacing = 10.0;
   static const double waterfallFlowLargeMainAxisSpacing = 10.0;
-  static const double waterfallFlowLargeMaxCrossAxisExtent = 210.0;
+  static const double waterfallFlowLargeMaxCrossAxisExtent = 190.0;
 
   // Grid视图参数
   static const double gridCrossAxisSpacing = 6.0;

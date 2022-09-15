@@ -1,10 +1,10 @@
-import 'package:eros_n/models/index.dart';
+import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:html/dom.dart' as dom;
+import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 
-GalleryList parseGalleryList(String html) {
-  final dom.Document document = parse(html);
+GallerySet parseGalleryList(String html) {
+  final Document document = parse(html);
 
   const selectorPopular =
       '#content > div.container.index-container.index-popular';
@@ -15,14 +15,13 @@ GalleryList parseGalleryList(String html) {
   const selectorGallery = '.gallery';
   const selectorMaxPage = '.last';
 
-  final dom.Element? popularElm = document.querySelector(selectorPopular);
-  final dom.Element? galleryListElm =
-      document.querySelector(selectorGalleryList);
+  final Element? popularElm = document.querySelector(selectorPopular);
+  final Element? galleryListElm = document.querySelector(selectorGalleryList);
 
-  final List<dom.Element> galleryElmListOfPopular =
+  final List<Element> galleryElmListOfPopular =
       popularElm?.querySelectorAll(selectorGallery) ?? [];
 
-  final List<dom.Element> galleryElmList =
+  final List<Element> galleryElmList =
       galleryListElm?.querySelectorAll(selectorGallery) ?? [];
 
   // logger.d('galleryElmListOfPopular ${galleryElmListOfPopular.length}');
@@ -36,16 +35,16 @@ GalleryList parseGalleryList(String html) {
 
   final galleryList = parseGalleryListElm(galleryElmList);
   final popularList = parseGalleryListElm(galleryElmListOfPopular);
-  return GalleryList(
+  return GallerySet(
     gallerys: galleryList,
     populars: popularList,
     maxPage: int.parse(maxPage),
   );
 }
 
-List<Gallery> parseGalleryListElm(List<dom.Element> galleryElmList) {
+List<Gallery> parseGalleryListElm(List<Element> galleryElmList) {
   final List<Gallery> galleryList = [];
-  for (final dom.Element elm in galleryElmList) {
+  for (final Element elm in galleryElmList) {
     final title = elm.querySelector('.caption')?.text ?? '';
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
     final thumbUrl =

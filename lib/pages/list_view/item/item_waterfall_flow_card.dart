@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:eros_n/models/index.dart';
+import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/gallery/gallery_view.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
@@ -48,7 +48,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
         context.router.push(GalleryRoute(gid: gallery.gid));
       },
       child: Card(
-        clipBehavior: Clip.antiAlias,
+        // clipBehavior: Clip.antiAlias,
         margin: const EdgeInsets.all(0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -56,9 +56,16 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
           children: [
             SizedBox(
               height: _getHeigth(width),
-              child: CoverImg(
-                imgUrl: gallery.thumbUrl ?? '',
-                fit: BoxFit.contain,
+              child: Hero(
+                tag: gallery.thumbUrl ?? '',
+                child: Card(
+                  margin: const EdgeInsets.all(0),
+                  clipBehavior: Clip.antiAlias,
+                  child: CoverImg(
+                    imgUrl: gallery.thumbUrl ?? '',
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
             ),
             Container(

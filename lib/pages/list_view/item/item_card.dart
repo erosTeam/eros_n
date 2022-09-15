@@ -1,6 +1,6 @@
+import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
-import 'package:eros_n/models/index.dart';
 import 'package:eros_n/pages/gallery/gallery_view.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:flutter/foundation.dart';

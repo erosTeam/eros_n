@@ -1,7 +1,7 @@
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/dialog/cf_dialog.dart';
-import 'package:eros_n/models/index.dart';
+import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -67,14 +67,13 @@ class FrontNotifier extends StateNotifier<FrontState> {
       }
     }
 
+    final toPage =
+        page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
+
     try {
       final galleryList = await getGalleryList(
         refresh: refresh || next || prev,
-        page: next
-            ? state.curPage + 1
-            : prev
-                ? state.curPage - 1
-                : state.curPage,
+        page: toPage,
       );
       final gallerys = galleryList.gallerys ?? [];
 
@@ -88,7 +87,10 @@ class FrontNotifier extends StateNotifier<FrontState> {
       }
 
       state = state.copyWith(
-          maxPage: galleryList.maxPage ?? 1, status: LoadStatus.success);
+        maxPage: galleryList.maxPage ?? 1,
+        status: LoadStatus.success,
+        curPage: toPage,
+      );
     } on HttpException catch (e) {
       state = state.copyWith(status: LoadStatus.none);
       if (showWebViewDialogOnFail && (e.code == 403 || e.code == 503)) {
@@ -117,7 +119,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
   }
 
   Future<void> reloadData() async {
-    await getGalleryData(refresh: true);
+    await getGalleryData(refresh: true, page: 1);
   }
 
   Future<void> loadNextPage() async {

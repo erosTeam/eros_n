@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -27,7 +30,7 @@ class GalleryPage extends HookConsumerWidget {
               preferredSize: Size.fromHeight(0),
               child: SizedBox(height: 0),
             ),
-            expandedHeight: 200,
+            // expandedHeight: 200,
             // flexibleSpace: FlexibleSpaceBar(
             //   centerTitle: true,
             //   expandedTitleScale: 1.4,
@@ -70,14 +73,17 @@ class GalleryPage extends HookConsumerWidget {
                     child: Row(
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Card(
-                          margin: const EdgeInsets.symmetric(horizontal: 12),
-                          clipBehavior: Clip.antiAlias,
-                          child: Container(
-                            width: 120,
-                            child: ErosCachedNetworkImage(
-                              gallery.thumbUrl ?? '',
-                              fit: BoxFit.cover,
+                        Hero(
+                          tag: gallery.thumbUrl ?? '',
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
+                            clipBehavior: Clip.antiAlias,
+                            child: Container(
+                              width: 120,
+                              child: ErosCachedNetworkImage(
+                                gallery.thumbUrl ?? '',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -92,6 +98,7 @@ class GalleryPage extends HookConsumerWidget {
                                     .titleMedium
                                     ?.copyWith(height: 1.3),
                                 maxLines: 5,
+                                minLines: 1,
                                 // overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 8),
@@ -111,17 +118,83 @@ class GalleryPage extends HookConsumerWidget {
               ),
             ),
           ),
-          SliverFixedExtentList(
-            itemExtent: 50.0,
-            delegate: new SliverChildBuilderDelegate(
-              (context, index) => new ListTile(
-                title: new Text("Item $index"),
-              ),
-              childCount: 30,
-            ),
-          ),
+          ThumbsView(gid: gid),
+          // SliverFixedExtentList(
+          //   itemExtent: 50.0,
+          //   delegate: SliverChildBuilderDelegate(
+          //     (context, index) => ListTile(
+          //       title: Text('Item $index'),
+          //     ),
+          //     childCount: 30,
+          //   ),
+          // ),
         ],
       ),
+    );
+  }
+}
+
+class ThumbsView extends HookConsumerWidget {
+  const ThumbsView({
+    Key? key,
+    this.gid,
+  }) : super(key: key);
+
+  final String? gid;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final thumbs = ref.watch(galleryProvider(gid)).thumbs;
+    final status = ref.watch(pageStateProvider(gid));
+
+    if (status == PageStatus.loading || thumbs.isEmpty) {
+      return const SliverFillRemaining(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    final minRatio = thumbs
+        .map((thumb) => (thumb.imgWidth ?? 300) / (thumb.imgHeight ?? 400))
+        .min;
+    logger.d('minRatio: $minRatio');
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      sliver: SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final thumb = thumbs[index];
+              return Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
+                        child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          child: Container(
+                            child: ErosCachedNetworkImage(
+                              thumb.thumbUrl ?? '',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text('${index + 1}'),
+                ],
+              );
+            },
+            childCount: thumbs.length,
+          ),
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 150.0,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 4,
+            childAspectRatio: minRatio - 0.1,
+          )),
     );
   }
 }

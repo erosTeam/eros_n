@@ -17,7 +17,7 @@ class IndexPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(homeProvider);
+    final state = ref.watch(indexProvider);
     return Scaffold(
       // extendBody: true,
       // extendBodyBehindAppBar: true,
@@ -43,7 +43,7 @@ class IndexPage extends HookConsumerWidget {
           ),
         ],
         onDestinationSelected: (index) {
-          ref.read(homeProvider.notifier).setIndex(index);
+          ref.read(indexProvider.notifier).setIndex(index);
         },
       ),
     );

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/models/index.dart';
+import 'package:eros_n/common/parser/parser.dart';
+import 'package:eros_n/component/models/index.dart';
 
-import '../common/parser/parse_gallery_list.dart';
 import '../utils/logger.dart';
 import 'api.dart';
 import 'app_dio/pdio.dart';
@@ -31,7 +31,7 @@ Options getOptions({bool forceRefresh = false}) {
   return options;
 }
 
-Future<GalleryList> getGalleryList({
+Future<GallerySet> getGalleryList({
   bool refresh = false,
   CancelToken? cancelToken,
   String? referer,
@@ -50,17 +50,45 @@ Future<GalleryList> getGalleryList({
       (response) {
         logger.d('statusCode ${response.statusCode}');
         final list = parseGalleryList(response.data as String);
-        return DioHttpResponse<GalleryList>.success(list);
+        return DioHttpResponse<GallerySet>.success(list);
       },
     ),
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
   );
 
-  if (httpResponse.ok && httpResponse.data is GalleryList) {
-    return httpResponse.data as GalleryList;
+  if (httpResponse.ok && httpResponse.data is GallerySet) {
+    return httpResponse.data as GallerySet;
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryList error');
+  }
+}
+
+Future<Gallery> getGalleryDetail({
+  required String url,
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    url,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        logger.d('statusCode ${response.statusCode}');
+        final gallery = parseGalleryDetail(response.data as String);
+        return DioHttpResponse<Gallery>.success(gallery);
+      },
+    ),
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is Gallery) {
+    return httpResponse.data as Gallery;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getGalleryDetail error');
   }
 }

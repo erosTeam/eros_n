@@ -1,5 +1,6 @@
-import 'package:eros_n/models/index.dart';
+import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
+import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,6 +28,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
 
     super.build(context);
     logger.v('${MediaQuery.of(context).padding.top}');
+    logger.v('${context.width}');
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => ref.read(frontProvider.notifier).reloadData(),

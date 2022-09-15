@@ -12,6 +12,6 @@ class IndexNotifier extends StateNotifier<IndexState> {
   }
 }
 
-final homeProvider = StateNotifierProvider<IndexNotifier, IndexState>((ref) {
+final indexProvider = StateNotifierProvider<IndexNotifier, IndexState>((ref) {
   return IndexNotifier();
 });
