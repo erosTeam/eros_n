@@ -14,6 +14,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   }
 }
 
-final galleryProvider = StateNotifierProvider<GalleryNotifier, Gallery>((ref) {
-  return GalleryNotifier(const Gallery());
+final galleryProvider =
+    StateNotifierProvider.family<GalleryNotifier, Gallery, String?>((ref, gid) {
+  return GalleryNotifier(Gallery(gid: gid));
 });

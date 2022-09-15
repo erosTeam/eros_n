@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'gallery_provider.dart';
 
 class GalleryPage extends HookConsumerWidget {
-  const GalleryPage({super.key});
+  const GalleryPage({
+    super.key,
+    this.gid,
+  });
 
+  final String? gid;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gallery = ref.watch(galleryProvider);
+    final gallery = ref.watch(galleryProvider(gid));
     return Scaffold(
       body: CustomScrollView(
         slivers: [

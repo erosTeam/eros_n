@@ -41,8 +41,11 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        ref.read(galleryProvider.notifier).initFromGallery(gallery);
-        context.router.pushNamed(NHRoutes.gallery);
+        ref
+            .read(galleryProvider(gallery.gid).notifier)
+            .initFromGallery(gallery);
+        // context.router.pushNamed(NHRoutes.gallery);
+        context.router.push(GalleryRoute(gid: gallery.gid));
       },
       child: Card(
         clipBehavior: Clip.antiAlias,
