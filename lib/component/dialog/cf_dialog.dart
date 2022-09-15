@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
+const kDialogTag = 'InAppWebViewDialog';
+
 // 使用请求nh主页，获取cookie更新到cookieJar
 Future<void> showInAppWebViewDialog({
   int? statusCode,
@@ -56,17 +58,7 @@ Future<void> showInAppWebViewDialog({
               final ioCookies =
                   cookies.map((e) => io.Cookie(e.name, '${e.value}')).toList();
 
-              // erosRouter.pop<List<io.Cookie>>(ioCookies);
-              context.router.pop();
-              // Navigator.of(context).pop(ioCookies);
-              await Global.cookieJar
-                  .saveFromResponse(Uri.parse(NHConst.baseUrl), ioCookies);
-              final rCookies = await Global.cookieJar
-                  .loadForRequest(Uri.parse(NHConst.baseUrl));
-              logger.d(
-                  'rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
-
-              await onComplete?.call();
+              SmartDialog.dismiss(result: ioCookies, tag: kDialogTag);
             }
           },
         );
@@ -112,22 +104,25 @@ Future<void> showInAppWebViewDialog({
     // );
   }
 
-  await SmartDialog.show<void>(
-    tag: 'showInAppWebViewDialog',
+  final cookies = await SmartDialog.show<List<io.Cookie>>(
+    tag: kDialogTag,
     builder: dialogBuilder,
     clickMaskDismiss: false,
-    useSystem: true,
+    // useSystem: true,
   );
 
-  // if (cookies != null) {
-  //   await Global.cookieJar
-  //       .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
-  //   final rCookies =
-  //       await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-  //   logger.d('rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
-  //
-  //   await onComplete?.call();
-  // }
+  // log cookies
+  logger.d('****** cookies:\n${cookies?.map((e) => e.toString()).join('\n')}');
+
+  if (cookies != null) {
+    await Global.cookieJar
+        .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+    final rCookies =
+        await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    logger.d('rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+
+    await onComplete?.call();
+  }
 }
 
 final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(

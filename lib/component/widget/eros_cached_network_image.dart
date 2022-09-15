@@ -23,6 +23,8 @@ class ErosCachedNetworkImage extends StatelessWidget {
     this.checkPHashHide = false,
     this.checkQRCodeHide = false,
     this.onHideFlagChanged,
+    this.color,
+    this.colorBlendMode,
   }) : super(key: key);
 
   final String imageUrl;
@@ -38,6 +40,19 @@ class ErosCachedNetworkImage extends StatelessWidget {
   final bool checkPHashHide;
   final bool checkQRCodeHide;
   final ValueChanged<bool>? onHideFlagChanged;
+
+  /// If non-null, this color is blended with each image pixel using [colorBlendMode].
+  final Color? color;
+
+  /// Used to combine [color] with this image.
+  ///
+  /// The default is [BlendMode.srcIn]. In terms of the blend mode, [color] is
+  /// the source and this image is the destination.
+  ///
+  /// See also:
+  ///
+  ///  * [BlendMode], which includes an illustration of the effect of each blend mode.
+  final BlendMode? colorBlendMode;
 
   ImageWidgetBuilder get imageWidgetBuilder => (context, imageProvider) {
         return OctoImage(
@@ -67,8 +82,8 @@ class ErosCachedNetworkImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      // color: Color.fromARGB(220, 255, 255, 255),
-      // colorBlendMode: BlendMode.lighten,
+      color: color,
+      colorBlendMode: colorBlendMode,
       // imageUrl: imageUrl.handleUrl,
       imageUrl: imageUrl,
       placeholder: placeholder,

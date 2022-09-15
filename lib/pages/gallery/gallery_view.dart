@@ -1,4 +1,5 @@
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,13 +22,36 @@ class GalleryPage extends HookConsumerWidget {
               preferredSize: Size.fromHeight(0),
               child: SizedBox(height: 0),
             ),
-            // expandedHeight: 230,
+            expandedHeight: 200,
             // flexibleSpace: FlexibleSpaceBar(
-            //   // title: Text(gallery.title ?? ''),
+            //   centerTitle: true,
+            //   expandedTitleScale: 1.4,
+            //   titlePadding: EdgeInsetsDirectional.only(
+            //     start: 60,
+            //     bottom: 16,
+            //     top: context.mediaQueryPadding.top + 3,
+            //   ),
+            //   // centerTitle: true,
+            //   title: Text(
+            //     gallery.title ?? '',
+            //     maxLines: 6,
+            //     overflow: TextOverflow.ellipsis,
+            //     style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            //           height: 1.25,
+            //         ),
+            //   ),
             //   background: ErosCachedNetworkImage(
             //     gallery.thumbUrl ?? '',
             //     fit: BoxFit.cover,
+            //     color:
+            //         Theme.of(context).colorScheme.background.withOpacity(0.7),
+            //     colorBlendMode: BlendMode.lighten,
             //   ),
+            //   stretchModes: [
+            //     StretchMode.zoomBackground,
+            //     StretchMode.blurBackground,
+            //     StretchMode.fadeTitle,
+            //   ],
             // ),
           ),
           SliverToBoxAdapter(
@@ -56,11 +80,14 @@ class GalleryPage extends HookConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              SelectableText(
                                 gallery.title ?? '',
-                                style: Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(height: 1.3),
                                 maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
+                                // overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -74,17 +101,7 @@ class GalleryPage extends HookConsumerWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 8),
-                  // Text(
-                  //   'imgWidth: ${gallery.imgWidth}',
-                  //   style: Theme.of(context).textTheme.caption,
-                  // ),
-                  // const SizedBox(height: 8),
-                  // Text(
-                  //   'imgHeight: ${gallery.imgHeight}',
-                  //   style: Theme.of(context).textTheme.caption,
-                  // ),
                 ],
               ),
             ),
