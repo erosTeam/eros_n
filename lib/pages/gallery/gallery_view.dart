@@ -2,8 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -119,15 +121,6 @@ class GalleryPage extends HookConsumerWidget {
             ),
           ),
           ThumbsView(gid: gid),
-          // SliverFixedExtentList(
-          //   itemExtent: 50.0,
-          //   delegate: SliverChildBuilderDelegate(
-          //     (context, index) => ListTile(
-          //       title: Text('Item $index'),
-          //     ),
-          //     childCount: 30,
-          //   ),
-          // ),
         ],
       ),
     );
@@ -165,26 +158,31 @@ class ThumbsView extends HookConsumerWidget {
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               final thumb = thumbs[index];
-              return Column(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: AspectRatio(
-                        aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          child: Container(
-                            child: ErosCachedNetworkImage(
-                              thumb.thumbUrl ?? '',
-                              fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () {
+                  context.router.push(ReadRoute(gid: gid, initialPage: index));
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            child: Container(
+                              child: ErosCachedNetworkImage(
+                                thumb.thumbUrl ?? '',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Text('${index + 1}'),
-                ],
+                    Text('${index + 1}'),
+                  ],
+                ),
               );
             },
             childCount: thumbs.length,

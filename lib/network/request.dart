@@ -21,7 +21,7 @@ import 'app_dio/pdio.dart';
 Options getOptions({bool forceRefresh = false}) {
   final options = Api.cacheOption
       .copyWith(
-        policy: forceRefresh ? CachePolicy.refresh : null,
+        policy: forceRefresh ? CachePolicy.refreshForceCache : null,
       )
       .toOptions();
   // if (forceRefresh) {

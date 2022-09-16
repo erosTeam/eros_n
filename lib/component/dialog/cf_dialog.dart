@@ -108,6 +108,7 @@ Future<void> showInAppWebViewDialog({
     tag: kDialogTag,
     builder: dialogBuilder,
     clickMaskDismiss: false,
+    keepSingle: true,
     // useSystem: true,
   );
 

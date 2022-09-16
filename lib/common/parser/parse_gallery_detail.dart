@@ -11,7 +11,7 @@ Gallery parseGalleryDetail(String html) {
 
   final List<Element> galleryThumbsElm =
       document.querySelectorAll(selectorThumb);
-  logger.d('galleryThumbsElm ${galleryThumbsElm.length}');
+  logger.v('galleryThumbsElm ${galleryThumbsElm.length}');
 
   final List<GalleryThumb> galleryThumbs = [];
   // for galleryThumbsElm

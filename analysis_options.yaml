@@ -47,6 +47,8 @@ analyzer:
     - "lib/src/http/**"
     - "lib/models/**"
     - "**/*.g.dart"
+    - "**/*.gr.dart"
+    - "**/*.freezed.dart"
 
 linter:
   rules:
