@@ -93,7 +93,7 @@ android {
         }
         debug {
             if (signingConfigs.debug.storePassword != null){
-                signingConfig signingConfigs.debug
+                signingConfig signingConfigs.release
             }
             minifyEnabled true
             shrinkResources true

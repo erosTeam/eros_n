@@ -137,10 +137,10 @@ class ThumbsView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final thumbs = ref.watch(galleryProvider(gid)).thumbs;
+    final images = ref.watch(galleryProvider(gid)).images;
     final status = ref.watch(pageStateProvider(gid));
 
-    if (status == PageStatus.loading || thumbs.isEmpty) {
+    if (status == PageStatus.loading || images.isEmpty) {
       return const SliverFillRemaining(
         child: Center(
           child: CircularProgressIndicator(),
@@ -148,16 +148,16 @@ class ThumbsView extends HookConsumerWidget {
       );
     }
 
-    final minRatio = thumbs
-        .map((thumb) => (thumb.imgWidth ?? 300) / (thumb.imgHeight ?? 400))
+    final minRatio = images
+        .map((image) => (image.imgWidth ?? 300) / (image.imgHeight ?? 400))
         .min;
-    logger.d('minRatio: $minRatio');
+    // logger.d('minRatio: $minRatio');
     return SliverPadding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              final thumb = thumbs[index];
+              final image = images[index];
               return GestureDetector(
                 onTap: () {
                   context.router.push(ReadRoute(gid: gid, initialPage: index));
@@ -167,12 +167,12 @@ class ThumbsView extends HookConsumerWidget {
                     Expanded(
                       child: Center(
                         child: AspectRatio(
-                          aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
+                          aspectRatio: image.thumbWidth! / image.thumbHeight!,
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             child: Container(
                               child: ErosCachedNetworkImage(
-                                thumb.thumbUrl ?? '',
+                                image.thumbUrl ?? '',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -185,7 +185,7 @@ class ThumbsView extends HookConsumerWidget {
                 ),
               );
             },
-            childCount: thumbs.length,
+            childCount: images.length,
           ),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150.0,

@@ -58,7 +58,10 @@ Future<void> showInAppWebViewDialog({
               final ioCookies =
                   cookies.map((e) => io.Cookie(e.name, '${e.value}')).toList();
 
-              SmartDialog.dismiss(result: ioCookies, tag: kDialogTag);
+              SmartDialog.dismiss(
+                result: ioCookies,
+                // tag: kDialogTag,
+              );
             }
           },
         );
@@ -105,7 +108,7 @@ Future<void> showInAppWebViewDialog({
   }
 
   final cookies = await SmartDialog.show<List<io.Cookie>>(
-    tag: kDialogTag,
+    // tag: kDialogTag,
     builder: dialogBuilder,
     clickMaskDismiss: false,
     keepSingle: true,

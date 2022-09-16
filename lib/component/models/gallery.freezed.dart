@@ -21,12 +21,13 @@ Gallery _$GalleryFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Gallery {
   String? get gid => throw _privateConstructorUsedError;
+  String? get imageKey => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get url => throw _privateConstructorUsedError;
   String? get thumbUrl => throw _privateConstructorUsedError;
   int? get imgHeight => throw _privateConstructorUsedError;
   int? get imgWidth => throw _privateConstructorUsedError;
-  List<GalleryThumb> get thumbs => throw _privateConstructorUsedError;
+  List<GalleryImage> get images => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,12 +40,13 @@ abstract class $GalleryCopyWith<$Res> {
       _$GalleryCopyWithImpl<$Res>;
   $Res call(
       {String? gid,
+      String? imageKey,
       String? title,
       String? url,
       String? thumbUrl,
       int? imgHeight,
       int? imgWidth,
-      List<GalleryThumb> thumbs});
+      List<GalleryImage> images});
 }
 
 /// @nodoc
@@ -58,17 +60,22 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
   @override
   $Res call({
     Object? gid = freezed,
+    Object? imageKey = freezed,
     Object? title = freezed,
     Object? url = freezed,
     Object? thumbUrl = freezed,
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
-    Object? thumbs = freezed,
+    Object? images = freezed,
   }) {
     return _then(_value.copyWith(
       gid: gid == freezed
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageKey: imageKey == freezed
+          ? _value.imageKey
+          : imageKey // ignore: cast_nullable_to_non_nullable
               as String?,
       title: title == freezed
           ? _value.title
@@ -90,10 +97,10 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.imgWidth
           : imgWidth // ignore: cast_nullable_to_non_nullable
               as int?,
-      thumbs: thumbs == freezed
-          ? _value.thumbs
-          : thumbs // ignore: cast_nullable_to_non_nullable
-              as List<GalleryThumb>,
+      images: images == freezed
+          ? _value.images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<GalleryImage>,
     ));
   }
 }
@@ -106,12 +113,13 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
   @override
   $Res call(
       {String? gid,
+      String? imageKey,
       String? title,
       String? url,
       String? thumbUrl,
       int? imgHeight,
       int? imgWidth,
-      List<GalleryThumb> thumbs});
+      List<GalleryImage> images});
 }
 
 /// @nodoc
@@ -126,17 +134,22 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
   @override
   $Res call({
     Object? gid = freezed,
+    Object? imageKey = freezed,
     Object? title = freezed,
     Object? url = freezed,
     Object? thumbUrl = freezed,
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
-    Object? thumbs = freezed,
+    Object? images = freezed,
   }) {
     return _then(_$_Gallery(
       gid: gid == freezed
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageKey: imageKey == freezed
+          ? _value.imageKey
+          : imageKey // ignore: cast_nullable_to_non_nullable
               as String?,
       title: title == freezed
           ? _value.title
@@ -158,10 +171,10 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value.imgWidth
           : imgWidth // ignore: cast_nullable_to_non_nullable
               as int?,
-      thumbs: thumbs == freezed
-          ? _value._thumbs
-          : thumbs // ignore: cast_nullable_to_non_nullable
-              as List<GalleryThumb>,
+      images: images == freezed
+          ? _value._images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<GalleryImage>,
     ));
   }
 }
@@ -171,19 +184,22 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
 class _$_Gallery implements _Gallery {
   const _$_Gallery(
       {this.gid,
+      this.imageKey,
       this.title,
       this.url,
       this.thumbUrl,
       this.imgHeight,
       this.imgWidth,
-      final List<GalleryThumb> thumbs = const []})
-      : _thumbs = thumbs;
+      final List<GalleryImage> images = const []})
+      : _images = images;
 
   factory _$_Gallery.fromJson(Map<String, dynamic> json) =>
       _$$_GalleryFromJson(json);
 
   @override
   final String? gid;
+  @override
+  final String? imageKey;
   @override
   final String? title;
   @override
@@ -194,17 +210,17 @@ class _$_Gallery implements _Gallery {
   final int? imgHeight;
   @override
   final int? imgWidth;
-  final List<GalleryThumb> _thumbs;
+  final List<GalleryImage> _images;
   @override
   @JsonKey()
-  List<GalleryThumb> get thumbs {
+  List<GalleryImage> get images {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_thumbs);
+    return EqualUnmodifiableListView(_images);
   }
 
   @override
   String toString() {
-    return 'Gallery(gid: $gid, title: $title, url: $url, thumbUrl: $thumbUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, thumbs: $thumbs)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, url: $url, thumbUrl: $thumbUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, images: $images)';
   }
 
   @override
@@ -213,12 +229,13 @@ class _$_Gallery implements _Gallery {
         (other.runtimeType == runtimeType &&
             other is _$_Gallery &&
             const DeepCollectionEquality().equals(other.gid, gid) &&
+            const DeepCollectionEquality().equals(other.imageKey, imageKey) &&
             const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality().equals(other.url, url) &&
             const DeepCollectionEquality().equals(other.thumbUrl, thumbUrl) &&
             const DeepCollectionEquality().equals(other.imgHeight, imgHeight) &&
             const DeepCollectionEquality().equals(other.imgWidth, imgWidth) &&
-            const DeepCollectionEquality().equals(other._thumbs, _thumbs));
+            const DeepCollectionEquality().equals(other._images, _images));
   }
 
   @JsonKey(ignore: true)
@@ -226,12 +243,13 @@ class _$_Gallery implements _Gallery {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(gid),
+      const DeepCollectionEquality().hash(imageKey),
       const DeepCollectionEquality().hash(title),
       const DeepCollectionEquality().hash(url),
       const DeepCollectionEquality().hash(thumbUrl),
       const DeepCollectionEquality().hash(imgHeight),
       const DeepCollectionEquality().hash(imgWidth),
-      const DeepCollectionEquality().hash(_thumbs));
+      const DeepCollectionEquality().hash(_images));
 
   @JsonKey(ignore: true)
   @override
@@ -249,17 +267,20 @@ class _$_Gallery implements _Gallery {
 abstract class _Gallery implements Gallery {
   const factory _Gallery(
       {final String? gid,
+      final String? imageKey,
       final String? title,
       final String? url,
       final String? thumbUrl,
       final int? imgHeight,
       final int? imgWidth,
-      final List<GalleryThumb> thumbs}) = _$_Gallery;
+      final List<GalleryImage> images}) = _$_Gallery;
 
   factory _Gallery.fromJson(Map<String, dynamic> json) = _$_Gallery.fromJson;
 
   @override
   String? get gid;
+  @override
+  String? get imageKey;
   @override
   String? get title;
   @override
@@ -271,7 +292,7 @@ abstract class _Gallery implements Gallery {
   @override
   int? get imgWidth;
   @override
-  List<GalleryThumb> get thumbs;
+  List<GalleryImage> get images;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryCopyWith<_$_Gallery> get copyWith =>

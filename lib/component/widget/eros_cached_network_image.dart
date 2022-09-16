@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -88,11 +89,12 @@ class ErosCachedNetworkImage extends StatelessWidget {
       imageUrl: imageUrl,
       placeholder: placeholder,
       errorWidget: errorWidget,
+      cacheKey: buildImageCacheKey(imageUrl),
       // progressIndicatorBuilder: progressIndicatorBuilder,
     );
 
     return image;
-    return Opacity(opacity: 0.03, child: image);
+    // return Opacity(opacity: 0.3, child: image);
   }
 }
 
@@ -108,3 +110,16 @@ final imageCacheManager = CacheManager(
     ),
   ),
 );
+
+ImageProvider getErorsImageProvider(String url) {
+  return CachedNetworkImageProvider(
+    url,
+    cacheManager: imageCacheManager,
+    headers: {
+      'Host': Uri.parse(url).host,
+      'User-Agent': Global.userAgent ?? NHConst.userAgent,
+      'Accept-Encoding': 'gzip, deflate, br'
+    },
+    cacheKey: buildImageCacheKey(url),
+  );
+}

@@ -1,6 +1,7 @@
+import 'package:eros_n/component/models/gallery_image.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'gallery_thumb.dart';
+import 'gallery_image.dart';
 part 'gallery.freezed.dart';
 part 'gallery.g.dart';
 
@@ -8,12 +9,13 @@ part 'gallery.g.dart';
 class Gallery with _$Gallery {
   const factory Gallery({
     String? gid,
+    String? imageKey,
     String? title,
     String? url,
     String? thumbUrl,
     int? imgHeight,
     int? imgWidth,
-    @Default([]) List<GalleryThumb> thumbs,
+    @Default([]) List<GalleryImage> images,
   }) = _Gallery;
 
   factory Gallery.fromJson(Map<String, Object?> json) =>

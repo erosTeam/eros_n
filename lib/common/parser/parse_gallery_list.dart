@@ -53,10 +53,13 @@ List<Gallery> parseGalleryListElm(List<Element> galleryElmList) {
         elm.querySelector('.lazyload')?.attributes['height'] ?? '';
     final imageWidth =
         elm.querySelector('.lazyload')?.attributes['width'] ?? '';
-    final gid = RegExp(r'\d+').firstMatch(url)?.group(0) ?? '';
+
+    final gid = RegExp(r'/(\d+)/').firstMatch(url)?.group(1) ?? '';
+    final imageKey = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
 
     final Gallery gallery = Gallery(
       gid: gid,
+      imageKey: imageKey,
       title: title,
       url: url,
       thumbUrl: thumbUrl,

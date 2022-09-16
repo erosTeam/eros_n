@@ -3,4 +3,5 @@
 library parser;
 
 export 'parse_gallery_detail.dart';
+export 'parse_gallery_image.dart';
 export 'parse_gallery_list.dart';

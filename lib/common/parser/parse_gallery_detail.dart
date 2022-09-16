@@ -13,23 +13,24 @@ Gallery parseGalleryDetail(String html) {
       document.querySelectorAll(selectorThumb);
   logger.v('galleryThumbsElm ${galleryThumbsElm.length}');
 
-  final List<GalleryThumb> galleryThumbs = [];
+  final List<GalleryImage> galleryThumbs = [];
   // for galleryThumbsElm
   for (final elm in galleryThumbsElm) {
-    final url = elm.attributes['href'];
+    final href = elm.attributes['href'];
     final thumbUrl = elm.querySelector('img')?.attributes['data-src'];
     final imgHeight = elm.querySelector('img')?.attributes['height'];
     final imgWidth = elm.querySelector('img')?.attributes['width'];
 
-    galleryThumbs.add(GalleryThumb(
-      url: url,
+    // logger.d('thumbUrl: $thumbUrl');
+    galleryThumbs.add(GalleryImage(
+      href: href,
       thumbUrl: thumbUrl,
-      imgHeight: int.parse(imgHeight ?? '0'),
-      imgWidth: int.parse(imgWidth ?? '0'),
+      thumbHeight: int.parse(imgHeight ?? '0'),
+      thumbWidth: int.parse(imgWidth ?? '0'),
     ));
   }
 
   return Gallery(
-    thumbs: galleryThumbs,
+    images: galleryThumbs,
   );
 }

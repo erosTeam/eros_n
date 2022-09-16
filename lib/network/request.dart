@@ -92,3 +92,31 @@ Future<Gallery> getGalleryDetail({
     throw httpResponse.error ?? HttpException('getGalleryDetail error');
   }
 }
+
+Future<GalleryImage> getGalleryImage({
+  required String url,
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    url,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        logger.d('statusCode ${response.statusCode}');
+        final galleryThumb = parseGalleryImage(response.data as String);
+        return DioHttpResponse<GalleryImage>.success(galleryThumb);
+      },
+    ),
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is GalleryImage) {
+    return httpResponse.data as GalleryImage;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getGalleryImage error');
+  }
+}
