@@ -50,7 +50,6 @@ class _$AppRouter extends RootStackRouter {
         child: ReadPage(
           key: args.key,
           gid: args.gid,
-          initialPage: args.initialPage,
         ),
       );
     },
@@ -153,14 +152,12 @@ class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
   ReadRoute({
     Key? key,
     String? gid,
-    int initialPage = 0,
   }) : super(
           ReadRoute.name,
           path: '/read',
           args: ReadRouteArgs(
             key: key,
             gid: gid,
-            initialPage: initialPage,
           ),
         );
 
@@ -171,17 +168,14 @@ class ReadRouteArgs {
   const ReadRouteArgs({
     this.key,
     this.gid,
-    this.initialPage = 0,
   });
 
   final Key? key;
 
   final String? gid;
 
-  final int initialPage;
-
   @override
   String toString() {
-    return 'ReadRouteArgs{key: $key, gid: $gid, initialPage: $initialPage}';
+    return 'ReadRouteArgs{key: $key, gid: $gid}';
   }
 }

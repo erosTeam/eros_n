@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,20 @@ class MyApp extends StatelessWidget {
           );
         }
 
+        ThemeConfig.lightColorScheme = lightColorScheme;
+        ThemeConfig.lightTheme = ThemeData(
+          colorScheme: lightColorScheme,
+          extensions: [lightCustomColors],
+          useMaterial3: true,
+        );
+
+        ThemeConfig.darkColorScheme = darkColorScheme;
+        ThemeConfig.darkTheme = ThemeData(
+          colorScheme: darkColorScheme,
+          extensions: [darkCustomColors],
+          useMaterial3: true,
+        );
+
         return MaterialApp.router(
           routeInformationParser: erosRouter.defaultRouteParser(),
           routeInformationProvider: erosRouter.routeInfoProvider(),
@@ -76,16 +91,8 @@ class MyApp extends StatelessWidget {
           builder: FlutterSmartDialog.init(),
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: lightColorScheme,
-            extensions: [lightCustomColors],
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            colorScheme: darkColorScheme,
-            extensions: [darkCustomColors],
-            useMaterial3: true,
-          ),
+          theme: ThemeConfig.lightTheme,
+          darkTheme: ThemeConfig.darkTheme,
           localizationsDelegates: const [
             L10n.delegate,
             GlobalMaterialLocalizations.delegate,

@@ -28,6 +28,7 @@ mixin _$Gallery {
   int? get imgHeight => throw _privateConstructorUsedError;
   int? get imgWidth => throw _privateConstructorUsedError;
   List<GalleryImage> get images => throw _privateConstructorUsedError;
+  int get currentPageIndex => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +47,8 @@ abstract class $GalleryCopyWith<$Res> {
       String? thumbUrl,
       int? imgHeight,
       int? imgWidth,
-      List<GalleryImage> images});
+      List<GalleryImage> images,
+      int currentPageIndex});
 }
 
 /// @nodoc
@@ -67,6 +69,7 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
     Object? images = freezed,
+    Object? currentPageIndex = freezed,
   }) {
     return _then(_value.copyWith(
       gid: gid == freezed
@@ -101,6 +104,10 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
               as List<GalleryImage>,
+      currentPageIndex: currentPageIndex == freezed
+          ? _value.currentPageIndex
+          : currentPageIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -119,7 +126,8 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       String? thumbUrl,
       int? imgHeight,
       int? imgWidth,
-      List<GalleryImage> images});
+      List<GalleryImage> images,
+      int currentPageIndex});
 }
 
 /// @nodoc
@@ -141,6 +149,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
     Object? images = freezed,
+    Object? currentPageIndex = freezed,
   }) {
     return _then(_$_Gallery(
       gid: gid == freezed
@@ -175,6 +184,10 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value._images
           : images // ignore: cast_nullable_to_non_nullable
               as List<GalleryImage>,
+      currentPageIndex: currentPageIndex == freezed
+          ? _value.currentPageIndex
+          : currentPageIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -190,7 +203,8 @@ class _$_Gallery implements _Gallery {
       this.thumbUrl,
       this.imgHeight,
       this.imgWidth,
-      final List<GalleryImage> images = const []})
+      final List<GalleryImage> images = const [],
+      this.currentPageIndex = 0})
       : _images = images;
 
   factory _$_Gallery.fromJson(Map<String, dynamic> json) =>
@@ -219,8 +233,12 @@ class _$_Gallery implements _Gallery {
   }
 
   @override
+  @JsonKey()
+  final int currentPageIndex;
+
+  @override
   String toString() {
-    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, url: $url, thumbUrl: $thumbUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, images: $images)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, url: $url, thumbUrl: $thumbUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, images: $images, currentPageIndex: $currentPageIndex)';
   }
 
   @override
@@ -235,7 +253,9 @@ class _$_Gallery implements _Gallery {
             const DeepCollectionEquality().equals(other.thumbUrl, thumbUrl) &&
             const DeepCollectionEquality().equals(other.imgHeight, imgHeight) &&
             const DeepCollectionEquality().equals(other.imgWidth, imgWidth) &&
-            const DeepCollectionEquality().equals(other._images, _images));
+            const DeepCollectionEquality().equals(other._images, _images) &&
+            const DeepCollectionEquality()
+                .equals(other.currentPageIndex, currentPageIndex));
   }
 
   @JsonKey(ignore: true)
@@ -249,7 +269,8 @@ class _$_Gallery implements _Gallery {
       const DeepCollectionEquality().hash(thumbUrl),
       const DeepCollectionEquality().hash(imgHeight),
       const DeepCollectionEquality().hash(imgWidth),
-      const DeepCollectionEquality().hash(_images));
+      const DeepCollectionEquality().hash(_images),
+      const DeepCollectionEquality().hash(currentPageIndex));
 
   @JsonKey(ignore: true)
   @override
@@ -273,7 +294,8 @@ abstract class _Gallery implements Gallery {
       final String? thumbUrl,
       final int? imgHeight,
       final int? imgWidth,
-      final List<GalleryImage> images}) = _$_Gallery;
+      final List<GalleryImage> images,
+      final int currentPageIndex}) = _$_Gallery;
 
   factory _Gallery.fromJson(Map<String, dynamic> json) = _$_Gallery.fromJson;
 
@@ -293,6 +315,8 @@ abstract class _Gallery implements Gallery {
   int? get imgWidth;
   @override
   List<GalleryImage> get images;
+  @override
+  int get currentPageIndex;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryCopyWith<_$_Gallery> get copyWith =>

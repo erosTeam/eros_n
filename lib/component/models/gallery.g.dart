@@ -18,6 +18,7 @@ _$_Gallery _$$_GalleryFromJson(Map<String, dynamic> json) => _$_Gallery(
               ?.map((e) => GalleryImage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      currentPageIndex: json['currentPageIndex'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
@@ -30,4 +31,5 @@ Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
       'imgHeight': instance.imgHeight,
       'imgWidth': instance.imgWidth,
       'images': instance.images,
+      'currentPageIndex': instance.currentPageIndex,
     };

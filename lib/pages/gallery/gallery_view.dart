@@ -18,110 +18,116 @@ class GalleryPage extends HookConsumerWidget {
   });
 
   final String? gid;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.watch(galleryProvider(gid));
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            // title: Text(gallery.title ?? ''),
-            floating: true,
-            pinned: true,
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(0),
-              child: SizedBox(height: 0),
+      body: RefreshIndicator(
+        onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
+        edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              // title: Text(gallery.title ?? ''),
+              floating: true,
+              pinned: true,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(0),
+                child: SizedBox(height: 0),
+              ),
+              // expandedHeight: 200,
+              // flexibleSpace: FlexibleSpaceBar(
+              //   centerTitle: true,
+              //   expandedTitleScale: 1.4,
+              //   titlePadding: EdgeInsetsDirectional.only(
+              //     start: 60,
+              //     bottom: 16,
+              //     top: context.mediaQueryPadding.top + 3,
+              //   ),
+              //   // centerTitle: true,
+              //   title: Text(
+              //     gallery.title ?? '',
+              //     maxLines: 6,
+              //     overflow: TextOverflow.ellipsis,
+              //     style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              //           height: 1.25,
+              //         ),
+              //   ),
+              //   background: ErosCachedNetworkImage(
+              //     gallery.thumbUrl ?? '',
+              //     fit: BoxFit.cover,
+              //     color:
+              //         Theme.of(context).colorScheme.background.withOpacity(0.7),
+              //     colorBlendMode: BlendMode.lighten,
+              //   ),
+              //   stretchModes: [
+              //     StretchMode.zoomBackground,
+              //     StretchMode.blurBackground,
+              //     StretchMode.fadeTitle,
+              //   ],
+              // ),
             ),
-            // expandedHeight: 200,
-            // flexibleSpace: FlexibleSpaceBar(
-            //   centerTitle: true,
-            //   expandedTitleScale: 1.4,
-            //   titlePadding: EdgeInsetsDirectional.only(
-            //     start: 60,
-            //     bottom: 16,
-            //     top: context.mediaQueryPadding.top + 3,
-            //   ),
-            //   // centerTitle: true,
-            //   title: Text(
-            //     gallery.title ?? '',
-            //     maxLines: 6,
-            //     overflow: TextOverflow.ellipsis,
-            //     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            //           height: 1.25,
-            //         ),
-            //   ),
-            //   background: ErosCachedNetworkImage(
-            //     gallery.thumbUrl ?? '',
-            //     fit: BoxFit.cover,
-            //     color:
-            //         Theme.of(context).colorScheme.background.withOpacity(0.7),
-            //     colorBlendMode: BlendMode.lighten,
-            //   ),
-            //   stretchModes: [
-            //     StretchMode.zoomBackground,
-            //     StretchMode.blurBackground,
-            //     StretchMode.fadeTitle,
-            //   ],
-            // ),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 180,
-                    child: Row(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Hero(
-                          tag: gallery.thumbUrl ?? '',
-                          child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 12),
-                            clipBehavior: Clip.antiAlias,
-                            child: Container(
-                              width: 120,
-                              child: ErosCachedNetworkImage(
-                                gallery.thumbUrl ?? '',
-                                fit: BoxFit.cover,
+            SliverToBoxAdapter(
+              child: Container(
+                padding: const EdgeInsets.all(0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 180,
+                      child: Row(
+                        // crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Hero(
+                            tag: gallery.thumbUrl ?? '',
+                            child: Card(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              clipBehavior: Clip.antiAlias,
+                              child: Container(
+                                width: 120,
+                                child: ErosCachedNetworkImage(
+                                  gallery.thumbUrl ?? '',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SelectableText(
-                                gallery.title ?? '',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(height: 1.3),
-                                maxLines: 5,
-                                minLines: 1,
-                                // overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                '#${gallery.gid}',
-                                style: Theme.of(context).textTheme.caption,
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SelectableText(
+                                  gallery.title ?? '',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(height: 1.3),
+                                  maxLines: 5,
+                                  minLines: 1,
+                                  // overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '#${gallery.gid}',
+                                  style: Theme.of(context).textTheme.caption,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
+                    const SizedBox(height: 8),
+                  ],
+                ),
               ),
             ),
-          ),
-          ThumbsView(gid: gid),
-        ],
+            ThumbsView(gid: gid),
+          ],
+        ),
       ),
     );
   }
@@ -137,7 +143,7 @@ class ThumbsView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final images = ref.watch(galleryProvider(gid)).images;
+    final images = ref.watch(galleryProvider(gid).select((g) => g.images));
     final status = ref.watch(pageStateProvider(gid));
 
     if (status == PageStatus.loading || images.isEmpty) {
@@ -160,7 +166,10 @@ class ThumbsView extends HookConsumerWidget {
               final image = images[index];
               return GestureDetector(
                 onTap: () {
-                  context.router.push(ReadRoute(gid: gid, initialPage: index));
+                  ref.read(galleryProvider(gid).notifier).setInitialPage(index);
+
+                  ///
+                  context.router.push(ReadRoute(gid: gid));
                 },
                 child: Column(
                   children: [
@@ -170,10 +179,16 @@ class ThumbsView extends HookConsumerWidget {
                           aspectRatio: image.thumbWidth! / image.thumbHeight!,
                           child: Card(
                             clipBehavior: Clip.antiAlias,
-                            child: Container(
+                            child: Hero(
+                              tag: '${gid}_$index',
                               child: ErosCachedNetworkImage(
                                 image.thumbUrl ?? '',
                                 fit: BoxFit.cover,
+                                // placeholder: (context, url) {
+                                //   return const Center(
+                                //     child: CircularProgressIndicator(),
+                                //   );
+                                // },
                               ),
                             ),
                           ),
@@ -191,7 +206,8 @@ class ThumbsView extends HookConsumerWidget {
             maxCrossAxisExtent: 150.0,
             mainAxisSpacing: 8,
             crossAxisSpacing: 4,
-            childAspectRatio: minRatio - 0.1,
+            childAspectRatio: minRatio - 0.2,
+            // childAspectRatio: 0.6,
           )),
     );
   }

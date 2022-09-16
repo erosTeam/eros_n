@@ -16,6 +16,7 @@ class Gallery with _$Gallery {
     int? imgHeight,
     int? imgWidth,
     @Default([]) List<GalleryImage> images,
+    @Default(0) int currentPageIndex,
   }) = _Gallery;
 
   factory Gallery.fromJson(Map<String, Object?> json) =>

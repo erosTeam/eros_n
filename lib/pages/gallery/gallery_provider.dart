@@ -27,13 +27,22 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     loadData();
   }
 
-  Future<void> loadData() async {
-    if (state.images.isEmpty) {}
-    ref
-        .read(pageStateProvider(state.gid).notifier)
-        .update((state) => PageStatus.loading);
+  void setInitialPage(int page) {
+    state = state.copyWith(currentPageIndex: page);
+  }
+
+  Future<void> loadData({bool refresh = false}) async {
+    if (state.images.isEmpty) {
+      ref
+          .read(pageStateProvider(state.gid).notifier)
+          .update((state) => PageStatus.loading);
+    }
+
     try {
-      final gallery = await getGalleryDetail(url: state.url ?? '');
+      final gallery = await getGalleryDetail(
+        url: state.url ?? '',
+        refresh: refresh,
+      );
       state = state.copyWith(
         images: gallery.images,
       );
@@ -45,9 +54,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         }
         await showInAppWebViewDialog(
           statusCode: e.code,
-          onComplete: () async => await getGalleryDetail(
-            url: state.url ?? '',
-          ),
+          onComplete: () async => await loadData(refresh: refresh),
         );
       } else {
         rethrow;
@@ -58,12 +65,24 @@ class GalleryNotifier extends StateNotifier<Gallery> {
           .update((state) => PageStatus.none);
     }
   }
+
+  Future<void> reloadData() async {
+    await loadData(refresh: true);
+  }
+
+  void onPageChanged(int index) {
+    state = state.copyWith(
+      currentPageIndex: index,
+    );
+  }
 }
 
 final galleryProvider =
-    StateNotifierProvider.family<GalleryNotifier, Gallery, String?>((ref, gid) {
-  return GalleryNotifier(Gallery(gid: gid), ref);
-});
+    StateNotifierProvider.family<GalleryNotifier, Gallery, String?>(
+  (ref, gid) {
+    return GalleryNotifier(Gallery(gid: gid), ref);
+  },
+);
 
 final pageStateProvider = StateProvider.family<PageStatus, String?>((ref, gid) {
   return PageStatus.none;

@@ -80,6 +80,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
       cacheManager: imageCacheManager,
       // imageBuilder: imageWidgetBuilder,
       httpHeaders: defHttpHeaders,
+      // filterQuality: FilterQuality.low,
       width: width,
       height: height,
       fit: fit,
@@ -90,7 +91,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
       placeholder: placeholder,
       errorWidget: errorWidget,
       cacheKey: buildImageCacheKey(imageUrl),
-      // progressIndicatorBuilder: progressIndicatorBuilder,
+      progressIndicatorBuilder: progressIndicatorBuilder,
     );
 
     return image;

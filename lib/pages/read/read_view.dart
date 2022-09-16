@@ -1,32 +1,41 @@
 import 'package:async_builder/async_builder.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/component/widget/preload_photo_view_gallery.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
 class ReadPage extends HookConsumerWidget {
   const ReadPage({
     Key? key,
     this.gid,
-    this.initialPage = 0,
   }) : super(key: key);
-  final int initialPage;
   final String? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gallery = ref.watch(galleryProvider(gid));
-    final images = gallery.images;
-    final imageKey = gallery.imageKey;
+    final currentPageIndex =
+        ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+    final images = ref.watch(galleryProvider(gid).select((g) => g.images));
+    final imageKey = ref.watch(galleryProvider(gid).select((g) => g.imageKey));
+
+    void onPageChanged(int index) {
+      ref.read(galleryProvider(gid).notifier).onPageChanged(index);
+    }
+
+    late Widget body;
 
     if (false)
-      return PhotoViewGallery.builder(
+      body = PhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
           final imageUrl = getGalleryImageUrl(imageKey ?? '', index);
@@ -53,12 +62,12 @@ class ReadPage extends HookConsumerWidget {
           ),
         ),
         // backgroundDecoration: widget.backgroundDecoration,
-        pageController: PageController(initialPage: initialPage),
+        pageController: PageController(initialPage: currentPageIndex),
         // onPageChanged: onPageChanged,
       );
 
-    if (true)
-      return PhotoViewGallery.builder(
+    if (true) {
+      body = PreloadPhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
           final imageUrl = getGalleryImageUrl(imageKey ?? '', index);
@@ -66,12 +75,16 @@ class ReadPage extends HookConsumerWidget {
             imageProvider: getErorsImageProvider(
               imageUrl,
             ),
+            filterQuality: FilterQuality.medium,
             initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained * 0.5,
-            maxScale: PhotoViewComputedScale.contained * 3,
-            heroAttributes: PhotoViewHeroAttributes(tag: '${gid}_$index'),
+            minScale: PhotoViewComputedScale.contained * 0.8,
+            maxScale: PhotoViewComputedScale.contained * 2,
+            heroAttributes: currentPageIndex == index
+                ? PhotoViewHeroAttributes(tag: '${gid}_$index')
+                : null,
           );
         },
+        preloadPagesCount: 3,
         itemCount: images.length,
         loadingBuilder: (context, event) => Center(
           child: CircularProgressIndicator(
@@ -80,10 +93,28 @@ class ReadPage extends HookConsumerWidget {
                 : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
           ),
         ),
-        // backgroundDecoration: widget.backgroundDecoration,
-        pageController: PageController(initialPage: initialPage),
-        // onPageChanged: onPageChanged,
+        // backgroundDecoration: const BoxDecoration(
+        //   color: Colors.black,
+        // ),
+        pageController: PreloadPageController(initialPage: currentPageIndex),
+        onPageChanged: onPageChanged,
       );
+    }
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+        statusBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Theme(
+        data: ThemeConfig.lightTheme,
+        child: Container(color: Colors.black, child: body),
+      ),
+    );
 
     // return Scaffold(
     //   body: PageView.builder(
