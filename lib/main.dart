@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/theme/theme.dart';

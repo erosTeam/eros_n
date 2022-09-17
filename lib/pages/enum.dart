@@ -5,6 +5,7 @@ enum LoadStatus {
   empty,
   success,
   error,
+  getToken,
 }
 
 enum PageStatus {

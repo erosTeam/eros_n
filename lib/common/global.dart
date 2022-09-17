@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:eros_n/network/app_dio/app_dio.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/kv/hive.dart';

@@ -92,12 +92,14 @@ class FrontNotifier extends StateNotifier<FrontState> {
         curPage: toPage,
       );
     } on HttpException catch (e) {
-      state = state.copyWith(status: LoadStatus.none);
-      if (showWebViewDialogOnFail && (e.code == 403 || e.code == 503)) {
+      if (showWebViewDialogOnFail &&
+          (e.code == 403 || e.code == 503) &&
+          state.status != LoadStatus.getToken) {
         logger.e('code ${e.code}');
         if (!mounted) {
           return;
         }
+        state = state.copyWith(status: LoadStatus.getToken);
         await showInAppWebViewDialog(
           statusCode: e.code,
           onComplete: () async => await getGalleryData(
@@ -107,6 +109,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
             prev: prev,
           ),
         );
+        state = state.copyWith(status: LoadStatus.none);
       } else {
         state = state.copyWith(status: LoadStatus.error);
         rethrow;
