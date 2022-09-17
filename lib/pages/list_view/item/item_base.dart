@@ -24,12 +24,12 @@ class CoverImg extends StatelessWidget {
       if (imgUrl.isNotEmpty) {
         return ErosCachedNetworkImage(
           imgUrl,
-          placeholder: (_, __) {
-            return Container(
-              alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
-            );
-          },
+          // placeholder: (_, __) {
+          //   return Container(
+          //     alignment: Alignment.center,
+          //     child: const CircularProgressIndicator(),
+          //   );
+          // },
           width: width,
           height: height,
           // httpHeaders: _httpHeaders,

@@ -12,8 +12,8 @@ _$_Gallery _$$_GalleryFromJson(Map<String, dynamic> json) => _$_Gallery(
       title: json['title'] as String?,
       url: json['url'] as String?,
       thumbUrl: json['thumbUrl'] as String?,
-      imgHeight: json['imgHeight'] as int?,
-      imgWidth: json['imgWidth'] as int?,
+      thumbHeight: json['thumbHeight'] as int?,
+      thumbWidth: json['thumbWidth'] as int?,
       images: (json['images'] as List<dynamic>?)
               ?.map((e) => GalleryImage.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -28,8 +28,8 @@ Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
       'title': instance.title,
       'url': instance.url,
       'thumbUrl': instance.thumbUrl,
-      'imgHeight': instance.imgHeight,
-      'imgWidth': instance.imgWidth,
+      'thumbHeight': instance.thumbHeight,
+      'thumbWidth': instance.thumbWidth,
       'images': instance.images,
       'currentPageIndex': instance.currentPageIndex,
     };

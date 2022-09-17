@@ -78,7 +78,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
   final int? lastTopitemIndex;
   final bool keepPosition;
 
-  Widget itemCardBuilder(BuildContext context, int index, double width) {
+  Widget itemCardBuilder(BuildContext context, int index) {
     if (gallerys.length - 1 < index) {
       return const SizedBox.shrink();
     }
@@ -94,7 +94,6 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     return ItemWaterfallFlowCard(
       gallery: gallery,
       index: index,
-      width: width,
     );
   }
 
@@ -144,7 +143,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
         //   preferItemHeight: 180,
         // ),
         delegate: SliverChildBuilderDelegate(
-          (context, index) => itemCardBuilder(context, index, _itemWith),
+          itemCardBuilder,
           childCount: gallerys.length,
         ),
         gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(

@@ -16,8 +16,8 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     logger.d('${gallery.toString()} ');
     state = state.copyWith(
       thumbUrl: gallery.thumbUrl,
-      imgWidth: gallery.imgWidth,
-      imgHeight: gallery.imgHeight,
+      thumbWidth: gallery.thumbWidth,
+      thumbHeight: gallery.thumbHeight,
       gid: gallery.gid,
       title: gallery.title,
       url: gallery.url,

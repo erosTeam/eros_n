@@ -75,21 +75,28 @@ class GalleryPage extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       height: 180,
                       child: Row(
                         // crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Hero(
-                            tag: gallery.thumbUrl ?? '',
-                            child: Card(
+                          Center(
+                            child: Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 12),
-                              clipBehavior: Clip.antiAlias,
-                              child: Container(
-                                width: 120,
-                                child: ErosCachedNetworkImage(
-                                  gallery.thumbUrl ?? '',
-                                  fit: BoxFit.cover,
+                              child: Hero(
+                                tag: gallery.thumbUrl ?? '',
+                                child: Card(
+                                  margin: const EdgeInsets.all(0),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: AspectRatio(
+                                    aspectRatio: (gallery.thumbWidth ?? 300) /
+                                        (gallery.thumbHeight ?? 400),
+                                    child: ErosCachedNetworkImage(
+                                      gallery.thumbUrl ?? '',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),

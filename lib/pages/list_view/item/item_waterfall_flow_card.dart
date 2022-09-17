@@ -14,28 +14,11 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
     required this.gallery,
     this.index,
     this.page,
-    required this.width,
   }) : super(key: key);
 
   final Gallery gallery;
   final int? index;
   final int? page;
-  final double width;
-
-  // 获取图片高度
-  double? _getHeigth(double constraintsMaxWidth) {
-    // return (galleryProvider.imgHeight ?? 0) *
-    //     constraintsMaxWidth /
-    //     (galleryProvider.imgWidth ?? 0);
-
-    if ((gallery.imgWidth ?? 0) >= constraintsMaxWidth) {
-      return (gallery.imgHeight ?? 0) *
-          constraintsMaxWidth /
-          (gallery.imgWidth ?? 0);
-    } else {
-      return gallery.imgHeight?.roundToDouble();
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,10 +37,11 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: _getHeigth(width),
-              child: Hero(
-                tag: gallery.thumbUrl ?? '',
+            Hero(
+              tag: gallery.thumbUrl ?? '',
+              child: AspectRatio(
+                aspectRatio:
+                    (gallery.thumbWidth ?? 300) / (gallery.thumbHeight ?? 400),
                 child: Card(
                   margin: const EdgeInsets.all(0),
                   clipBehavior: Clip.antiAlias,

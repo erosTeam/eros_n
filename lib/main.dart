@@ -93,6 +93,7 @@ class MyApp extends StatelessWidget {
           // debugShowCheckedModeBanner: false,
           theme: ThemeConfig.lightTheme,
           darkTheme: ThemeConfig.darkTheme,
+          supportedLocales: [...L10n.delegate.supportedLocales],
           localizationsDelegates: const [
             L10n.delegate,
             GlobalMaterialLocalizations.delegate,

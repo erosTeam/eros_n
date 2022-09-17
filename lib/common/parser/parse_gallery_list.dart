@@ -63,8 +63,8 @@ List<Gallery> parseGalleryListElm(List<Element> galleryElmList) {
       title: title,
       url: url,
       thumbUrl: thumbUrl,
-      imgHeight: int.parse(imageHeight),
-      imgWidth: int.parse(imageWidth),
+      thumbHeight: int.parse(imageHeight),
+      thumbWidth: int.parse(imageWidth),
     );
     // logger.d('gallery ${gallery.toJson()}');
     galleryList.add(gallery);

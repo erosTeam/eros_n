@@ -25,8 +25,8 @@ mixin _$Gallery {
   String? get title => throw _privateConstructorUsedError;
   String? get url => throw _privateConstructorUsedError;
   String? get thumbUrl => throw _privateConstructorUsedError;
-  int? get imgHeight => throw _privateConstructorUsedError;
-  int? get imgWidth => throw _privateConstructorUsedError;
+  int? get thumbHeight => throw _privateConstructorUsedError;
+  int? get thumbWidth => throw _privateConstructorUsedError;
   List<GalleryImage> get images => throw _privateConstructorUsedError;
   int get currentPageIndex => throw _privateConstructorUsedError;
 
@@ -45,8 +45,8 @@ abstract class $GalleryCopyWith<$Res> {
       String? title,
       String? url,
       String? thumbUrl,
-      int? imgHeight,
-      int? imgWidth,
+      int? thumbHeight,
+      int? thumbWidth,
       List<GalleryImage> images,
       int currentPageIndex});
 }
@@ -66,8 +66,8 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? title = freezed,
     Object? url = freezed,
     Object? thumbUrl = freezed,
-    Object? imgHeight = freezed,
-    Object? imgWidth = freezed,
+    Object? thumbHeight = freezed,
+    Object? thumbWidth = freezed,
     Object? images = freezed,
     Object? currentPageIndex = freezed,
   }) {
@@ -92,13 +92,13 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.thumbUrl
           : thumbUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      imgHeight: imgHeight == freezed
-          ? _value.imgHeight
-          : imgHeight // ignore: cast_nullable_to_non_nullable
+      thumbHeight: thumbHeight == freezed
+          ? _value.thumbHeight
+          : thumbHeight // ignore: cast_nullable_to_non_nullable
               as int?,
-      imgWidth: imgWidth == freezed
-          ? _value.imgWidth
-          : imgWidth // ignore: cast_nullable_to_non_nullable
+      thumbWidth: thumbWidth == freezed
+          ? _value.thumbWidth
+          : thumbWidth // ignore: cast_nullable_to_non_nullable
               as int?,
       images: images == freezed
           ? _value.images
@@ -124,8 +124,8 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       String? title,
       String? url,
       String? thumbUrl,
-      int? imgHeight,
-      int? imgWidth,
+      int? thumbHeight,
+      int? thumbWidth,
       List<GalleryImage> images,
       int currentPageIndex});
 }
@@ -146,8 +146,8 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? title = freezed,
     Object? url = freezed,
     Object? thumbUrl = freezed,
-    Object? imgHeight = freezed,
-    Object? imgWidth = freezed,
+    Object? thumbHeight = freezed,
+    Object? thumbWidth = freezed,
     Object? images = freezed,
     Object? currentPageIndex = freezed,
   }) {
@@ -172,13 +172,13 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value.thumbUrl
           : thumbUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      imgHeight: imgHeight == freezed
-          ? _value.imgHeight
-          : imgHeight // ignore: cast_nullable_to_non_nullable
+      thumbHeight: thumbHeight == freezed
+          ? _value.thumbHeight
+          : thumbHeight // ignore: cast_nullable_to_non_nullable
               as int?,
-      imgWidth: imgWidth == freezed
-          ? _value.imgWidth
-          : imgWidth // ignore: cast_nullable_to_non_nullable
+      thumbWidth: thumbWidth == freezed
+          ? _value.thumbWidth
+          : thumbWidth // ignore: cast_nullable_to_non_nullable
               as int?,
       images: images == freezed
           ? _value._images
@@ -201,8 +201,8 @@ class _$_Gallery implements _Gallery {
       this.title,
       this.url,
       this.thumbUrl,
-      this.imgHeight,
-      this.imgWidth,
+      this.thumbHeight,
+      this.thumbWidth,
       final List<GalleryImage> images = const [],
       this.currentPageIndex = 0})
       : _images = images;
@@ -221,9 +221,9 @@ class _$_Gallery implements _Gallery {
   @override
   final String? thumbUrl;
   @override
-  final int? imgHeight;
+  final int? thumbHeight;
   @override
-  final int? imgWidth;
+  final int? thumbWidth;
   final List<GalleryImage> _images;
   @override
   @JsonKey()
@@ -238,7 +238,7 @@ class _$_Gallery implements _Gallery {
 
   @override
   String toString() {
-    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, url: $url, thumbUrl: $thumbUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, images: $images, currentPageIndex: $currentPageIndex)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, images: $images, currentPageIndex: $currentPageIndex)';
   }
 
   @override
@@ -251,8 +251,10 @@ class _$_Gallery implements _Gallery {
             const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality().equals(other.url, url) &&
             const DeepCollectionEquality().equals(other.thumbUrl, thumbUrl) &&
-            const DeepCollectionEquality().equals(other.imgHeight, imgHeight) &&
-            const DeepCollectionEquality().equals(other.imgWidth, imgWidth) &&
+            const DeepCollectionEquality()
+                .equals(other.thumbHeight, thumbHeight) &&
+            const DeepCollectionEquality()
+                .equals(other.thumbWidth, thumbWidth) &&
             const DeepCollectionEquality().equals(other._images, _images) &&
             const DeepCollectionEquality()
                 .equals(other.currentPageIndex, currentPageIndex));
@@ -267,8 +269,8 @@ class _$_Gallery implements _Gallery {
       const DeepCollectionEquality().hash(title),
       const DeepCollectionEquality().hash(url),
       const DeepCollectionEquality().hash(thumbUrl),
-      const DeepCollectionEquality().hash(imgHeight),
-      const DeepCollectionEquality().hash(imgWidth),
+      const DeepCollectionEquality().hash(thumbHeight),
+      const DeepCollectionEquality().hash(thumbWidth),
       const DeepCollectionEquality().hash(_images),
       const DeepCollectionEquality().hash(currentPageIndex));
 
@@ -292,8 +294,8 @@ abstract class _Gallery implements Gallery {
       final String? title,
       final String? url,
       final String? thumbUrl,
-      final int? imgHeight,
-      final int? imgWidth,
+      final int? thumbHeight,
+      final int? thumbWidth,
       final List<GalleryImage> images,
       final int currentPageIndex}) = _$_Gallery;
 
@@ -310,9 +312,9 @@ abstract class _Gallery implements Gallery {
   @override
   String? get thumbUrl;
   @override
-  int? get imgHeight;
+  int? get thumbHeight;
   @override
-  int? get imgWidth;
+  int? get thumbWidth;
   @override
   List<GalleryImage> get images;
   @override

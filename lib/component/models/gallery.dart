@@ -13,8 +13,8 @@ class Gallery with _$Gallery {
     String? title,
     String? url,
     String? thumbUrl,
-    int? imgHeight,
-    int? imgWidth,
+    int? thumbHeight,
+    int? thumbWidth,
     @Default([]) List<GalleryImage> images,
     @Default(0) int currentPageIndex,
   }) = _Gallery;
