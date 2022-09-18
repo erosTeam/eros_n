@@ -7,12 +7,62 @@ import 'package:eros_n/component/widget/preload_photo_view_gallery.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/eros_utils.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:preload_page_view/preload_page_view.dart';
+
+PhotoViewScaleState customChildScaleStateCycle(PhotoViewScaleState actual) {
+  PhotoViewScaleState desc = PhotoViewScaleState.initial;
+  switch (actual) {
+    case PhotoViewScaleState.initial:
+      desc = PhotoViewScaleState.covering;
+      break;
+    case PhotoViewScaleState.covering:
+      desc = PhotoViewScaleState.originalSize;
+      break;
+    case PhotoViewScaleState.originalSize:
+      desc = PhotoViewScaleState.initial;
+      break;
+    case PhotoViewScaleState.zoomedIn:
+    case PhotoViewScaleState.zoomedOut:
+      desc = PhotoViewScaleState.initial;
+      break;
+    default:
+      desc = PhotoViewScaleState.initial;
+  }
+
+  logger.d('actual $actual to $desc');
+  return desc;
+}
+
+PhotoViewScaleState imageScaleStateCycle(PhotoViewScaleState actual) {
+  PhotoViewScaleState desc = PhotoViewScaleState.initial;
+
+  switch (actual) {
+    case PhotoViewScaleState.initial:
+      desc = PhotoViewScaleState.covering;
+      break;
+    case PhotoViewScaleState.covering:
+      desc = PhotoViewScaleState.originalSize;
+      break;
+    case PhotoViewScaleState.originalSize:
+      desc = PhotoViewScaleState.initial;
+      break;
+    case PhotoViewScaleState.zoomedIn:
+    case PhotoViewScaleState.zoomedOut:
+      desc = PhotoViewScaleState.initial;
+      break;
+    default:
+      desc = PhotoViewScaleState.initial;
+  }
+
+  logger.d('actual $actual to $desc');
+  return desc;
+}
 
 class ReadPage extends HookConsumerWidget {
   const ReadPage({
@@ -34,8 +84,8 @@ class ReadPage extends HookConsumerWidget {
 
     late Widget body;
 
-    if (false)
-      body = PhotoViewGallery.builder(
+    if (false) {
+      body = PreloadPhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
           final imageUrl = getGalleryImageUrl(imageKey ?? '', index);
@@ -46,25 +96,31 @@ class ReadPage extends HookConsumerWidget {
                 child: CircularProgressIndicator(),
               ),
             ),
+            scaleStateCycle: customChildScaleStateCycle,
             initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained * 0.5,
-            // maxScale: PhotoViewComputedScale.contained * 3,
-            maxScale: 3.0,
-            heroAttributes: PhotoViewHeroAttributes(tag: '${gid}_$index'),
+            minScale: PhotoViewComputedScale.contained * 0.8,
+            maxScale: PhotoViewComputedScale.contained * 2,
+            // maxScale: 3.0,
+            childSize: MediaQuery.of(context).size * 2,
+            heroAttributes: currentPageIndex == index
+                ? PhotoViewHeroAttributes(tag: '${gid}_$index')
+                : null,
           );
         },
+        preloadPagesCount: 3,
         itemCount: images.length,
-        loadingBuilder: (context, event) => Center(
-          child: CircularProgressIndicator(
-            value: event == null
-                ? null
-                : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
-          ),
-        ),
+        // loadingBuilder: (context, event) => Center(
+        //   child: CircularProgressIndicator(
+        //     value: event == null
+        //         ? null
+        //         : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
+        //   ),
+        // ),
         // backgroundDecoration: widget.backgroundDecoration,
-        pageController: PageController(initialPage: currentPageIndex),
-        // onPageChanged: onPageChanged,
+        pageController: PreloadPageController(initialPage: currentPageIndex),
+        onPageChanged: onPageChanged,
       );
+    }
 
     if (true) {
       body = PreloadPhotoViewGallery.builder(
@@ -75,6 +131,7 @@ class ReadPage extends HookConsumerWidget {
             imageProvider: getErorsImageProvider(
               imageUrl,
             ),
+            scaleStateCycle: imageScaleStateCycle,
             filterQuality: FilterQuality.medium,
             initialScale: PhotoViewComputedScale.contained,
             minScale: PhotoViewComputedScale.contained * 0.8,
@@ -96,6 +153,7 @@ class ReadPage extends HookConsumerWidget {
         // backgroundDecoration: const BoxDecoration(
         //   color: Colors.black,
         // ),
+
         pageController: PreloadPageController(initialPage: currentPageIndex),
         onPageChanged: onPageChanged,
       );
