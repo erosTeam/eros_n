@@ -80,22 +80,22 @@ class GalleryPage extends HookConsumerWidget {
                       child: Row(
                         // crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(
-                            child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: Hero(
-                                tag: gallery.thumbUrl ?? '',
-                                child: Card(
-                                  margin: const EdgeInsets.all(0),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: AspectRatio(
-                                    aspectRatio: (gallery.thumbWidth ?? 300) /
-                                        (gallery.thumbHeight ?? 400),
-                                    child: ErosCachedNetworkImage(
-                                      gallery.thumbUrl ?? '',
-                                      fit: BoxFit.cover,
-                                    ),
+                          Container(
+                            width: 120,
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 12),
+                            alignment: Alignment.center,
+                            child: Hero(
+                              tag: gallery.thumbUrl ?? '',
+                              child: Card(
+                                margin: const EdgeInsets.all(0),
+                                clipBehavior: Clip.antiAlias,
+                                child: AspectRatio(
+                                  aspectRatio: (gallery.thumbWidth ?? 300) /
+                                      (gallery.thumbHeight ?? 400),
+                                  child: ErosCachedNetworkImage(
+                                    gallery.thumbUrl ?? '',
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
