@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/routes/routes.dart';
@@ -22,6 +23,7 @@ class GalleryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.watch(galleryProvider(gid));
+    logger.d('build gallery $gid ${gallery.title}');
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
@@ -30,7 +32,7 @@ class GalleryPage extends HookConsumerWidget {
           slivers: [
             SliverAppBar(
               // title: Text(gallery.title ?? ''),
-              floating: true,
+              floating: false,
               pinned: true,
               // bottom: PreferredSize(
               //   preferredSize: Size.fromHeight(0),
@@ -63,23 +65,31 @@ class GalleryPage extends HookConsumerWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
+                          // Theme.of(context).canvasColor,
                           Colors.transparent,
-                          Theme.of(context).colorScheme.primaryContainer,
+                          Theme.of(context).canvasColor,
                         ]).createShader(
-                      Rect.fromLTRB(0, 0, bounds.width, bounds.height),
+                      Rect.fromLTRB(0, 0, bounds.width, bounds.height - 4),
                     );
                   },
-                  blendMode: BlendMode.dstOut,
-                  child: ErosCachedNetworkImage(
-                    imageUrl: gallery.thumbUrl ?? '',
-                    fit: BoxFit.cover,
-                    color:
-                        Theme.of(context).colorScheme.background.withOpacity(0),
-                    colorBlendMode: BlendMode.lighten,
+                  blendMode: Theme.of(context).brightness == Brightness.dark
+                      ? BlendMode.srcOver
+                      : BlendMode.dstOut,
+                  child: BlurImage(
+                    sigma: context.isTablet ? 4 : 2,
+                    color: Theme.of(context).canvasColor.withOpacity(0.4),
+                    child: ErosCachedNetworkImage(
+                      imageUrl: gallery.thumbUrl ?? '',
+                      filterQuality: FilterQuality.medium,
+                      fit: BoxFit.cover,
+                      // color:
+                      //     Theme.of(context).colorScheme.background.withOpacity(0.5),
+                      // colorBlendMode: BlendMode.lighten,
+                    ),
                   ),
                 ),
                 stretchModes: const [
-                  // StretchMode.zoomBackground,
+                  StretchMode.zoomBackground,
                   // StretchMode.blurBackground,
                   StretchMode.fadeTitle,
                 ],
@@ -168,7 +178,10 @@ class ThumbsView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final images = ref.watch(galleryProvider(gid).select((g) => g.images));
+    logger.d('build thumbs $gid');
+    // final images = ref.watch(galleryProvider(gid).select((g) => g.images));
+
+    final images = ref.read(galleryProvider(gid)).images;
     final status = ref.watch(pageStateProvider(gid));
 
     if (status == PageStatus.loading || images.isEmpty) {
@@ -209,11 +222,6 @@ class ThumbsView extends HookConsumerWidget {
                               child: ErosCachedNetworkImage(
                                 imageUrl: image.thumbUrl ?? '',
                                 fit: BoxFit.cover,
-                                // placeholder: (context, url) {
-                                //   return const Center(
-                                //     child: CircularProgressIndicator(),
-                                //   );
-                                // },
                               ),
                             ),
                           ),
@@ -232,7 +240,6 @@ class ThumbsView extends HookConsumerWidget {
             mainAxisSpacing: 8,
             crossAxisSpacing: 4,
             childAspectRatio: minRatio - 0.2,
-            // childAspectRatio: 0.6,
           )),
     );
   }

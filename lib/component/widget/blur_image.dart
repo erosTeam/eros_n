@@ -9,31 +9,33 @@ class BlurImage extends StatelessWidget {
     required this.child,
     this.blur = true,
     this.sigma = 5.0,
+    this.fit = StackFit.expand,
+    this.color = Colors.transparent,
   });
 
   final Widget child;
   final bool blur;
   final double sigma;
+  final StackFit fit;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
-      fit: StackFit.loose,
+      fit: fit,
       children: <Widget>[
         Container(child: child),
-        Offstage(
-          offstage: !blur,
-          child: BackdropFilter(
+        if (blur)
+          BackdropFilter(
             filter: ImageFilter.blur(
               sigmaX: sigma,
               sigmaY: sigma,
             ),
-            child: Container(
-                // color: Colors.white.withOpacity(0.1),
-                ),
+            child: ColoredBox(
+              color: color,
+            ),
           ),
-        ),
       ],
     );
   }

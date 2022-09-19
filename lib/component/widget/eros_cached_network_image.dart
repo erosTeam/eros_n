@@ -26,6 +26,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
     this.onHideFlagChanged,
     this.color,
     this.colorBlendMode,
+    this.filterQuality = FilterQuality.low,
   }) : super(key: key);
 
   final String imageUrl;
@@ -41,6 +42,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
   final bool checkPHashHide;
   final bool checkQRCodeHide;
   final ValueChanged<bool>? onHideFlagChanged;
+  final FilterQuality filterQuality;
 
   /// If non-null, this color is blended with each image pixel using [colorBlendMode].
   final Color? color;
@@ -80,7 +82,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
       cacheManager: imageCacheManager,
       // imageBuilder: imageWidgetBuilder,
       httpHeaders: defHttpHeaders,
-      // filterQuality: FilterQuality.low,
+      filterQuality: filterQuality,
       width: width,
       height: height,
       fit: fit,

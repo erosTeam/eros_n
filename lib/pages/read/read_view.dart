@@ -73,6 +73,8 @@ class ReadPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logger.d('ReadPage build');
+
     final currentPageIndex =
         ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
     final images = ref.watch(galleryProvider(gid).select((g) => g.images));
@@ -117,7 +119,7 @@ class ReadPage extends HookConsumerWidget {
         //   ),
         // ),
         // backgroundDecoration: widget.backgroundDecoration,
-        pageController: PreloadPageController(initialPage: currentPageIndex),
+        pageController: PreloadPageController(initialPage: 0),
         onPageChanged: onPageChanged,
       );
     }
@@ -172,41 +174,5 @@ class ReadPage extends HookConsumerWidget {
         data: ThemeConfig.lightTheme,
         child: Container(color: Colors.black, child: body),
       ),
-    );
-
-    // return Scaffold(
-    //   body: PageView.builder(
-    //     controller: PageController(initialPage: initialPage),
-    //     itemBuilder: (BuildContext context, int index) {
-    //       final image = images[index];
-    //       final AsyncValue<GalleryImage> asyncImage = ref.watch(
-    //         galleryImageProvider(image.href),
-    //       );
-    //
-    //       return asyncImage.when(
-    //         data: (data) {
-    //           return ErosCachedNetworkImage(
-    //             data.imageUrl ?? '',
-    //             fit: BoxFit.contain,
-    //             placeholder: (context, url) => const Center(
-    //               child: CircularProgressIndicator(),
-    //             ),
-    //           );
-    //         },
-    //         loading: () {
-    //           return const Center(
-    //             child: CircularProgressIndicator(),
-    //           );
-    //         },
-    //         error: (error, stackTrace) {
-    //           return const Center(
-    //             child: Text('Error'),
-    //           );
-    //         },
-    //       );
-    //     },
-    //     itemCount: images.length,
-    //   ),
-    // );
-  }
+    );}
 }
