@@ -22,7 +22,7 @@ class GalleryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gallery = ref.watch(galleryProvider(gid));
+    final gallery = ref.read(galleryProvider(gid));
     logger.d('build gallery $gid ${gallery.title}');
     return Scaffold(
       body: RefreshIndicator(

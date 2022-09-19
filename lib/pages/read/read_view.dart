@@ -75,10 +75,14 @@ class ReadPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     logger.d('ReadPage build');
 
-    final currentPageIndex =
-        ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
-    final images = ref.watch(galleryProvider(gid).select((g) => g.images));
-    final imageKey = ref.watch(galleryProvider(gid).select((g) => g.imageKey));
+    // final currentPageIndex =
+    //     ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+    // final images = ref.watch(galleryProvider(gid).select((g) => g.images));
+    // final imageKey = ref.watch(galleryProvider(gid).select((g) => g.imageKey));
+    final gallery = ref.read(galleryProvider(gid));
+    final currentPageIndex = gallery.currentPageIndex;
+    final images = gallery.images;
+    final imageKey = gallery.imageKey;
 
     void onPageChanged(int index) {
       ref.read(galleryProvider(gid).notifier).onPageChanged(index);
@@ -174,5 +178,6 @@ class ReadPage extends HookConsumerWidget {
         data: ThemeConfig.lightTheme,
         child: Container(color: Colors.black, child: body),
       ),
-    );}
+    );
+  }
 }
