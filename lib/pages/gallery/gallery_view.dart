@@ -32,106 +32,124 @@ class GalleryPage extends HookConsumerWidget {
               // title: Text(gallery.title ?? ''),
               floating: true,
               pinned: true,
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: SizedBox(height: 0),
-              ),
-              // expandedHeight: 200,
-              // flexibleSpace: FlexibleSpaceBar(
-              //   centerTitle: true,
-              //   expandedTitleScale: 1.4,
-              //   titlePadding: EdgeInsetsDirectional.only(
-              //     start: 60,
-              //     bottom: 16,
-              //     top: context.mediaQueryPadding.top + 3,
-              //   ),
-              //   // centerTitle: true,
-              //   title: Text(
-              //     gallery.title ?? '',
-              //     maxLines: 6,
-              //     overflow: TextOverflow.ellipsis,
-              //     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              //           height: 1.25,
-              //         ),
-              //   ),
-              //   background: ErosCachedNetworkImage(
-              //     gallery.thumbUrl ?? '',
-              //     fit: BoxFit.cover,
-              //     color:
-              //         Theme.of(context).colorScheme.background.withOpacity(0.7),
-              //     colorBlendMode: BlendMode.lighten,
-              //   ),
-              //   stretchModes: [
-              //     StretchMode.zoomBackground,
-              //     StretchMode.blurBackground,
-              //     StretchMode.fadeTitle,
-              //   ],
+              // bottom: PreferredSize(
+              //   preferredSize: Size.fromHeight(0),
+              //   child: SizedBox(height: 0),
               // ),
+              expandedHeight: 260,
+              flexibleSpace: FlexibleSpaceBar(
+                // centerTitle: true,
+                expandedTitleScale: 1.2,
+                titlePadding: EdgeInsetsDirectional.only(
+                  start: 60,
+                  // bottom: 16,
+                  // start: 16,
+                  end: 16,
+                  bottom: 16,
+                  top: context.mediaQueryPadding.top + 3,
+                ),
+                // centerTitle: true,
+                title: Text(
+                  gallery.title ?? '',
+                  maxLines: 6,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        height: 1.25,
+                      ),
+                ),
+                background: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Theme.of(context).colorScheme.primaryContainer,
+                        ]).createShader(
+                      Rect.fromLTRB(0, 0, bounds.width, bounds.height),
+                    );
+                  },
+                  blendMode: BlendMode.dstOut,
+                  child: ErosCachedNetworkImage(
+                    imageUrl: gallery.thumbUrl ?? '',
+                    fit: BoxFit.cover,
+                    color:
+                        Theme.of(context).colorScheme.background.withOpacity(0),
+                    colorBlendMode: BlendMode.lighten,
+                  ),
+                ),
+                stretchModes: const [
+                  // StretchMode.zoomBackground,
+                  // StretchMode.blurBackground,
+                  StretchMode.fadeTitle,
+                ],
+              ),
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                padding: const EdgeInsets.all(0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      height: 180,
-                      child: Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 120,
-                            margin:
-                                const EdgeInsets.symmetric(horizontal: 12),
-                            alignment: Alignment.center,
-                            child: Hero(
-                              tag: gallery.thumbUrl ?? '',
-                              child: Card(
-                                margin: const EdgeInsets.all(0),
-                                clipBehavior: Clip.antiAlias,
-                                child: AspectRatio(
-                                  aspectRatio: (gallery.thumbWidth ?? 300) /
-                                      (gallery.thumbHeight ?? 400),
-                                  child: ErosCachedNetworkImage(
-                                    gallery.thumbUrl ?? '',
-                                    fit: BoxFit.cover,
+            if (false)
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: const EdgeInsets.all(0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        height: 180,
+                        child: Row(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 120,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              alignment: Alignment.center,
+                              child: Hero(
+                                tag: gallery.thumbUrl ?? '',
+                                child: Card(
+                                  margin: const EdgeInsets.all(0),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: AspectRatio(
+                                    aspectRatio: (gallery.thumbWidth ?? 300) /
+                                        (gallery.thumbHeight ?? 400),
+                                    child: ErosCachedNetworkImage(
+                                      imageUrl: gallery.thumbUrl ?? '',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SelectableText(
-                                  gallery.title ?? '',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(height: 1.3),
-                                  maxLines: 5,
-                                  minLines: 1,
-                                  // overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '#${gallery.gid}',
-                                  style: Theme.of(context).textTheme.caption,
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SelectableText(
+                                    gallery.title ?? '',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(height: 1.3),
+                                    maxLines: 5,
+                                    minLines: 1,
+                                    // overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    '#${gallery.gid}',
+                                    style: Theme.of(context).textTheme.caption,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
+                      const SizedBox(height: 8),
+                    ],
+                  ),
                 ),
               ),
-            ),
             ThumbsView(gid: gid),
           ],
         ),
@@ -189,7 +207,7 @@ class ThumbsView extends HookConsumerWidget {
                             child: Hero(
                               tag: '${gid}_$index',
                               child: ErosCachedNetworkImage(
-                                image.thumbUrl ?? '',
+                                imageUrl: image.thumbUrl ?? '',
                                 fit: BoxFit.cover,
                                 // placeholder: (context, url) {
                                 //   return const Center(

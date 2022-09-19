@@ -1,7 +1,7 @@
-import 'package:eros_n/component/models/gallery_image.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'gallery_image.dart';
+
 part 'gallery.freezed.dart';
 part 'gallery.g.dart';
 

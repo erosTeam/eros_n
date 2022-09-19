@@ -27,9 +27,18 @@ class GallerysNotifier extends StateNotifier<List<Gallery>> {
   }
 }
 
+class PopularNotifier extends GallerysNotifier {
+  PopularNotifier() : super([]);
+}
+
 final gallerysProvider =
     StateNotifierProvider<GallerysNotifier, List<Gallery>>((ref) {
   return GallerysNotifier([]);
+});
+
+final popularProvider =
+    StateNotifierProvider<PopularNotifier, List<Gallery>>((ref) {
+  return PopularNotifier();
 });
 
 class FrontNotifier extends StateNotifier<FrontState> {
@@ -38,6 +47,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
   final Ref ref;
 
   GallerysNotifier get gallerysNoti => ref.read(gallerysProvider.notifier);
+  PopularNotifier get popularNoti => ref.read(popularProvider.notifier);
 
   Future<void> getGalleryData({
     bool refresh = false,
@@ -75,6 +85,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
         refresh: refresh || next || prev,
         page: toPage,
       );
+      final populars = galleryList.populars ?? [];
       final gallerys = galleryList.gallerys ?? [];
 
       if (next) {
@@ -84,6 +95,9 @@ class FrontNotifier extends StateNotifier<FrontState> {
       } else {
         gallerysNoti.clearGallerys();
         gallerysNoti.addGallerys(gallerys);
+
+        popularNoti.clearGallerys();
+        popularNoti.addGallerys(populars);
       }
 
       state = state.copyWith(

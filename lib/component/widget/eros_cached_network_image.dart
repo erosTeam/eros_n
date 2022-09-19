@@ -10,9 +10,9 @@ import 'package:http/retry.dart' as retry;
 import 'package:octo_image/octo_image.dart';
 
 class ErosCachedNetworkImage extends StatelessWidget {
-  const ErosCachedNetworkImage(
-    this.imageUrl, {
+  const ErosCachedNetworkImage({
     Key? key,
+    required this.imageUrl,
     this.height,
     this.width,
     this.fit,
@@ -55,14 +55,14 @@ class ErosCachedNetworkImage extends StatelessWidget {
   ///  * [BlendMode], which includes an illustration of the effect of each blend mode.
   final BlendMode? colorBlendMode;
 
-  ImageWidgetBuilder get imageWidgetBuilder => (context, imageProvider) {
-        return OctoImage(
-          image: imageProvider,
-          width: width,
-          height: height,
-          fit: fit,
-        );
-      };
+  // ImageWidgetBuilder get imageWidgetBuilder => (context, imageProvider) {
+  //       return OctoImage(
+  //         image: imageProvider,
+  //         width: width,
+  //         height: height,
+  //         fit: fit,
+  //       );
+  //     };
 
   @override
   Widget build(BuildContext context) {

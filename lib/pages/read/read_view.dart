@@ -91,7 +91,7 @@ class ReadPage extends HookConsumerWidget {
           final imageUrl = getGalleryImageUrl(imageKey ?? '', index);
           return PhotoViewGalleryPageOptions.customChild(
             child: ErosCachedNetworkImage(
-              imageUrl,
+              imageUrl: imageUrl,
               placeholder: (context, url) => const Center(
                 child: CircularProgressIndicator(),
               ),

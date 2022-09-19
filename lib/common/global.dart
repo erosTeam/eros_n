@@ -1,18 +1,16 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:eros_n/network/app_dio/app_dio.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/kv/hive.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:eros_n/utils/logger.dart';
-import 'package:logger/logger.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart' as iaw;
+import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'const/const.dart';

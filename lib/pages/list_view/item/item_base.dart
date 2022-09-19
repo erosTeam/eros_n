@@ -23,7 +23,7 @@ class CoverImg extends StatelessWidget {
     Widget image() {
       if (imgUrl.isNotEmpty) {
         return ErosCachedNetworkImage(
-          imgUrl,
+          imageUrl: imgUrl,
           // placeholder: (_, __) {
           //   return Container(
           //     alignment: Alignment.center,
@@ -41,9 +41,9 @@ class CoverImg extends StatelessWidget {
     }
 
     return BlurImage(
-      // blur: kDebugMode,
-      sigma: 5,
-      blur: false,
+      blur: kDebugMode,
+      sigma: 4,
+      // blur: false,
       child: image(),
     );
   }
