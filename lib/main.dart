@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
         );
 
         return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           routeInformationParser: erosRouter.defaultRouteParser(),
           routeInformationProvider: erosRouter.routeInfoProvider(),
           routerDelegate: AutoRouterDelegate(

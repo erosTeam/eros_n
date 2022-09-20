@@ -97,58 +97,20 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     );
   }
 
-  static const gridDelegateWithMaxCrossAxisExtent =
-      SliverGridDelegateWithMaxCrossAxisExtent(
-    maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
-    crossAxisSpacing: NHConst.waterfallFlowLargeCrossAxisSpacing,
-    mainAxisSpacing: NHConst.waterfallFlowLargeMainAxisSpacing,
-  );
-
   @override
   Widget build(BuildContext context) {
-    final constraintsWith = context.width -
-        context.mediaQueryPadding.left -
-        context.mediaQueryPadding.right -
-        2 * NHConst.waterfallFlowLargeCrossAxisSpacing;
-
-    final _sgp = sliverGridDelegateWithMaxToCount(
-      constraintsWith,
-      gridDelegateWithMaxCrossAxisExtent,
-    );
-    // log constraintsWith
-    logger
-        .v('context.width ${context.width}, constraintsWith $constraintsWith');
-
-    final gridDelegate = _sgp.gridDelegate;
-    final _crossAxisCount = gridDelegate.crossAxisCount;
-    final _itemWith = (constraintsWith -
-            (_crossAxisCount - 1) *
-                NHConst.waterfallFlowLargeCrossAxisSpacing) /
-        _crossAxisCount;
-
-    logger.v('_crossAxisCount $_crossAxisCount');
-
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         vertical: NHConst.waterfallFlowLargeMainAxisSpacing,
         horizontal: NHConst.waterfallFlowLargeCrossAxisSpacing,
       ),
       sliver: SliverWaterfallFlow(
-        // delegate: FlutterListViewDelegate(
-        //   itemCardBuilder,
-        //   onItemKey: (index) => galleryProviders[index].gid ?? '',
-        //   childCount: galleryProviders.length,
-        //   keepPosition: keepPosition,
-        //   // onItemHeight: (index) => 180,
-        //   preferItemHeight: 180,
-        // ),
         delegate: SliverChildBuilderDelegate(
           itemCardBuilder,
           childCount: gallerys.length,
         ),
-        gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-          // maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
-          crossAxisCount: _crossAxisCount,
+        gridDelegate: SliverWaterfallFlowDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
           crossAxisSpacing: NHConst.waterfallFlowLargeCrossAxisSpacing,
           mainAxisSpacing: NHConst.waterfallFlowLargeMainAxisSpacing,
           lastChildLayoutTypeBuilder: (int index) => index == gallerys.length

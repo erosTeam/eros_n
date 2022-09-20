@@ -41,9 +41,9 @@ class CoverImg extends StatelessWidget {
     }
 
     return BlurImage(
-      blur: kDebugMode,
+      // blur: kDebugMode,
       sigma: 4,
-      // blur: false,
+      blur: false,
       child: image(),
     );
   }

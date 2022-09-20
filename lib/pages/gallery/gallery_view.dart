@@ -8,6 +8,7 @@ import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -29,24 +30,62 @@ class GalleryPage extends HookConsumerWidget {
     late ScrollController scrollController;
     useEffect(() {
       scrollController = ScrollController();
-      scrollController.addListener(() {
-        if (scrollController.position.pixels < kToolbarHeight / 2) {
-          logger.d('scrollController ${scrollController.position.pixels}');
-        }
-      });
       return scrollController.dispose;
     });
 
-    final appBartTansparent = ref.watch(
-        pageStateProvider(gid).select((state) => state.appBartTansparent));
+    Widget backGround() {
+      return ShaderMask(
+        shaderCallback: (Rect bounds) {
+          return LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                // Theme.of(context).canvasColor,
+                // Colors.black,
+                Colors.transparent,
+                Theme.of(context).canvasColor,
+                // Colors.white,
+              ]).createShader(
+            Rect.fromLTRB(0, 0, bounds.width, bounds.height - 0),
+          );
+        },
+        // blendMode: Theme.of(context).brightness == Brightness.dark
+        //     ? BlendMode.srcOver
+        //     : BlendMode.dstOut,
+        blendMode: BlendMode.dstOut,
+        child: ClipRect(
+          child: BlurImage(
+            sigma: context.isTablet ? 4 : 2,
+            color: Theme.of(context).canvasColor.withOpacity(0.5),
+            child: ErosCachedNetworkImage(
+              imageUrl: gallery.thumbUrl ?? '',
+              filterQuality: FilterQuality.medium,
+              fit: BoxFit.cover,
+              // color:
+              //     Theme.of(context).colorScheme.background.withOpacity(0.5),
+              // colorBlendMode: BlendMode.lighten,
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
-        backgroundColor: appBartTansparent ? Colors.transparent : null,
+        backgroundColor: MaterialStateColor.resolveWith((states) {
+          if (states.contains(MaterialState.scrolledUnder)) {
+            return Theme.of(context).colorScheme.surface;
+          }
+          return Colors.transparent;
+        }),
+        systemOverlayStyle: Theme.of(context).brightness == Brightness.light
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
         actions: [
           IconButton(
-            icon: const Icon(Icons.share),
+            icon: const Icon(Icons.more_horiz),
             onPressed: () {},
           ),
         ],
@@ -57,132 +96,77 @@ class GalleryPage extends HookConsumerWidget {
         child: CustomScrollView(
           controller: scrollController,
           slivers: [
-            // SliverAppBar(
-            //   // title: Text(gallery.title ?? ''),
-            //   floating: false,
-            //   pinned: true,
-            //   // bottom: PreferredSize(
-            //   //   preferredSize: Size.fromHeight(0),
-            //   //   child: SizedBox(height: 0),
-            //   // ),
-            //   // expandedHeight: 260,
-            //   // flexibleSpace: FlexibleSpaceBar(
-            //   //   // centerTitle: true,
-            //   //   expandedTitleScale: 1.2,
-            //   //   titlePadding: EdgeInsetsDirectional.only(
-            //   //     start: 60,
-            //   //     // bottom: 16,
-            //   //     // start: 16,
-            //   //     end: 16,
-            //   //     bottom: 16,
-            //   //     top: context.mediaQueryPadding.top + 3,
-            //   //   ),
-            //   //   // centerTitle: true,
-            //   //   title: Text(
-            //   //     gallery.title ?? '',
-            //   //     maxLines: 6,
-            //   //     overflow: TextOverflow.ellipsis,
-            //   //     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            //   //           height: 1.25,
-            //   //         ),
-            //   //   ),
-            //   //   background: ShaderMask(
-            //   //     shaderCallback: (Rect bounds) {
-            //   //       return LinearGradient(
-            //   //           begin: Alignment.topCenter,
-            //   //           end: Alignment.bottomCenter,
-            //   //           colors: [
-            //   //             // Theme.of(context).canvasColor,
-            //   //             Colors.transparent,
-            //   //             Theme.of(context).canvasColor,
-            //   //           ]).createShader(
-            //   //         Rect.fromLTRB(0, 0, bounds.width, bounds.height - 4),
-            //   //       );
-            //   //     },
-            //   //     blendMode: Theme.of(context).brightness == Brightness.dark
-            //   //         ? BlendMode.srcOver
-            //   //         : BlendMode.dstOut,
-            //   //     child: BlurImage(
-            //   //       sigma: context.isTablet ? 4 : 2,
-            //   //       color: Theme.of(context).canvasColor.withOpacity(0.4),
-            //   //       child: ErosCachedNetworkImage(
-            //   //         imageUrl: gallery.thumbUrl ?? '',
-            //   //         filterQuality: FilterQuality.medium,
-            //   //         fit: BoxFit.cover,
-            //   //         // color:
-            //   //         //     Theme.of(context).colorScheme.background.withOpacity(0.5),
-            //   //         // colorBlendMode: BlendMode.lighten,
-            //   //       ),
-            //   //     ),
-            //   //   ),
-            //   //   stretchModes: const [
-            //   //     StretchMode.zoomBackground,
-            //   //     // StretchMode.blurBackground,
-            //   //     StretchMode.fadeTitle,
-            //   //   ],
-            //   // ),
-            // ),
             if (true)
               SliverToBoxAdapter(
                 child: Container(
-                  padding: const EdgeInsets.all(0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  height: 280,
+                  child: Stack(
+                    alignment: Alignment.bottomLeft,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        height: 180,
-                        child: Row(
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 120,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              alignment: Alignment.center,
-                              child: Hero(
-                                tag: gallery.thumbUrl ?? '',
-                                child: Card(
-                                  margin: const EdgeInsets.all(0),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: AspectRatio(
-                                    aspectRatio: (gallery.thumbWidth ?? 300) /
-                                        (gallery.thumbHeight ?? 400),
-                                    child: ErosCachedNetworkImage(
-                                      imageUrl: gallery.thumbUrl ?? '',
-                                      fit: BoxFit.cover,
+                      backGround(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            height: 180,
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 120,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  alignment: Alignment.center,
+                                  child: Hero(
+                                    tag: gallery.thumbUrl ?? '',
+                                    child: Card(
+                                      margin: const EdgeInsets.all(0),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: AspectRatio(
+                                        aspectRatio:
+                                            (gallery.thumbWidth ?? 300) /
+                                                (gallery.thumbHeight ?? 400),
+                                        child: ErosCachedNetworkImage(
+                                          imageUrl: gallery.thumbUrl ?? '',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SelectableText(
-                                    gallery.title ?? '',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(height: 1.3),
-                                    maxLines: 5,
-                                    minLines: 1,
-                                    // overflow: TextOverflow.ellipsis,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SelectableText(
+                                        gallery.title ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(height: 1.3),
+                                        maxLines: 5,
+                                        minLines: 1,
+                                        // overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '#${gallery.gid}',
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    '#${gallery.gid}',
-                                    style: Theme.of(context).textTheme.caption,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
                       ),
-                      const SizedBox(height: 8),
                     ],
                   ),
                 ),
