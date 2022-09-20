@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_scrolling_fab_animated/flutter_scrolling_fab_animated.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'gallery_provider.dart';
@@ -49,14 +51,11 @@ class GalleryPage extends HookConsumerWidget {
             Rect.fromLTRB(0, 0, bounds.width, bounds.height - 0),
           );
         },
-        // blendMode: Theme.of(context).brightness == Brightness.dark
-        //     ? BlendMode.srcOver
-        //     : BlendMode.dstOut,
         blendMode: BlendMode.dstOut,
         child: ClipRect(
           child: BlurImage(
             sigma: context.isTablet ? 4 : 2,
-            color: Theme.of(context).canvasColor.withOpacity(0.5),
+            color: Theme.of(context).canvasColor.withOpacity(0.4),
             child: ErosCachedNetworkImage(
               imageUrl: gallery.thumbUrl ?? '',
               filterQuality: FilterQuality.medium,
@@ -85,10 +84,23 @@ class GalleryPage extends HookConsumerWidget {
             : SystemUiOverlayStyle.light,
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_horiz),
+            icon: const Icon(Icons.share),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
             onPressed: () {},
           ),
         ],
+      ),
+      floatingActionButton: ScrollingFab(
+        onPressed: () {
+          // ref.read(galleryProvider(gid).notifier).setInitialPage(index);
+          context.router.push(ReadRoute(gid: gid));
+        },
+        scrollController: scrollController,
+        label: Text('Read'),
+        icon: const Icon(Icons.play_arrow),
       ),
       body: RefreshIndicator(
         onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,

@@ -55,6 +55,7 @@ dependencies:
   flutter_hooks: ^0.18.5+1
   webview_cef: ^0.0.6
   desktop_webview_window: ^0.1.6
+  flutter_scrolling_fab_animated: ^0.1.4
 
 dev_dependencies:
   # flutter pub run apn_json2model
