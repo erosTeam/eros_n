@@ -50,7 +50,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
               toolbarHeight: 0,
             ),
             SliverPadding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 16,
                 top: 16,
                 // top: MediaQuery.of(context).padding.top + 16,

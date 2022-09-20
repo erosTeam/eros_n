@@ -7,6 +7,8 @@ import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'gallery_page_state.dart';
+
 class GalleryNotifier extends StateNotifier<Gallery> {
   GalleryNotifier(super.state, this.ref);
 
@@ -35,7 +37,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     if (state.images.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)
-          .update((state) => PageStatus.loading);
+          .update((state) => state.copyWith(pageStatus: PageStatus.loading));
     }
 
     try {
@@ -62,7 +64,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     } finally {
       ref
           .read(pageStateProvider(state.gid).notifier)
-          .update((state) => PageStatus.none);
+          .update((state) => state.copyWith(pageStatus: PageStatus.none));
     }
   }
 
@@ -84,8 +86,9 @@ final galleryProvider =
   },
 );
 
-final pageStateProvider = StateProvider.family<PageStatus, String?>((ref, gid) {
-  return PageStatus.none;
+final pageStateProvider =
+    StateProvider.family<GalleryViewState, String?>((ref, gid) {
+  return const GalleryViewState(pageStatus: PageStatus.none);
 });
 
 String getGalleryImageUrl(String imageKey, int index) {

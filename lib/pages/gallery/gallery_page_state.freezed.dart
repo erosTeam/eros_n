@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'gallery_state.dart';
+part of 'gallery_page_state.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$GalleryViewState {
   PageStatus? get pageStatus => throw _privateConstructorUsedError;
+  bool get appBartTansparent => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GalleryViewStateCopyWith<GalleryViewState> get copyWith =>
@@ -28,7 +29,7 @@ abstract class $GalleryViewStateCopyWith<$Res> {
   factory $GalleryViewStateCopyWith(
           GalleryViewState value, $Res Function(GalleryViewState) then) =
       _$GalleryViewStateCopyWithImpl<$Res>;
-  $Res call({PageStatus? pageStatus});
+  $Res call({PageStatus? pageStatus, bool appBartTansparent});
 }
 
 /// @nodoc
@@ -43,12 +44,17 @@ class _$GalleryViewStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? pageStatus = freezed,
+    Object? appBartTansparent = freezed,
   }) {
     return _then(_value.copyWith(
       pageStatus: pageStatus == freezed
           ? _value.pageStatus
           : pageStatus // ignore: cast_nullable_to_non_nullable
               as PageStatus?,
+      appBartTansparent: appBartTansparent == freezed
+          ? _value.appBartTansparent
+          : appBartTansparent // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -60,7 +66,7 @@ abstract class _$$_GalleryViewStateCopyWith<$Res>
           _$_GalleryViewState value, $Res Function(_$_GalleryViewState) then) =
       __$$_GalleryViewStateCopyWithImpl<$Res>;
   @override
-  $Res call({PageStatus? pageStatus});
+  $Res call({PageStatus? pageStatus, bool appBartTansparent});
 }
 
 /// @nodoc
@@ -77,12 +83,17 @@ class __$$_GalleryViewStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? pageStatus = freezed,
+    Object? appBartTansparent = freezed,
   }) {
     return _then(_$_GalleryViewState(
       pageStatus: pageStatus == freezed
           ? _value.pageStatus
           : pageStatus // ignore: cast_nullable_to_non_nullable
               as PageStatus?,
+      appBartTansparent: appBartTansparent == freezed
+          ? _value.appBartTansparent
+          : appBartTansparent // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -90,14 +101,17 @@ class __$$_GalleryViewStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_GalleryViewState implements _GalleryViewState {
-  const _$_GalleryViewState({this.pageStatus});
+  const _$_GalleryViewState({this.pageStatus, this.appBartTansparent = true});
 
   @override
   final PageStatus? pageStatus;
+  @override
+  @JsonKey()
+  final bool appBartTansparent;
 
   @override
   String toString() {
-    return 'GalleryViewState(pageStatus: $pageStatus)';
+    return 'GalleryViewState(pageStatus: $pageStatus, appBartTansparent: $appBartTansparent)';
   }
 
   @override
@@ -106,12 +120,16 @@ class _$_GalleryViewState implements _GalleryViewState {
         (other.runtimeType == runtimeType &&
             other is _$_GalleryViewState &&
             const DeepCollectionEquality()
-                .equals(other.pageStatus, pageStatus));
+                .equals(other.pageStatus, pageStatus) &&
+            const DeepCollectionEquality()
+                .equals(other.appBartTansparent, appBartTansparent));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(pageStatus));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(pageStatus),
+      const DeepCollectionEquality().hash(appBartTansparent));
 
   @JsonKey(ignore: true)
   @override
@@ -120,11 +138,14 @@ class _$_GalleryViewState implements _GalleryViewState {
 }
 
 abstract class _GalleryViewState implements GalleryViewState {
-  const factory _GalleryViewState({final PageStatus? pageStatus}) =
-      _$_GalleryViewState;
+  const factory _GalleryViewState(
+      {final PageStatus? pageStatus,
+      final bool appBartTansparent}) = _$_GalleryViewState;
 
   @override
   PageStatus? get pageStatus;
+  @override
+  bool get appBartTansparent;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryViewStateCopyWith<_$_GalleryViewState> get copyWith =>

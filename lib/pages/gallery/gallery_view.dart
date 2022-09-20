@@ -8,6 +8,7 @@ import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'gallery_provider.dart';
@@ -24,78 +25,104 @@ class GalleryPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.read(galleryProvider(gid));
     logger.d('build gallery $gid ${gallery.title}');
+
+    late ScrollController scrollController;
+    useEffect(() {
+      scrollController = ScrollController();
+      scrollController.addListener(() {
+        if (scrollController.position.pixels < kToolbarHeight / 2) {
+          logger.d('scrollController ${scrollController.position.pixels}');
+        }
+      });
+      return scrollController.dispose;
+    });
+
+    final appBartTansparent = ref.watch(
+        pageStateProvider(gid).select((state) => state.appBartTansparent));
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: appBartTansparent ? Colors.transparent : null,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
         child: CustomScrollView(
+          controller: scrollController,
           slivers: [
-            SliverAppBar(
-              // title: Text(gallery.title ?? ''),
-              floating: false,
-              pinned: true,
-              // bottom: PreferredSize(
-              //   preferredSize: Size.fromHeight(0),
-              //   child: SizedBox(height: 0),
-              // ),
-              expandedHeight: 260,
-              flexibleSpace: FlexibleSpaceBar(
-                // centerTitle: true,
-                expandedTitleScale: 1.2,
-                titlePadding: EdgeInsetsDirectional.only(
-                  start: 60,
-                  // bottom: 16,
-                  // start: 16,
-                  end: 16,
-                  bottom: 16,
-                  top: context.mediaQueryPadding.top + 3,
-                ),
-                // centerTitle: true,
-                title: Text(
-                  gallery.title ?? '',
-                  maxLines: 6,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        height: 1.25,
-                      ),
-                ),
-                background: ShaderMask(
-                  shaderCallback: (Rect bounds) {
-                    return LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          // Theme.of(context).canvasColor,
-                          Colors.transparent,
-                          Theme.of(context).canvasColor,
-                        ]).createShader(
-                      Rect.fromLTRB(0, 0, bounds.width, bounds.height - 4),
-                    );
-                  },
-                  blendMode: Theme.of(context).brightness == Brightness.dark
-                      ? BlendMode.srcOver
-                      : BlendMode.dstOut,
-                  child: BlurImage(
-                    sigma: context.isTablet ? 4 : 2,
-                    color: Theme.of(context).canvasColor.withOpacity(0.4),
-                    child: ErosCachedNetworkImage(
-                      imageUrl: gallery.thumbUrl ?? '',
-                      filterQuality: FilterQuality.medium,
-                      fit: BoxFit.cover,
-                      // color:
-                      //     Theme.of(context).colorScheme.background.withOpacity(0.5),
-                      // colorBlendMode: BlendMode.lighten,
-                    ),
-                  ),
-                ),
-                stretchModes: const [
-                  StretchMode.zoomBackground,
-                  // StretchMode.blurBackground,
-                  StretchMode.fadeTitle,
-                ],
-              ),
-            ),
-            if (false)
+            // SliverAppBar(
+            //   // title: Text(gallery.title ?? ''),
+            //   floating: false,
+            //   pinned: true,
+            //   // bottom: PreferredSize(
+            //   //   preferredSize: Size.fromHeight(0),
+            //   //   child: SizedBox(height: 0),
+            //   // ),
+            //   // expandedHeight: 260,
+            //   // flexibleSpace: FlexibleSpaceBar(
+            //   //   // centerTitle: true,
+            //   //   expandedTitleScale: 1.2,
+            //   //   titlePadding: EdgeInsetsDirectional.only(
+            //   //     start: 60,
+            //   //     // bottom: 16,
+            //   //     // start: 16,
+            //   //     end: 16,
+            //   //     bottom: 16,
+            //   //     top: context.mediaQueryPadding.top + 3,
+            //   //   ),
+            //   //   // centerTitle: true,
+            //   //   title: Text(
+            //   //     gallery.title ?? '',
+            //   //     maxLines: 6,
+            //   //     overflow: TextOverflow.ellipsis,
+            //   //     style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            //   //           height: 1.25,
+            //   //         ),
+            //   //   ),
+            //   //   background: ShaderMask(
+            //   //     shaderCallback: (Rect bounds) {
+            //   //       return LinearGradient(
+            //   //           begin: Alignment.topCenter,
+            //   //           end: Alignment.bottomCenter,
+            //   //           colors: [
+            //   //             // Theme.of(context).canvasColor,
+            //   //             Colors.transparent,
+            //   //             Theme.of(context).canvasColor,
+            //   //           ]).createShader(
+            //   //         Rect.fromLTRB(0, 0, bounds.width, bounds.height - 4),
+            //   //       );
+            //   //     },
+            //   //     blendMode: Theme.of(context).brightness == Brightness.dark
+            //   //         ? BlendMode.srcOver
+            //   //         : BlendMode.dstOut,
+            //   //     child: BlurImage(
+            //   //       sigma: context.isTablet ? 4 : 2,
+            //   //       color: Theme.of(context).canvasColor.withOpacity(0.4),
+            //   //       child: ErosCachedNetworkImage(
+            //   //         imageUrl: gallery.thumbUrl ?? '',
+            //   //         filterQuality: FilterQuality.medium,
+            //   //         fit: BoxFit.cover,
+            //   //         // color:
+            //   //         //     Theme.of(context).colorScheme.background.withOpacity(0.5),
+            //   //         // colorBlendMode: BlendMode.lighten,
+            //   //       ),
+            //   //     ),
+            //   //   ),
+            //   //   stretchModes: const [
+            //   //     StretchMode.zoomBackground,
+            //   //     // StretchMode.blurBackground,
+            //   //     StretchMode.fadeTitle,
+            //   //   ],
+            //   // ),
+            // ),
+            if (true)
               SliverToBoxAdapter(
                 child: Container(
                   padding: const EdgeInsets.all(0),
@@ -182,9 +209,10 @@ class ThumbsView extends HookConsumerWidget {
     // final images = ref.watch(galleryProvider(gid).select((g) => g.images));
 
     final images = ref.read(galleryProvider(gid)).images;
-    final status = ref.watch(pageStateProvider(gid));
+    final pageStatus =
+        ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
 
-    if (status == PageStatus.loading || images.isEmpty) {
+    if (pageStatus == PageStatus.loading || images.isEmpty) {
       return const SliverFillRemaining(
         child: Center(
           child: CircularProgressIndicator(),
