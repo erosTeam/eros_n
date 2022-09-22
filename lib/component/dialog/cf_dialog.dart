@@ -85,15 +85,14 @@ Future<void> showInAppWebViewDialog({
 
     Widget cefWebView() {
       return FutureBuilder<void>(
-        future: initCef(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return cef.Webview(cefController);
-          } else {
-            return const Center(child: Text('W'));
-          }
-        }
-      );
+          future: initCef(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return cef.Webview(cefController);
+            } else {
+              return const Center(child: Text('W'));
+            }
+          });
     }
 
     Future<void> initDw() async {
@@ -107,13 +106,13 @@ Future<void> showInAppWebViewDialog({
       );
       webview.launch(NHConst.baseUrl);
     }
+
     Widget dw() {
       return FutureBuilder<void>(
-        future: initDw(),
-        builder: (context, snapshot) {
-          return SizedBox();
-        }
-      );
+          future: initDw(),
+          builder: (context, snapshot) {
+            return SizedBox();
+          });
     }
 
     return ClipRRect(
@@ -129,7 +128,11 @@ Future<void> showInAppWebViewDialog({
           children: [
             SizedBox(
               height: 100,
-              child: isPlatformPhone ? iw() : dw(),
+              child: isPlatformPhone
+                  ? iw()
+                  : io.Platform.isWindows
+                      ? dw()
+                      : cefWebView(),
             ),
             Container(
               alignment: Alignment.center,
