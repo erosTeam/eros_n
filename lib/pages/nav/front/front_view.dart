@@ -3,10 +3,13 @@ import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
+import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
+import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -21,15 +24,30 @@ class FrontPage extends StatefulHookConsumerWidget {
 
 class _FrontPageState extends ConsumerState<FrontPage>
     with AutomaticKeepAliveClientMixin {
+  final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     ref.read(frontProvider.notifier).loadData();
+    // _scrollListener();
+    scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      ref.read(indexProvider.notifier).hideNavigationBar();
+    }
+    if (scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      ref.read(indexProvider.notifier).showNavigationBar();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    logger.d('FrontPage build');
+    logger.v('FrontPage build');
 
     super.build(context);
     logger.v('${MediaQuery.of(context).padding.top}');
@@ -39,6 +57,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
         onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
         child: CustomScrollView(
+          controller: scrollController,
           slivers: [
             const SliverAppBar(
               floating: true,
@@ -87,6 +106,13 @@ class _FrontPageState extends ConsumerState<FrontPage>
         ),
       ),
     );
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
   }
 
   @override

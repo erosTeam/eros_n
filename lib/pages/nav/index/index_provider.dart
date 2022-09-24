@@ -8,7 +8,19 @@ class IndexNotifier extends StateNotifier<IndexState> {
 
   void setIndex(int index) {
     state.pageController.jumpToPage(index);
-    state = state.cpoyWith(selectedIndex: index);
+    state = state.copyWith(selectedIndex: index);
+  }
+
+  void hideNavigationBar() {
+    if (!state.hideNavigationBar) {
+      state = state.copyWith(hideNavigationBar: true);
+    }
+  }
+
+  void showNavigationBar() {
+    if (state.hideNavigationBar) {
+      state = state.copyWith(hideNavigationBar: false);
+    }
   }
 }
 

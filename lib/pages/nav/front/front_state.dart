@@ -13,6 +13,8 @@ class FrontState {
   final int curPage;
   final int maxPage;
 
+
+
   FrontState copyWith({
     LoadStatus? status,
     int? curPage,

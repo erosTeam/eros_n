@@ -1,6 +1,7 @@
 import 'package:eros_n/pages/nav/front/front_view.dart';
 import 'package:eros_n/pages/nav/history/history_view.dart';
 import 'package:eros_n/pages/nav/more/more_view.dart';
+import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -26,25 +27,33 @@ class IndexPage extends HookConsumerWidget {
         physics: const NeverScrollableScrollPhysics(),
         children: pages,
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: state.selectedIndex,
-        destinations: [
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.history),
-            label: 'History',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.more_horiz),
-            label: 'More',
-          ),
-        ],
-        onDestinationSelected: (index) {
-          ref.read(indexProvider.notifier).setIndex(index);
-        },
+      bottomNavigationBar: AnimatedContainer(
+        height:
+            state.hideNavigationBar ? 0 : 64 + context.mediaQueryPadding.bottom,
+        duration: 300.milliseconds,
+        curve: Curves.ease,
+        child: NavigationBar(
+          selectedIndex: state.selectedIndex,
+          // labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          // height: 48,
+          destinations: [
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.history),
+              label: 'History',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.more_horiz),
+              label: 'More',
+            ),
+          ],
+          onDestinationSelected: (index) {
+            ref.read(indexProvider.notifier).setIndex(index);
+          },
+        ),
       ),
     );
   }
