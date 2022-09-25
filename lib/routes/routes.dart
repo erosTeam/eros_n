@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/nav/index/index_view.dart';
 import 'package:eros_n/pages/read/read_view.dart';
+import 'package:eros_n/pages/setting/appearance_setting_page.dart';
+import 'package:eros_n/pages/setting/settings_page.dart';
 import 'package:eros_n/pages/splash/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,8 @@ class NHRoutes {
   static const String home = '/home';
   static const String gallery = '/gallery';
   static const String read = '/read';
+  static const String settings = '/settings';
+  static const String appearanceSetting = '/appearance_setting';
 }
 
 class AppRouteObserver extends AutoRouterObserver {
@@ -28,6 +32,8 @@ class AppRouteObserver extends AutoRouterObserver {
     AutoRoute(path: NHRoutes.home, page: IndexPage),
     AutoRoute(path: NHRoutes.gallery, page: GalleryPage),
     AutoRoute(path: NHRoutes.read, page: ReadPage),
+    AutoRoute(path: NHRoutes.settings, page: SettingsPage),
+    AutoRoute(path: NHRoutes.appearanceSetting, page: AppearanceSettingPage),
   ],
 )
 class AppRouter extends _$AppRouter {}

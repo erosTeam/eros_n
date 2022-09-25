@@ -48,7 +48,7 @@ Future<GallerySet> getGalleryList({
 
   final httpTransformer = HttpTransformerBuilder(
         (response) {
-      logger.d('statusCode ${response.statusCode}');
+      logger.v('statusCode ${response.statusCode}');
       statusCode = response.statusCode;
       final list = parseGalleryList(response.data as String);
       return DioHttpResponse<GallerySet>.success(list);

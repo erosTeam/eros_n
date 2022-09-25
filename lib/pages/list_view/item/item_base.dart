@@ -1,7 +1,9 @@
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CoverImg extends StatelessWidget {
   const CoverImg({
@@ -40,10 +42,16 @@ class CoverImg extends StatelessWidget {
       }
     }
 
-    return BlurImage(
-      // blur: kDebugMode,
-      sigma: 4,
-      blur: false,
+    return Consumer(
+      builder: (context, ref, child) {
+        final isCoverBlur = ref
+            .watch(settingsProvider.select((settings) => settings.coverBlur));
+        return BlurImage(
+          blur: isCoverBlur,
+          // sigma: 4,
+          child: child!,
+        );
+      },
       child: image(),
     );
   }

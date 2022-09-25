@@ -53,6 +53,18 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SettingsRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const SettingsPage(),
+      );
+    },
+    AppearanceSettingRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const AppearanceSettingPage(),
+      );
+    },
   };
 
   @override
@@ -72,6 +84,14 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ReadRoute.name,
           path: '/read',
+        ),
+        RouteConfig(
+          SettingsRoute.name,
+          path: '/settings',
+        ),
+        RouteConfig(
+          AppearanceSettingRoute.name,
+          path: '/appearance_setting',
         ),
       ];
 }
@@ -178,4 +198,28 @@ class ReadRouteArgs {
   String toString() {
     return 'ReadRouteArgs{key: $key, gid: $gid}';
   }
+}
+
+/// generated route for
+/// [SettingsPage]
+class SettingsRoute extends PageRouteInfo<void> {
+  const SettingsRoute()
+      : super(
+          SettingsRoute.name,
+          path: '/settings',
+        );
+
+  static const String name = 'SettingsRoute';
+}
+
+/// generated route for
+/// [AppearanceSettingPage]
+class AppearanceSettingRoute extends PageRouteInfo<void> {
+  const AppearanceSettingRoute()
+      : super(
+          AppearanceSettingRoute.name,
+          path: '/appearance_setting',
+        );
+
+  static const String name = 'AppearanceSettingRoute';
 }

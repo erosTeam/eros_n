@@ -15,6 +15,7 @@ _$_GallerySet _$$_GallerySetFromJson(Map<String, dynamic> json) =>
           ?.map((e) => Gallery.fromJson(e as Map<String, dynamic>))
           .toList(),
       maxPage: json['maxPage'] as int?,
+      fromCache: json['fromCache'] as bool?,
     );
 
 Map<String, dynamic> _$$_GallerySetToJson(_$_GallerySet instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$_GallerySetToJson(_$_GallerySet instance) =>
       'gallerys': instance.gallerys,
       'populars': instance.populars,
       'maxPage': instance.maxPage,
+      'fromCache': instance.fromCache,
     };

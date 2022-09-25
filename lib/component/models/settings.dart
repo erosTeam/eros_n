@@ -11,4 +11,5 @@ class Settings with _$Settings {
 
   factory Settings.fromJson(Map<String, Object?> json) =>
       _$SettingsFromJson(json);
+
 }

@@ -23,6 +23,7 @@ mixin _$GallerySet {
   List<Gallery>? get gallerys => throw _privateConstructorUsedError;
   List<Gallery>? get populars => throw _privateConstructorUsedError;
   int? get maxPage => throw _privateConstructorUsedError;
+  bool? get fromCache => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,11 @@ abstract class $GallerySetCopyWith<$Res> {
   factory $GallerySetCopyWith(
           GallerySet value, $Res Function(GallerySet) then) =
       _$GallerySetCopyWithImpl<$Res>;
-  $Res call({List<Gallery>? gallerys, List<Gallery>? populars, int? maxPage});
+  $Res call(
+      {List<Gallery>? gallerys,
+      List<Gallery>? populars,
+      int? maxPage,
+      bool? fromCache});
 }
 
 /// @nodoc
@@ -51,6 +56,7 @@ class _$GallerySetCopyWithImpl<$Res> implements $GallerySetCopyWith<$Res> {
     Object? gallerys = freezed,
     Object? populars = freezed,
     Object? maxPage = freezed,
+    Object? fromCache = freezed,
   }) {
     return _then(_value.copyWith(
       gallerys: gallerys == freezed
@@ -65,6 +71,10 @@ class _$GallerySetCopyWithImpl<$Res> implements $GallerySetCopyWith<$Res> {
           ? _value.maxPage
           : maxPage // ignore: cast_nullable_to_non_nullable
               as int?,
+      fromCache: fromCache == freezed
+          ? _value.fromCache
+          : fromCache // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -76,7 +86,11 @@ abstract class _$$_GallerySetCopyWith<$Res>
           _$_GallerySet value, $Res Function(_$_GallerySet) then) =
       __$$_GallerySetCopyWithImpl<$Res>;
   @override
-  $Res call({List<Gallery>? gallerys, List<Gallery>? populars, int? maxPage});
+  $Res call(
+      {List<Gallery>? gallerys,
+      List<Gallery>? populars,
+      int? maxPage,
+      bool? fromCache});
 }
 
 /// @nodoc
@@ -94,6 +108,7 @@ class __$$_GallerySetCopyWithImpl<$Res> extends _$GallerySetCopyWithImpl<$Res>
     Object? gallerys = freezed,
     Object? populars = freezed,
     Object? maxPage = freezed,
+    Object? fromCache = freezed,
   }) {
     return _then(_$_GallerySet(
       gallerys: gallerys == freezed
@@ -108,6 +123,10 @@ class __$$_GallerySetCopyWithImpl<$Res> extends _$GallerySetCopyWithImpl<$Res>
           ? _value.maxPage
           : maxPage // ignore: cast_nullable_to_non_nullable
               as int?,
+      fromCache: fromCache == freezed
+          ? _value.fromCache
+          : fromCache // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -118,7 +137,8 @@ class _$_GallerySet implements _GallerySet {
   const _$_GallerySet(
       {final List<Gallery>? gallerys,
       final List<Gallery>? populars,
-      this.maxPage})
+      this.maxPage,
+      this.fromCache})
       : _gallerys = gallerys,
         _populars = populars;
 
@@ -145,10 +165,12 @@ class _$_GallerySet implements _GallerySet {
 
   @override
   final int? maxPage;
+  @override
+  final bool? fromCache;
 
   @override
   String toString() {
-    return 'GallerySet(gallerys: $gallerys, populars: $populars, maxPage: $maxPage)';
+    return 'GallerySet(gallerys: $gallerys, populars: $populars, maxPage: $maxPage, fromCache: $fromCache)';
   }
 
   @override
@@ -158,7 +180,8 @@ class _$_GallerySet implements _GallerySet {
             other is _$_GallerySet &&
             const DeepCollectionEquality().equals(other._gallerys, _gallerys) &&
             const DeepCollectionEquality().equals(other._populars, _populars) &&
-            const DeepCollectionEquality().equals(other.maxPage, maxPage));
+            const DeepCollectionEquality().equals(other.maxPage, maxPage) &&
+            const DeepCollectionEquality().equals(other.fromCache, fromCache));
   }
 
   @JsonKey(ignore: true)
@@ -167,7 +190,8 @@ class _$_GallerySet implements _GallerySet {
       runtimeType,
       const DeepCollectionEquality().hash(_gallerys),
       const DeepCollectionEquality().hash(_populars),
-      const DeepCollectionEquality().hash(maxPage));
+      const DeepCollectionEquality().hash(maxPage),
+      const DeepCollectionEquality().hash(fromCache));
 
   @JsonKey(ignore: true)
   @override
@@ -186,7 +210,8 @@ abstract class _GallerySet implements GallerySet {
   const factory _GallerySet(
       {final List<Gallery>? gallerys,
       final List<Gallery>? populars,
-      final int? maxPage}) = _$_GallerySet;
+      final int? maxPage,
+      final bool? fromCache}) = _$_GallerySet;
 
   factory _GallerySet.fromJson(Map<String, dynamic> json) =
       _$_GallerySet.fromJson;
@@ -197,6 +222,8 @@ abstract class _GallerySet implements GallerySet {
   List<Gallery>? get populars;
   @override
   int? get maxPage;
+  @override
+  bool? get fromCache;
   @override
   @JsonKey(ignore: true)
   _$$_GallerySetCopyWith<_$_GallerySet> get copyWith =>
