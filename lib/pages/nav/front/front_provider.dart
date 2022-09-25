@@ -4,8 +4,8 @@ import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../network/app_dio/pdio.dart';
@@ -47,17 +47,19 @@ class FrontNotifier extends StateNotifier<FrontState> {
   final Ref ref;
 
   GallerysNotifier get gallerysNoti => ref.read(gallerysProvider.notifier);
+
   PopularNotifier get popularNoti => ref.read(popularProvider.notifier);
 
-  Future<void> getGalleryData({
+  Future<bool> getGalleryData({
     bool refresh = false,
     bool showWebViewDialogOnFail = true,
     int? page,
     bool next = false,
     bool prev = false,
+    bool first = false,
   }) async {
     if (state.isLoading || state.isLoadMore) {
-      return;
+      return false;
     }
 
     final rCookies =
@@ -66,7 +68,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
 
     if (next) {
       if (state.curPage == state.maxPage) {
-        return;
+        return false;
       }
       state = state.copyWith(status: LoadStatus.loadingMore);
     } else if (prev) {
@@ -81,12 +83,12 @@ class FrontNotifier extends StateNotifier<FrontState> {
         page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
 
     try {
-      final galleryList = await getGalleryList(
+      final gallerySet = await getGalleryList(
         refresh: refresh || next || prev,
         page: toPage,
       );
-      final populars = galleryList.populars ?? [];
-      final gallerys = galleryList.gallerys ?? [];
+      final populars = gallerySet.populars ?? [];
+      final gallerys = gallerySet.gallerys ?? [];
 
       if (next) {
         gallerysNoti.addGallerys(gallerys);
@@ -101,10 +103,12 @@ class FrontNotifier extends StateNotifier<FrontState> {
       }
 
       state = state.copyWith(
-        maxPage: galleryList.maxPage ?? 1,
+        maxPage: gallerySet.maxPage ?? 1,
         status: LoadStatus.success,
         curPage: toPage,
       );
+
+      return gallerySet.fromCache ?? false;
     } on HttpException catch (e) {
       logger.d('state.status ${state.status}');
       if (showWebViewDialogOnFail &&
@@ -112,7 +116,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
           state.status != LoadStatus.getToken) {
         logger.e('code ${e.code}');
         if (!mounted) {
-          return;
+          return false;
         }
         state = state.copyWith(status: LoadStatus.getToken);
         await showInAppWebViewDialog(
@@ -130,10 +134,15 @@ class FrontNotifier extends StateNotifier<FrontState> {
         rethrow;
       }
     }
+    return false;
   }
 
   Future<void> loadData() async {
-    await getGalleryData();
+    final fromCache = await getGalleryData(first: true);
+    if (fromCache) {
+      await 3.seconds.delay();
+      await getGalleryData(refresh: true);
+    }
   }
 
   Future<void> reloadData() async {

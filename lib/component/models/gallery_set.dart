@@ -10,6 +10,7 @@ class GallerySet with _$GallerySet {
     List<Gallery>? gallerys,
     List<Gallery>? populars,
     int? maxPage,
+    bool? fromCache,
   }) = _GallerySet;
 
   factory GallerySet.fromJson(Map<String, Object?> json) =>
