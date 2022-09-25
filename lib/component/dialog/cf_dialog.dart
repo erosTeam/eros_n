@@ -15,20 +15,24 @@ import 'package:webview_cef/webview_cef.dart' as cef;
 import 'package:desktop_webview_window/desktop_webview_window.dart' as dw;
 
 const kDialogTag = 'InAppWebViewDialog';
+bool _canShowDialog = true;
 
 // 使用请求nh主页，获取cookie更新到cookieJar
 Future<void> showInAppWebViewDialog({
   int? statusCode,
   FutureOr Function()? onComplete,
 }) async {
+  if (!_canShowDialog) {
+    return;
+  }
   final isPlatformPhone = io.Platform.isAndroid || io.Platform.isAndroid;
 
   final CookieManager cookieManager = CookieManager.instance();
   if (isPlatformPhone) {
     await cookieManager.deleteAllCookies();
   }
-  final showWebview = !kReleaseMode;
-  // final showWebview = false;
+  // final showWebview = !kReleaseMode;
+  final showWebview = false;
 
   final cefController = cef.WebviewController();
 
@@ -160,12 +164,12 @@ Future<void> showInAppWebViewDialog({
     // );
   }
 
+  _canShowDialog = false;
   final cookies = await SmartDialog.show<List<io.Cookie>>(
     // tag: kDialogTag,
     builder: dialogBuilder,
     clickMaskDismiss: false,
     keepSingle: true,
-    // useSystem: true,
   );
 
   // log cookies
@@ -180,6 +184,8 @@ Future<void> showInAppWebViewDialog({
 
     await onComplete?.call();
   }
+
+  _canShowDialog = true;
 }
 
 final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(

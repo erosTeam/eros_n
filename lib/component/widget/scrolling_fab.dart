@@ -80,7 +80,9 @@ class _ScrollingFabState extends State<ScrollingFab> {
         isExtended: true,
         extendedIconLabelSpacing:
             _isExtended ? widget.extendedIconLabelSpacing : 0,
-        extendedPadding: const EdgeInsets.symmetric(horizontal: 16),
+        extendedPadding: _isExtended
+            ? const EdgeInsetsDirectional.only(start: 16, end: 20)
+            : const EdgeInsetsDirectional.only(start: 16, end: 16),
       ),
     );
   }

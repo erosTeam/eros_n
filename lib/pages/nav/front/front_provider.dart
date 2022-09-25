@@ -106,6 +106,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
         curPage: toPage,
       );
     } on HttpException catch (e) {
+      logger.d('state.status ${state.status}');
       if (showWebViewDialogOnFail &&
           (e.code == 403 || e.code == 503) &&
           state.status != LoadStatus.getToken) {

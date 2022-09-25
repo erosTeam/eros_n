@@ -91,8 +91,8 @@ final pageStateProvider =
   return const GalleryViewState(pageStatus: PageStatus.none);
 });
 
-String getGalleryImageUrl(String imageKey, int index) {
+String getGalleryImageUrl(String imageKey, int index, String extention) {
   final subDomain = radomList(['', '3', '5', '7']);
-  return 'https://i.nhentai.net/galleries/$imageKey/${index + 1}.jpg';
+  return 'https://i.nhentai.net/galleries/$imageKey/${index + 1}$extention';
   // return 'https://i$subDomain.nhentai.net/galleries/$imageKey/${index + 1}.jpg';
 }

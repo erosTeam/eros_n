@@ -1,12 +1,8 @@
-import 'package:async_builder/async_builder.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/preload_photo_view_gallery.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
-import 'package:eros_n/pages/read/read_provider.dart';
-import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:preload_page_view/preload_page_view.dart';
+import 'package:path/path.dart' as path;
 
 PhotoViewScaleState customChildScaleStateCycle(PhotoViewScaleState actual) {
   PhotoViewScaleState desc = PhotoViewScaleState.initial;
@@ -79,7 +76,7 @@ class ReadPage extends HookConsumerWidget {
     //     ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
     // final images = ref.watch(galleryProvider(gid).select((g) => g.images));
     // final imageKey = ref.watch(galleryProvider(gid).select((g) => g.imageKey));
-    final gallery = ref.read(galleryProvider(gid));
+    final Gallery gallery = ref.read(galleryProvider(gid));
     final currentPageIndex = gallery.currentPageIndex;
     final images = gallery.images;
     final imageKey = gallery.imageKey;
@@ -94,7 +91,7 @@ class ReadPage extends HookConsumerWidget {
       body = PreloadPhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
-          final imageUrl = getGalleryImageUrl(imageKey ?? '', index);
+          final imageUrl = getGalleryImageUrl(imageKey ?? '', index, path.extension(images[index].thumbUrl ?? '.jpg'));
           return PhotoViewGalleryPageOptions.customChild(
             child: ErosCachedNetworkImage(
               imageUrl: imageUrl,
@@ -132,7 +129,7 @@ class ReadPage extends HookConsumerWidget {
       body = PreloadPhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
-          final imageUrl = getGalleryImageUrl(imageKey ?? '', index);
+          final imageUrl = getGalleryImageUrl(imageKey ?? '', index, path.extension(images[index].thumbUrl ?? '.jpg'));
           return PhotoViewGalleryPageOptions(
             imageProvider: getErorsImageProvider(
               imageUrl,
