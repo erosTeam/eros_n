@@ -7,6 +7,24 @@ Gallery parseGalleryDetail(String html) {
   final Document document = parse(html);
   // logger.d('html\n$html');
 
+  final titleElms = document.querySelectorAll('#info > .title');
+  final title = titleElms.first.text;
+  final secondTitle = titleElms.last.text;
+  logger.d('title: $title, secondTitle: $secondTitle');
+
+  const selectorFavorite = '#favorite';
+  final favoriteElm = document.querySelector(selectorFavorite);
+
+  final favoriteText = favoriteElm?.text.trim() ?? '';
+  logger.v('favoriteText: $favoriteText');
+  final favNum = RegExp(r'\d+').firstMatch(favoriteText)?.group(0) ?? '0';
+
+  final favText = favoriteElm?.querySelector('.text')?.text.trim() ?? '';
+  logger.v('favText: $favText');
+  final isFav = favText.contains('Un');
+
+  logger.v('favNum: $favNum isFav: $isFav');
+
   const selectorThumb = '.gallerythumb';
 
   final List<Element> galleryThumbsElm =
@@ -31,6 +49,10 @@ Gallery parseGalleryDetail(String html) {
   }
 
   return Gallery(
+    title: title,
+    secondTitle: secondTitle,
     images: galleryThumbs,
+    isFavorited: isFav,
+    favoritedNum: favNum,
   );
 }

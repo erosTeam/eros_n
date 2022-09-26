@@ -47,6 +47,10 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       );
       state = state.copyWith(
         images: gallery.images,
+        favoritedNum: gallery.favoritedNum,
+        isFavorited: gallery.isFavorited,
+        title: gallery.title,
+        secondTitle: gallery.secondTitle,
       );
     } on HttpException catch (e) {
       if (e.code == 403 || e.code == 503) {

@@ -23,12 +23,15 @@ mixin _$Gallery {
   String? get gid => throw _privateConstructorUsedError;
   String? get imageKey => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
+  String? get secondTitle => throw _privateConstructorUsedError;
   String? get url => throw _privateConstructorUsedError;
   String? get thumbUrl => throw _privateConstructorUsedError;
   int? get thumbHeight => throw _privateConstructorUsedError;
   int? get thumbWidth => throw _privateConstructorUsedError;
   List<GalleryImage> get images => throw _privateConstructorUsedError;
   int get currentPageIndex => throw _privateConstructorUsedError;
+  bool? get isFavorited => throw _privateConstructorUsedError;
+  String? get favoritedNum => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,12 +46,15 @@ abstract class $GalleryCopyWith<$Res> {
       {String? gid,
       String? imageKey,
       String? title,
+      String? secondTitle,
       String? url,
       String? thumbUrl,
       int? thumbHeight,
       int? thumbWidth,
       List<GalleryImage> images,
-      int currentPageIndex});
+      int currentPageIndex,
+      bool? isFavorited,
+      String? favoritedNum});
 }
 
 /// @nodoc
@@ -64,12 +70,15 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? gid = freezed,
     Object? imageKey = freezed,
     Object? title = freezed,
+    Object? secondTitle = freezed,
     Object? url = freezed,
     Object? thumbUrl = freezed,
     Object? thumbHeight = freezed,
     Object? thumbWidth = freezed,
     Object? images = freezed,
     Object? currentPageIndex = freezed,
+    Object? isFavorited = freezed,
+    Object? favoritedNum = freezed,
   }) {
     return _then(_value.copyWith(
       gid: gid == freezed
@@ -83,6 +92,10 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
       title: title == freezed
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      secondTitle: secondTitle == freezed
+          ? _value.secondTitle
+          : secondTitle // ignore: cast_nullable_to_non_nullable
               as String?,
       url: url == freezed
           ? _value.url
@@ -108,6 +121,14 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.currentPageIndex
           : currentPageIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      isFavorited: isFavorited == freezed
+          ? _value.isFavorited
+          : isFavorited // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      favoritedNum: favoritedNum == freezed
+          ? _value.favoritedNum
+          : favoritedNum // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -122,12 +143,15 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       {String? gid,
       String? imageKey,
       String? title,
+      String? secondTitle,
       String? url,
       String? thumbUrl,
       int? thumbHeight,
       int? thumbWidth,
       List<GalleryImage> images,
-      int currentPageIndex});
+      int currentPageIndex,
+      bool? isFavorited,
+      String? favoritedNum});
 }
 
 /// @nodoc
@@ -144,12 +168,15 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? gid = freezed,
     Object? imageKey = freezed,
     Object? title = freezed,
+    Object? secondTitle = freezed,
     Object? url = freezed,
     Object? thumbUrl = freezed,
     Object? thumbHeight = freezed,
     Object? thumbWidth = freezed,
     Object? images = freezed,
     Object? currentPageIndex = freezed,
+    Object? isFavorited = freezed,
+    Object? favoritedNum = freezed,
   }) {
     return _then(_$_Gallery(
       gid: gid == freezed
@@ -163,6 +190,10 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
       title: title == freezed
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      secondTitle: secondTitle == freezed
+          ? _value.secondTitle
+          : secondTitle // ignore: cast_nullable_to_non_nullable
               as String?,
       url: url == freezed
           ? _value.url
@@ -188,6 +219,14 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value.currentPageIndex
           : currentPageIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      isFavorited: isFavorited == freezed
+          ? _value.isFavorited
+          : isFavorited // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      favoritedNum: favoritedNum == freezed
+          ? _value.favoritedNum
+          : favoritedNum // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -199,12 +238,15 @@ class _$_Gallery implements _Gallery {
       {this.gid,
       this.imageKey,
       this.title,
+      this.secondTitle,
       this.url,
       this.thumbUrl,
       this.thumbHeight,
       this.thumbWidth,
       final List<GalleryImage> images = const [],
-      this.currentPageIndex = 0})
+      this.currentPageIndex = 0,
+      this.isFavorited,
+      this.favoritedNum})
       : _images = images;
 
   factory _$_Gallery.fromJson(Map<String, dynamic> json) =>
@@ -216,6 +258,8 @@ class _$_Gallery implements _Gallery {
   final String? imageKey;
   @override
   final String? title;
+  @override
+  final String? secondTitle;
   @override
   final String? url;
   @override
@@ -235,10 +279,14 @@ class _$_Gallery implements _Gallery {
   @override
   @JsonKey()
   final int currentPageIndex;
+  @override
+  final bool? isFavorited;
+  @override
+  final String? favoritedNum;
 
   @override
   String toString() {
-    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, images: $images, currentPageIndex: $currentPageIndex)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum)';
   }
 
   @override
@@ -249,6 +297,8 @@ class _$_Gallery implements _Gallery {
             const DeepCollectionEquality().equals(other.gid, gid) &&
             const DeepCollectionEquality().equals(other.imageKey, imageKey) &&
             const DeepCollectionEquality().equals(other.title, title) &&
+            const DeepCollectionEquality()
+                .equals(other.secondTitle, secondTitle) &&
             const DeepCollectionEquality().equals(other.url, url) &&
             const DeepCollectionEquality().equals(other.thumbUrl, thumbUrl) &&
             const DeepCollectionEquality()
@@ -257,7 +307,11 @@ class _$_Gallery implements _Gallery {
                 .equals(other.thumbWidth, thumbWidth) &&
             const DeepCollectionEquality().equals(other._images, _images) &&
             const DeepCollectionEquality()
-                .equals(other.currentPageIndex, currentPageIndex));
+                .equals(other.currentPageIndex, currentPageIndex) &&
+            const DeepCollectionEquality()
+                .equals(other.isFavorited, isFavorited) &&
+            const DeepCollectionEquality()
+                .equals(other.favoritedNum, favoritedNum));
   }
 
   @JsonKey(ignore: true)
@@ -267,12 +321,15 @@ class _$_Gallery implements _Gallery {
       const DeepCollectionEquality().hash(gid),
       const DeepCollectionEquality().hash(imageKey),
       const DeepCollectionEquality().hash(title),
+      const DeepCollectionEquality().hash(secondTitle),
       const DeepCollectionEquality().hash(url),
       const DeepCollectionEquality().hash(thumbUrl),
       const DeepCollectionEquality().hash(thumbHeight),
       const DeepCollectionEquality().hash(thumbWidth),
       const DeepCollectionEquality().hash(_images),
-      const DeepCollectionEquality().hash(currentPageIndex));
+      const DeepCollectionEquality().hash(currentPageIndex),
+      const DeepCollectionEquality().hash(isFavorited),
+      const DeepCollectionEquality().hash(favoritedNum));
 
   @JsonKey(ignore: true)
   @override
@@ -292,12 +349,15 @@ abstract class _Gallery implements Gallery {
       {final String? gid,
       final String? imageKey,
       final String? title,
+      final String? secondTitle,
       final String? url,
       final String? thumbUrl,
       final int? thumbHeight,
       final int? thumbWidth,
       final List<GalleryImage> images,
-      final int currentPageIndex}) = _$_Gallery;
+      final int currentPageIndex,
+      final bool? isFavorited,
+      final String? favoritedNum}) = _$_Gallery;
 
   factory _Gallery.fromJson(Map<String, dynamic> json) = _$_Gallery.fromJson;
 
@@ -307,6 +367,8 @@ abstract class _Gallery implements Gallery {
   String? get imageKey;
   @override
   String? get title;
+  @override
+  String? get secondTitle;
   @override
   String? get url;
   @override
@@ -319,6 +381,10 @@ abstract class _Gallery implements Gallery {
   List<GalleryImage> get images;
   @override
   int get currentPageIndex;
+  @override
+  bool? get isFavorited;
+  @override
+  String? get favoritedNum;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryCopyWith<_$_Gallery> get copyWith =>

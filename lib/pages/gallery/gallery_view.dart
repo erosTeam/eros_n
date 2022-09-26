@@ -111,7 +111,7 @@ class GalleryPage extends HookConsumerWidget {
             if (true)
               SliverToBoxAdapter(
                 child: Container(
-                  height: 280,
+                  height: 340,
                   child: Stack(
                     alignment: Alignment.bottomLeft,
                     children: [
@@ -122,12 +122,13 @@ class GalleryPage extends HookConsumerWidget {
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            height: 180,
+                            height: 240,
                             child: Row(
                               // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // 封面
                                 Container(
-                                  width: 120,
+                                  width: 140,
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 12),
                                   alignment: Alignment.center,
@@ -149,28 +150,51 @@ class GalleryPage extends HookConsumerWidget {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SelectableText(
-                                        gallery.title ?? '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium
-                                            ?.copyWith(height: 1.3),
-                                        maxLines: 5,
-                                        minLines: 1,
-                                        // overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        '#${gallery.gid}',
-                                        style:
-                                            Theme.of(context).textTheme.caption,
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ],
+                                  child: Container(
+                                    padding: const EdgeInsets.only(right: 12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // 主标题
+                                        SelectableText(
+                                          gallery.title ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(height: 1.3),
+                                          maxLines: 5,
+                                          minLines: 1,
+                                          // overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        // 画廊id
+                                        Text(
+                                          '#${gallery.gid}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption,
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        // 副标题
+                                        Consumer(
+                                            builder: (context, ref, child) {
+                                          final secondTitle = ref
+                                              .watch(galleryProvider(gid))
+                                              .secondTitle;
+                                          return SelectableText(
+                                            secondTitle ?? '',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption,
+                                            textAlign: TextAlign.start,
+                                            minLines: 1,
+                                            maxLines: 2,
+                                          );
+                                        }),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -201,7 +225,7 @@ class ThumbsView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('build thumbs $gid');
+    logger.v('build thumbs $gid');
     // final images = ref.watch(galleryProvider(gid).select((g) => g.images));
 
     final images = ref.read(galleryProvider(gid)).images;
