@@ -108,6 +108,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ThumbRoute.name: (routeData) {
+      final args = routeData.argsAs<ThumbRouteArgs>(
+          orElse: () => const ThumbRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ThumbPage(
+          key: args.key,
+          gid: args.gid,
+        ),
+      );
+    },
   };
 
   @override
@@ -155,6 +166,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           LicenseRoute.name,
           path: '/license',
+        ),
+        RouteConfig(
+          ThumbRoute.name,
+          path: '/thumb',
         ),
       ];
 }
@@ -408,5 +423,39 @@ class LicenseRouteArgs {
   @override
   String toString() {
     return 'LicenseRouteArgs{key: $key, applicationName: $applicationName, applicationVersion: $applicationVersion, applicationIcon: $applicationIcon, applicationLegalese: $applicationLegalese}';
+  }
+}
+
+/// generated route for
+/// [ThumbPage]
+class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
+  ThumbRoute({
+    Key? key,
+    String? gid,
+  }) : super(
+          ThumbRoute.name,
+          path: '/thumb',
+          args: ThumbRouteArgs(
+            key: key,
+            gid: gid,
+          ),
+        );
+
+  static const String name = 'ThumbRoute';
+}
+
+class ThumbRouteArgs {
+  const ThumbRouteArgs({
+    this.key,
+    this.gid,
+  });
+
+  final Key? key;
+
+  final String? gid;
+
+  @override
+  String toString() {
+    return 'ThumbRouteArgs{key: $key, gid: $gid}';
   }
 }

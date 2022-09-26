@@ -1,3 +1,4 @@
+import 'package:eros_n/common/parser/parse_gallery_list.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:html/dom.dart';
@@ -24,6 +25,12 @@ Gallery parseGalleryDetail(String html) {
   final isFav = favText.contains('Un');
 
   logger.v('favNum: $favNum isFav: $isFav');
+
+  const selectorMoreLikeGalleryList = '#related-container';
+  const selectorGallery = '.gallery:not(.blacklisted)';
+  final moreLikeGalleryElmList =
+      document.querySelector(selectorMoreLikeGalleryList)?.querySelectorAll(selectorGallery) ?? [];
+  final moreLikeGalleryList = parseGalleryListElm(moreLikeGalleryElmList, []);
 
   const selectorThumb = '.gallerythumb';
 
@@ -54,5 +61,6 @@ Gallery parseGalleryDetail(String html) {
     images: galleryThumbs,
     isFavorited: isFav,
     favoritedNum: favNum,
+    moreLikeGallerys: moreLikeGalleryList,
   );
 }

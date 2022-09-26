@@ -18,10 +18,14 @@ _$_Gallery _$$_GalleryFromJson(Map<String, dynamic> json) => _$_Gallery(
       images: (json['images'] as List<dynamic>?)
               ?.map((e) => GalleryImage.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          const [],
+          const <GalleryImage>[],
       currentPageIndex: json['currentPageIndex'] as int? ?? 0,
       isFavorited: json['isFavorited'] as bool?,
       favoritedNum: json['favoritedNum'] as String?,
+      moreLikeGallerys: (json['moreLikeGallerys'] as List<dynamic>?)
+              ?.map((e) => Gallery.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <Gallery>[],
     );
 
 Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
@@ -38,4 +42,5 @@ Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
       'currentPageIndex': instance.currentPageIndex,
       'isFavorited': instance.isFavorited,
       'favoritedNum': instance.favoritedNum,
+      'moreLikeGallerys': instance.moreLikeGallerys,
     };

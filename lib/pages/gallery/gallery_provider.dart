@@ -51,6 +51,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         isFavorited: gallery.isFavorited,
         title: gallery.title,
         secondTitle: gallery.secondTitle,
+        moreLikeGallerys: gallery.moreLikeGallerys,
       );
     } on HttpException catch (e) {
       if (e.code == 403 || e.code == 503) {

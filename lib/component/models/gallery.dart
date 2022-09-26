@@ -16,10 +16,11 @@ class Gallery with _$Gallery {
     String? thumbUrl,
     int? thumbHeight,
     int? thumbWidth,
-    @Default([]) List<GalleryImage> images,
+    @Default(<GalleryImage>[]) List<GalleryImage> images,
     @Default(0) int currentPageIndex,
     bool? isFavorited,
     String? favoritedNum,
+    @Default(<Gallery>[]) List<Gallery> moreLikeGallerys,
   }) = _Gallery;
 
   factory Gallery.fromJson(Map<String, Object?> json) =>
