@@ -78,7 +78,7 @@ bool _isRequestSuccess(int? statusCode) {
 }
 
 HttpException _parseException(Exception error, {dynamic data}) {
-  logger.e('_parseException');
+  // logger.e('_parseException');
   if (error is DioError) {
     switch (error.type) {
       case DioErrorType.connectTimeout:

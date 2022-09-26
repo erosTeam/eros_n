@@ -48,7 +48,7 @@ class CoverImg extends StatelessWidget {
             .watch(settingsProvider.select((settings) => settings.coverBlur));
         return BlurImage(
           blur: isCoverBlur,
-          // sigma: 4,
+          sigma: 8,
           child: child!,
         );
       },

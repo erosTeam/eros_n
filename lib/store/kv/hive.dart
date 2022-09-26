@@ -1,23 +1,27 @@
 import 'dart:convert';
 
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 const String configBox = 'config_box';
 
 const String userAgentKey = 'user_agent';
 const String settingsKey = 'settings';
+const String userKey = 'user';
 
 class HiveHelper {
   HiveHelper();
 
   static final _configBox = Hive.box<String>(configBox);
   static final _settingsBox = Hive.box<String>(settingsKey);
+  static final _userBox = Hive.box<String>(userKey);
 
   static Future<void> init() async {
     await Hive.initFlutter();
     await Hive.openBox<String>(configBox);
     await Hive.openBox<String>(settingsKey);
+    await Hive.openBox<String>(userKey);
   }
 
   String? getString(String key) {
@@ -48,5 +52,18 @@ class HiveHelper {
 
   Future<void> setSettings(Settings settings) async {
     await _settingsBox.put(settingsKey, jsonEncode(settings.toJson()));
+  }
+
+  User? getUser() {
+    final user = _userBox.get(userKey, defaultValue: '{}') ?? '{}';
+    if (user.isNotEmpty) {
+      return User.fromJson(jsonDecode(user) as Map<String, dynamic>);
+    }
+    return null;
+  }
+
+  Future<void> setUser(User user) async {
+    logger.d('setUser $user');
+    await _userBox.put(userKey, jsonEncode(user.toJson()));
   }
 }

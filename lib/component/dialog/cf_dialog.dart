@@ -5,6 +5,7 @@ import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/pages/webview/webview.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
@@ -187,17 +188,3 @@ Future<void> showInAppWebViewDialog({
 
   _canShowDialog = true;
 }
-
-final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(
-  crossPlatform: InAppWebViewOptions(
-    useShouldOverrideUrlLoading: true,
-    mediaPlaybackRequiresUserGesture: false,
-    // userAgent: GetPlatform.isIOS ? (Global.userAgent ?? NHConst.userAgent) : '',
-  ),
-  android: AndroidInAppWebViewOptions(
-    useHybridComposition: true,
-  ),
-  ios: IOSInAppWebViewOptions(
-    allowsInlineMediaPlayback: true,
-  ),
-);

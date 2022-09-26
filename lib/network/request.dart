@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/models/index.dart';
@@ -9,25 +10,12 @@ import '../utils/logger.dart';
 import 'api.dart';
 import 'app_dio/pdio.dart';
 
-// Options getCacheOptions({bool forceRefresh = false, Options? options}) {
-//   logger.d('forceRefresh: $forceRefresh');
-//   return buildCacheOptions(
-//     const Duration(days: 3),
-//     maxStale: const Duration(days: 7),
-//     forceRefresh: forceRefresh,
-//     options: options,
-//   );
-// }
-
 Options getOptions({bool forceRefresh = false}) {
   final options = Api.cacheOption
       .copyWith(
         policy: forceRefresh ? CachePolicy.refreshForceCache : null,
       )
       .toOptions();
-  // if (forceRefresh) {
-  //   options.validateStatus = (status) => status == 200 || status == 304;
-  // }
 
   return options;
 }
@@ -47,7 +35,7 @@ Future<GallerySet> getGalleryList({
   int? statusCode;
 
   final httpTransformer = HttpTransformerBuilder(
-        (response) {
+    (response) {
       logger.v('statusCode ${response.statusCode}');
       statusCode = response.statusCode;
       final list = parseGalleryList(response.data as String);
@@ -128,5 +116,132 @@ Future<GalleryImage> getGalleryImage({
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryImage error');
+  }
+}
+
+Future<String?> getLoginToken() async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final params = <String, dynamic>{
+    'next': '/',
+  };
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    NHConst.loginUrl,
+    queryParameters: params,
+    options: getOptions(forceRefresh: true),
+    // cancelToken: cancelToken,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        logger.d('statusCode ${response.statusCode}');
+        final token = parseLoginPage(response.data as String);
+        return DioHttpResponse<String>.success(token);
+      },
+    ),
+  );
+
+  if (httpResponse.ok && httpResponse.data is String) {
+    return httpResponse.data as String;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getLoginToken error');
+  }
+}
+
+Future<User> getInfoFromIndex({
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    NHConst.baseUrl,
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        final user = parseInfo(response.data as String);
+        return DioHttpResponse<User>.success(user);
+      },
+    ),
+  );
+
+  if (httpResponse.ok && httpResponse.data is User) {
+    return httpResponse.data as User;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getInfo error');
+  }
+}
+
+Future<User> getInfoFromUserPage({
+  required String url,
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    url,
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        final user = parseUserPage(response.data as String);
+        return DioHttpResponse<User>.success(user);
+      },
+    ),
+  );
+
+  if (httpResponse.ok && httpResponse.data is User) {
+    return httpResponse.data as User;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getInfo error');
+  }
+}
+
+Future<void> loginNhentai({
+  required String username,
+  required String password,
+  required String csrfToken,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final dataMap = <String, dynamic>{
+    'username_or_email': username,
+    'password': password,
+    'csrfmiddlewaretoken': csrfToken
+  };
+
+  final params = <String, dynamic>{
+    'next': '/',
+  };
+
+  final dataForm = FormData.fromMap(dataMap);
+
+  DioHttpResponse httpResponse = await dioHttpClient.post(
+    NHConst.loginUrl,
+    queryParameters: params,
+    data: dataForm,
+    options: getOptions(forceRefresh: true)
+      ..followRedirects = true
+      ..validateStatus = (status) => status! < 500,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        logger.d('statusCode ${response.statusCode}');
+        logger.d('response ${response.headers}');
+        return DioHttpResponse<void>.success(null);
+      },
+    ),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok) {
+    return;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('login error');
   }
 }

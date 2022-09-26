@@ -140,7 +140,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
   Future<void> loadData() async {
     final fromCache = await getGalleryData(first: true);
     if (fromCache) {
-      await 3.seconds.delay();
+      await 1.seconds.delay();
       await getGalleryData(refresh: true);
     }
   }

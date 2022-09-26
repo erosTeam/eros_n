@@ -109,7 +109,6 @@ class _FrontPageState extends ConsumerState<FrontPage>
     );
   }
 
-
   @override
   void dispose() {
     super.dispose();
@@ -207,7 +206,7 @@ class GalleryListView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('GalleryListView build');
+    logger.v('GalleryListView build');
     final List<Gallery> galleryList = ref.watch(gallerysProvider);
     final state = ref.watch(frontProvider);
 

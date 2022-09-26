@@ -65,6 +65,49 @@ class _$AppRouter extends RootStackRouter {
         child: const AppearanceSettingPage(),
       );
     },
+    LoginRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const LoginPage(),
+      );
+    },
+    WebLoginRoute.name: (routeData) {
+      return MaterialPageX<List<Cookie>>(
+        routeData: routeData,
+        child: const WebLoginPage(),
+      );
+    },
+    NhWebViewRoute.name: (routeData) {
+      final args = routeData.argsAs<NhWebViewRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: NhWebViewPage(
+          key: args.key,
+          initialUrl: args.initialUrl,
+          title: args.title,
+        ),
+      );
+    },
+    AboutRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const AboutPage(),
+      );
+    },
+    LicenseRoute.name: (routeData) {
+      final args = routeData.argsAs<LicenseRouteArgs>(
+          orElse: () => const LicenseRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: LicensePage(
+          key: args.key,
+          applicationName: args.applicationName,
+          applicationVersion: args.applicationVersion,
+          applicationIcon: args.applicationIcon,
+          applicationLegalese: args.applicationLegalese,
+        ),
+      );
+    },
   };
 
   @override
@@ -91,7 +134,27 @@ class _$AppRouter extends RootStackRouter {
         ),
         RouteConfig(
           AppearanceSettingRoute.name,
-          path: '/appearance_setting',
+          path: '/appearanceSetting',
+        ),
+        RouteConfig(
+          LoginRoute.name,
+          path: '/login',
+        ),
+        RouteConfig(
+          WebLoginRoute.name,
+          path: '/webLogin',
+        ),
+        RouteConfig(
+          NhWebViewRoute.name,
+          path: '/webview',
+        ),
+        RouteConfig(
+          AboutRoute.name,
+          path: '/about',
+        ),
+        RouteConfig(
+          LicenseRoute.name,
+          path: '/license',
         ),
       ];
 }
@@ -218,8 +281,132 @@ class AppearanceSettingRoute extends PageRouteInfo<void> {
   const AppearanceSettingRoute()
       : super(
           AppearanceSettingRoute.name,
-          path: '/appearance_setting',
+          path: '/appearanceSetting',
         );
 
   static const String name = 'AppearanceSettingRoute';
+}
+
+/// generated route for
+/// [LoginPage]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute()
+      : super(
+          LoginRoute.name,
+          path: '/login',
+        );
+
+  static const String name = 'LoginRoute';
+}
+
+/// generated route for
+/// [WebLoginPage]
+class WebLoginRoute extends PageRouteInfo<void> {
+  const WebLoginRoute()
+      : super(
+          WebLoginRoute.name,
+          path: '/webLogin',
+        );
+
+  static const String name = 'WebLoginRoute';
+}
+
+/// generated route for
+/// [NhWebViewPage]
+class NhWebViewRoute extends PageRouteInfo<NhWebViewRouteArgs> {
+  NhWebViewRoute({
+    Key? key,
+    required String initialUrl,
+    String? title,
+  }) : super(
+          NhWebViewRoute.name,
+          path: '/webview',
+          args: NhWebViewRouteArgs(
+            key: key,
+            initialUrl: initialUrl,
+            title: title,
+          ),
+        );
+
+  static const String name = 'NhWebViewRoute';
+}
+
+class NhWebViewRouteArgs {
+  const NhWebViewRouteArgs({
+    this.key,
+    required this.initialUrl,
+    this.title,
+  });
+
+  final Key? key;
+
+  final String initialUrl;
+
+  final String? title;
+
+  @override
+  String toString() {
+    return 'NhWebViewRouteArgs{key: $key, initialUrl: $initialUrl, title: $title}';
+  }
+}
+
+/// generated route for
+/// [AboutPage]
+class AboutRoute extends PageRouteInfo<void> {
+  const AboutRoute()
+      : super(
+          AboutRoute.name,
+          path: '/about',
+        );
+
+  static const String name = 'AboutRoute';
+}
+
+/// generated route for
+/// [LicensePage]
+class LicenseRoute extends PageRouteInfo<LicenseRouteArgs> {
+  LicenseRoute({
+    Key? key,
+    String? applicationName,
+    String? applicationVersion,
+    Widget? applicationIcon,
+    String? applicationLegalese,
+  }) : super(
+          LicenseRoute.name,
+          path: '/license',
+          args: LicenseRouteArgs(
+            key: key,
+            applicationName: applicationName,
+            applicationVersion: applicationVersion,
+            applicationIcon: applicationIcon,
+            applicationLegalese: applicationLegalese,
+          ),
+        );
+
+  static const String name = 'LicenseRoute';
+}
+
+class LicenseRouteArgs {
+  const LicenseRouteArgs({
+    this.key,
+    this.applicationName,
+    this.applicationVersion,
+    this.applicationIcon,
+    this.applicationLegalese,
+  });
+
+  final Key? key;
+
+  final String? applicationName;
+
+  final String? applicationVersion;
+
+  final Widget? applicationIcon;
+
+  final String? applicationLegalese;
+
+  @override
+  String toString() {
+    return 'LicenseRouteArgs{key: $key, applicationName: $applicationName, applicationVersion: $applicationVersion, applicationIcon: $applicationIcon, applicationLegalese: $applicationLegalese}';
+  }
 }
