@@ -8,28 +8,41 @@ Gallery parseGalleryDetail(String html) {
   final Document document = parse(html);
   // logger.d('html\n$html');
 
+  const selectorScript = 'body > script';
+  final scriptElm = document.querySelector(selectorScript);
+  final scriptText = scriptElm?.text ?? '';
+
+  final csrfToken =
+      RegExp(r'csrf_token:\s+"(.*)",').firstMatch(scriptText)?.group(1) ?? '';
+
   final titleElms = document.querySelectorAll('#info > .title');
   final title = titleElms.first.text;
   final secondTitle = titleElms.last.text;
   logger.d('title: $title, secondTitle: $secondTitle');
 
-  const selectorFavorite = '#favorite';
-  final favoriteElm = document.querySelector(selectorFavorite);
+  const selectorButtons = '#info > div.buttons';
+  final buttonsElms = document.querySelector(selectorButtons);
+  final favoriteButtonElm = buttonsElms?.children.first;
 
-  final favoriteText = favoriteElm?.text.trim() ?? '';
-  logger.v('favoriteText: $favoriteText');
-  final favNum = RegExp(r'\d+').firstMatch(favoriteText)?.group(0) ?? '0';
+  final favoriteText = favoriteButtonElm?.text.trim() ?? '';
+  logger.d('favoriteText: $favoriteText');
+  final favNum = RegExp(r'\d+').firstMatch(favoriteText)?.group(0) ?? '';
 
-  final favText = favoriteElm?.querySelector('.text')?.text.trim() ?? '';
-  logger.v('favText: $favText');
+  final favText = favoriteButtonElm?.querySelector('.text')?.text.trim() ?? '';
+  logger.d('favText: $favText');
   final isFav = favText.contains('Un');
 
-  logger.v('favNum: $favNum isFav: $isFav');
+  logger.d('favNum: $favNum isFav: $isFav');
+
+  final downloadButtonElm = buttonsElms?.children[1];
+  final torrentUrl = downloadButtonElm?.attributes['href'] ?? '';
 
   const selectorMoreLikeGalleryList = '#related-container';
   const selectorGallery = '.gallery:not(.blacklisted)';
-  final moreLikeGalleryElmList =
-      document.querySelector(selectorMoreLikeGalleryList)?.querySelectorAll(selectorGallery) ?? [];
+  final moreLikeGalleryElmList = document
+          .querySelector(selectorMoreLikeGalleryList)
+          ?.querySelectorAll(selectorGallery) ??
+      [];
   final moreLikeGalleryList = parseGalleryListElm(moreLikeGalleryElmList, []);
 
   const selectorThumb = '.gallerythumb';
@@ -62,5 +75,6 @@ Gallery parseGalleryDetail(String html) {
     isFavorited: isFav,
     favoritedNum: favNum,
     moreLikeGallerys: moreLikeGalleryList,
+    csrfToken: csrfToken,
   );
 }

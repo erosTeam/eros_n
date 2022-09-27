@@ -22,6 +22,7 @@ Gallery _$GalleryFromJson(Map<String, dynamic> json) {
 mixin _$Gallery {
   String? get gid => throw _privateConstructorUsedError;
   String? get imageKey => throw _privateConstructorUsedError;
+  String? get csrfToken => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get secondTitle => throw _privateConstructorUsedError;
   String? get url => throw _privateConstructorUsedError;
@@ -46,6 +47,7 @@ abstract class $GalleryCopyWith<$Res> {
   $Res call(
       {String? gid,
       String? imageKey,
+      String? csrfToken,
       String? title,
       String? secondTitle,
       String? url,
@@ -71,6 +73,7 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
   $Res call({
     Object? gid = freezed,
     Object? imageKey = freezed,
+    Object? csrfToken = freezed,
     Object? title = freezed,
     Object? secondTitle = freezed,
     Object? url = freezed,
@@ -91,6 +94,10 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
       imageKey: imageKey == freezed
           ? _value.imageKey
           : imageKey // ignore: cast_nullable_to_non_nullable
+              as String?,
+      csrfToken: csrfToken == freezed
+          ? _value.csrfToken
+          : csrfToken // ignore: cast_nullable_to_non_nullable
               as String?,
       title: title == freezed
           ? _value.title
@@ -149,6 +156,7 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
   $Res call(
       {String? gid,
       String? imageKey,
+      String? csrfToken,
       String? title,
       String? secondTitle,
       String? url,
@@ -175,6 +183,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
   $Res call({
     Object? gid = freezed,
     Object? imageKey = freezed,
+    Object? csrfToken = freezed,
     Object? title = freezed,
     Object? secondTitle = freezed,
     Object? url = freezed,
@@ -195,6 +204,10 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
       imageKey: imageKey == freezed
           ? _value.imageKey
           : imageKey // ignore: cast_nullable_to_non_nullable
+              as String?,
+      csrfToken: csrfToken == freezed
+          ? _value.csrfToken
+          : csrfToken // ignore: cast_nullable_to_non_nullable
               as String?,
       title: title == freezed
           ? _value.title
@@ -250,6 +263,7 @@ class _$_Gallery implements _Gallery {
   const _$_Gallery(
       {this.gid,
       this.imageKey,
+      this.csrfToken,
       this.title,
       this.secondTitle,
       this.url,
@@ -271,6 +285,8 @@ class _$_Gallery implements _Gallery {
   final String? gid;
   @override
   final String? imageKey;
+  @override
+  final String? csrfToken;
   @override
   final String? title;
   @override
@@ -308,7 +324,7 @@ class _$_Gallery implements _Gallery {
 
   @override
   String toString() {
-    return 'Gallery(gid: $gid, imageKey: $imageKey, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, moreLikeGallerys: $moreLikeGallerys)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, csrfToken: $csrfToken, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, moreLikeGallerys: $moreLikeGallerys)';
   }
 
   @override
@@ -318,6 +334,7 @@ class _$_Gallery implements _Gallery {
             other is _$_Gallery &&
             const DeepCollectionEquality().equals(other.gid, gid) &&
             const DeepCollectionEquality().equals(other.imageKey, imageKey) &&
+            const DeepCollectionEquality().equals(other.csrfToken, csrfToken) &&
             const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality()
                 .equals(other.secondTitle, secondTitle) &&
@@ -344,6 +361,7 @@ class _$_Gallery implements _Gallery {
       runtimeType,
       const DeepCollectionEquality().hash(gid),
       const DeepCollectionEquality().hash(imageKey),
+      const DeepCollectionEquality().hash(csrfToken),
       const DeepCollectionEquality().hash(title),
       const DeepCollectionEquality().hash(secondTitle),
       const DeepCollectionEquality().hash(url),
@@ -373,6 +391,7 @@ abstract class _Gallery implements Gallery {
   const factory _Gallery(
       {final String? gid,
       final String? imageKey,
+      final String? csrfToken,
       final String? title,
       final String? secondTitle,
       final String? url,
@@ -391,6 +410,8 @@ abstract class _Gallery implements Gallery {
   String? get gid;
   @override
   String? get imageKey;
+  @override
+  String? get csrfToken;
   @override
   String? get title;
   @override

@@ -111,6 +111,7 @@ class UserNotifier extends StateNotifier<User> {
   }
 
   void logout() {
+    Global.cookieJar.deleteAll();
     state = const User();
     hiveHelper.setUser(state);
   }

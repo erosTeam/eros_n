@@ -1,3 +1,4 @@
+import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
 import 'package:eros_n/pages/nav/history/history_view.dart';
 import 'package:eros_n/pages/nav/more/more_view.dart';
@@ -13,8 +14,9 @@ class IndexPage extends HookConsumerWidget {
 
   final pages = <Widget>[
     const FrontPage(),
-    HistoryPage(),
-    MorePage(),
+    const FavoritePage(),
+    const HistoryPage(),
+    const MorePage(),
   ];
 
   @override
@@ -27,11 +29,15 @@ class IndexPage extends HookConsumerWidget {
         controller: state.pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: pages,
+        onPageChanged: (index) {
+          ref.read(indexProvider.notifier).setIndex(index);
+        },
       ),
       bottomNavigationBar: AnimatedContainer(
         // height:
         //     state.hideNavigationBar ? 0 : 64 + context.mediaQueryPadding.bottom,
-        height: state.hideNavigationBar ? 0 : 80 + context.mediaQueryPadding.bottom,
+        height:
+            state.hideNavigationBar ? 0 : 80 + context.mediaQueryPadding.bottom,
         duration: 300.milliseconds,
         curve: Curves.ease,
         child: NavigationBar(
@@ -45,6 +51,11 @@ class IndexPage extends HookConsumerWidget {
               label: 'Home',
             ),
             NavigationDestination(
+              icon: Icon(Icons.favorite_outline),
+              selectedIcon: Icon(Icons.favorite),
+              label: 'Favorite',
+            ),
+            NavigationDestination(
               icon: Icon(Icons.history),
               label: 'History',
             ),
@@ -54,7 +65,7 @@ class IndexPage extends HookConsumerWidget {
             ),
           ],
           onDestinationSelected: (index) {
-            ref.read(indexProvider.notifier).setIndex(index);
+            ref.read(indexProvider.notifier).setIndex(index, jumpToPage: true);
           },
         ),
       ),

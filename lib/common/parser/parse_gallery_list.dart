@@ -18,12 +18,12 @@ GallerySet parseGalleryList(String html) {
       .split(',')
       .map((e) => e.trim().replaceAll("'", ''))
       .toList();
-  logger.d('blacklistTagsList: $blacklistTagsList');
+  logger.v('blacklistTagsList: $blacklistTagsList');
 
   const usernameSelector = '.username';
   final usernameElm = document.querySelector(usernameSelector);
   final username = usernameElm?.text;
-  logger.d('username: $username');
+  logger.v('username: $username');
 
   const selectorPopular =
       '#content > div.container.index-container.index-popular';
@@ -31,17 +31,26 @@ GallerySet parseGalleryList(String html) {
   const selectorGalleryList =
       '#content > div.container.index-container:not(.index-popular)';
 
+  const selectorFavoriteList = '#favcontainer';
+
   const selectorGallery = '.gallery:not(.blacklisted)';
+  const selectorFavoriteGallery = '.gallery-favorite';
   const selectorMaxPage = '.last';
 
   final Element? popularElm = document.querySelector(selectorPopular);
   final Element? galleryListElm = document.querySelector(selectorGalleryList);
+  final Element? favoriteListElm = document.querySelector(selectorFavoriteList);
 
   final List<Element> galleryElmListOfPopular =
       popularElm?.querySelectorAll(selectorGallery) ?? [];
 
   final List<Element> galleryElmList =
       galleryListElm?.querySelectorAll(selectorGallery) ?? [];
+
+  final List<Element> favoriteGalleryElmList =
+      favoriteListElm?.querySelectorAll(selectorFavoriteGallery) ?? [];
+
+  logger.d('favoriteGalleryElmList.len ${favoriteGalleryElmList.length}');
 
   final maxPage = RegExp(r'\d+')
           .firstMatch(
@@ -52,9 +61,12 @@ GallerySet parseGalleryList(String html) {
   final galleryList = parseGalleryListElm(galleryElmList, blacklistTagsList);
   final popularList =
       parseGalleryListElm(galleryElmListOfPopular, blacklistTagsList);
+  final favoriteList = parseGalleryListElm(favoriteGalleryElmList, []);
+
   return GallerySet(
     gallerys: galleryList,
     populars: popularList,
+    favorites: favoriteList,
     maxPage: int.parse(maxPage),
   );
 }
@@ -63,7 +75,7 @@ List<Gallery> parseGalleryListElm(
     List<Element> galleryElmList, List<String> blacklistTagsList) {
   final List<Gallery> galleryList = [];
   for (final Element elm in galleryElmList) {
-
+    // logger.d('elm: ${elm.outerHtml}');
 
     final title = elm.querySelector('.caption')?.text ?? '';
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
@@ -78,7 +90,7 @@ List<Gallery> parseGalleryListElm(
     final imageKey = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
 
     final dataTags =
-    (elm.attributes['data-tags'] ?? '').split(RegExp(r'\s+')).toList();
+        (elm.attributes['data-tags'] ?? '').split(RegExp(r'\s+')).toList();
     // logger.d('dataTags: $dataTags');
     if (dataTags.any((e) => blacklistTagsList.contains(e))) {
       logger.d('$gid $title is blacklisted');

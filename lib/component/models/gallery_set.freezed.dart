@@ -22,6 +22,7 @@ GallerySet _$GallerySetFromJson(Map<String, dynamic> json) {
 mixin _$GallerySet {
   List<Gallery>? get gallerys => throw _privateConstructorUsedError;
   List<Gallery>? get populars => throw _privateConstructorUsedError;
+  List<Gallery>? get favorites => throw _privateConstructorUsedError;
   int? get maxPage => throw _privateConstructorUsedError;
   bool? get fromCache => throw _privateConstructorUsedError;
 
@@ -39,6 +40,7 @@ abstract class $GallerySetCopyWith<$Res> {
   $Res call(
       {List<Gallery>? gallerys,
       List<Gallery>? populars,
+      List<Gallery>? favorites,
       int? maxPage,
       bool? fromCache});
 }
@@ -55,6 +57,7 @@ class _$GallerySetCopyWithImpl<$Res> implements $GallerySetCopyWith<$Res> {
   $Res call({
     Object? gallerys = freezed,
     Object? populars = freezed,
+    Object? favorites = freezed,
     Object? maxPage = freezed,
     Object? fromCache = freezed,
   }) {
@@ -66,6 +69,10 @@ class _$GallerySetCopyWithImpl<$Res> implements $GallerySetCopyWith<$Res> {
       populars: populars == freezed
           ? _value.populars
           : populars // ignore: cast_nullable_to_non_nullable
+              as List<Gallery>?,
+      favorites: favorites == freezed
+          ? _value.favorites
+          : favorites // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
       maxPage: maxPage == freezed
           ? _value.maxPage
@@ -89,6 +96,7 @@ abstract class _$$_GallerySetCopyWith<$Res>
   $Res call(
       {List<Gallery>? gallerys,
       List<Gallery>? populars,
+      List<Gallery>? favorites,
       int? maxPage,
       bool? fromCache});
 }
@@ -107,6 +115,7 @@ class __$$_GallerySetCopyWithImpl<$Res> extends _$GallerySetCopyWithImpl<$Res>
   $Res call({
     Object? gallerys = freezed,
     Object? populars = freezed,
+    Object? favorites = freezed,
     Object? maxPage = freezed,
     Object? fromCache = freezed,
   }) {
@@ -118,6 +127,10 @@ class __$$_GallerySetCopyWithImpl<$Res> extends _$GallerySetCopyWithImpl<$Res>
       populars: populars == freezed
           ? _value._populars
           : populars // ignore: cast_nullable_to_non_nullable
+              as List<Gallery>?,
+      favorites: favorites == freezed
+          ? _value._favorites
+          : favorites // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
       maxPage: maxPage == freezed
           ? _value.maxPage
@@ -137,10 +150,12 @@ class _$_GallerySet implements _GallerySet {
   const _$_GallerySet(
       {final List<Gallery>? gallerys,
       final List<Gallery>? populars,
+      final List<Gallery>? favorites,
       this.maxPage,
       this.fromCache})
       : _gallerys = gallerys,
-        _populars = populars;
+        _populars = populars,
+        _favorites = favorites;
 
   factory _$_GallerySet.fromJson(Map<String, dynamic> json) =>
       _$$_GallerySetFromJson(json);
@@ -163,6 +178,15 @@ class _$_GallerySet implements _GallerySet {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<Gallery>? _favorites;
+  @override
+  List<Gallery>? get favorites {
+    final value = _favorites;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final int? maxPage;
   @override
@@ -170,7 +194,7 @@ class _$_GallerySet implements _GallerySet {
 
   @override
   String toString() {
-    return 'GallerySet(gallerys: $gallerys, populars: $populars, maxPage: $maxPage, fromCache: $fromCache)';
+    return 'GallerySet(gallerys: $gallerys, populars: $populars, favorites: $favorites, maxPage: $maxPage, fromCache: $fromCache)';
   }
 
   @override
@@ -180,6 +204,8 @@ class _$_GallerySet implements _GallerySet {
             other is _$_GallerySet &&
             const DeepCollectionEquality().equals(other._gallerys, _gallerys) &&
             const DeepCollectionEquality().equals(other._populars, _populars) &&
+            const DeepCollectionEquality()
+                .equals(other._favorites, _favorites) &&
             const DeepCollectionEquality().equals(other.maxPage, maxPage) &&
             const DeepCollectionEquality().equals(other.fromCache, fromCache));
   }
@@ -190,6 +216,7 @@ class _$_GallerySet implements _GallerySet {
       runtimeType,
       const DeepCollectionEquality().hash(_gallerys),
       const DeepCollectionEquality().hash(_populars),
+      const DeepCollectionEquality().hash(_favorites),
       const DeepCollectionEquality().hash(maxPage),
       const DeepCollectionEquality().hash(fromCache));
 
@@ -210,6 +237,7 @@ abstract class _GallerySet implements GallerySet {
   const factory _GallerySet(
       {final List<Gallery>? gallerys,
       final List<Gallery>? populars,
+      final List<Gallery>? favorites,
       final int? maxPage,
       final bool? fromCache}) = _$_GallerySet;
 
@@ -220,6 +248,8 @@ abstract class _GallerySet implements GallerySet {
   List<Gallery>? get gallerys;
   @override
   List<Gallery>? get populars;
+  @override
+  List<Gallery>? get favorites;
   @override
   int? get maxPage;
   @override

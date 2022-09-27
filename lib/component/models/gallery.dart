@@ -10,6 +10,7 @@ class Gallery with _$Gallery {
   const factory Gallery({
     String? gid,
     String? imageKey,
+    String? csrfToken,
     String? title,
     String? secondTitle,
     String? url,

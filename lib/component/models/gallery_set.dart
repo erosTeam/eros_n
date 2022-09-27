@@ -9,6 +9,7 @@ class GallerySet with _$GallerySet {
   const factory GallerySet({
     List<Gallery>? gallerys,
     List<Gallery>? populars,
+    List<Gallery>? favorites,
     int? maxPage,
     bool? fromCache,
   }) = _GallerySet;

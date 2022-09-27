@@ -6,6 +6,7 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 import 'gallery_page_state.dart';
 
@@ -33,6 +34,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     state = state.copyWith(currentPageIndex: page);
   }
 
+  /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
     if (state.images.isEmpty) {
       ref
@@ -45,13 +47,23 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         url: state.url ?? '',
         refresh: refresh,
       );
-      state = state.copyWith(
-        images: gallery.images,
-        favoritedNum: gallery.favoritedNum,
-        isFavorited: gallery.isFavorited,
-        title: gallery.title,
-        secondTitle: gallery.secondTitle,
-        moreLikeGallerys: gallery.moreLikeGallerys,
+      // state = state.copyWith(
+      //   images: gallery.images,
+      //   favoritedNum: gallery.favoritedNum,
+      //   isFavorited: gallery.isFavorited,
+      //   title: gallery.title,
+      //   secondTitle: gallery.secondTitle,
+      //   moreLikeGallerys: gallery.moreLikeGallerys,
+      // );
+      state = gallery.copyWith(
+        thumbUrl: state.thumbUrl,
+        thumbWidth: state.thumbWidth,
+        thumbHeight: state.thumbHeight,
+        gid: state.gid,
+        title: state.title,
+        url: state.url,
+        imageKey: state.imageKey,
+        currentPageIndex: state.currentPageIndex,
       );
     } on HttpException catch (e) {
       if (e.code == 403 || e.code == 503) {
@@ -73,6 +85,35 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     }
   }
 
+  /// 收藏
+  Future<void> toggleFavorite() async {
+    late final Tuple2<bool?, int?> result;
+    if (state.isFavorited ?? false) {
+      logger.d('取消收藏');
+      result = await setFavorite(
+        gid: state.gid,
+        unfavorite: true,
+        csrfToken: state.csrfToken,
+      );
+    } else {
+      logger.d('收藏');
+      result = await setFavorite(
+        gid: state.gid,
+        csrfToken: state.csrfToken,
+      );
+    }
+    final int? numFavorite = result.item2;
+    final bool? isFavorite = result.item1;
+
+    if (isFavorite != null && numFavorite != null) {
+      state = state.copyWith(
+        isFavorited: isFavorite,
+        favoritedNum: '$numFavorite',
+      );
+    }
+  }
+
+  /// 重新加载
   Future<void> reloadData() async {
     await loadData(refresh: true);
   }

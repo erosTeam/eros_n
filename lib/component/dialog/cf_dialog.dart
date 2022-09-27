@@ -23,9 +23,9 @@ Future<void> showInAppWebViewDialog({
   int? statusCode,
   FutureOr Function()? onComplete,
 }) async {
-  if (!_canShowDialog) {
-    return;
-  }
+  // if (!_canShowDialog) {
+  //   return;
+  // }
   final isPlatformPhone = io.Platform.isAndroid || io.Platform.isAndroid;
 
   final CookieManager cookieManager = CookieManager.instance();

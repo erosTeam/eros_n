@@ -6,8 +6,10 @@ import 'index_state.dart';
 class IndexNotifier extends StateNotifier<IndexState> {
   IndexNotifier() : super(IndexState());
 
-  void setIndex(int index) {
-    state.pageController.jumpToPage(index);
+  void setIndex(int index, {bool jumpToPage = false}) {
+    if (jumpToPage) {
+      state.pageController.jumpToPage(index);
+    }
     state = state.copyWith(selectedIndex: index);
   }
 

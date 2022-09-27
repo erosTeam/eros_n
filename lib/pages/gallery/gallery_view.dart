@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -29,7 +31,7 @@ class GalleryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.read(galleryProvider(gid));
-    logger.d('build gallery $gid ${gallery.title}');
+    logger.v('build gallery $gid ${gallery.title}');
 
     late ScrollController scrollController;
     useEffect(() {
@@ -151,97 +153,7 @@ class GalleryPage extends HookConsumerWidget {
                                 ),
                               ),
                               Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.only(right: 12),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // 主标题
-                                      SelectableText(
-                                        gallery.title ?? '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium
-                                            ?.copyWith(height: 1.3),
-                                        maxLines: 4,
-                                        minLines: 1,
-                                        // overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      // 画廊id
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '#${gallery.gid}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .caption,
-                                            textAlign: TextAlign.start,
-                                          ),
-                                          const SizedBox(width: 16),
-                                          Icon(
-                                            Icons.favorite,
-                                            size: 12,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Consumer(
-                                              builder: (context, ref, child) {
-                                            final favoritedNum = ref
-                                                .watch(galleryProvider(gid))
-                                                .favoritedNum;
-                                            return Text(
-                                              favoritedNum ?? '··',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption,
-                                              textAlign: TextAlign.start,
-                                            );
-                                          }),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      // 副标题
-                                      Consumer(
-                                        builder: (context, ref, child) {
-                                          final secondTitle = ref
-                                              .watch(galleryProvider(gid))
-                                              .secondTitle;
-                                          return SelectableText(
-                                            secondTitle ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .caption,
-                                            textAlign: TextAlign.start,
-                                            minLines: 1,
-                                            maxLines: 2,
-                                          );
-                                        },
-                                      ),
-                                      Expanded(
-                                        child: LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            logger
-                                                .d('constraints $constraints');
-                                            if (constraints.maxHeight > 60 &&
-                                                constraints.maxWidth > 100) {
-                                              return ToolBarView(gid: gid);
-                                            }
-                                            return const SizedBox();
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                child: buildGalleryInfo(gallery, context),
                               ),
                             ],
                           ),
@@ -257,6 +169,81 @@ class GalleryPage extends HookConsumerWidget {
             DetailView(gid: gid),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildGalleryInfo(Gallery gallery, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(right: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 主标题
+          SelectableText(
+            gallery.title ?? '',
+            style:
+                Theme.of(context).textTheme.titleMedium?.copyWith(height: 1.3),
+            maxLines: 4,
+            minLines: 1,
+            // overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 8),
+          // 画廊id
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '#${gallery.gid}',
+                style: Theme.of(context).textTheme.caption,
+                textAlign: TextAlign.start,
+              ),
+              const SizedBox(width: 16),
+              Icon(
+                Icons.favorite,
+                size: 12,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(width: 4),
+              Consumer(builder: (context, ref, child) {
+                final favoritedNum =
+                    ref.watch(galleryProvider(gid)).favoritedNum;
+                return Text(
+                  favoritedNum ?? '··',
+                  style: Theme.of(context).textTheme.caption,
+                  textAlign: TextAlign.start,
+                );
+              }),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // 副标题
+          Consumer(
+            builder: (context, ref, child) {
+              final secondTitle = ref.watch(galleryProvider(gid)).secondTitle;
+              return SelectableText(
+                secondTitle ?? '',
+                style: Theme.of(context).textTheme.caption,
+                textAlign: TextAlign.start,
+                minLines: 1,
+                maxLines: 2,
+              );
+            },
+          ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                logger.v('constraints $constraints');
+                if (constraints.maxHeight > 60 && constraints.maxWidth > 100) {
+                  return ToolBarView(gid: gid);
+                }
+                return const SizedBox();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -391,7 +378,8 @@ class MoreLikeListView extends HookConsumerWidget {
         separatorBuilder: (context, index) => const SizedBox(width: 0),
         itemBuilder: (context, index) {
           final likeGallery = moreLikeGallerys[index];
-          final aspectRatio = likeGallery.thumbWidth! / likeGallery.thumbHeight!;
+          final aspectRatio =
+              likeGallery.thumbWidth! / likeGallery.thumbHeight!;
           return GestureDetector(
             onTap: () {
               ref
@@ -444,6 +432,7 @@ class ToolBarView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     const iconSize = 28.0;
     final gallery = ref.watch(galleryProvider(gid));
+    final isUserLogin = ref.watch(userProvider.select((user) => user.isLogin));
     return Container(
       padding: context.isTablet
           ? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)
@@ -462,14 +451,19 @@ class ToolBarView extends HookConsumerWidget {
           IconButton(
             icon: const Icon(Icons.energy_savings_leaf, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
-            onPressed: () {},
+            onPressed: isUserLogin ? () {} : null,
           ),
+          // 收藏按钮
           IconButton(
             icon: (gallery.isFavorited ?? false)
                 ? const Icon(Icons.favorite, size: iconSize)
                 : const Icon(Icons.favorite_border_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
-            onPressed: () {},
+            onPressed: isUserLogin
+                ? () {
+                    ref.read(galleryProvider(gid).notifier).toggleFavorite();
+                  }
+                : null,
           ),
         ],
       ),

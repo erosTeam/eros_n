@@ -1,0 +1,143 @@
+import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/common/global.dart';
+import 'package:eros_n/component/dialog/cf_dialog.dart';
+import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/network/app_dio/pdio.dart';
+import 'package:eros_n/network/request.dart';
+import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/nav/front/front_state.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
+import 'package:eros_n/utils/logger.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../front/front_provider.dart';
+
+class FavoriteNotifier extends StateNotifier<FrontState> {
+  FavoriteNotifier(this.ref) : super(const FrontState());
+  final Ref ref;
+
+  FavoriteGalleryNotifier get favoriteGalleryNotifier =>
+      ref.read(favoriteGallerysProvider.notifier);
+
+  Future<bool> getGalleryData({
+    bool refresh = false,
+    bool showWebViewDialogOnFail = true,
+    int? page,
+    bool next = false,
+    bool prev = false,
+    bool first = false,
+  }) async {
+    if (state.isLoading || state.isLoadMore) {
+      return false;
+    }
+
+    final rCookies =
+        await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    logger.d('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+
+    if (next) {
+      if (state.curPage == state.maxPage) {
+        return false;
+      }
+      state = state.copyWith(status: LoadStatus.loadingMore);
+    } else if (prev) {
+      state = state.copyWith(status: LoadStatus.loadingMore);
+    } else {
+      if (favoriteGalleryNotifier.state.isEmpty) {
+        state = state.copyWith(status: LoadStatus.loading);
+      }
+    }
+
+    final toPage =
+        page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
+
+    try {
+      final gallerySet = await getFavoriteList(
+        refresh: refresh || next || prev,
+        page: toPage,
+      );
+      final favorites = gallerySet.favorites ?? [];
+      logger.d('favorites.length ${favorites.length}');
+
+      if (next) {
+        favoriteGalleryNotifier.addGallerys(favorites);
+      } else if (prev) {
+        favoriteGalleryNotifier.insertGallerys(favorites);
+      } else {
+        favoriteGalleryNotifier.clearGallerys();
+        favoriteGalleryNotifier.addGallerys(favorites);
+      }
+
+      state = state.copyWith(
+        maxPage: gallerySet.maxPage ?? 1,
+        status: LoadStatus.success,
+        curPage: toPage,
+      );
+
+      return gallerySet.fromCache ?? false;
+    } on HttpException catch (e) {
+      logger.d('state.status ${state.status}');
+      if (showWebViewDialogOnFail &&
+          (e.code == 403 || e.code == 503) &&
+          state.status != LoadStatus.getToken) {
+        logger.e('code ${e.code}');
+        if (!mounted) {
+          return false;
+        }
+        state = state.copyWith(status: LoadStatus.getToken);
+        await showInAppWebViewDialog(
+          statusCode: e.code,
+          onComplete: () async => await getGalleryData(
+            refresh: refresh,
+            showWebViewDialogOnFail: false,
+            next: next,
+            prev: prev,
+          ),
+        );
+        state = state.copyWith(status: LoadStatus.none);
+      } else {
+        state = state.copyWith(status: LoadStatus.error);
+        rethrow;
+      }
+    }
+    return false;
+  }
+
+  Future<void> loadData() async {
+    final fromCache = await getGalleryData(first: true);
+    if (fromCache) {
+      await 1.seconds.delay();
+      await getGalleryData(refresh: true);
+    }
+  }
+
+  Future<void> reloadData() async {
+    await getGalleryData(refresh: true, page: 1);
+  }
+
+  Future<void> loadNextPage() async {
+    await getGalleryData(next: true);
+  }
+
+  Future<void> loadPrevPage() async {
+    await getGalleryData(prev: true);
+  }
+
+  Future<void> loadFromPage(int page) async {
+    await getGalleryData(refresh: true);
+  }
+}
+
+class FavoriteGalleryNotifier extends GallerysNotifier {
+  FavoriteGalleryNotifier() : super([]);
+}
+
+final favoriteGallerysProvider =
+    StateNotifierProvider<FavoriteGalleryNotifier, List<Gallery>>((ref) {
+  return FavoriteGalleryNotifier();
+});
+
+final favoriteProvider =
+    StateNotifierProvider<FavoriteNotifier, FrontState>((ref) {
+  return FavoriteNotifier(ref);
+});

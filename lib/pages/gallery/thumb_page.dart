@@ -8,8 +8,6 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'gallery_view.dart';
-
 class ThumbPage extends HookConsumerWidget {
   const ThumbPage({
     Key? key,
@@ -21,7 +19,7 @@ class ThumbPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ThumbPage'),
+        title: const Text('Thumbs'),
       ),
       body: CustomScrollView(
         slivers: [
@@ -49,7 +47,7 @@ class ThumbsView extends HookConsumerWidget {
 
     final images = ref.read(galleryProvider(gid)).images;
     final pageStatus =
-    ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
+        ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
 
     if (pageStatus == PageStatus.loading || images.isEmpty) {
       return const SliverFillRemaining(
@@ -67,7 +65,7 @@ class ThumbsView extends HookConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
-                (context, index) {
+            (context, index) {
               final image = images[index];
               return GestureDetector(
                 onTap: () {

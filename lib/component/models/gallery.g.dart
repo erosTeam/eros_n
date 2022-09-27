@@ -9,6 +9,7 @@ part of 'gallery.dart';
 _$_Gallery _$$_GalleryFromJson(Map<String, dynamic> json) => _$_Gallery(
       gid: json['gid'] as String?,
       imageKey: json['imageKey'] as String?,
+      csrfToken: json['csrfToken'] as String?,
       title: json['title'] as String?,
       secondTitle: json['secondTitle'] as String?,
       url: json['url'] as String?,
@@ -32,6 +33,7 @@ Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
     <String, dynamic>{
       'gid': instance.gid,
       'imageKey': instance.imageKey,
+      'csrfToken': instance.csrfToken,
       'title': instance.title,
       'secondTitle': instance.secondTitle,
       'url': instance.url,

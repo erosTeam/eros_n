@@ -102,7 +102,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
               return EndIndicator(
                 loadStatus: state.status,
               );
-            })
+            }),
           ],
         ),
       ),

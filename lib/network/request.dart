@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/const/const.dart';
@@ -5,6 +7,7 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
+import 'package:tuple/tuple.dart';
 
 import '../utils/logger.dart';
 import 'api.dart';
@@ -60,6 +63,49 @@ Future<GallerySet> getGalleryList({
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryList error');
+  }
+}
+
+Future<GallerySet> getFavoriteList({
+  bool refresh = false,
+  CancelToken? cancelToken,
+  String? referer,
+  int? page,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final params = <String, dynamic>{
+    if (page != null && page > 1) 'page': page,
+  };
+
+  int? statusCode;
+
+  final httpTransformer = HttpTransformerBuilder(
+    (response) {
+      logger.v('statusCode ${response.statusCode}');
+      statusCode = response.statusCode;
+      final list = parseGalleryList(response.data as String);
+      return DioHttpResponse<GallerySet>.success(list);
+    },
+  );
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    'favorites/',
+    queryParameters: params,
+    httpTransformer: httpTransformer,
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is GallerySet) {
+    GallerySet data = httpResponse.data as GallerySet;
+    if (statusCode == 304) {
+      data = data.copyWith(fromCache: true);
+    }
+    return data;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getFavoriteList error');
   }
 }
 
@@ -198,6 +244,47 @@ Future<User> getInfoFromUserPage({
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getInfo error');
+  }
+}
+
+Future<Tuple2<bool?, int?>> setFavorite({
+  required String? gid,
+  required String? csrfToken,
+  bool unfavorite = false,
+  bool refresh = true,
+  CancelToken? cancelToken,
+}) async {
+  if (gid == null) {
+    return const Tuple2(null, null);
+  }
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final path = 'api/gallery/$gid/${unfavorite ? 'unfavorite' : 'favorite'}';
+
+  DioHttpResponse httpResponse = await dioHttpClient.post(
+    path,
+    options: getOptions(forceRefresh: refresh)
+      ..headers = {'x-csrftoken': csrfToken},
+    cancelToken: cancelToken,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        // logger.d('statusCode ${response.statusCode}');
+        final result = response.data;
+        // logger.d('result $result');
+        final favNums = result['num_favorites'] as List<dynamic>?;
+        final favNum = favNums?.first as int?;
+        final favorited = result['favorited'] as bool?;
+        return DioHttpResponse<Tuple2<bool?, int?>>.success(
+            Tuple2(favorited, favNum));
+      },
+    ),
+  );
+
+  if (httpResponse.ok && httpResponse.data is Tuple2<bool?, int?>) {
+    return httpResponse.data as Tuple2<bool?, int?>;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('setFavorite error');
   }
 }
 
