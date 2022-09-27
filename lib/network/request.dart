@@ -174,7 +174,7 @@ Future<String?> getLoginToken() async {
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     NHConst.loginUrl,
-    queryParameters: params,
+    // queryParameters: params,
     options: getOptions(forceRefresh: true),
     // cancelToken: cancelToken,
     httpTransformer: HttpTransformerBuilder(
@@ -201,7 +201,7 @@ Future<User> getInfoFromIndex({
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
-    NHConst.baseUrl,
+    NHConst.infoUrl,
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
     httpTransformer: HttpTransformerBuilder(
@@ -288,7 +288,7 @@ Future<Tuple2<bool?, int?>> setFavorite({
   }
 }
 
-Future<void> loginNhentai({
+Future<bool> loginNhentai({
   required String username,
   required String password,
   required String csrfToken,
@@ -310,23 +310,27 @@ Future<void> loginNhentai({
 
   DioHttpResponse httpResponse = await dioHttpClient.post(
     NHConst.loginUrl,
-    queryParameters: params,
+    // queryParameters: params,
     data: dataForm,
     options: getOptions(forceRefresh: true)
-      ..followRedirects = true
+      ..followRedirects = false
       ..validateStatus = (status) => status! < 500,
     httpTransformer: HttpTransformerBuilder(
       (response) {
         logger.d('statusCode ${response.statusCode}');
         logger.d('response ${response.headers}');
-        return DioHttpResponse<void>.success(null);
+        if (response.statusCode == 302) {
+          return DioHttpResponse<bool>.success(true);
+        } else {
+          return DioHttpResponse<bool>.success(false);
+        }
       },
     ),
     cancelToken: cancelToken,
   );
 
-  if (httpResponse.ok) {
-    return;
+  if (httpResponse.ok && httpResponse.data is bool) {
+    return httpResponse.data as bool;
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('login error');

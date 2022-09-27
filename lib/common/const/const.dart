@@ -11,9 +11,9 @@ class NHConst {
   static const String baseUrl = 'https://nhentai.net/';
   static const String baseHost = 'nhentai.net';
 
-  static const String loginUrl = 'https://nhentai.net/login';
-  static const String registerUrl = 'https://nhentai.net/register';
-  static const String infoUrl = 'https://nhentai.net/info';
+  static const String loginUrl = 'https://nhentai.net/login/';
+  static const String registerUrl = 'https://nhentai.net/register/';
+  static const String infoUrl = 'https://nhentai.net/info/';
 
   // 瀑布流视图参数
   // static const double waterfallFlowCrossAxisSpacing = 4.0;

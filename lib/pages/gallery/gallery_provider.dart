@@ -3,6 +3,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/nav/history/history_provider.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,6 +29,8 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     );
 
     loadData();
+    // add history
+    ref.read(historyProvider.notifier).addHistory(gallery);
   }
 
   void setInitialPage(int page) {
@@ -47,14 +50,6 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         url: state.url ?? '',
         refresh: refresh,
       );
-      // state = state.copyWith(
-      //   images: gallery.images,
-      //   favoritedNum: gallery.favoritedNum,
-      //   isFavorited: gallery.isFavorited,
-      //   title: gallery.title,
-      //   secondTitle: gallery.secondTitle,
-      //   moreLikeGallerys: gallery.moreLikeGallerys,
-      // );
       state = gallery.copyWith(
         thumbUrl: state.thumbUrl,
         thumbWidth: state.thumbWidth,

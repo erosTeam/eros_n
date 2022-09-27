@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/component/exception/error.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -61,16 +63,60 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     try {
-      await ref.read(userProvider.notifier).login(
+      final result = await ref.read(userProvider.notifier).login(
             username: _usernameController.text.trim(),
             password: _passwordController.text.trim(),
           );
+      if (result) {
+        erosRouter.pop();
+        ref.read(userProvider.notifier).loginGetMore();
+      }
+    } on NhError catch (e) {
+      if (e.type == NhErrorType.loginCaptcha) {
+        // log in with captcha
+        logger.e('login need captcha');
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                  title: Text('Login need captcha'),
+                  content: Text('Please login with webview'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        erosRouter.pop();
+                        _loginWithWebView();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ));
+      } else if (e.type == NhErrorType.loginInvalid) {
+        // log invalid
+        logger.e('login invalid');
+        context.showSnackBar('Login invalid');
+      } else {
+        logger.e(e);
+        rethrow;
+      }
     } catch (e) {
       logger.e(e);
+      rethrow;
     } finally {
       setState(() {
         _logining = false;
       });
+    }
+  }
+
+  Future<void> _loginWithWebView() async {
+    final cookies = await erosRouter.pushNamed<List<Cookie>>(NHRoutes.webLogin);
+    logger.d('==>> cookies: $cookies');
+    if (cookies != null) {
+      erosRouter.pop();
+      await Global.cookieJar.delete(Uri.parse(NHConst.baseUrl));
+      await Global.cookieJar
+          .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+      await ref.read(userProvider.notifier).loginGetMore();
     }
   }
 
@@ -155,18 +201,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                      onPressed: () async {
-                        final cookies = await erosRouter
-                            .pushNamed<List<Cookie>>(NHRoutes.webLogin);
-                        logger.d('==>> cookies: $cookies');
-                        if (cookies != null) {
-                          await Global.cookieJar
-                              .delete(Uri.parse(NHConst.baseUrl));
-                          await Global.cookieJar.saveFromResponse(
-                              Uri.parse(NHConst.baseUrl), cookies);
-                          await ref.read(userProvider.notifier).loginWithWeb();
-                        }
-                      },
+                      onPressed: _loginWithWebView,
                       child: const Text(
                         'Login by web',
                         style: TextStyle(decoration: TextDecoration.underline),

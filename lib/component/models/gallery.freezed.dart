@@ -29,6 +29,7 @@ mixin _$Gallery {
   String? get thumbUrl => throw _privateConstructorUsedError;
   int? get thumbHeight => throw _privateConstructorUsedError;
   int? get thumbWidth => throw _privateConstructorUsedError;
+  int? get viewTime => throw _privateConstructorUsedError;
   List<GalleryImage> get images => throw _privateConstructorUsedError;
   int get currentPageIndex => throw _privateConstructorUsedError;
   bool? get isFavorited => throw _privateConstructorUsedError;
@@ -54,6 +55,7 @@ abstract class $GalleryCopyWith<$Res> {
       String? thumbUrl,
       int? thumbHeight,
       int? thumbWidth,
+      int? viewTime,
       List<GalleryImage> images,
       int currentPageIndex,
       bool? isFavorited,
@@ -80,6 +82,7 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? thumbUrl = freezed,
     Object? thumbHeight = freezed,
     Object? thumbWidth = freezed,
+    Object? viewTime = freezed,
     Object? images = freezed,
     Object? currentPageIndex = freezed,
     Object? isFavorited = freezed,
@@ -123,6 +126,10 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.thumbWidth
           : thumbWidth // ignore: cast_nullable_to_non_nullable
               as int?,
+      viewTime: viewTime == freezed
+          ? _value.viewTime
+          : viewTime // ignore: cast_nullable_to_non_nullable
+              as int?,
       images: images == freezed
           ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
@@ -163,6 +170,7 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       String? thumbUrl,
       int? thumbHeight,
       int? thumbWidth,
+      int? viewTime,
       List<GalleryImage> images,
       int currentPageIndex,
       bool? isFavorited,
@@ -190,6 +198,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? thumbUrl = freezed,
     Object? thumbHeight = freezed,
     Object? thumbWidth = freezed,
+    Object? viewTime = freezed,
     Object? images = freezed,
     Object? currentPageIndex = freezed,
     Object? isFavorited = freezed,
@@ -233,6 +242,10 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value.thumbWidth
           : thumbWidth // ignore: cast_nullable_to_non_nullable
               as int?,
+      viewTime: viewTime == freezed
+          ? _value.viewTime
+          : viewTime // ignore: cast_nullable_to_non_nullable
+              as int?,
       images: images == freezed
           ? _value._images
           : images // ignore: cast_nullable_to_non_nullable
@@ -259,7 +272,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Gallery implements _Gallery {
+class _$_Gallery extends _Gallery {
   const _$_Gallery(
       {this.gid,
       this.imageKey,
@@ -270,13 +283,15 @@ class _$_Gallery implements _Gallery {
       this.thumbUrl,
       this.thumbHeight,
       this.thumbWidth,
+      this.viewTime,
       final List<GalleryImage> images = const <GalleryImage>[],
       this.currentPageIndex = 0,
       this.isFavorited,
       this.favoritedNum,
       final List<Gallery> moreLikeGallerys = const <Gallery>[]})
       : _images = images,
-        _moreLikeGallerys = moreLikeGallerys;
+        _moreLikeGallerys = moreLikeGallerys,
+        super._();
 
   factory _$_Gallery.fromJson(Map<String, dynamic> json) =>
       _$$_GalleryFromJson(json);
@@ -299,6 +314,8 @@ class _$_Gallery implements _Gallery {
   final int? thumbHeight;
   @override
   final int? thumbWidth;
+  @override
+  final int? viewTime;
   final List<GalleryImage> _images;
   @override
   @JsonKey()
@@ -324,7 +341,7 @@ class _$_Gallery implements _Gallery {
 
   @override
   String toString() {
-    return 'Gallery(gid: $gid, imageKey: $imageKey, csrfToken: $csrfToken, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, moreLikeGallerys: $moreLikeGallerys)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, csrfToken: $csrfToken, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, viewTime: $viewTime, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, moreLikeGallerys: $moreLikeGallerys)';
   }
 
   @override
@@ -344,6 +361,7 @@ class _$_Gallery implements _Gallery {
                 .equals(other.thumbHeight, thumbHeight) &&
             const DeepCollectionEquality()
                 .equals(other.thumbWidth, thumbWidth) &&
+            const DeepCollectionEquality().equals(other.viewTime, viewTime) &&
             const DeepCollectionEquality().equals(other._images, _images) &&
             const DeepCollectionEquality()
                 .equals(other.currentPageIndex, currentPageIndex) &&
@@ -368,6 +386,7 @@ class _$_Gallery implements _Gallery {
       const DeepCollectionEquality().hash(thumbUrl),
       const DeepCollectionEquality().hash(thumbHeight),
       const DeepCollectionEquality().hash(thumbWidth),
+      const DeepCollectionEquality().hash(viewTime),
       const DeepCollectionEquality().hash(_images),
       const DeepCollectionEquality().hash(currentPageIndex),
       const DeepCollectionEquality().hash(isFavorited),
@@ -387,7 +406,7 @@ class _$_Gallery implements _Gallery {
   }
 }
 
-abstract class _Gallery implements Gallery {
+abstract class _Gallery extends Gallery {
   const factory _Gallery(
       {final String? gid,
       final String? imageKey,
@@ -398,11 +417,13 @@ abstract class _Gallery implements Gallery {
       final String? thumbUrl,
       final int? thumbHeight,
       final int? thumbWidth,
+      final int? viewTime,
       final List<GalleryImage> images,
       final int currentPageIndex,
       final bool? isFavorited,
       final String? favoritedNum,
       final List<Gallery> moreLikeGallerys}) = _$_Gallery;
+  const _Gallery._() : super._();
 
   factory _Gallery.fromJson(Map<String, dynamic> json) = _$_Gallery.fromJson;
 
@@ -424,6 +445,8 @@ abstract class _Gallery implements Gallery {
   int? get thumbHeight;
   @override
   int? get thumbWidth;
+  @override
+  int? get viewTime;
   @override
   List<GalleryImage> get images;
   @override

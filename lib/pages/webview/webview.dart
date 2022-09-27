@@ -27,7 +27,7 @@ final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(
   crossPlatform: InAppWebViewOptions(
     useShouldOverrideUrlLoading: true,
     mediaPlaybackRequiresUserGesture: false,
-    clearCache: true,
+    // clearCache: true,
     // userAgent: GetPlatform.isIOS ? (Global.userAgent ?? NHConst.userAgent) : '',
   ),
   android: AndroidInAppWebViewOptions(

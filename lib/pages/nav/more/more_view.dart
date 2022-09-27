@@ -40,10 +40,11 @@ class MorePage extends StatelessWidget {
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.primary,
-                    backgroundImage:
-                        CachedNetworkImageProvider(user.avatarUrl ?? ''),
+                    backgroundImage: user.avatarUrl != null
+                        ? CachedNetworkImageProvider(user.avatarUrl ?? '')
+                        : null,
                   ),
-                  title: Text(user.userName ?? ''),
+                  title: Text(user.userName ?? '...'),
                   onTap: () {
                     // dialog to logout
                     showDialog(

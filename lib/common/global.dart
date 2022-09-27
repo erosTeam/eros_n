@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:eros_n/network/app_dio/app_dio.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/store/db/isar_helper.dart';
 import 'package:eros_n/store/kv/hive.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +19,7 @@ import 'const/const.dart';
 DioHttpConfig globalDioConfig = nhDioConfig;
 
 final HiveHelper hiveHelper = HiveHelper();
+final IsarHelper isarHelper = IsarHelper();
 final erosRouter = AppRouter();
 
 final DioHttpConfig nhDioConfig = DioHttpConfig(
@@ -69,6 +71,7 @@ class Global {
     }
 
     await HiveHelper.init();
+    await isarHelper.initIsar();
 
     userAgent = hiveHelper.getUserAgent();
     globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);

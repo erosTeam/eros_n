@@ -36,7 +36,8 @@ class WebLoginPage extends HookConsumerWidget {
         // }
       };
 
-      cookieManager = CookieManager.instance()..deleteAllCookies();
+      cookieManager = CookieManager.instance();
+      // cookieManager.deleteAllCookies();
       return;
     }, const []);
 

@@ -1,9 +1,11 @@
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
+import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 import '../index/index_provider.dart';
 import 'favorite_provider.dart';
@@ -41,12 +43,17 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
 
   @override
   Widget build(BuildContext context) {
+    final isUserLoggedIn =
+        ref.watch(userProvider.select((user) => user.isLogin));
     super.build(context);
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: ref.read(favoriteProvider.notifier).reloadData,
+        onRefresh: isUserLoggedIn
+            ? ref.read(favoriteProvider.notifier).reloadData
+            : () async {},
         child: CustomScrollView(
           controller: scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             const SliverAppBar(
               title: Text('Favorite'),
@@ -56,15 +63,28 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
                 preferredSize: Size.fromHeight(0),
                 child: SizedBox(height: 0),
               ),
-              // toolbarHeight: 0,
             ),
-            const FavoriteListView(),
-            Consumer(builder: (context, ref, _) {
-              final state = ref.watch(favoriteProvider);
-              return EndIndicator(
-                loadStatus: state.status,
-              );
-            }),
+            if (isUserLoggedIn)
+              MultiSliver(
+                children: [
+                  const FavoriteListView(),
+                  Consumer(builder: (context, ref, _) {
+                    final state = ref.watch(favoriteProvider);
+                    return EndIndicator(
+                      loadStatus: state.status,
+                    );
+                  }),
+                ],
+              )
+            else
+              SliverFillRemaining(
+                child: Center(
+                  child: Text(
+                    'Please login first',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

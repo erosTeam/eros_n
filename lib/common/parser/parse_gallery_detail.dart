@@ -25,14 +25,14 @@ Gallery parseGalleryDetail(String html) {
   final favoriteButtonElm = buttonsElms?.children.first;
 
   final favoriteText = favoriteButtonElm?.text.trim() ?? '';
-  logger.d('favoriteText: $favoriteText');
+  logger.v('favoriteText: $favoriteText');
   final favNum = RegExp(r'\d+').firstMatch(favoriteText)?.group(0) ?? '';
 
   final favText = favoriteButtonElm?.querySelector('.text')?.text.trim() ?? '';
-  logger.d('favText: $favText');
+  logger.v('favText: $favText');
   final isFav = favText.contains('Un');
 
-  logger.d('favNum: $favNum isFav: $isFav');
+  logger.v('favNum: $favNum isFav: $isFav');
 
   final downloadButtonElm = buttonsElms?.children[1];
   final torrentUrl = downloadButtonElm?.attributes['href'] ?? '';

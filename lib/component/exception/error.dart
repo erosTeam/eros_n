@@ -20,7 +20,7 @@ class NhError implements Exception {
 
   @override
   String toString() {
-    var msg = 'EhError [$type]: $message';
+    var msg = 'NhError [$type]: $message';
     if (error is Error) {
       msg += '\n${error.stackTrace}';
     }

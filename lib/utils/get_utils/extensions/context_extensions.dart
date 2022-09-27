@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import '../platform/platform.dart';
 
 extension ContextExtensionss on BuildContext {
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
   /// The same of [MediaQuery.of(context).size]
   Size get mediaQuerySize => MediaQuery.of(this).size;
 

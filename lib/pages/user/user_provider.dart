@@ -13,7 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class UserNotifier extends StateNotifier<User> {
   UserNotifier(super.state);
 
-  Future<void> login({
+  Future<bool> login({
     required String username,
     required String password,
   }) async {
@@ -25,7 +25,7 @@ class UserNotifier extends StateNotifier<User> {
       if (e.code == 403 || e.code == 503) {
         logger.e('code ${e.code}');
         if (!mounted) {
-          return;
+          return false;
         }
         await showInAppWebViewDialog(
           statusCode: e.code,
@@ -39,11 +39,13 @@ class UserNotifier extends StateNotifier<User> {
     }
 
     logger.d('csrfToken $csrfToken');
-    await loginNhentai(
+    final loginResult = await loginNhentai(
         username: username, password: password, csrfToken: csrfToken);
+
+    return loginResult;
   }
 
-  Future<void> loginWithWeb() async {
+  Future<void> loginGetMore() async {
     logger.d('loginWithCookie');
 
     final cookie =
