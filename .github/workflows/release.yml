@@ -137,6 +137,13 @@ jobs:
           git config --global core.longpaths true
           flutter pub get
 
+      # Get app version
+      - name: Get app version
+        id: get_version
+        shell: bash
+        run: |
+          echo "::set-output name=version::$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)"
+
       # 打包 apk
       - name: Collect Apks
         if: matrix.target == 'android'
@@ -162,17 +169,17 @@ jobs:
           cd build
           mkdir -p Payload
           mv ios/iphoneos/*.app Payload
-          zip -9 Eros_N.ipa -r Payload
+          zip -9 Eros-N_${{ steps.get_version.outputs.version }}.ipa -r Payload
 
       # 打包 mac
-      - name: Build mac app
-        if: matrix.target == 'macos'
-        run: |
-          cd macos && pod update && pod install && cd ..
-          flutter build macos --release
-          APP_PATH=build/macos/Build/Products/Release/eros_n.app
-          cp -a $APP_PATH ./build
-          cd build && zip -qroy macos/Eros_N_macos.zip eros_n.app
+#      - name: Build mac app
+#        if: matrix.target == 'macos'
+#        run: |
+#          cd macos && pod update && pod install && cd ..
+#          flutter build macos --release
+#          APP_PATH=build/macos/Build/Products/Release/eros_n.app
+#          cp -a $APP_PATH ./build
+#          cd build && zip -qroy macos/Eros_N_macos.zip eros_n.app
 
 #      - name: Build windows
 #        if: matrix.target == 'windows'
@@ -205,10 +212,30 @@ jobs:
 
       - run: ls -R /tmp/artifacts
 
-#      - name: Upload to release
-#        uses: ncipollo/release-action@v1
-#        with:
-#          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
-#          tag: ${{ github.ref_name }}
-#          prerelease: true
-#          allowUpdates: true
+      # Get app version
+      - name: Get app version
+        id: get_version
+        shell: bash
+        run: |
+          echo "::set-output name=version::$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)"
+
+      - name: Upload to release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
+          tag: ${{ github.ref_name }}
+          prerelease: false
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          replacesArtifacts: true
+
+      - name: Post release notes
+        run: |
+          changelog=$(cat changelog/v${{ steps.get_version.outputs.version }}.md)
+          curl 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' \
+          --header 'Content-Type: application/x-www-form-urlencoded' \
+          -d parse_mode=markdown \
+          -d chat_id=${{ secrets.TELEGRAM_CHANNEL_ID }} \
+          --data-urlencode text="[Eros-N_${{ github.ref_name }}](https://github.com/honjow/eros_n/releases/tag/${{ github.ref_name }})
+          $changelog" \
+          -d disable_web_page_preview=true
