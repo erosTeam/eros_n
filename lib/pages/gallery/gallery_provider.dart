@@ -39,6 +39,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
+    logger.d('loadData refresh $refresh  url: ${state.url}');
     if (state.images.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)

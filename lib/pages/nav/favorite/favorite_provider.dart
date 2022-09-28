@@ -57,7 +57,7 @@ class FavoriteNotifier extends StateNotifier<FrontState> {
         page: toPage,
       );
       final favorites = gallerySet.favorites ?? [];
-      logger.d('favorites.length ${favorites.length}');
+      logger.v('favorites.length ${favorites.length}');
 
       if (next) {
         favoriteGalleryNotifier.addGallerys(favorites);

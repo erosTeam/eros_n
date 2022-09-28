@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eros_n/common/parser/parse_gallery_list.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -16,8 +17,8 @@ Gallery parseGalleryDetail(String html) {
       RegExp(r'csrf_token:\s+"(.*)",').firstMatch(scriptText)?.group(1) ?? '';
 
   final titleElms = document.querySelectorAll('#info > .title');
-  final title = titleElms.first.text;
-  final secondTitle = titleElms.last.text;
+  final title = titleElms.firstOrNull?.text ?? '';
+  final secondTitle = titleElms.lastOrNull?.text ?? '';
   logger.d('title: $title, secondTitle: $secondTitle');
 
   const selectorButtons = '#info > div.buttons';

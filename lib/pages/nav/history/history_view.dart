@@ -68,8 +68,10 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                     onTap: () {
                       final gallery = Gallery(
                         gid: '${history.gid}',
+                        url: history.url,
                         imageKey: history.imageKey,
                         title: history.title,
+                        secondTitle: history.secondTitle,
                         thumbUrl: history.thumbUrl,
                         thumbWidth: history.thumbWidth,
                         thumbHeight: history.thumbHeight,

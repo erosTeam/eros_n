@@ -103,7 +103,7 @@ class FavoriteListView extends HookConsumerWidget {
     final List<Gallery> galleryList = ref.watch(favoriteGallerysProvider);
     final state = ref.watch(favoriteProvider);
     logger
-        .d('FavoriteListView build ,galleryList.length: ${galleryList.length}');
+        .v('FavoriteListView build ,galleryList.length: ${galleryList.length}');
 
     if (state.isLoading) {
       return const SliverFillRemaining(
