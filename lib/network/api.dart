@@ -10,7 +10,7 @@ class Api {
     ),
     policy: CachePolicy.forceCache,
     hitCacheOnErrorExcept: [401, 403, 304, 503],
-    maxStale: const Duration(days: 7),
+    maxStale: const Duration(days: 1),
     priority: CachePriority.normal,
     cipher: null,
     keyBuilder: CacheOptions.defaultCacheKeyBuilder,
