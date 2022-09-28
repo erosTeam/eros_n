@@ -2,6 +2,7 @@ import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
@@ -55,11 +56,11 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
           controller: scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            const SliverAppBar(
-              title: Text('History'),
+            SliverAppBar(
+              title: Text(L10n.of(context).history),
               floating: true,
               pinned: true,
-              bottom: PreferredSize(
+              bottom: const PreferredSize(
                 preferredSize: Size.fromHeight(0),
                 child: SizedBox(height: 0),
               ),
@@ -75,9 +76,9 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                     final DateTime date = e.key;
                     // if date is today
                     final String dateStr = date.isToday()
-                        ? 'Today'
+                        ? L10n.of(context).today
                         : date.isYesterday()
-                            ? 'Yesterday'
+                            ? L10n.of(context).yesterday
                             : date.toLocal().toString().split(' ')[0];
                     final historysInDate = e.value;
                     return MultiSliver(

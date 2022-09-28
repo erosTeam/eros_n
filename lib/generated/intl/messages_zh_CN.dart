@@ -22,6 +22,37 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "app_title": MessageLookupByLibrary.simpleMessage("Eros-N")
+        "about": MessageLookupByLibrary.simpleMessage("关于"),
+        "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
+        "appearance": MessageLookupByLibrary.simpleMessage("外观"),
+        "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "download": MessageLookupByLibrary.simpleMessage("下载"),
+        "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
+        "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
+        "history": MessageLookupByLibrary.simpleMessage("历史"),
+        "home": MessageLookupByLibrary.simpleMessage("主页"),
+        "login": MessageLookupByLibrary.simpleMessage("登录"),
+        "login_by_web": MessageLookupByLibrary.simpleMessage("通过网页登陆"),
+        "login_invalid": MessageLookupByLibrary.simpleMessage("无效登录信息"),
+        "login_need_captcha": MessageLookupByLibrary.simpleMessage("登录需要验证码"),
+        "logout": MessageLookupByLibrary.simpleMessage("登出"),
+        "more": MessageLookupByLibrary.simpleMessage("更多"),
+        "more_like_this": MessageLookupByLibrary.simpleMessage("更多相似"),
+        "never": MessageLookupByLibrary.simpleMessage("从不"),
+        "newest": MessageLookupByLibrary.simpleMessage("最新"),
+        "ok": MessageLookupByLibrary.simpleMessage("确定"),
+        "password": MessageLookupByLibrary.simpleMessage("密码"),
+        "please_login_first": MessageLookupByLibrary.simpleMessage("请先登录"),
+        "please_login_web": MessageLookupByLibrary.simpleMessage("请通过网页登录"),
+        "popular": MessageLookupByLibrary.simpleMessage("热门"),
+        "read": MessageLookupByLibrary.simpleMessage("阅读"),
+        "register": MessageLookupByLibrary.simpleMessage("注册"),
+        "search": MessageLookupByLibrary.simpleMessage("搜索"),
+        "settings": MessageLookupByLibrary.simpleMessage("设置"),
+        "share": MessageLookupByLibrary.simpleMessage("分享"),
+        "thumbs": MessageLookupByLibrary.simpleMessage("缩略图"),
+        "today": MessageLookupByLibrary.simpleMessage("今天"),
+        "username": MessageLookupByLibrary.simpleMessage("用户名"),
+        "yesterday": MessageLookupByLibrary.simpleMessage("昨天")
       };
 }

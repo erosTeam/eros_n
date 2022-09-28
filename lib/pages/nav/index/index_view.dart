@@ -1,3 +1,4 @@
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
 import 'package:eros_n/pages/nav/history/history_view.dart';
@@ -46,22 +47,22 @@ class IndexPage extends HookConsumerWidget {
           // height: 48,
           destinations: [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'Home',
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: const Icon(Icons.home),
+              label: L10n.of(context).home,
             ),
             NavigationDestination(
-              icon: Icon(Icons.favorite_outline),
-              selectedIcon: Icon(Icons.favorite),
-              label: 'Favorite',
+              icon: const Icon(Icons.favorite_outline),
+              selectedIcon: const Icon(Icons.favorite),
+              label: L10n.of(context).favorites,
             ),
             NavigationDestination(
-              icon: Icon(Icons.history),
-              label: 'History',
+              icon: const Icon(Icons.history),
+              label: L10n.of(context).history,
             ),
             NavigationDestination(
-              icon: Icon(Icons.more_horiz),
-              label: 'More',
+              icon: const Icon(Icons.more_horiz),
+              label: L10n.of(context).more,
             ),
           ],
           onDestinationSelected: (index) {

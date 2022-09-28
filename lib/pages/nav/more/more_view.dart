@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -15,7 +16,7 @@ class MorePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('More'),
+        title: Text(L10n.of(context).more),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -31,7 +32,7 @@ class MorePage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
-                  title: Text('Login'),
+                  title: Text(L10n.of(context).login),
                   onTap: () {
                     erosRouter.pushNamed(NHRoutes.login);
                   },
@@ -52,17 +53,17 @@ class MorePage extends StatelessWidget {
                         builder: (context) {
                           logger.d('logout $user');
                           return AlertDialog(
-                            title: Text('Logout'),
+                            title: Text(L10n.of(context).logout),
                             content: Text('Are you sure to logout?'),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('Cancel'),
+                                child: Text(L10n.of(context).cancel),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
                               TextButton(
-                                child: Text('Logout'),
+                                child: Text(L10n.of(context).logout),
                                 onPressed: () {
                                   ref.read(userProvider.notifier).logout();
                                   Navigator.of(context).pop();
@@ -81,7 +82,7 @@ class MorePage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.download_outlined),
               iconColor: Theme.of(context).colorScheme.primary,
-              title: Text('Download'),
+              title: Text(L10n.of(context).download),
               onTap: () {
                 Navigator.pushNamed(context, '/download');
               },
@@ -92,7 +93,7 @@ class MorePage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.settings_outlined),
               iconColor: Theme.of(context).colorScheme.primary,
-              title: Text('Settings'),
+              title: Text(L10n.of(context).settings),
               onTap: () {
                 erosRouter.pushNamed(NHRoutes.settings);
               },
@@ -100,7 +101,7 @@ class MorePage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.info_outline),
               iconColor: Theme.of(context).colorScheme.primary,
-              title: Text('About'),
+              title: Text(L10n.of(context).about),
               onTap: () {
                 erosRouter.pushNamed(NHRoutes.about);
               },

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
@@ -80,7 +81,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
                     color: Theme.of(context).scaffoldBackgroundColor,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Popular',
+                      L10n.of(context).popular,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
@@ -98,7 +99,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
                     color: Theme.of(context).scaffoldBackgroundColor,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Gallery',
+                      L10n.of(context).newest,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),

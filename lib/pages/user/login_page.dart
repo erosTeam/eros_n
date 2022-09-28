@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/exception/error.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
@@ -78,22 +79,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         showDialog(
             context: context,
             builder: (_) => AlertDialog(
-                  title: Text('Login need captcha'),
-                  content: Text('Please login with webview'),
+                  title: Text(L10n.of(context).login_need_captcha),
+                  content: Text(L10n.of(context).please_login_web),
                   actions: [
                     TextButton(
                       onPressed: () {
                         erosRouter.pop();
                         _loginWithWebView();
                       },
-                      child: Text('OK'),
+                      child: Text(L10n.of(context).ok),
                     ),
                   ],
                 ));
       } else if (e.type == NhErrorType.loginInvalid) {
         // log invalid
         logger.e('login invalid');
-        context.showSnackBar('Login invalid');
+        context.showSnackBar(L10n.of(context).login_invalid);
       } else {
         logger.e(e);
         rethrow;
@@ -124,11 +125,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text(L10n.of(context).login),
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -140,8 +141,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               TextField(
                 controller: _usernameController,
                 focusNode: _usernameFocusNode,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
+                decoration: InputDecoration(
+                  labelText: L10n.of(context).username,
                   // hintText: 'Enter your username',
                 ),
                 onEditingComplete: () {
@@ -153,7 +154,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 controller: _passwordController,
                 focusNode: _passwordFocusNode,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: L10n.of(context).password,
                   // hintText: 'Enter your password',
                   suffixIcon: IconButton(
                       onPressed: () {
@@ -194,7 +195,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         )
-                      : const Text('Login'),
+                      : Text(L10n.of(context).login),
                 ),
               ),
               Row(
@@ -202,20 +203,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 children: [
                   TextButton(
                       onPressed: _loginWithWebView,
-                      child: const Text(
-                        'Login by web',
-                        style: TextStyle(decoration: TextDecoration.underline),
+                      child: Text(
+                        L10n.of(context).login_by_web,
+                        style: const TextStyle(
+                            decoration: TextDecoration.underline),
                       )),
                   TextButton(
                       onPressed: () {
                         erosRouter.push(NhWebViewRoute(
                           initialUrl: NHConst.registerUrl,
-                          title: 'Register',
+                          title: L10n.of(context).register,
                         ));
                       },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(decoration: TextDecoration.underline),
+                      child: Text(
+                        L10n.of(context).register,
+                        style: const TextStyle(
+                            decoration: TextDecoration.underline),
                       )),
                 ],
               ),

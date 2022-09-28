@@ -22,6 +22,41 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "app_title": MessageLookupByLibrary.simpleMessage("Eros-N")
+        "about": MessageLookupByLibrary.simpleMessage("About"),
+        "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
+        "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "download": MessageLookupByLibrary.simpleMessage("Download"),
+        "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+        "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+        "history": MessageLookupByLibrary.simpleMessage("History"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "login_by_web": MessageLookupByLibrary.simpleMessage("Login by Web"),
+        "login_invalid": MessageLookupByLibrary.simpleMessage("Login invalid"),
+        "login_need_captcha":
+            MessageLookupByLibrary.simpleMessage("Login need captcha"),
+        "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+        "more": MessageLookupByLibrary.simpleMessage("More"),
+        "more_like_this":
+            MessageLookupByLibrary.simpleMessage("More like this"),
+        "never": MessageLookupByLibrary.simpleMessage("Never"),
+        "newest": MessageLookupByLibrary.simpleMessage("Newest"),
+        "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "please_login_first":
+            MessageLookupByLibrary.simpleMessage("Please login first"),
+        "please_login_web":
+            MessageLookupByLibrary.simpleMessage("Please login with web"),
+        "popular": MessageLookupByLibrary.simpleMessage("Popular"),
+        "read": MessageLookupByLibrary.simpleMessage("Read"),
+        "register": MessageLookupByLibrary.simpleMessage("Register"),
+        "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
+        "today": MessageLookupByLibrary.simpleMessage("Today"),
+        "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday")
       };
 }

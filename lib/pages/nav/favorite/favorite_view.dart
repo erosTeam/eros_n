@@ -1,4 +1,5 @@
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -55,11 +56,11 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
           controller: scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            const SliverAppBar(
-              title: Text('Favorite'),
+            SliverAppBar(
+              title: Text(L10n.of(context).favorites),
               floating: true,
               pinned: true,
-              bottom: PreferredSize(
+              bottom: const PreferredSize(
                 preferredSize: Size.fromHeight(0),
                 child: SizedBox(height: 0),
               ),
@@ -80,7 +81,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
               SliverFillRemaining(
                 child: Center(
                   child: Text(
-                    'Please login first',
+                    L10n.of(context).please_login_first,
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),

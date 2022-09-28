@@ -5,6 +5,7 @@ import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/scrolling_fab.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
@@ -102,7 +103,7 @@ class GalleryPage extends HookConsumerWidget {
           context.router.push(ReadRoute(gid: gid));
         },
         scrollController: scrollController,
-        label: Text('Read'),
+        label: Text(L10n.of(context).read),
         icon: const Icon(Icons.play_arrow),
       ),
       body: RefreshIndicator(
@@ -274,7 +275,7 @@ class DetailView extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Thumbs',
+                L10n.of(context).thumbs,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               TextButton(
@@ -282,7 +283,7 @@ class DetailView extends HookConsumerWidget {
                     erosRouter.push(ThumbRoute(gid: gid));
                   },
                   child: Text(
-                    'More',
+                    L10n.of(context).more,
                     style: Theme.of(context).textTheme.caption,
                   )),
             ],
@@ -296,7 +297,7 @@ class DetailView extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                'More Like This',
+                L10n.of(context).more_like_this,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
