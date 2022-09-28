@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eros_n/common/parser/parse_gallery_list.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:html/dom.dart';
+import 'package:html/dom.dart' hide Comment;
 import 'package:html/parser.dart' show parse;
 
 Gallery parseGalleryDetail(String html) {
@@ -37,6 +37,7 @@ Gallery parseGalleryDetail(String html) {
 
   final downloadButtonElm = buttonsElms?.children[1];
   final torrentUrl = downloadButtonElm?.attributes['href'] ?? '';
+  logger.d('torrentUrl: $torrentUrl');
 
   const selectorMoreLikeGalleryList = '#related-container';
   const selectorGallery = '.gallery:not(.blacklisted)';
@@ -69,6 +70,7 @@ Gallery parseGalleryDetail(String html) {
     ));
   }
 
+
   return Gallery(
     title: title,
     secondTitle: secondTitle,
@@ -77,5 +79,7 @@ Gallery parseGalleryDetail(String html) {
     favoritedNum: favNum,
     moreLikeGallerys: moreLikeGalleryList,
     csrfToken: csrfToken,
+    torrentUrl: torrentUrl,
+    // comments: comments,
   );
 }

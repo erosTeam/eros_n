@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'comment.dart';
 import 'gallery_image.dart';
 
 part 'gallery.freezed.dart';
@@ -21,7 +22,9 @@ class Gallery with _$Gallery {
     @Default(0) int currentPageIndex,
     bool? isFavorited,
     String? favoritedNum,
+    String? torrentUrl,
     @Default(<Gallery>[]) List<Gallery> moreLikeGallerys,
+    @Default(<Comment>[]) List<Comment> comments,
   }) = _Gallery;
 
   const Gallery._();

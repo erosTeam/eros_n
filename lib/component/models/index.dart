@@ -2,6 +2,7 @@
 
 library index;
 
+export 'comment.dart';
 export 'gallery.dart';
 export 'gallery_image.dart';
 export 'gallery_set.dart';

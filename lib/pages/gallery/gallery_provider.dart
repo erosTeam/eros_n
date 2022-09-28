@@ -50,6 +50,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
           .update((state) => state.copyWith(pageStatus: PageStatus.loading));
     }
 
+    // 获取画廊数据
     try {
       final gallery = await getGalleryDetail(
         url: state.url ?? '',
@@ -65,6 +66,33 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         imageKey: state.imageKey,
         currentPageIndex: state.currentPageIndex,
       );
+    } on HttpException catch (e) {
+      if (e.code == 403 || e.code == 503) {
+        logger.e('code ${e.code}');
+        if (!mounted) {
+          return;
+        }
+        await showInAppWebViewDialog(
+          statusCode: e.code,
+          onComplete: () async => await loadData(refresh: refresh),
+        );
+      } else {
+        rethrow;
+      }
+    } finally {
+      ref
+          .read(pageStateProvider(state.gid).notifier)
+          .update((state) => state.copyWith(pageStatus: PageStatus.none));
+    }
+
+
+    // 获取评论数据
+    try {
+      final comments = await getGalleryComments(
+        gid: state.gid,
+        refresh: refresh,
+      );
+      state = state.copyWith(comments: comments);
     } on HttpException catch (e) {
       if (e.code == 403 || e.code == 503) {
         logger.e('code ${e.code}');

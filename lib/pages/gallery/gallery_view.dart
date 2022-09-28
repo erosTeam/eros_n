@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
+import 'package:dio/dio.dart';
+import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
@@ -16,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path/path.dart' as path;
+import 'package:share/share.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'gallery_provider.dart';
@@ -89,7 +93,14 @@ class GalleryPage extends HookConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () {},
+            onPressed: () {
+              if (gallery.title != null) {
+                final shareText =
+                    '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
+                logger.d(shareText);
+                Share.share(shareText);
+              }
+            },
           ),
           IconButton(
             icon: const Icon(Icons.more_vert),
@@ -261,6 +272,7 @@ class DetailView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
+    final images = ref.read(galleryProvider(gid)).images;
     if (pageStatus == PageStatus.loading) {
       return const SliverFillRemaining(
         child: Center(
@@ -283,7 +295,7 @@ class DetailView extends HookConsumerWidget {
                     erosRouter.push(ThumbRoute(gid: gid));
                   },
                   child: Text(
-                    L10n.of(context).more,
+                    '${L10n.of(context).more} ${images.length}',
                     style: Theme.of(context).textTheme.caption,
                   )),
             ],
@@ -304,7 +316,9 @@ class DetailView extends HookConsumerWidget {
           ),
         ),
         MoreLikeListView(gid: gid),
-        SizedBox(height: 150),
+        const SizedBox(height: 8),
+        CommentsListView(gid: gid),
+        const SizedBox(height: 150),
       ]);
     }
   }
@@ -423,6 +437,113 @@ class MoreLikeListView extends HookConsumerWidget {
   }
 }
 
+class CommentsListView extends HookConsumerWidget {
+  const CommentsListView({
+    Key? key,
+    this.gid,
+  }) : super(key: key);
+
+  final String? gid;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final comments = ref.read(galleryProvider(gid)).comments;
+    if (comments.isEmpty) {
+      return const SizedBox(height: 8);
+    }
+    return MultiSliver(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Comments',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              TextButton(
+                  onPressed: () {
+                    // erosRouter.push(ThumbRoute(gid: gid));
+                  },
+                  child: Text(
+                    '${L10n.of(context).more} ${comments.length}',
+                    style: Theme.of(context).textTheme.caption,
+                  )),
+            ],
+          ),
+        ),
+        Container(
+          height: 180,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            scrollDirection: Axis.horizontal,
+            itemCount: comments.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 0),
+            itemBuilder: (context, index) {
+              final comment = comments[index];
+              final aspectRatio = 2.0;
+              return GestureDetector(
+                onTap: () {
+                  // ref
+                  //     .read(galleryProvider(likeGallery.gid).notifier)
+                  //     .initFromGallery(likeGallery);
+                  // context.router.push(GalleryRoute(gid: likeGallery.gid));
+                },
+                child: AspectRatio(
+                  aspectRatio: aspectRatio,
+                  child: Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              ClipOval(
+                                child: SizedBox(
+                                  height: 48,
+                                  width: 48,
+                                  child: ErosCachedNetworkImage(
+                                    imageUrl:
+                                        'https://i.${NHConst.baseHost}/${comment.poster?.avatarUrl ?? ''}',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(comment.poster?.username ?? '',
+                                  style: Theme.of(context).textTheme.titleSmall),
+                            ],
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 12, right: 8, top: 12),
+                              child: Text(
+                                comment.commentText ?? '',
+                                style: Theme.of(context).textTheme.bodyText2,
+                                textAlign: TextAlign.start,
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class ToolBarView extends HookConsumerWidget {
   const ToolBarView({Key? key, required this.gid}) : super(key: key);
 
@@ -451,7 +572,38 @@ class ToolBarView extends HookConsumerWidget {
           IconButton(
             icon: const Icon(Icons.energy_savings_leaf, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
-            onPressed: isUserLogin ? () {} : null,
+            onPressed: isUserLogin
+                ? () async {
+                    // launch torrent
+                    // logger.d('launch torrent ${NHConst.baseUrl}${gallery.torrentUrl}');
+                    // launchUrlString('${NHConst.baseUrl}${gallery.torrentUrl}');
+
+                    // final savePathFB =
+                    //     path.joinAll([Global.extStorePath, gallery.gid ?? '']);
+                    late String savePath;
+
+                    await nhDownload(
+                        url: '${gallery.torrentUrl}',
+                        savePath: (Headers headers) {
+                          logger.d(headers);
+                          final contentDisposition =
+                              headers.value('content-disposition');
+                          final filename = contentDisposition
+                              ?.split(RegExp(r"filename(=|\*=UTF-8'')"))
+                              .last;
+                          final fileNameDecode = Uri.decodeFull(filename ?? '');
+                          logger.d(fileNameDecode);
+                          savePath = path.joinAll([
+                            Global.tempPath,
+                            'torrent',
+                            gallery.gid ?? '',
+                            fileNameDecode
+                          ]);
+                          return savePath;
+                        });
+                    Share.shareFiles([savePath]);
+                  }
+                : null,
           ),
           // 收藏按钮
           IconButton(

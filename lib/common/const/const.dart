@@ -8,7 +8,7 @@ class NHConst {
   static const String acceptLanguage =
       'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6';
 
-  static const String baseUrl = 'https://nhentai.net/';
+  static const String baseUrl = 'https://nhentai.net';
   static const String baseHost = 'nhentai.net';
 
   static const String loginUrl = 'https://nhentai.net/login/';

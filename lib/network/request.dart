@@ -7,6 +7,7 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 
 import '../utils/logger.dart';
@@ -90,7 +91,7 @@ Future<GallerySet> getFavoriteList({
   );
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
-    'favorites/',
+    '/favorites/',
     queryParameters: params,
     httpTransformer: httpTransformer,
     options: getOptions(forceRefresh: refresh),
@@ -162,6 +163,45 @@ Future<GalleryImage> getGalleryImage({
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryImage error');
+  }
+}
+
+Future<List<Comment>> getGalleryComments({
+  required String? gid,
+  String? token,
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final url = 'https://nhentai.net/api/gallery/$gid/comments';
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    url,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        logger.d('statusCode ${response.statusCode}');
+        logger.d('response ${response.data.runtimeType}');
+        final comments = <Comment>[];
+        if (response.data is List) {
+          for (final item in response.data as List) {
+            if (item is Map) {
+              comments.add(Comment.fromJson(item as Map<String, dynamic>));
+            }
+          }
+        }
+        return DioHttpResponse<List<Comment>>.success(comments);
+      },
+    ),
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is List<Comment>) {
+    return httpResponse.data as List<Comment>;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getGalleryComments error');
   }
 }
 
@@ -268,9 +308,7 @@ Future<Tuple2<bool?, int?>> setFavorite({
     cancelToken: cancelToken,
     httpTransformer: HttpTransformerBuilder(
       (response) {
-        // logger.d('statusCode ${response.statusCode}');
         final result = response.data;
-        // logger.d('result $result');
         final favNums = result['num_favorites'] as List<dynamic>?;
         final favNum = favNums?.first as int?;
         final favorited = result['favorited'] as bool?;
@@ -334,5 +372,45 @@ Future<bool> loginNhentai({
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('login error');
+  }
+}
+
+Future<void> nhDownload({
+  required String url,
+  required savePath,
+  CancelToken? cancelToken,
+  bool? errToast,
+  bool deleteOnError = true,
+  VoidCallback? onDownloadComplete,
+  ProgressCallback? progressCallback,
+}) async {
+  late final String downloadUrl;
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+  if (!url.startsWith(RegExp(r'https?://'))) {
+    downloadUrl = '${NHConst.baseUrl}$url';
+  } else {
+    downloadUrl = url;
+  }
+  logger.v('downloadUrl $downloadUrl');
+  try {
+    final response = await dioHttpClient.download(
+      downloadUrl,
+      savePath,
+      deleteOnError: deleteOnError,
+      onReceiveProgress: (int count, int total) {
+        progressCallback?.call(count, total);
+        if (count == total) {
+          onDownloadComplete?.call();
+        }
+      },
+      cancelToken: cancelToken,
+    );
+
+    // logger.d('response.runtimeType ${response.runtimeType}');
+    // logger.d('response.statusCode ${response.headers}');
+  } on CancelException catch (e) {
+    logger.d('cancel');
+  } on Exception catch (e) {
+    rethrow;
   }
 }

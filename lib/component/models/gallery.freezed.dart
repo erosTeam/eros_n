@@ -34,7 +34,9 @@ mixin _$Gallery {
   int get currentPageIndex => throw _privateConstructorUsedError;
   bool? get isFavorited => throw _privateConstructorUsedError;
   String? get favoritedNum => throw _privateConstructorUsedError;
+  String? get torrentUrl => throw _privateConstructorUsedError;
   List<Gallery> get moreLikeGallerys => throw _privateConstructorUsedError;
+  List<Comment> get comments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -60,7 +62,9 @@ abstract class $GalleryCopyWith<$Res> {
       int currentPageIndex,
       bool? isFavorited,
       String? favoritedNum,
-      List<Gallery> moreLikeGallerys});
+      String? torrentUrl,
+      List<Gallery> moreLikeGallerys,
+      List<Comment> comments});
 }
 
 /// @nodoc
@@ -87,7 +91,9 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? currentPageIndex = freezed,
     Object? isFavorited = freezed,
     Object? favoritedNum = freezed,
+    Object? torrentUrl = freezed,
     Object? moreLikeGallerys = freezed,
+    Object? comments = freezed,
   }) {
     return _then(_value.copyWith(
       gid: gid == freezed
@@ -146,10 +152,18 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.favoritedNum
           : favoritedNum // ignore: cast_nullable_to_non_nullable
               as String?,
+      torrentUrl: torrentUrl == freezed
+          ? _value.torrentUrl
+          : torrentUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       moreLikeGallerys: moreLikeGallerys == freezed
           ? _value.moreLikeGallerys
           : moreLikeGallerys // ignore: cast_nullable_to_non_nullable
               as List<Gallery>,
+      comments: comments == freezed
+          ? _value.comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as List<Comment>,
     ));
   }
 }
@@ -175,7 +189,9 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       int currentPageIndex,
       bool? isFavorited,
       String? favoritedNum,
-      List<Gallery> moreLikeGallerys});
+      String? torrentUrl,
+      List<Gallery> moreLikeGallerys,
+      List<Comment> comments});
 }
 
 /// @nodoc
@@ -203,7 +219,9 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? currentPageIndex = freezed,
     Object? isFavorited = freezed,
     Object? favoritedNum = freezed,
+    Object? torrentUrl = freezed,
     Object? moreLikeGallerys = freezed,
+    Object? comments = freezed,
   }) {
     return _then(_$_Gallery(
       gid: gid == freezed
@@ -262,10 +280,18 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value.favoritedNum
           : favoritedNum // ignore: cast_nullable_to_non_nullable
               as String?,
+      torrentUrl: torrentUrl == freezed
+          ? _value.torrentUrl
+          : torrentUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       moreLikeGallerys: moreLikeGallerys == freezed
           ? _value._moreLikeGallerys
           : moreLikeGallerys // ignore: cast_nullable_to_non_nullable
               as List<Gallery>,
+      comments: comments == freezed
+          ? _value._comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as List<Comment>,
     ));
   }
 }
@@ -288,9 +314,12 @@ class _$_Gallery extends _Gallery {
       this.currentPageIndex = 0,
       this.isFavorited,
       this.favoritedNum,
-      final List<Gallery> moreLikeGallerys = const <Gallery>[]})
+      this.torrentUrl,
+      final List<Gallery> moreLikeGallerys = const <Gallery>[],
+      final List<Comment> comments = const <Comment>[]})
       : _images = images,
         _moreLikeGallerys = moreLikeGallerys,
+        _comments = comments,
         super._();
 
   factory _$_Gallery.fromJson(Map<String, dynamic> json) =>
@@ -331,6 +360,8 @@ class _$_Gallery extends _Gallery {
   final bool? isFavorited;
   @override
   final String? favoritedNum;
+  @override
+  final String? torrentUrl;
   final List<Gallery> _moreLikeGallerys;
   @override
   @JsonKey()
@@ -339,9 +370,17 @@ class _$_Gallery extends _Gallery {
     return EqualUnmodifiableListView(_moreLikeGallerys);
   }
 
+  final List<Comment> _comments;
+  @override
+  @JsonKey()
+  List<Comment> get comments {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_comments);
+  }
+
   @override
   String toString() {
-    return 'Gallery(gid: $gid, imageKey: $imageKey, csrfToken: $csrfToken, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, viewTime: $viewTime, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, moreLikeGallerys: $moreLikeGallerys)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, csrfToken: $csrfToken, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, viewTime: $viewTime, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, torrentUrl: $torrentUrl, moreLikeGallerys: $moreLikeGallerys, comments: $comments)';
   }
 
   @override
@@ -370,7 +409,10 @@ class _$_Gallery extends _Gallery {
             const DeepCollectionEquality()
                 .equals(other.favoritedNum, favoritedNum) &&
             const DeepCollectionEquality()
-                .equals(other._moreLikeGallerys, _moreLikeGallerys));
+                .equals(other.torrentUrl, torrentUrl) &&
+            const DeepCollectionEquality()
+                .equals(other._moreLikeGallerys, _moreLikeGallerys) &&
+            const DeepCollectionEquality().equals(other._comments, _comments));
   }
 
   @JsonKey(ignore: true)
@@ -391,7 +433,9 @@ class _$_Gallery extends _Gallery {
       const DeepCollectionEquality().hash(currentPageIndex),
       const DeepCollectionEquality().hash(isFavorited),
       const DeepCollectionEquality().hash(favoritedNum),
-      const DeepCollectionEquality().hash(_moreLikeGallerys));
+      const DeepCollectionEquality().hash(torrentUrl),
+      const DeepCollectionEquality().hash(_moreLikeGallerys),
+      const DeepCollectionEquality().hash(_comments));
 
   @JsonKey(ignore: true)
   @override
@@ -422,7 +466,9 @@ abstract class _Gallery extends Gallery {
       final int currentPageIndex,
       final bool? isFavorited,
       final String? favoritedNum,
-      final List<Gallery> moreLikeGallerys}) = _$_Gallery;
+      final String? torrentUrl,
+      final List<Gallery> moreLikeGallerys,
+      final List<Comment> comments}) = _$_Gallery;
   const _Gallery._() : super._();
 
   factory _Gallery.fromJson(Map<String, dynamic> json) = _$_Gallery.fromJson;
@@ -456,7 +502,11 @@ abstract class _Gallery extends Gallery {
   @override
   String? get favoritedNum;
   @override
+  String? get torrentUrl;
+  @override
   List<Gallery> get moreLikeGallerys;
+  @override
+  List<Comment> get comments;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryCopyWith<_$_Gallery> get copyWith =>
