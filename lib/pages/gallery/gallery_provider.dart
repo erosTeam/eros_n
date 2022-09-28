@@ -5,6 +5,8 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
 import 'package:eros_n/utils/eros_utils.dart';
+import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
+import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
@@ -30,7 +32,9 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
     loadData();
     // add history
-    ref.read(historyProvider.notifier).addHistory(gallery);
+    500.milliseconds.delay(() {
+      ref.read(historyProvider.notifier).addHistory(gallery);
+    });
   }
 
   void setInitialPage(int page) {

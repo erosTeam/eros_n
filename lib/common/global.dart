@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart' as iaw;
 import 'package:logger/logger.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -41,6 +42,8 @@ class Global {
 
   static String? userAgent;
 
+  static late PackageInfo packageInfo;
+
   static Future<void> init() async {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.transparent,
@@ -69,6 +72,8 @@ class Global {
           true);
       WebView.platform = AndroidWebView();
     }
+
+    packageInfo = await PackageInfo.fromPlatform();
 
     await HiveHelper.init();
     await isarHelper.initIsar();
