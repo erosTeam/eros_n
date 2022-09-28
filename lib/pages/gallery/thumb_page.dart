@@ -21,12 +21,15 @@ class ThumbPage extends HookConsumerWidget {
       appBar: AppBar(
         title: const Text('Thumbs'),
       ),
-      body: CustomScrollView(
-        slivers: [
-          ThumbsView(
-            gid: gid,
-          ),
-        ],
+      body: Scrollbar(
+        controller: ScrollController(),
+        child: CustomScrollView(
+          slivers: [
+            ThumbsView(
+              gid: gid,
+            ),
+          ],
+        ),
       ),
     );
   }

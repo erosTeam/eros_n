@@ -64,7 +64,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
 
     final rCookies =
         await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    logger.d('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+    logger.v('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
 
     if (next) {
       if (state.curPage == state.maxPage) {

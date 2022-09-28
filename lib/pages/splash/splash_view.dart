@@ -26,7 +26,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    300
+    0
         .milliseconds
         .delay()
         .then((value) => erosRouter.replaceNamed(NHRoutes.home));

@@ -35,7 +35,7 @@ class AppDio with DioMixin implements Dio {
     logger.v('dioConfig ${dioConfig?.toString()}');
 
     if (dioConfig?.userAgent?.isNotEmpty ?? false) {
-      logger.d('set userAgent from dioConfig');
+      logger.v('set userAgent from dioConfig');
       this.options.headers['User-Agent'] = dioConfig?.userAgent;
     }
 

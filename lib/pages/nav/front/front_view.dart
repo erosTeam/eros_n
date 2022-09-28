@@ -63,40 +63,49 @@ class _FrontPageState extends ConsumerState<FrontPage>
             const SliverAppBar(
               floating: true,
               pinned: true,
+              scrolledUnderElevation: 0,
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(0),
                 child: SizedBox(height: 0),
               ),
               toolbarHeight: 0,
             ),
-            SliverPadding(
-              padding: const EdgeInsets.only(
-                left: 16,
-                top: 16,
-                // top: MediaQuery.of(context).padding.top + 16,
-              ),
-              sliver: SliverToBoxAdapter(
-                child: Text(
-                  'Popular',
-                  style: Theme.of(context).textTheme.titleLarge,
+            MultiSliver(
+              pushPinnedChildren: true,
+              children: [
+                SliverPinnedHeader(
+                  child: Container(
+                    height: kToolbarHeight,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Popular',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
                 ),
-              ),
+                const PopularListView(),
+              ],
             ),
-            const PopularListView(),
-            SliverPadding(
-              padding: const EdgeInsets.only(
-                left: 16,
-                top: 16,
-                bottom: 8,
-              ),
-              sliver: SliverToBoxAdapter(
-                child: Text(
-                  'Gallery',
-                  style: Theme.of(context).textTheme.titleLarge,
+            MultiSliver(
+              pushPinnedChildren: true,
+              children: [
+                SliverPinnedHeader(
+                  child: Container(
+                    height: kToolbarHeight,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Gallery',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
                 ),
-              ),
+                const GalleryListView(),
+              ],
             ),
-            const GalleryListView(),
             Consumer(builder: (context, ref, _) {
               final state = ref.watch(frontProvider);
               return EndIndicator(

@@ -50,7 +50,7 @@ GallerySet parseGalleryList(String html) {
   final List<Element> favoriteGalleryElmList =
       favoriteListElm?.querySelectorAll(selectorFavoriteGallery) ?? [];
 
-  logger.d('favoriteGalleryElmList.len ${favoriteGalleryElmList.length}');
+  logger.v('favoriteGalleryElmList.len ${favoriteGalleryElmList.length}');
 
   final maxPage = RegExp(r'\d+')
           .firstMatch(
@@ -93,7 +93,7 @@ List<Gallery> parseGalleryListElm(
         (elm.attributes['data-tags'] ?? '').split(RegExp(r'\s+')).toList();
     // logger.d('dataTags: $dataTags');
     if (dataTags.any((e) => blacklistTagsList.contains(e))) {
-      logger.d('$gid $title is blacklisted');
+      logger.v('$gid $title is blacklisted');
       continue;
     }
 
