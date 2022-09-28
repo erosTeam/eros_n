@@ -26,14 +26,15 @@ Future<void> showInAppWebViewDialog({
   // if (!_canShowDialog) {
   //   return;
   // }
-  final isPlatformPhone = io.Platform.isAndroid || io.Platform.isAndroid;
+  final isPlatformPhone =
+      io.Platform.isAndroid || io.Platform.isIOS || io.Platform.isFuchsia;
 
   final CookieManager cookieManager = CookieManager.instance();
   if (isPlatformPhone) {
     await cookieManager.deleteAllCookies();
   }
-  // final showWebview = !kReleaseMode;
-  final showWebview = false;
+  final showWebview = !kReleaseMode;
+  // final showWebview = !kReleaseMode && io.Platform.isIOS;
 
   final cefController = cef.WebviewController();
 
