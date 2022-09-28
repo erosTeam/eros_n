@@ -69,7 +69,6 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
               builder: (context, ref, child) {
                 final historys = ref.watch(historyGallerysProvider);
                 final historysGroupByDate = groupByDate(historys);
-                // final historysGroupByDateKeys = historysGroupByDate.keys.toList();
                 return MultiSliver(
                     children: historysGroupByDate.entries.map(
                   (e) {
@@ -130,6 +129,12 @@ class HistoryItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // last view hour and minute
+    final lastReadTime =
+        DateTime.fromMillisecondsSinceEpoch(history.lastReadTime ?? 0);
+    final String lastReadTimeStr =
+        lastReadTime.toLocal().toString().split(' ')[1].substring(0, 5);
+
     return InkWell(
       onTap: () {
         final gallery = Gallery(
@@ -169,6 +174,7 @@ class HistoryItem extends HookConsumerWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     history.title ?? '',
@@ -176,7 +182,15 @@ class HistoryItem extends HookConsumerWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Expanded(child: Container()),
+                  const SizedBox(height: 4),
+                  Container(
+                    alignment: Alignment.bottomLeft,
+                    // time
+                    child: Text(
+                      lastReadTimeStr,
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ),
                 ],
               ),
             ),
