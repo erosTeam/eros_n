@@ -614,9 +614,11 @@ class ToolBarView extends HookConsumerWidget {
                           final contentDisposition =
                               headers.value('content-disposition');
                           final filename = contentDisposition
-                              ?.split(RegExp(r"filename(=|\*=UTF-8'')"))
-                              .last;
-                          final fileNameDecode = Uri.decodeFull(filename ?? '');
+                                  ?.split(RegExp(r"filename(=|\*=UTF-8'')"))
+                                  .last ??
+                              '';
+                          final fileNameDecode = Uri.decodeFull(filename ?? '')
+                              .replaceAll('/', '_');
                           logger.d(fileNameDecode);
                           savePath = path.joinAll([
                             Global.tempPath,
