@@ -30,5 +30,8 @@
   "please_login_web": "Please login with web",
   "ok": "OK",
   "cancel": "Cancel",
-  "never": "Never"
+  "never": "Never",
+  "always": "Always",
+  "auto": "Auto",
+  "comments": "Comments"
 }

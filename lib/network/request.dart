@@ -174,14 +174,12 @@ Future<List<Comment>> getGalleryComments({
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final url = 'https://nhentai.net/api/gallery/$gid/comments';
+  final url = '/api/gallery/$gid/comments';
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,
     httpTransformer: HttpTransformerBuilder(
       (response) {
-        logger.d('statusCode ${response.statusCode}');
-        logger.d('response ${response.data.runtimeType}');
         final comments = <Comment>[];
         if (response.data is List) {
           for (final item in response.data as List) {
@@ -299,7 +297,7 @@ Future<Tuple2<bool?, int?>> setFavorite({
   }
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final path = 'api/gallery/$gid/${unfavorite ? 'unfavorite' : 'favorite'}';
+  final path = '/api/gallery/$gid/${unfavorite ? 'unfavorite' : 'favorite'}';
 
   DioHttpResponse httpResponse = await dioHttpClient.post(
     path,

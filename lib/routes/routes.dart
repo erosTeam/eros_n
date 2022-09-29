@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/pages/gallery/comments_page.dart';
 import 'package:eros_n/pages/gallery/thumb_page.dart';
 import 'package:eros_n/pages/nav/index/index_view.dart';
 import 'package:eros_n/pages/read/read_view.dart';
@@ -31,6 +32,7 @@ class NHRoutes {
   static const String about = '/about';
   static const String license = '/license';
   static const String thumb = '/thumb';
+  static const String comments = '/comments';
 }
 
 class AppRouteObserver extends AutoRouterObserver {
@@ -53,6 +55,7 @@ class AppRouteObserver extends AutoRouterObserver {
     AutoRoute(path: NHRoutes.about, page: AboutPage),
     AutoRoute(path: NHRoutes.license, page: LicensePage),
     AutoRoute(path: NHRoutes.thumb, page: ThumbPage),
+    AutoRoute(path: NHRoutes.comments, page: CommentsPage),
   ],
 )
 class AppRouter extends _$AppRouter {}

@@ -119,6 +119,16 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CommentsRoute.name: (routeData) {
+      final args = routeData.argsAs<CommentsRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: CommentsPage(
+          key: args.key,
+          gid: args.gid,
+        ),
+      );
+    },
   };
 
   @override
@@ -170,6 +180,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           ThumbRoute.name,
           path: '/thumb',
+        ),
+        RouteConfig(
+          CommentsRoute.name,
+          path: '/comments',
         ),
       ];
 }
@@ -457,5 +471,39 @@ class ThumbRouteArgs {
   @override
   String toString() {
     return 'ThumbRouteArgs{key: $key, gid: $gid}';
+  }
+}
+
+/// generated route for
+/// [CommentsPage]
+class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
+  CommentsRoute({
+    Key? key,
+    required String? gid,
+  }) : super(
+          CommentsRoute.name,
+          path: '/comments',
+          args: CommentsRouteArgs(
+            key: key,
+            gid: gid,
+          ),
+        );
+
+  static const String name = 'CommentsRoute';
+}
+
+class CommentsRouteArgs {
+  const CommentsRouteArgs({
+    this.key,
+    required this.gid,
+  });
+
+  final Key? key;
+
+  final String? gid;
+
+  @override
+  String toString() {
+    return 'CommentsRouteArgs{key: $key, gid: $gid}';
   }
 }

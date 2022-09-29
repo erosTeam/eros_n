@@ -30,5 +30,8 @@
   "please_login_web": "请通过网页登录",
   "ok": "确定",
   "cancel": "取消",
-  "never": "从不"
+  "never": "从不",
+  "always": "始终",
+  "auto": "自动",
+  "comments": "评论"
 }

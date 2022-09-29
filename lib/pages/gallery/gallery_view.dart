@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/component/models/comment.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:share/share.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -281,40 +283,8 @@ class DetailView extends HookConsumerWidget {
       );
     } else {
       return MultiSliver(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                L10n.of(context).thumbs,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              TextButton(
-                  onPressed: () {
-                    erosRouter.push(ThumbRoute(gid: gid));
-                  },
-                  child: Text(
-                    '${L10n.of(context).more} ${images.length}',
-                    style: Theme.of(context).textTheme.caption,
-                  )),
-            ],
-          ),
-        ),
         ThumbListView(gid: gid),
         const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                L10n.of(context).more_like_this,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-        ),
         MoreLikeListView(gid: gid),
         const SizedBox(height: 8),
         CommentsListView(gid: gid),
@@ -335,39 +305,63 @@ class ThumbListView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final images = ref.read(galleryProvider(gid)).images;
-    return Container(
-      height: 200,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        scrollDirection: Axis.horizontal,
-        itemCount: images.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 0),
-        itemBuilder: (context, index) {
-          final image = images[index];
-          return GestureDetector(
-            onTap: () {
-              ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-              context.router.push(ReadRoute(gid: gid));
-            },
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: image.thumbWidth! / image.thumbHeight!,
-                child: Card(
-                  // margin: const EdgeInsets.all(0),
-                  clipBehavior: Clip.antiAlias,
-                  child: Hero(
-                    tag: '${gid}_$index',
-                    child: ErosCachedNetworkImage(
-                      imageUrl: image.thumbUrl ?? '',
-                      fit: BoxFit.cover,
+    return MultiSliver(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                L10n.of(context).thumbs,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              TextButton(
+                  onPressed: () {
+                    erosRouter.push(ThumbRoute(gid: gid));
+                  },
+                  child: Text(
+                    '${L10n.of(context).more} ${images.length}',
+                    style: Theme.of(context).textTheme.caption,
+                  )),
+            ],
+          ),
+        ),
+        Container(
+          height: 200,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            scrollDirection: Axis.horizontal,
+            itemCount: images.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 0),
+            itemBuilder: (context, index) {
+              final image = images[index];
+              return GestureDetector(
+                onTap: () {
+                  ref.read(galleryProvider(gid).notifier).setInitialPage(index);
+                  context.router.push(ReadRoute(gid: gid));
+                },
+                child: Center(
+                  child: AspectRatio(
+                    aspectRatio: image.thumbWidth! / image.thumbHeight!,
+                    child: Card(
+                      // margin: const EdgeInsets.all(0),
+                      clipBehavior: Clip.antiAlias,
+                      child: Hero(
+                        tag: '${gid}_$index',
+                        child: ErosCachedNetworkImage(
+                          imageUrl: image.thumbUrl ?? '',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -383,56 +377,72 @@ class MoreLikeListView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final moreLikeGallerys = ref.read(galleryProvider(gid)).moreLikeGallerys;
-    return Container(
-      height: 280,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        scrollDirection: Axis.horizontal,
-        itemCount: moreLikeGallerys.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 0),
-        itemBuilder: (context, index) {
-          final likeGallery = moreLikeGallerys[index];
-          final aspectRatio =
-              likeGallery.thumbWidth! / likeGallery.thumbHeight!;
-          return GestureDetector(
-            onTap: () {
-              ref
-                  .read(galleryProvider(likeGallery.gid).notifier)
-                  .initFromGallery(likeGallery);
-              context.router.push(GalleryRoute(gid: likeGallery.gid));
-            },
-            child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: aspectRatio,
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: ErosCachedNetworkImage(
-                          imageUrl: likeGallery.thumbUrl ?? '',
-                          fit: BoxFit.cover,
+    return MultiSliver(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                L10n.of(context).more_like_this,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
+        ),
+        Container(
+          height: 280,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            scrollDirection: Axis.horizontal,
+            itemCount: moreLikeGallerys.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 0),
+            itemBuilder: (context, index) {
+              final likeGallery = moreLikeGallerys[index];
+              final aspectRatio =
+                  likeGallery.thumbWidth! / likeGallery.thumbHeight!;
+              return GestureDetector(
+                onTap: () {
+                  ref
+                      .read(galleryProvider(likeGallery.gid).notifier)
+                      .initFromGallery(likeGallery);
+                  context.router.push(GalleryRoute(gid: likeGallery.gid));
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: aspectRatio,
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            child: ErosCachedNetworkImage(
+                              imageUrl: likeGallery.thumbUrl ?? '',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    Container(
+                      height: 80,
+                      width: aspectRatio * 200,
+                      child: Text(
+                        likeGallery.title ?? '',
+                        style: Theme.of(context).textTheme.caption,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                  ],
                 ),
-                Container(
-                  height: 80,
-                  width: aspectRatio * 200,
-                  child: Text(
-                    likeGallery.title ?? '',
-                    style: Theme.of(context).textTheme.caption,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -447,10 +457,8 @@ class CommentsListView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final comments = ref.read(galleryProvider(gid)).comments;
-    if (comments.isEmpty) {
-      return const SizedBox(height: 8);
-    }
+    final comments = ref.watch(galleryProvider(gid)).comments;
+
     return MultiSliver(
       children: [
         Padding(
@@ -459,12 +467,12 @@ class CommentsListView extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Comments',
+                L10n.of(context).comments,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               TextButton(
                   onPressed: () {
-                    // erosRouter.push(ThumbRoute(gid: gid));
+                    erosRouter.push(CommentsRoute(gid: gid));
                   },
                   child: Text(
                     '${L10n.of(context).more} ${comments.length}',
@@ -473,72 +481,89 @@ class CommentsListView extends HookConsumerWidget {
             ],
           ),
         ),
-        Container(
-          height: 180,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            scrollDirection: Axis.horizontal,
-            itemCount: comments.length,
-            separatorBuilder: (context, index) => const SizedBox(width: 0),
-            itemBuilder: (context, index) {
-              final comment = comments[index];
-              final aspectRatio = 2.0;
-              return GestureDetector(
-                onTap: () {
-                  // ref
-                  //     .read(galleryProvider(likeGallery.gid).notifier)
-                  //     .initFromGallery(likeGallery);
-                  // context.router.push(GalleryRoute(gid: likeGallery.gid));
-                },
-                child: AspectRatio(
-                  aspectRatio: aspectRatio,
-                  child: Card(
-                    clipBehavior: Clip.antiAlias,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              ClipOval(
-                                child: SizedBox(
-                                  height: 48,
-                                  width: 48,
-                                  child: ErosCachedNetworkImage(
-                                    imageUrl:
-                                        'https://i.${NHConst.baseHost}/${comment.poster?.avatarUrl ?? ''}',
-                                    fit: BoxFit.cover,
+        if (comments.isEmpty)
+          const SizedBox(height: 8)
+        else
+          Container(
+            height: 180,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              scrollDirection: Axis.horizontal,
+              itemCount: comments.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 0),
+              itemBuilder: (context, index) {
+                final Comment comment = comments[index];
+                final date = DateTime.fromMillisecondsSinceEpoch(
+                    (comment.postDate ?? 0) * 1000);
+                final dateFormatted =
+                    DateFormat('yyyy-MM-dd HH:mm').format(date.toLocal());
+                const aspectRatio = 2.0;
+                return InkWell(
+                  onTap: () {
+                    erosRouter.push(CommentsRoute(gid: gid));
+                  },
+                  child: AspectRatio(
+                    aspectRatio: aspectRatio,
+                    child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                ClipOval(
+                                  child: SizedBox(
+                                    height: 48,
+                                    width: 48,
+                                    child: ErosCachedNetworkImage(
+                                      imageUrl:
+                                          'https://i.${NHConst.baseHost}/${comment.poster?.avatarUrl ?? ''}',
+                                      fit: BoxFit.cover,
+                                      placeholder: (_, __) => Container(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(comment.poster?.username ?? '',
-                                  style: Theme.of(context).textTheme.titleSmall),
-                            ],
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 12, right: 8, top: 12),
-                              child: Text(
-                                comment.commentText ?? '',
-                                style: Theme.of(context).textTheme.bodyText2,
-                                textAlign: TextAlign.start,
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
+                                const SizedBox(width: 12),
+                                Text(comment.poster?.username ?? '',
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
+                              ],
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 12, right: 8, top: 12),
+                                child: Text(
+                                  comment.commentText ?? '',
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                  textAlign: TextAlign.start,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12),
+                              child: Text(
+                                dateFormatted,
+                                style: Theme.of(context).textTheme.caption,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }

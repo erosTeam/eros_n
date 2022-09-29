@@ -23,9 +23,12 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("关于"),
+        "always": MessageLookupByLibrary.simpleMessage("始终"),
         "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
         "appearance": MessageLookupByLibrary.simpleMessage("外观"),
+        "auto": MessageLookupByLibrary.simpleMessage("自动"),
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "comments": MessageLookupByLibrary.simpleMessage("评论"),
         "download": MessageLookupByLibrary.simpleMessage("下载"),
         "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
         "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
