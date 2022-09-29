@@ -37,6 +37,8 @@ mixin _$Gallery {
   String? get torrentUrl => throw _privateConstructorUsedError;
   List<Gallery> get moreLikeGallerys => throw _privateConstructorUsedError;
   List<Comment> get comments => throw _privateConstructorUsedError;
+  List<Tag> get tags => throw _privateConstructorUsedError;
+  String? get uploadedDateTime => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -64,7 +66,9 @@ abstract class $GalleryCopyWith<$Res> {
       String? favoritedNum,
       String? torrentUrl,
       List<Gallery> moreLikeGallerys,
-      List<Comment> comments});
+      List<Comment> comments,
+      List<Tag> tags,
+      String? uploadedDateTime});
 }
 
 /// @nodoc
@@ -94,6 +98,8 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? torrentUrl = freezed,
     Object? moreLikeGallerys = freezed,
     Object? comments = freezed,
+    Object? tags = freezed,
+    Object? uploadedDateTime = freezed,
   }) {
     return _then(_value.copyWith(
       gid: gid == freezed
@@ -164,6 +170,14 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
               as List<Comment>,
+      tags: tags == freezed
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<Tag>,
+      uploadedDateTime: uploadedDateTime == freezed
+          ? _value.uploadedDateTime
+          : uploadedDateTime // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -191,7 +205,9 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       String? favoritedNum,
       String? torrentUrl,
       List<Gallery> moreLikeGallerys,
-      List<Comment> comments});
+      List<Comment> comments,
+      List<Tag> tags,
+      String? uploadedDateTime});
 }
 
 /// @nodoc
@@ -222,6 +238,8 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? torrentUrl = freezed,
     Object? moreLikeGallerys = freezed,
     Object? comments = freezed,
+    Object? tags = freezed,
+    Object? uploadedDateTime = freezed,
   }) {
     return _then(_$_Gallery(
       gid: gid == freezed
@@ -292,6 +310,14 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
               as List<Comment>,
+      tags: tags == freezed
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<Tag>,
+      uploadedDateTime: uploadedDateTime == freezed
+          ? _value.uploadedDateTime
+          : uploadedDateTime // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -316,10 +342,13 @@ class _$_Gallery extends _Gallery {
       this.favoritedNum,
       this.torrentUrl,
       final List<Gallery> moreLikeGallerys = const <Gallery>[],
-      final List<Comment> comments = const <Comment>[]})
+      final List<Comment> comments = const <Comment>[],
+      final List<Tag> tags = const <Tag>[],
+      this.uploadedDateTime})
       : _images = images,
         _moreLikeGallerys = moreLikeGallerys,
         _comments = comments,
+        _tags = tags,
         super._();
 
   factory _$_Gallery.fromJson(Map<String, dynamic> json) =>
@@ -378,9 +407,20 @@ class _$_Gallery extends _Gallery {
     return EqualUnmodifiableListView(_comments);
   }
 
+  final List<Tag> _tags;
+  @override
+  @JsonKey()
+  List<Tag> get tags {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tags);
+  }
+
+  @override
+  final String? uploadedDateTime;
+
   @override
   String toString() {
-    return 'Gallery(gid: $gid, imageKey: $imageKey, csrfToken: $csrfToken, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, viewTime: $viewTime, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, torrentUrl: $torrentUrl, moreLikeGallerys: $moreLikeGallerys, comments: $comments)';
+    return 'Gallery(gid: $gid, imageKey: $imageKey, csrfToken: $csrfToken, title: $title, secondTitle: $secondTitle, url: $url, thumbUrl: $thumbUrl, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, viewTime: $viewTime, images: $images, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, favoritedNum: $favoritedNum, torrentUrl: $torrentUrl, moreLikeGallerys: $moreLikeGallerys, comments: $comments, tags: $tags, uploadedDateTime: $uploadedDateTime)';
   }
 
   @override
@@ -412,30 +452,36 @@ class _$_Gallery extends _Gallery {
                 .equals(other.torrentUrl, torrentUrl) &&
             const DeepCollectionEquality()
                 .equals(other._moreLikeGallerys, _moreLikeGallerys) &&
-            const DeepCollectionEquality().equals(other._comments, _comments));
+            const DeepCollectionEquality().equals(other._comments, _comments) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            const DeepCollectionEquality()
+                .equals(other.uploadedDateTime, uploadedDateTime));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(gid),
-      const DeepCollectionEquality().hash(imageKey),
-      const DeepCollectionEquality().hash(csrfToken),
-      const DeepCollectionEquality().hash(title),
-      const DeepCollectionEquality().hash(secondTitle),
-      const DeepCollectionEquality().hash(url),
-      const DeepCollectionEquality().hash(thumbUrl),
-      const DeepCollectionEquality().hash(thumbHeight),
-      const DeepCollectionEquality().hash(thumbWidth),
-      const DeepCollectionEquality().hash(viewTime),
-      const DeepCollectionEquality().hash(_images),
-      const DeepCollectionEquality().hash(currentPageIndex),
-      const DeepCollectionEquality().hash(isFavorited),
-      const DeepCollectionEquality().hash(favoritedNum),
-      const DeepCollectionEquality().hash(torrentUrl),
-      const DeepCollectionEquality().hash(_moreLikeGallerys),
-      const DeepCollectionEquality().hash(_comments));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        const DeepCollectionEquality().hash(gid),
+        const DeepCollectionEquality().hash(imageKey),
+        const DeepCollectionEquality().hash(csrfToken),
+        const DeepCollectionEquality().hash(title),
+        const DeepCollectionEquality().hash(secondTitle),
+        const DeepCollectionEquality().hash(url),
+        const DeepCollectionEquality().hash(thumbUrl),
+        const DeepCollectionEquality().hash(thumbHeight),
+        const DeepCollectionEquality().hash(thumbWidth),
+        const DeepCollectionEquality().hash(viewTime),
+        const DeepCollectionEquality().hash(_images),
+        const DeepCollectionEquality().hash(currentPageIndex),
+        const DeepCollectionEquality().hash(isFavorited),
+        const DeepCollectionEquality().hash(favoritedNum),
+        const DeepCollectionEquality().hash(torrentUrl),
+        const DeepCollectionEquality().hash(_moreLikeGallerys),
+        const DeepCollectionEquality().hash(_comments),
+        const DeepCollectionEquality().hash(_tags),
+        const DeepCollectionEquality().hash(uploadedDateTime)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -468,7 +514,9 @@ abstract class _Gallery extends Gallery {
       final String? favoritedNum,
       final String? torrentUrl,
       final List<Gallery> moreLikeGallerys,
-      final List<Comment> comments}) = _$_Gallery;
+      final List<Comment> comments,
+      final List<Tag> tags,
+      final String? uploadedDateTime}) = _$_Gallery;
   const _Gallery._() : super._();
 
   factory _Gallery.fromJson(Map<String, dynamic> json) = _$_Gallery.fromJson;
@@ -507,6 +555,10 @@ abstract class _Gallery extends Gallery {
   List<Gallery> get moreLikeGallerys;
   @override
   List<Comment> get comments;
+  @override
+  List<Tag> get tags;
+  @override
+  String? get uploadedDateTime;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryCopyWith<_$_Gallery> get copyWith =>

@@ -4,6 +4,7 @@ import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/comment.dart';
 import 'package:eros_n/component/models/gallery.dart';
+import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/scrolling_fab.dart';
@@ -13,6 +14,7 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -229,6 +231,19 @@ class GalleryPage extends HookConsumerWidget {
                   textAlign: TextAlign.start,
                 );
               }),
+              const SizedBox(width: 16),
+              Consumer(builder: (context, ref, child) {
+                final uploadedDate =
+                    ref.watch(galleryProvider(gid)).uploadedDate;
+                final uploadedDateStr = uploadedDate != null
+                    ? DateFormat('yyyy-MM-dd').format(uploadedDate)
+                    : '··';
+                return Text(
+                  uploadedDateStr,
+                  style: Theme.of(context).textTheme.caption,
+                  textAlign: TextAlign.start,
+                );
+              }),
             ],
           ),
           const SizedBox(height: 8),
@@ -274,7 +289,6 @@ class DetailView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
-    final images = ref.read(galleryProvider(gid)).images;
     if (pageStatus == PageStatus.loading) {
       return const SliverFillRemaining(
         child: Center(
@@ -283,6 +297,8 @@ class DetailView extends HookConsumerWidget {
       );
     } else {
       return MultiSliver(children: [
+        TagsView(gid: gid),
+        const SizedBox(height: 8),
         ThumbListView(gid: gid),
         const SizedBox(height: 8),
         MoreLikeListView(gid: gid),
@@ -291,6 +307,82 @@ class DetailView extends HookConsumerWidget {
         const SizedBox(height: 150),
       ]);
     }
+  }
+}
+
+class TagsView extends HookConsumerWidget {
+  const TagsView({
+    Key? key,
+    this.gid,
+  }) : super(key: key);
+
+  final String? gid;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tags = ref.watch(galleryProvider(gid)).tags;
+    // tags group by type
+    final tagsGroupByType = useMemoized(() {
+      final tagsGroupByType = <String, List<Tag>>{};
+      for (final tag in tags) {
+        if (tagsGroupByType.containsKey(tag.type)) {
+          tagsGroupByType[tag.type]?.add(tag);
+        } else {
+          tagsGroupByType[tag.type!] = [tag];
+        }
+      }
+      return tagsGroupByType;
+    });
+
+    const buttonPadding = EdgeInsets.symmetric(horizontal: 10, vertical: 4);
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      sliver: MultiSliver(
+        children: tagsGroupByType.entries.map((entry) {
+          final type = entry.key;
+          final tags = entry.value;
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  padding: buttonPadding,
+                  minimumSize: const Size(0, 0),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  type,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: tags.map((Tag tag) {
+                    return OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: buttonPadding,
+                        minimumSize: const Size(0, 0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        tag.name ?? '',
+                      ),
+                      onPressed: () {
+                        // ref.read(searchProvider).searchByTag(tag);
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ).paddingOnly(bottom: 8);
+        }).toList(),
+      ),
+    );
   }
 }
 
@@ -485,7 +577,7 @@ class CommentsListView extends HookConsumerWidget {
           const SizedBox(height: 8)
         else
           Container(
-            height: 180,
+            height: 190,
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               scrollDirection: Axis.horizontal,
@@ -497,13 +589,12 @@ class CommentsListView extends HookConsumerWidget {
                     (comment.postDate ?? 0) * 1000);
                 final dateFormatted =
                     DateFormat('yyyy-MM-dd HH:mm').format(date.toLocal());
-                const aspectRatio = 2.0;
                 return InkWell(
                   onTap: () {
                     erosRouter.push(CommentsRoute(gid: gid));
                   },
-                  child: AspectRatio(
-                    aspectRatio: aspectRatio,
+                  child: Container(
+                    width: 280,
                     child: Card(
                       clipBehavior: Clip.antiAlias,
                       child: Padding(
@@ -513,26 +604,47 @@ class CommentsListView extends HookConsumerWidget {
                           children: [
                             Row(
                               children: [
-                                ClipOval(
-                                  child: SizedBox(
-                                    height: 48,
-                                    width: 48,
-                                    child: ErosCachedNetworkImage(
-                                      imageUrl:
-                                          'https://i.${NHConst.baseHost}/${comment.poster?.avatarUrl ?? ''}',
-                                      fit: BoxFit.cover,
-                                      placeholder: (_, __) => Container(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 2), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipOval(
+                                    child: SizedBox(
+                                      height: 48,
+                                      width: 48,
+                                      child: ErosCachedNetworkImage(
+                                        imageUrl:
+                                            'https://i.${NHConst.baseHost}/${comment.poster?.avatarUrl ?? ''}',
+                                        fit: BoxFit.cover,
+                                        placeholder: (_, __) => Container(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                Text(comment.poster?.username ?? '',
+                                Expanded(
+                                  child: Text(
+                                    comment.poster?.username ?? '',
                                     style:
-                                        Theme.of(context).textTheme.titleSmall),
+                                        Theme.of(context).textTheme.titleSmall,
+                                    maxLines: 2,
+                                  ),
+                                ),
                               ],
                             ),
                             Expanded(
@@ -542,9 +654,11 @@ class CommentsListView extends HookConsumerWidget {
                                 child: Text(
                                   comment.commentText ?? '',
                                   style: Theme.of(context).textTheme.bodyText2,
-                                  textAlign: TextAlign.start,
+                                  // textAlign: TextAlign.start,
+                                  softWrap: true,
                                   maxLines: 4,
                                   overflow: TextOverflow.ellipsis,
+                                  textScaleFactor: 0.9,
                                 ),
                               ),
                             ),
@@ -590,12 +704,13 @@ class ToolBarView extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           IconButton(
-            icon: const Icon(Icons.download, size: iconSize),
+            icon: const Icon(Icons.download_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.energy_savings_leaf, size: iconSize),
+            icon:
+                const Icon(Icons.energy_savings_leaf_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
             onPressed: isUserLogin
                 ? () async {

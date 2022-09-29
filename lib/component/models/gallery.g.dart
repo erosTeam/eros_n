@@ -33,6 +33,11 @@ _$_Gallery _$$_GalleryFromJson(Map<String, dynamic> json) => _$_Gallery(
               ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <Comment>[],
+      tags: (json['tags'] as List<dynamic>?)
+              ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <Tag>[],
+      uploadedDateTime: json['uploadedDateTime'] as String?,
     );
 
 Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
@@ -54,4 +59,6 @@ Map<String, dynamic> _$$_GalleryToJson(_$_Gallery instance) =>
       'torrentUrl': instance.torrentUrl,
       'moreLikeGallerys': instance.moreLikeGallerys,
       'comments': instance.comments,
+      'tags': instance.tags,
+      'uploadedDateTime': instance.uploadedDateTime,
     };

@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'comment.dart';
 import 'gallery_image.dart';
+import 'tag.dart';
 
 part 'gallery.freezed.dart';
 part 'gallery.g.dart';
@@ -25,10 +26,16 @@ class Gallery with _$Gallery {
     String? torrentUrl,
     @Default(<Gallery>[]) List<Gallery> moreLikeGallerys,
     @Default(<Comment>[]) List<Comment> comments,
+    @Default(<Tag>[]) List<Tag> tags,
+    String? uploadedDateTime,
   }) = _Gallery;
 
   const Gallery._();
 
   factory Gallery.fromJson(Map<String, Object?> json) =>
       _$GalleryFromJson(json);
+
+  @JsonKey(ignore: true)
+  DateTime? get uploadedDate =>
+      DateTime.tryParse(uploadedDateTime ?? '')?.toLocal();
 }

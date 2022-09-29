@@ -20,7 +20,7 @@ class CommentsPage extends HookConsumerWidget {
       appBar: AppBar(
         title: const Text('评论'),
       ),
-      body: ListView.builder(
+      body: ListView.separated(
         itemCount: comments.length,
         itemBuilder: (context, index) {
           final comment = comments[index];
@@ -32,7 +32,7 @@ class CommentsPage extends HookConsumerWidget {
             leading: Container(
               //shadow
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
@@ -78,8 +78,12 @@ class CommentsPage extends HookConsumerWidget {
             subtitle: Text(
               comment.commentText ?? '',
               style: Theme.of(context).textTheme.bodyText2,
+              textScaleFactor: 0.94,
             ),
           );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(height: 12);
         },
       ),
     );

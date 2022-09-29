@@ -43,7 +43,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
-    logger.d('loadData refresh $refresh  url: ${state.url}');
+    logger.v('loadData refresh $refresh  url: ${state.url}');
     if (state.images.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)
@@ -84,7 +84,6 @@ class GalleryNotifier extends StateNotifier<Gallery> {
           .read(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.none));
     }
-
 
     // 获取评论数据
     try {

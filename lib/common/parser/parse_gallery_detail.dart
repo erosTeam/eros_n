@@ -4,6 +4,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:html/dom.dart' hide Comment;
 import 'package:html/parser.dart' show parse;
+import 'package:tuple/tuple.dart';
 
 Gallery parseGalleryDetail(String html) {
   final Document document = parse(html);
@@ -37,7 +38,7 @@ Gallery parseGalleryDetail(String html) {
 
   final downloadButtonElm = buttonsElms?.children[1];
   final torrentUrl = downloadButtonElm?.attributes['href'] ?? '';
-  logger.d('torrentUrl: $torrentUrl');
+  logger.v('torrentUrl: $torrentUrl');
 
   const selectorMoreLikeGalleryList = '#related-container';
   const selectorGallery = '.gallery:not(.blacklisted)';
@@ -70,6 +71,12 @@ Gallery parseGalleryDetail(String html) {
     ));
   }
 
+  final tuple = parseGalleryTags(document);
+  final tags = tuple.item1;
+  final uploadedDateTime = tuple.item2;
+
+  logger.d('tags: $tags');
+  logger.d('uploadedDateTime: $uploadedDateTime');
 
   return Gallery(
     title: title,
@@ -80,6 +87,46 @@ Gallery parseGalleryDetail(String html) {
     moreLikeGallerys: moreLikeGalleryList,
     csrfToken: csrfToken,
     torrentUrl: torrentUrl,
-    // comments: comments,
+    tags: tags,
+    uploadedDateTime: uploadedDateTime,
   );
+}
+
+Tuple2<List<Tag>, String> parseGalleryTags(Document document) {
+  const selectorTagGroups = '#tags > .tag-container';
+
+  late final String uploadedDateTime;
+
+  final tagGroupsElm = document.querySelectorAll(selectorTagGroups);
+  final tags = <Tag>[];
+  for (final groupElm in tagGroupsElm) {
+    final tagType =
+        (groupElm.nodes.first.text?.trim() ?? '').replaceFirst(':', '');
+    // logger.d('tagType: $tagType');
+    if (tagType == 'Uploaded') {
+      uploadedDateTime =
+          groupElm.querySelector('.nobold')?.attributes['datetime'] ?? '';
+      continue;
+    }
+
+    if (tagType == 'Pages') {
+      continue;
+    }
+
+    final tagElms = groupElm.querySelectorAll('.tag');
+    for (final tagElm in tagElms) {
+      final tagId = tagElm.className.trim().split(' ').last.split('-').last;
+      final tagName = tagElm.querySelector('.name')?.text.trim() ?? '';
+      final tagCount = tagElm.querySelector('.count')?.text.trim() ?? '';
+      final tagUrl = tagElm.attributes['href'] ?? '';
+      tags.add(Tag(
+        id: tagId,
+        name: tagName,
+        url: tagUrl,
+        type: tagType,
+        count: tagCount,
+      ));
+    }
+  }
+  return Tuple2(tags, uploadedDateTime);
 }
