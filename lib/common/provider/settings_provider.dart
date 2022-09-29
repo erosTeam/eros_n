@@ -1,17 +1,28 @@
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SettingsNotifier extends StateNotifier<Settings> {
-  SettingsNotifier(super.state);
+  SettingsNotifier(super.state, this.ref);
+
+  final Ref ref;
 
   void setCoverBlur(bool value) {
-    state = state.copyWith(coverBlur: value);
+    state = state.copyWith(isCoverBlur: value);
+    hiveHelper.setSettings(state);
+  }
+
+  void setTagTranslate(bool value) {
+    state = state.copyWith(isTagTranslate: value);
+    if (value) {
+      ref.read(tagTranslateProvider.notifier).updateDb();
+    }
     hiveHelper.setSettings(state);
   }
 }
 
 final settingsProvider =
     StateNotifierProvider<SettingsNotifier, Settings>((ref) {
-  return SettingsNotifier(hiveHelper.getSettings() ?? const Settings());
+  return SettingsNotifier(hiveHelper.getSettings() ?? const Settings(), ref);
 });

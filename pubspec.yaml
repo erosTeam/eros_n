@@ -57,6 +57,9 @@ dependencies:
   package_info: ^2.0.0
   url_launcher: ^6.0.3
   share: ^2.0.4
+  copy_with_extension: ^4.0.0
+  path: ^1.8.2
+  archive: ^3.3.1
 
 dev_dependencies:
   # flutter pub run apn_json2model

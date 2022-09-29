@@ -28,7 +28,7 @@ class IndexPage extends HookConsumerWidget {
       // extendBodyBehindAppBar: true,
       body: PageView(
         controller: state.pageController,
-        physics: const NeverScrollableScrollPhysics(),
+        // physics: const NeverScrollableScrollPhysics(),
         children: pages,
         onPageChanged: (index) {
           ref.read(indexProvider.notifier).setIndex(index);

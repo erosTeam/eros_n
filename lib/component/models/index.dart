@@ -9,4 +9,5 @@ export 'gallery_image.dart';
 export 'gallery_set.dart';
 export 'settings.dart';
 export 'tag.dart';
+export 'tag_translate_info.dart';
 export 'user.dart';

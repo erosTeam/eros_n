@@ -57,6 +57,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "tag_type_artists": MessageLookupByLibrary.simpleMessage("Artists"),
+        "tag_type_categories":
+            MessageLookupByLibrary.simpleMessage("Categories"),
+        "tag_type_characters":
+            MessageLookupByLibrary.simpleMessage("Characters"),
+        "tag_type_groups": MessageLookupByLibrary.simpleMessage("Groups"),
+        "tag_type_languages": MessageLookupByLibrary.simpleMessage("Languages"),
+        "tag_type_parodies": MessageLookupByLibrary.simpleMessage("Parodies"),
+        "tag_type_tags": MessageLookupByLibrary.simpleMessage("Tags"),
         "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),

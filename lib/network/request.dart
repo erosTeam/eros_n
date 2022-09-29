@@ -412,3 +412,14 @@ Future<void> nhDownload({
     rethrow;
   }
 }
+
+Future<Map> getGithubApi(String url) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+  DioHttpResponse httpResponse = await dioHttpClient.get(url,
+      options: getOptions(forceRefresh: true));
+  if (httpResponse.ok && httpResponse.data is Map) {
+    return httpResponse.data as Map;
+  } else {
+    throw httpResponse.error ?? HttpException('getGithubApi error');
+  }
+}

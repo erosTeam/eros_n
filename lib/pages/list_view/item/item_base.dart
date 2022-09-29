@@ -45,7 +45,7 @@ class CoverImg extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final isCoverBlur = ref
-            .watch(settingsProvider.select((settings) => settings.coverBlur));
+            .watch(settingsProvider.select((settings) => settings.isCoverBlur));
         return BlurImage(
           blur: isCoverBlur,
           sigma: 8,

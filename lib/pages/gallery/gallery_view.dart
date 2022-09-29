@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/comment.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/models/index.dart';
@@ -13,6 +14,7 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -351,9 +353,13 @@ class TagsView extends HookConsumerWidget {
                   padding: buttonPadding,
                   minimumSize: const Size(0, 0),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
                 child: Text(
-                  type,
+                  // type,
+                  _getTagTypeTranslate(context, type),
                 ),
               ),
               const SizedBox(width: 8),
@@ -367,10 +373,22 @@ class TagsView extends HookConsumerWidget {
                         padding: buttonPadding,
                         minimumSize: const Size(0, 0),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                      child: Text(
-                        tag.name ?? '',
-                      ),
+                      child: Consumer(builder: (context, ref, child) {
+                        final TagTranslate? translated =
+                            isarHelper.findTagTranslate(tag.name ?? '',
+                                namespace: _getTagNamespace(type));
+                        final translatedName =
+                            translated?.translateNameNotMD ?? tag.name ?? '';
+                        final isTagTranslate = ref.watch(settingsProvider
+                            .select((value) => value.isTagTranslate));
+                        return Text(
+                          isTagTranslate ? translatedName : tag.name ?? '',
+                        );
+                      }),
                       onPressed: () {
                         // ref.read(searchProvider).searchByTag(tag);
                       },
@@ -383,6 +401,48 @@ class TagsView extends HookConsumerWidget {
         }).toList(),
       ),
     );
+  }
+}
+
+String _getTagTypeTranslate(BuildContext context, String tagType) {
+  switch (tagType) {
+    case 'Parodies':
+      return L10n.of(context).tag_type_parodies;
+    case 'Characters':
+      return L10n.of(context).tag_type_characters;
+    case 'Tags':
+      return L10n.of(context).tag_type_tags;
+    case 'Artists':
+      return L10n.of(context).tag_type_artists;
+    case 'Groups':
+      return L10n.of(context).tag_type_groups;
+    case 'Languages':
+      return L10n.of(context).tag_type_languages;
+    case 'Categories':
+      return L10n.of(context).tag_type_categories;
+    default:
+      return tagType;
+  }
+}
+
+String? _getTagNamespace(String tagType) {
+  switch (tagType) {
+    case 'Parodies':
+      return 'parody';
+    case 'Characters':
+      return 'character';
+    case 'Tags':
+      return null;
+    case 'Artists':
+      return 'artist';
+    case 'Groups':
+      return 'group';
+    case 'Languages':
+      return 'language';
+    case 'Categories':
+      return null;
+    default:
+      return null;
   }
 }
 
@@ -732,8 +792,8 @@ class ToolBarView extends HookConsumerWidget {
                                   ?.split(RegExp(r"filename(=|\*=UTF-8'')"))
                                   .last ??
                               '';
-                          final fileNameDecode = Uri.decodeFull(filename ?? '')
-                              .replaceAll('/', '_');
+                          final fileNameDecode =
+                              Uri.decodeFull(filename).replaceAll('/', '_');
                           logger.d(fileNameDecode);
                           savePath = path.joinAll([
                             Global.tempPath,

@@ -33,5 +33,12 @@
   "never": "从不",
   "always": "始终",
   "auto": "自动",
-  "comments": "评论"
+  "comments": "评论",
+  "tag_type_parodies": "原作",
+  "tag_type_characters": "角色",
+  "tag_type_tags": "标签",
+  "tag_type_artists": "作者",
+  "tag_type_groups": "团队",
+  "tag_type_languages": "语言",
+  "tag_type_categories": "类别"
 }

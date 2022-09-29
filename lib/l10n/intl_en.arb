@@ -33,5 +33,12 @@
   "never": "Never",
   "always": "Always",
   "auto": "Auto",
-  "comments": "Comments"
+  "comments": "Comments",
+  "tag_type_parodies": "Parodies",
+  "tag_type_characters": "Characters",
+  "tag_type_tags": "Tags",
+  "tag_type_artists": "Artists",
+  "tag_type_groups": "Groups",
+  "tag_type_languages": "Languages",
+  "tag_type_categories": "Categories"
 }

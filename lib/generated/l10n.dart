@@ -399,6 +399,76 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Parodies`
+  String get tag_type_parodies {
+    return Intl.message(
+      'Parodies',
+      name: 'tag_type_parodies',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Characters`
+  String get tag_type_characters {
+    return Intl.message(
+      'Characters',
+      name: 'tag_type_characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tags`
+  String get tag_type_tags {
+    return Intl.message(
+      'Tags',
+      name: 'tag_type_tags',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Artists`
+  String get tag_type_artists {
+    return Intl.message(
+      'Artists',
+      name: 'tag_type_artists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Groups`
+  String get tag_type_groups {
+    return Intl.message(
+      'Groups',
+      name: 'tag_type_groups',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Languages`
+  String get tag_type_languages {
+    return Intl.message(
+      'Languages',
+      name: 'tag_type_languages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Categories`
+  String get tag_type_categories {
+    return Intl.message(
+      'Categories',
+      name: 'tag_type_categories',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

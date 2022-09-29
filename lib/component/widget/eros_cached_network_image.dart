@@ -26,7 +26,7 @@ class ErosCachedNetworkImage extends StatelessWidget {
     this.onHideFlagChanged,
     this.color,
     this.colorBlendMode,
-    this.filterQuality = FilterQuality.low,
+    this.filterQuality = FilterQuality.medium,
   }) : super(key: key);
 
   final String imageUrl;

@@ -1,6 +1,8 @@
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:isar/isar.dart';
+
+import 'entity/gallery_history.dart';
+import 'entity/tag_translate.dart';
 
 Future<Isar> openIsar() async {
   final dirPath = Global.appSupportPath;
@@ -8,6 +10,7 @@ Future<Isar> openIsar() async {
   final isar = await Isar.open(
     [
       GalleryHistorySchema,
+      TagTranslateSchema,
     ],
     directory: dirPath,
     name: 'eros_n',

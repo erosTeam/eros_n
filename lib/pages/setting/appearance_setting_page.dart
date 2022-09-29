@@ -1,4 +1,5 @@
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,7 +17,7 @@ class AppearanceSettingPage extends StatelessWidget {
         children: <Widget>[
           Consumer(builder: (context, ref, child) {
             final isCoverBlur = ref.watch(
-                settingsProvider.select((settings) => settings.coverBlur));
+                settingsProvider.select((settings) => settings.isCoverBlur));
             return ListTile(
               title: Text('Cover blur'),
               trailing: Switch(
@@ -26,6 +27,26 @@ class AppearanceSettingPage extends StatelessWidget {
                   ref.read(settingsProvider.notifier).setCoverBlur(value);
                 },
               ),
+            );
+          }),
+          // Switch tag translate
+          Consumer(builder: (context, ref, child) {
+            final isTagTranslate = ref.watch(
+                settingsProvider.select((settings) => settings.isTagTranslate));
+            final tagTranslateInfo = ref.watch(tagTranslateProvider);
+            return ListTile(
+              title: Text('Tag translate'),
+              subtitle: Text('Version: ${tagTranslateInfo.version ?? ''}'),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: isTagTranslate,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setTagTranslate(value);
+                },
+              ),
+              onLongPress: () {
+                ref.read(tagTranslateProvider.notifier).updateDb(force: true);
+              },
             );
           }),
         ],

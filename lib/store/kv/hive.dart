@@ -9,18 +9,17 @@ const String configBox = 'config_box';
 const String userAgentKey = 'user_agent';
 const String settingsKey = 'settings';
 const String userKey = 'user';
+const String tagTranslateInfoKey = 'tag_translate_info';
 
 class HiveHelper {
   HiveHelper();
 
   static final _configBox = Hive.box<String>(configBox);
-  static final _settingsBox = Hive.box<String>(settingsKey);
   static final _userBox = Hive.box<String>(userKey);
 
   static Future<void> init() async {
     await Hive.initFlutter();
     await Hive.openBox<String>(configBox);
-    await Hive.openBox<String>(settingsKey);
     await Hive.openBox<String>(userKey);
   }
 
@@ -43,7 +42,7 @@ class HiveHelper {
   }
 
   Settings? getSettings() {
-    final settings = _settingsBox.get(settingsKey, defaultValue: '{}') ?? '{}';
+    final settings = _configBox.get(settingsKey, defaultValue: '{}') ?? '{}';
     if (settings.isNotEmpty) {
       return Settings.fromJson(jsonDecode(settings) as Map<String, dynamic>);
     }
@@ -51,19 +50,34 @@ class HiveHelper {
   }
 
   Future<void> setSettings(Settings settings) async {
-    await _settingsBox.put(settingsKey, jsonEncode(settings.toJson()));
+    await _configBox.put(settingsKey, jsonEncode(settings.toJson()));
   }
 
-  User? getUser() {
+  User getUser() {
     final user = _userBox.get(userKey, defaultValue: '{}') ?? '{}';
     if (user.isNotEmpty) {
       return User.fromJson(jsonDecode(user) as Map<String, dynamic>);
     }
-    return null;
+    return const User();
   }
 
   Future<void> setUser(User user) async {
     logger.d('setUser $user');
     await _userBox.put(userKey, jsonEncode(user.toJson()));
+  }
+
+  TagTranslateInfo getTagTranslateInfo() {
+    final tagTranslateInfo =
+        _configBox.get(tagTranslateInfoKey, defaultValue: '{}') ?? '{}';
+    if (tagTranslateInfo.isNotEmpty) {
+      return TagTranslateInfo.fromJson(
+          jsonDecode(tagTranslateInfo) as Map<String, dynamic>);
+    }
+    return const TagTranslateInfo();
+  }
+
+  Future<void> setTagTranslateInfo(TagTranslateInfo tagTranslateInfo) async {
+    await _configBox.put(
+        tagTranslateInfoKey, jsonEncode(tagTranslateInfo.toJson()));
   }
 }

@@ -120,5 +120,5 @@ class UserNotifier extends StateNotifier<User> {
 }
 
 final userProvider = StateNotifierProvider<UserNotifier, User>((ref) {
-  return UserNotifier(hiveHelper.getUser() ?? const User());
+  return UserNotifier(hiveHelper.getUser());
 });

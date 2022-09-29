@@ -6,7 +6,8 @@ part 'settings.g.dart';
 @freezed
 class Settings with _$Settings {
   const factory Settings({
-    @Default(false) bool coverBlur,
+    @Default(false) bool isCoverBlur,
+    @Default(false) bool isTagTranslate,
   }) = _Settings;
 
   factory Settings.fromJson(Map<String, Object?> json) =>

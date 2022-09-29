@@ -20,7 +20,8 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Settings {
-  bool get coverBlur => throw _privateConstructorUsedError;
+  bool get isCoverBlur => throw _privateConstructorUsedError;
+  bool get isTagTranslate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -32,7 +33,7 @@ mixin _$Settings {
 abstract class $SettingsCopyWith<$Res> {
   factory $SettingsCopyWith(Settings value, $Res Function(Settings) then) =
       _$SettingsCopyWithImpl<$Res>;
-  $Res call({bool coverBlur});
+  $Res call({bool isCoverBlur, bool isTagTranslate});
 }
 
 /// @nodoc
@@ -45,12 +46,17 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? coverBlur = freezed,
+    Object? isCoverBlur = freezed,
+    Object? isTagTranslate = freezed,
   }) {
     return _then(_value.copyWith(
-      coverBlur: coverBlur == freezed
-          ? _value.coverBlur
-          : coverBlur // ignore: cast_nullable_to_non_nullable
+      isCoverBlur: isCoverBlur == freezed
+          ? _value.isCoverBlur
+          : isCoverBlur // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isTagTranslate: isTagTranslate == freezed
+          ? _value.isTagTranslate
+          : isTagTranslate // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -62,7 +68,7 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
           _$_Settings value, $Res Function(_$_Settings) then) =
       __$$_SettingsCopyWithImpl<$Res>;
   @override
-  $Res call({bool coverBlur});
+  $Res call({bool isCoverBlur, bool isTagTranslate});
 }
 
 /// @nodoc
@@ -77,12 +83,17 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? coverBlur = freezed,
+    Object? isCoverBlur = freezed,
+    Object? isTagTranslate = freezed,
   }) {
     return _then(_$_Settings(
-      coverBlur: coverBlur == freezed
-          ? _value.coverBlur
-          : coverBlur // ignore: cast_nullable_to_non_nullable
+      isCoverBlur: isCoverBlur == freezed
+          ? _value.isCoverBlur
+          : isCoverBlur // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isTagTranslate: isTagTranslate == freezed
+          ? _value.isTagTranslate
+          : isTagTranslate // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -91,18 +102,21 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Settings implements _Settings {
-  const _$_Settings({this.coverBlur = false});
+  const _$_Settings({this.isCoverBlur = false, this.isTagTranslate = false});
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsFromJson(json);
 
   @override
   @JsonKey()
-  final bool coverBlur;
+  final bool isCoverBlur;
+  @override
+  @JsonKey()
+  final bool isTagTranslate;
 
   @override
   String toString() {
-    return 'Settings(coverBlur: $coverBlur)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate)';
   }
 
   @override
@@ -110,13 +124,18 @@ class _$_Settings implements _Settings {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Settings &&
-            const DeepCollectionEquality().equals(other.coverBlur, coverBlur));
+            const DeepCollectionEquality()
+                .equals(other.isCoverBlur, isCoverBlur) &&
+            const DeepCollectionEquality()
+                .equals(other.isTagTranslate, isTagTranslate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(coverBlur));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(isCoverBlur),
+      const DeepCollectionEquality().hash(isTagTranslate));
 
   @JsonKey(ignore: true)
   @override
@@ -132,12 +151,15 @@ class _$_Settings implements _Settings {
 }
 
 abstract class _Settings implements Settings {
-  const factory _Settings({final bool coverBlur}) = _$_Settings;
+  const factory _Settings({final bool isCoverBlur, final bool isTagTranslate}) =
+      _$_Settings;
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
 
   @override
-  bool get coverBlur;
+  bool get isCoverBlur;
+  @override
+  bool get isTagTranslate;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>
