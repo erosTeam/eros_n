@@ -20,6 +20,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     }
     hiveHelper.setSettings(state);
   }
+
+  void setDynamicColor(bool value) {
+    state = state.copyWith(dynamicColor: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

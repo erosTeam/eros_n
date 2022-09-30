@@ -68,15 +68,13 @@ class GalleryPage extends HookConsumerWidget {
         blendMode: BlendMode.dstOut,
         child: ClipRect(
           child: BlurImage(
-            sigma: context.isTablet ? 4 : 2,
-            color: Theme.of(context).canvasColor.withOpacity(0.4),
+            // sigma: context.isTablet ? 4 : 4,
+            sigma: 4,
+            color: Theme.of(context).canvasColor.withOpacity(0.5),
             child: ErosCachedNetworkImage(
               imageUrl: gallery.thumbUrl ?? '',
               filterQuality: FilterQuality.medium,
               fit: BoxFit.cover,
-              // color:
-              //     Theme.of(context).colorScheme.background.withOpacity(0.5),
-              // colorBlendMode: BlendMode.lighten,
             ),
           ),
         ),
@@ -86,34 +84,37 @@ class GalleryPage extends HookConsumerWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: AppBar(
-        backgroundColor: MaterialStateColor.resolveWith((states) {
-          if (states.contains(MaterialState.scrolledUnder)) {
-            return Theme.of(context).colorScheme.surface;
-          }
-          return Colors.transparent;
-        }),
-        systemOverlayStyle: Theme.of(context).brightness == Brightness.light
-            ? SystemUiOverlayStyle.dark
-            : SystemUiOverlayStyle.light,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              if (gallery.title != null) {
-                final shareText =
-                    '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
-                logger.d(shareText);
-                Share.share(shareText);
-              }
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: false
+          ? null
+          : AppBar(
+              backgroundColor: MaterialStateColor.resolveWith((states) {
+                if (states.contains(MaterialState.scrolledUnder)) {
+                  return Theme.of(context).colorScheme.surface;
+                }
+                return Colors.transparent;
+              }),
+              systemOverlayStyle:
+                  Theme.of(context).brightness == Brightness.light
+                      ? SystemUiOverlayStyle.dark
+                      : SystemUiOverlayStyle.light,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: () {
+                    if (gallery.title != null) {
+                      final shareText =
+                          '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
+                      logger.d(shareText);
+                      Share.share(shareText);
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () {},
+                ),
+              ],
+            ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
           // ref.read(galleryProvider(gid).notifier).setInitialPage(index);
@@ -130,53 +131,98 @@ class GalleryPage extends HookConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           controller: scrollController,
           slivers: [
+            // SliverAppBar.medium(
+            //   pinned: true,
+            //   title: Text(
+            //     gallery.title ?? '',
+            //     maxLines: 3,
+            //   ),
+            //   // systemOverlayStyle:
+            //   //     Theme.of(context).brightness == Brightness.light
+            //   //         ? SystemUiOverlayStyle.dark
+            //   //         : SystemUiOverlayStyle.light,
+            //   // backgroundColor: MaterialStateColor.resolveWith((states) {
+            //   //   if (states.contains(MaterialState.scrolledUnder)) {
+            //   //     return Theme.of(context).colorScheme.surface;
+            //   //   }
+            //   //   return Colors.transparent;
+            //   // }),
+            //   // backgroundColor: Colors.transparent,
+            //   // expandedHeight: context.isTablet ? 300 : 200,
+            //   actions: [
+            //     IconButton(
+            //       icon: const Icon(Icons.share),
+            //       onPressed: () {
+            //         if (gallery.title != null) {
+            //           final shareText =
+            //               '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
+            //           logger.d(shareText);
+            //           Share.share(shareText);
+            //         }
+            //       },
+            //     ),
+            //     IconButton(
+            //       icon: const Icon(Icons.more_vert),
+            //       onPressed: () {},
+            //     ),
+            //   ],
+            // ),
             SliverToBoxAdapter(
               child: Container(
-                height: 340,
+                height: context.isTablet ? 400 : 430,
                 child: Stack(
                   alignment: Alignment.bottomLeft,
                   children: [
                     backGround(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          height: 240,
-                          child: Row(
-                            // crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // 封面
-                              Container(
-                                width: 140,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                alignment: Alignment.center,
-                                child: Hero(
-                                  tag: gallery.thumbUrl ?? '',
-                                  child: Card(
-                                    margin: const EdgeInsets.all(0),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: AspectRatio(
-                                      aspectRatio: (gallery.thumbWidth ?? 300) /
-                                          (gallery.thumbHeight ?? 400),
-                                      child: ErosCachedNetworkImage(
-                                        imageUrl: gallery.thumbUrl ?? '',
-                                        fit: BoxFit.cover,
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SelectableText(
+                            gallery.title ?? '',
+                            style: Theme.of(context).textTheme.titleLarge,
+                            maxLines: context.isTablet ? 2 : 3,
+                            minLines: 1,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            height: 240,
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // 封面
+                                Container(
+                                  width: 140,
+                                  margin: const EdgeInsets.only(right: 12),
+                                  alignment: Alignment.center,
+                                  child: Hero(
+                                    tag: gallery.thumbUrl ?? '',
+                                    child: Card(
+                                      margin: const EdgeInsets.all(0),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: AspectRatio(
+                                        aspectRatio:
+                                            (gallery.thumbWidth ?? 300) /
+                                                (gallery.thumbHeight ?? 400),
+                                        child: ErosCachedNetworkImage(
+                                          imageUrl: gallery.thumbUrl ?? '',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: buildGalleryInfo(gallery, context),
-                              ),
-                            ],
+                                Expanded(
+                                  child: buildGalleryInfo(gallery, context),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                          const SizedBox(height: 8),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -197,43 +243,61 @@ class GalleryPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 主标题
-          SelectableText(
-            gallery.title ?? '',
-            style:
-                Theme.of(context).textTheme.titleMedium?.copyWith(height: 1.3),
-            maxLines: 4,
-            minLines: 1,
-            // overflow: TextOverflow.ellipsis,
+          // SelectableText(
+          //   gallery.title ?? '',
+          //   style:
+          //       Theme.of(context).textTheme.titleMedium?.copyWith(height: 1.3),
+          //   maxLines: 4,
+          //   minLines: 1,
+          //   // overflow: TextOverflow.ellipsis,
+          // ),
+          const SizedBox(height: 8),
+          // 副标题
+          Consumer(
+            builder: (context, ref, child) {
+              final secondTitle = ref.watch(galleryProvider(gid)).secondTitle;
+              return SelectableText(
+                secondTitle ?? '',
+                style: Theme.of(context).textTheme.caption,
+                textAlign: TextAlign.start,
+                minLines: 1,
+                maxLines: 2,
+              );
+            },
           ),
           const SizedBox(height: 8),
-          // 画廊id
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Wrap(
+            // mainAxisSize: MainAxisSize.min,
+            // mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 12,
+            runSpacing: 2,
             children: [
               Text(
                 '#${gallery.gid}',
                 style: Theme.of(context).textTheme.caption,
                 textAlign: TextAlign.start,
               ),
-              const SizedBox(width: 16),
-              Icon(
-                Icons.favorite,
-                size: 12,
-                color: Theme.of(context).colorScheme.primary,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.favorite,
+                    size: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Consumer(builder: (context, ref, child) {
+                    final favoritedNum =
+                        ref.watch(galleryProvider(gid)).favoritedNum;
+                    return Text(
+                      favoritedNum ?? '··',
+                      style: Theme.of(context).textTheme.caption,
+                      textAlign: TextAlign.start,
+                    );
+                  }),
+                ],
               ),
-              const SizedBox(width: 4),
-              Consumer(builder: (context, ref, child) {
-                final favoritedNum =
-                    ref.watch(galleryProvider(gid)).favoritedNum;
-                return Text(
-                  favoritedNum ?? '··',
-                  style: Theme.of(context).textTheme.caption,
-                  textAlign: TextAlign.start,
-                );
-              }),
-              const SizedBox(width: 16),
               Consumer(builder: (context, ref, child) {
                 final uploadedDate =
                     ref.watch(galleryProvider(gid)).uploadedDate;
@@ -249,30 +313,86 @@ class GalleryPage extends HookConsumerWidget {
             ],
           ),
           const SizedBox(height: 8),
-          // 副标题
-          Consumer(
-            builder: (context, ref, child) {
-              final secondTitle = ref.watch(galleryProvider(gid)).secondTitle;
-              return SelectableText(
-                secondTitle ?? '',
-                style: Theme.of(context).textTheme.caption,
-                textAlign: TextAlign.start,
-                minLines: 1,
-                maxLines: 2,
-              );
-            },
-          ),
           Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                logger.v('constraints $constraints');
-                if (constraints.maxHeight > 60 && constraints.maxWidth > 100) {
-                  return ToolBarView(gid: gid);
+            child: SingleChildScrollView(
+              child: Consumer(builder: (context, ref, child) {
+                final isTagTranslate = ref.watch(
+                    settingsProvider.select((value) => value.isTagTranslate));
+
+                final artistTags = ref
+                    .watch(galleryProvider(gid))
+                    .tags
+                    .where((e) => e.type == 'Artists')
+                    .map((tag) {
+                  final TagTranslate? translated = isarHelper.findTagTranslate(
+                      tag.name ?? '',
+                      namespace: _getTagNamespace(tag.type ?? ''));
+                  final translatedName =
+                      translated?.translateNameNotMD ?? tag.name ?? '';
+                  return tag.copyWith(
+                    translatedName: translatedName,
+                  );
+                }).toList();
+
+                final textStyle = Theme.of(context)
+                    .textTheme
+                    .caption
+                    ?.copyWith(color: Theme.of(context).colorScheme.primary);
+
+                final artistTagsWidgets = artistTags
+                    .map((tag) => TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          minimumSize: const Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: isTagTranslate
+                            ? Text(
+                                tag.translatedName ?? tag.name ?? '',
+                                style: textStyle,
+                              )
+                            : Text(tag.name ?? '', style: textStyle)))
+                    .toList();
+
+                // with separator
+                final artistTagsWidgetsWithSeparator = artistTagsWidgets
+                    .expand((element) => [
+                          element,
+                          Text('/', style: Theme.of(context).textTheme.caption)
+                        ])
+                    .toList();
+
+                // remove last separator
+                if (artistTagsWidgetsWithSeparator.isNotEmpty) {
+                  artistTagsWidgetsWithSeparator.removeLast();
                 }
-                return const SizedBox();
-              },
+
+                return Wrap(
+                  spacing: 0,
+                  runSpacing: 0,
+                  runAlignment: WrapAlignment.center,
+                  children: artistTagsWidgetsWithSeparator,
+                );
+              }),
             ),
           ),
+
+          ToolBarView(gid: gid),
+          // Expanded(
+          //   child: LayoutBuilder(
+          //     builder: (context, constraints) {
+          //       logger.v('constraints $constraints');
+          //       if (constraints.maxHeight > 60 && constraints.maxWidth > 100) {
+          //         return ToolBarView(gid: gid);
+          //       }
+          //       return const SizedBox();
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
@@ -327,6 +447,10 @@ class TagsView extends HookConsumerWidget {
     final tagsGroupByType = useMemoized(() {
       final tagsGroupByType = <String, List<Tag>>{};
       for (final tag in tags) {
+        if (tag.type == 'Artists') {
+          continue;
+        }
+
         if (tagsGroupByType.containsKey(tag.type)) {
           tagsGroupByType[tag.type]?.add(tag);
         } else {
@@ -336,10 +460,10 @@ class TagsView extends HookConsumerWidget {
       return tagsGroupByType;
     });
 
-    const buttonPadding = EdgeInsets.symmetric(horizontal: 10, vertical: 4);
+    const buttonPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 3);
 
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: MultiSliver(
         children: tagsGroupByType.entries.map((entry) {
           final type = entry.key;
@@ -347,14 +471,21 @@ class TagsView extends HookConsumerWidget {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(
+              OutlinedButton(
                 onPressed: () {},
-                style: ElevatedButton.styleFrom(
+                style: OutlinedButton.styleFrom(
                   padding: buttonPadding,
                   minimumSize: const Size(0, 0),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
+                  foregroundColor:
+                      Theme.of(context).colorScheme.onPrimaryContainer,
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.primaryContainer,
                   ),
                 ),
                 child: Text(

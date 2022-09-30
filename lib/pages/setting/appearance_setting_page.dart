@@ -1,6 +1,7 @@
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -49,6 +50,23 @@ class AppearanceSettingPage extends StatelessWidget {
               },
             );
           }),
+          // Switch dynamic color
+          if (GetPlatform.isAndroid)
+            Consumer(builder: (context, ref, child) {
+              final dynamicColor = ref.watch(
+                  settingsProvider.select((settings) => settings.dynamicColor));
+              return ListTile(
+                title: Text('Dynamic color'),
+                subtitle: Text('Only works on Android 10+'),
+                trailing: Switch(
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  value: dynamicColor,
+                  onChanged: (value) {
+                    ref.read(settingsProvider.notifier).setDynamicColor(value);
+                  },
+                ),
+              );
+            }),
         ],
       ),
     );

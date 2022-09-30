@@ -22,6 +22,7 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) {
 mixin _$Settings {
   bool get isCoverBlur => throw _privateConstructorUsedError;
   bool get isTagTranslate => throw _privateConstructorUsedError;
+  bool get dynamicColor => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +34,7 @@ mixin _$Settings {
 abstract class $SettingsCopyWith<$Res> {
   factory $SettingsCopyWith(Settings value, $Res Function(Settings) then) =
       _$SettingsCopyWithImpl<$Res>;
-  $Res call({bool isCoverBlur, bool isTagTranslate});
+  $Res call({bool isCoverBlur, bool isTagTranslate, bool dynamicColor});
 }
 
 /// @nodoc
@@ -48,6 +49,7 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
   $Res call({
     Object? isCoverBlur = freezed,
     Object? isTagTranslate = freezed,
+    Object? dynamicColor = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -57,6 +59,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
       isTagTranslate: isTagTranslate == freezed
           ? _value.isTagTranslate
           : isTagTranslate // ignore: cast_nullable_to_non_nullable
+              as bool,
+      dynamicColor: dynamicColor == freezed
+          ? _value.dynamicColor
+          : dynamicColor // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -68,7 +74,7 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
           _$_Settings value, $Res Function(_$_Settings) then) =
       __$$_SettingsCopyWithImpl<$Res>;
   @override
-  $Res call({bool isCoverBlur, bool isTagTranslate});
+  $Res call({bool isCoverBlur, bool isTagTranslate, bool dynamicColor});
 }
 
 /// @nodoc
@@ -85,6 +91,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
   $Res call({
     Object? isCoverBlur = freezed,
     Object? isTagTranslate = freezed,
+    Object? dynamicColor = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -95,6 +102,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.isTagTranslate
           : isTagTranslate // ignore: cast_nullable_to_non_nullable
               as bool,
+      dynamicColor: dynamicColor == freezed
+          ? _value.dynamicColor
+          : dynamicColor // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -102,7 +113,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Settings implements _Settings {
-  const _$_Settings({this.isCoverBlur = false, this.isTagTranslate = false});
+  const _$_Settings(
+      {this.isCoverBlur = false,
+      this.isTagTranslate = false,
+      this.dynamicColor = true});
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsFromJson(json);
@@ -113,10 +127,13 @@ class _$_Settings implements _Settings {
   @override
   @JsonKey()
   final bool isTagTranslate;
+  @override
+  @JsonKey()
+  final bool dynamicColor;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor)';
   }
 
   @override
@@ -127,7 +144,9 @@ class _$_Settings implements _Settings {
             const DeepCollectionEquality()
                 .equals(other.isCoverBlur, isCoverBlur) &&
             const DeepCollectionEquality()
-                .equals(other.isTagTranslate, isTagTranslate));
+                .equals(other.isTagTranslate, isTagTranslate) &&
+            const DeepCollectionEquality()
+                .equals(other.dynamicColor, dynamicColor));
   }
 
   @JsonKey(ignore: true)
@@ -135,7 +154,8 @@ class _$_Settings implements _Settings {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(isCoverBlur),
-      const DeepCollectionEquality().hash(isTagTranslate));
+      const DeepCollectionEquality().hash(isTagTranslate),
+      const DeepCollectionEquality().hash(dynamicColor));
 
   @JsonKey(ignore: true)
   @override
@@ -151,8 +171,10 @@ class _$_Settings implements _Settings {
 }
 
 abstract class _Settings implements Settings {
-  const factory _Settings({final bool isCoverBlur, final bool isTagTranslate}) =
-      _$_Settings;
+  const factory _Settings(
+      {final bool isCoverBlur,
+      final bool isTagTranslate,
+      final bool dynamicColor}) = _$_Settings;
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
 
@@ -160,6 +182,8 @@ abstract class _Settings implements Settings {
   bool get isCoverBlur;
   @override
   bool get isTagTranslate;
+  @override
+  bool get dynamicColor;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>
