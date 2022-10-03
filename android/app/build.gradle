@@ -61,7 +61,7 @@ android {
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        archivesBaseName = "ErosN_v$versionName+$versionCode"
+        archivesBaseName = "Eros-N_v$versionName+$versionCode"
     }
 
     signingConfigs {

@@ -22,9 +22,9 @@ const GalleryHistorySchema = CollectionSchema(
       name: r'csrfToken',
       type: IsarType.string,
     ),
-    r'imageKey': PropertySchema(
+    r'japaneseTitle': PropertySchema(
       id: 1,
-      name: r'imageKey',
+      name: r'japaneseTitle',
       type: IsarType.string,
     ),
     r'lastReadTime': PropertySchema(
@@ -32,9 +32,9 @@ const GalleryHistorySchema = CollectionSchema(
       name: r'lastReadTime',
       type: IsarType.long,
     ),
-    r'secondTitle': PropertySchema(
+    r'mediaId': PropertySchema(
       id: 3,
-      name: r'secondTitle',
+      name: r'mediaId',
       type: IsarType.string,
     ),
     r'thumbHeight': PropertySchema(
@@ -104,13 +104,13 @@ int _galleryHistoryEstimateSize(
     }
   }
   {
-    final value = object.imageKey;
+    final value = object.japaneseTitle;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
   }
   {
-    final value = object.secondTitle;
+    final value = object.mediaId;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -143,9 +143,9 @@ void _galleryHistorySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.csrfToken);
-  writer.writeString(offsets[1], object.imageKey);
+  writer.writeString(offsets[1], object.japaneseTitle);
   writer.writeLong(offsets[2], object.lastReadTime);
-  writer.writeString(offsets[3], object.secondTitle);
+  writer.writeString(offsets[3], object.mediaId);
   writer.writeLong(offsets[4], object.thumbHeight);
   writer.writeString(offsets[5], object.thumbUrl);
   writer.writeLong(offsets[6], object.thumbWidth);
@@ -162,9 +162,9 @@ GalleryHistory _galleryHistoryDeserialize(
   final object = GalleryHistory();
   object.csrfToken = reader.readStringOrNull(offsets[0]);
   object.gid = id;
-  object.imageKey = reader.readStringOrNull(offsets[1]);
+  object.japaneseTitle = reader.readStringOrNull(offsets[1]);
   object.lastReadTime = reader.readLongOrNull(offsets[2]);
-  object.secondTitle = reader.readStringOrNull(offsets[3]);
+  object.mediaId = reader.readStringOrNull(offsets[3]);
   object.thumbHeight = reader.readLongOrNull(offsets[4]);
   object.thumbUrl = reader.readStringOrNull(offsets[5]);
   object.thumbWidth = reader.readLongOrNull(offsets[6]);
@@ -650,31 +650,31 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyIsNull() {
+      japaneseTitleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'imageKey',
+        property: r'japaneseTitle',
       ));
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyIsNotNull() {
+      japaneseTitleIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'imageKey',
+        property: r'japaneseTitle',
       ));
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyEqualTo(
+      japaneseTitleEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -682,7 +682,7 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyGreaterThan(
+      japaneseTitleGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -690,7 +690,7 @@ extension GalleryHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -698,7 +698,7 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyLessThan(
+      japaneseTitleLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -706,7 +706,7 @@ extension GalleryHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -714,7 +714,7 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyBetween(
+      japaneseTitleBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -723,7 +723,7 @@ extension GalleryHistoryQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -734,13 +734,13 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyStartsWith(
+      japaneseTitleStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -748,13 +748,13 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyEndsWith(
+      japaneseTitleEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -762,10 +762,10 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyContains(String value, {bool caseSensitive = true}) {
+      japaneseTitleContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -773,10 +773,10 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyMatches(String pattern, {bool caseSensitive = true}) {
+      japaneseTitleMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -784,20 +784,20 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyIsEmpty() {
+      japaneseTitleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: '',
       ));
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      imageKeyIsNotEmpty() {
+      japaneseTitleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'imageKey',
+        property: r'japaneseTitle',
         value: '',
       ));
     });
@@ -878,31 +878,31 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleIsNull() {
+      mediaIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'secondTitle',
+        property: r'mediaId',
       ));
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleIsNotNull() {
+      mediaIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'secondTitle',
+        property: r'mediaId',
       ));
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleEqualTo(
+      mediaIdEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'secondTitle',
+        property: r'mediaId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -910,7 +910,7 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleGreaterThan(
+      mediaIdGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -918,7 +918,7 @@ extension GalleryHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'secondTitle',
+        property: r'mediaId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -926,7 +926,7 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleLessThan(
+      mediaIdLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -934,7 +934,7 @@ extension GalleryHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'secondTitle',
+        property: r'mediaId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -942,7 +942,7 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleBetween(
+      mediaIdBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -951,7 +951,7 @@ extension GalleryHistoryQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'secondTitle',
+        property: r'mediaId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -962,13 +962,13 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleStartsWith(
+      mediaIdStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'secondTitle',
+        property: r'mediaId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -976,13 +976,13 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleEndsWith(
+      mediaIdEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'secondTitle',
+        property: r'mediaId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -990,10 +990,10 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleContains(String value, {bool caseSensitive = true}) {
+      mediaIdContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'secondTitle',
+        property: r'mediaId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1001,10 +1001,10 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleMatches(String pattern, {bool caseSensitive = true}) {
+      mediaIdMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'secondTitle',
+        property: r'mediaId',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -1012,20 +1012,20 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleIsEmpty() {
+      mediaIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'secondTitle',
+        property: r'mediaId',
         value: '',
       ));
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      secondTitleIsNotEmpty() {
+      mediaIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'secondTitle',
+        property: r'mediaId',
         value: '',
       ));
     });
@@ -1663,16 +1663,17 @@ extension GalleryHistoryQuerySortBy
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> sortByImageKey() {
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      sortByJapaneseTitle() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imageKey', Sort.asc);
+      return query.addSortBy(r'japaneseTitle', Sort.asc);
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      sortByImageKeyDesc() {
+      sortByJapaneseTitleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imageKey', Sort.desc);
+      return query.addSortBy(r'japaneseTitle', Sort.desc);
     });
   }
 
@@ -1690,17 +1691,16 @@ extension GalleryHistoryQuerySortBy
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      sortBySecondTitle() {
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> sortByMediaId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'secondTitle', Sort.asc);
+      return query.addSortBy(r'mediaId', Sort.asc);
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      sortBySecondTitleDesc() {
+      sortByMediaIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'secondTitle', Sort.desc);
+      return query.addSortBy(r'mediaId', Sort.desc);
     });
   }
 
@@ -1797,16 +1797,17 @@ extension GalleryHistoryQuerySortThenBy
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> thenByImageKey() {
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      thenByJapaneseTitle() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imageKey', Sort.asc);
+      return query.addSortBy(r'japaneseTitle', Sort.asc);
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      thenByImageKeyDesc() {
+      thenByJapaneseTitleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imageKey', Sort.desc);
+      return query.addSortBy(r'japaneseTitle', Sort.desc);
     });
   }
 
@@ -1824,17 +1825,16 @@ extension GalleryHistoryQuerySortThenBy
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      thenBySecondTitle() {
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> thenByMediaId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'secondTitle', Sort.asc);
+      return query.addSortBy(r'mediaId', Sort.asc);
     });
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      thenBySecondTitleDesc() {
+      thenByMediaIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'secondTitle', Sort.desc);
+      return query.addSortBy(r'mediaId', Sort.desc);
     });
   }
 
@@ -1913,10 +1913,11 @@ extension GalleryHistoryQueryWhereDistinct
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct> distinctByImageKey(
-      {bool caseSensitive = true}) {
+  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct>
+      distinctByJapaneseTitle({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'imageKey', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'japaneseTitle',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -1927,10 +1928,10 @@ extension GalleryHistoryQueryWhereDistinct
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct> distinctBySecondTitle(
+  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct> distinctByMediaId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'secondTitle', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'mediaId', caseSensitive: caseSensitive);
     });
   }
 
@@ -1984,9 +1985,10 @@ extension GalleryHistoryQueryProperty
     });
   }
 
-  QueryBuilder<GalleryHistory, String?, QQueryOperations> imageKeyProperty() {
+  QueryBuilder<GalleryHistory, String?, QQueryOperations>
+      japaneseTitleProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'imageKey');
+      return query.addPropertyName(r'japaneseTitle');
     });
   }
 
@@ -1996,10 +1998,9 @@ extension GalleryHistoryQueryProperty
     });
   }
 
-  QueryBuilder<GalleryHistory, String?, QQueryOperations>
-      secondTitleProperty() {
+  QueryBuilder<GalleryHistory, String?, QQueryOperations> mediaIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'secondTitle');
+      return query.addPropertyName(r'mediaId');
     });
   }
 

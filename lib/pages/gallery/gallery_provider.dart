@@ -27,7 +27,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       gid: gallery.gid,
       title: gallery.title,
       url: gallery.url,
-      imageKey: gallery.imageKey,
+      mediaId: gallery.mediaId,
     );
 
     loadData();
@@ -44,7 +44,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
     logger.v('loadData refresh $refresh  url: ${state.url}');
-    if (state.images.isEmpty) {
+    if (state.images.pages.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.loading));
@@ -63,7 +63,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         gid: state.gid,
         title: state.title,
         url: state.url,
-        imageKey: state.imageKey,
+        mediaId: state.mediaId,
         currentPageIndex: state.currentPageIndex,
       );
     } on HttpException catch (e) {
@@ -135,7 +135,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     if (isFavorite != null && numFavorite != null) {
       state = state.copyWith(
         isFavorited: isFavorite,
-        favoritedNum: '$numFavorite',
+        numFavorites: numFavorite,
       );
     }
   }

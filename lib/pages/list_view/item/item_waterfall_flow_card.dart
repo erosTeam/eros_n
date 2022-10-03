@@ -58,7 +58,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    gallery.title ?? '',
+                    gallery.title.englishTitle ?? '',
                     textAlign: TextAlign.start,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,

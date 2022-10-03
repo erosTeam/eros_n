@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'gallery_image.dart';
+part of 'image.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -20,14 +20,22 @@ GalleryImage _$GalleryImageFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GalleryImage {
-  int? get index => throw _privateConstructorUsedError;
-  String? get href => throw _privateConstructorUsedError;
+  @JsonKey(name: 't')
+  String? get type => throw _privateConstructorUsedError;
+  @JsonKey(name: 'h')
+  String? get imgHeight => throw _privateConstructorUsedError;
+  @JsonKey(name: 'w')
+  String? get imgWidth => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
   String? get imageUrl => throw _privateConstructorUsedError;
-  String? get thumbUrl => throw _privateConstructorUsedError;
-  int? get imgHeight => throw _privateConstructorUsedError;
-  int? get imgWidth => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  String? get href => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
   int? get thumbHeight => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
   int? get thumbWidth => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  String? get thumbUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,14 +49,14 @@ abstract class $GalleryImageCopyWith<$Res> {
           GalleryImage value, $Res Function(GalleryImage) then) =
       _$GalleryImageCopyWithImpl<$Res>;
   $Res call(
-      {int? index,
-      String? href,
-      String? imageUrl,
-      String? thumbUrl,
-      int? imgHeight,
-      int? imgWidth,
-      int? thumbHeight,
-      int? thumbWidth});
+      {@JsonKey(name: 't') String? type,
+      @JsonKey(name: 'h') String? imgHeight,
+      @JsonKey(name: 'w') String? imgWidth,
+      @JsonKey(ignore: true) String? imageUrl,
+      @JsonKey(ignore: true) String? href,
+      @JsonKey(ignore: true) int? thumbHeight,
+      @JsonKey(ignore: true) int? thumbWidth,
+      @JsonKey(ignore: true) String? thumbUrl});
 }
 
 /// @nodoc
@@ -61,40 +69,36 @@ class _$GalleryImageCopyWithImpl<$Res> implements $GalleryImageCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? index = freezed,
-    Object? href = freezed,
-    Object? imageUrl = freezed,
-    Object? thumbUrl = freezed,
+    Object? type = freezed,
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
+    Object? imageUrl = freezed,
+    Object? href = freezed,
     Object? thumbHeight = freezed,
     Object? thumbWidth = freezed,
+    Object? thumbUrl = freezed,
   }) {
     return _then(_value.copyWith(
-      index: index == freezed
-          ? _value.index
-          : index // ignore: cast_nullable_to_non_nullable
-              as int?,
-      href: href == freezed
-          ? _value.href
-          : href // ignore: cast_nullable_to_non_nullable
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imgHeight: imgHeight == freezed
+          ? _value.imgHeight
+          : imgHeight // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imgWidth: imgWidth == freezed
+          ? _value.imgWidth
+          : imgWidth // ignore: cast_nullable_to_non_nullable
               as String?,
       imageUrl: imageUrl == freezed
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      thumbUrl: thumbUrl == freezed
-          ? _value.thumbUrl
-          : thumbUrl // ignore: cast_nullable_to_non_nullable
+      href: href == freezed
+          ? _value.href
+          : href // ignore: cast_nullable_to_non_nullable
               as String?,
-      imgHeight: imgHeight == freezed
-          ? _value.imgHeight
-          : imgHeight // ignore: cast_nullable_to_non_nullable
-              as int?,
-      imgWidth: imgWidth == freezed
-          ? _value.imgWidth
-          : imgWidth // ignore: cast_nullable_to_non_nullable
-              as int?,
       thumbHeight: thumbHeight == freezed
           ? _value.thumbHeight
           : thumbHeight // ignore: cast_nullable_to_non_nullable
@@ -103,6 +107,10 @@ class _$GalleryImageCopyWithImpl<$Res> implements $GalleryImageCopyWith<$Res> {
           ? _value.thumbWidth
           : thumbWidth // ignore: cast_nullable_to_non_nullable
               as int?,
+      thumbUrl: thumbUrl == freezed
+          ? _value.thumbUrl
+          : thumbUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -115,14 +123,14 @@ abstract class _$$_GalleryImageCopyWith<$Res>
       __$$_GalleryImageCopyWithImpl<$Res>;
   @override
   $Res call(
-      {int? index,
-      String? href,
-      String? imageUrl,
-      String? thumbUrl,
-      int? imgHeight,
-      int? imgWidth,
-      int? thumbHeight,
-      int? thumbWidth});
+      {@JsonKey(name: 't') String? type,
+      @JsonKey(name: 'h') String? imgHeight,
+      @JsonKey(name: 'w') String? imgWidth,
+      @JsonKey(ignore: true) String? imageUrl,
+      @JsonKey(ignore: true) String? href,
+      @JsonKey(ignore: true) int? thumbHeight,
+      @JsonKey(ignore: true) int? thumbWidth,
+      @JsonKey(ignore: true) String? thumbUrl});
 }
 
 /// @nodoc
@@ -138,40 +146,36 @@ class __$$_GalleryImageCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? index = freezed,
-    Object? href = freezed,
-    Object? imageUrl = freezed,
-    Object? thumbUrl = freezed,
+    Object? type = freezed,
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
+    Object? imageUrl = freezed,
+    Object? href = freezed,
     Object? thumbHeight = freezed,
     Object? thumbWidth = freezed,
+    Object? thumbUrl = freezed,
   }) {
     return _then(_$_GalleryImage(
-      index: index == freezed
-          ? _value.index
-          : index // ignore: cast_nullable_to_non_nullable
-              as int?,
-      href: href == freezed
-          ? _value.href
-          : href // ignore: cast_nullable_to_non_nullable
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imgHeight: imgHeight == freezed
+          ? _value.imgHeight
+          : imgHeight // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imgWidth: imgWidth == freezed
+          ? _value.imgWidth
+          : imgWidth // ignore: cast_nullable_to_non_nullable
               as String?,
       imageUrl: imageUrl == freezed
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      thumbUrl: thumbUrl == freezed
-          ? _value.thumbUrl
-          : thumbUrl // ignore: cast_nullable_to_non_nullable
+      href: href == freezed
+          ? _value.href
+          : href // ignore: cast_nullable_to_non_nullable
               as String?,
-      imgHeight: imgHeight == freezed
-          ? _value.imgHeight
-          : imgHeight // ignore: cast_nullable_to_non_nullable
-              as int?,
-      imgWidth: imgWidth == freezed
-          ? _value.imgWidth
-          : imgWidth // ignore: cast_nullable_to_non_nullable
-              as int?,
       thumbHeight: thumbHeight == freezed
           ? _value.thumbHeight
           : thumbHeight // ignore: cast_nullable_to_non_nullable
@@ -180,46 +184,59 @@ class __$$_GalleryImageCopyWithImpl<$Res>
           ? _value.thumbWidth
           : thumbWidth // ignore: cast_nullable_to_non_nullable
               as int?,
+      thumbUrl: thumbUrl == freezed
+          ? _value.thumbUrl
+          : thumbUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _$_GalleryImage implements _GalleryImage {
   const _$_GalleryImage(
-      {this.index,
-      this.href,
-      this.imageUrl,
-      this.thumbUrl,
-      this.imgHeight,
-      this.imgWidth,
-      this.thumbHeight,
-      this.thumbWidth});
+      {@JsonKey(name: 't') this.type,
+      @JsonKey(name: 'h') this.imgHeight,
+      @JsonKey(name: 'w') this.imgWidth,
+      @JsonKey(ignore: true) this.imageUrl,
+      @JsonKey(ignore: true) this.href,
+      @JsonKey(ignore: true) this.thumbHeight,
+      @JsonKey(ignore: true) this.thumbWidth,
+      @JsonKey(ignore: true) this.thumbUrl});
 
   factory _$_GalleryImage.fromJson(Map<String, dynamic> json) =>
       _$$_GalleryImageFromJson(json);
 
   @override
-  final int? index;
+  @JsonKey(name: 't')
+  final String? type;
   @override
-  final String? href;
+  @JsonKey(name: 'h')
+  final String? imgHeight;
   @override
+  @JsonKey(name: 'w')
+  final String? imgWidth;
+  @override
+  @JsonKey(ignore: true)
   final String? imageUrl;
   @override
-  final String? thumbUrl;
+  @JsonKey(ignore: true)
+  final String? href;
   @override
-  final int? imgHeight;
-  @override
-  final int? imgWidth;
-  @override
+  @JsonKey(ignore: true)
   final int? thumbHeight;
   @override
+  @JsonKey(ignore: true)
   final int? thumbWidth;
+  @override
+  @JsonKey(ignore: true)
+  final String? thumbUrl;
 
   @override
   String toString() {
-    return 'GalleryImage(index: $index, href: $href, imageUrl: $imageUrl, thumbUrl: $thumbUrl, imgHeight: $imgHeight, imgWidth: $imgWidth, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth)';
+    return 'GalleryImage(type: $type, imgHeight: $imgHeight, imgWidth: $imgWidth, imageUrl: $imageUrl, href: $href, thumbHeight: $thumbHeight, thumbWidth: $thumbWidth, thumbUrl: $thumbUrl)';
   }
 
   @override
@@ -227,30 +244,30 @@ class _$_GalleryImage implements _GalleryImage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GalleryImage &&
-            const DeepCollectionEquality().equals(other.index, index) &&
-            const DeepCollectionEquality().equals(other.href, href) &&
-            const DeepCollectionEquality().equals(other.imageUrl, imageUrl) &&
-            const DeepCollectionEquality().equals(other.thumbUrl, thumbUrl) &&
+            const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality().equals(other.imgHeight, imgHeight) &&
             const DeepCollectionEquality().equals(other.imgWidth, imgWidth) &&
+            const DeepCollectionEquality().equals(other.imageUrl, imageUrl) &&
+            const DeepCollectionEquality().equals(other.href, href) &&
             const DeepCollectionEquality()
                 .equals(other.thumbHeight, thumbHeight) &&
             const DeepCollectionEquality()
-                .equals(other.thumbWidth, thumbWidth));
+                .equals(other.thumbWidth, thumbWidth) &&
+            const DeepCollectionEquality().equals(other.thumbUrl, thumbUrl));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(index),
-      const DeepCollectionEquality().hash(href),
-      const DeepCollectionEquality().hash(imageUrl),
-      const DeepCollectionEquality().hash(thumbUrl),
+      const DeepCollectionEquality().hash(type),
       const DeepCollectionEquality().hash(imgHeight),
       const DeepCollectionEquality().hash(imgWidth),
+      const DeepCollectionEquality().hash(imageUrl),
+      const DeepCollectionEquality().hash(href),
       const DeepCollectionEquality().hash(thumbHeight),
-      const DeepCollectionEquality().hash(thumbWidth));
+      const DeepCollectionEquality().hash(thumbWidth),
+      const DeepCollectionEquality().hash(thumbUrl));
 
   @JsonKey(ignore: true)
   @override
@@ -267,34 +284,42 @@ class _$_GalleryImage implements _GalleryImage {
 
 abstract class _GalleryImage implements GalleryImage {
   const factory _GalleryImage(
-      {final int? index,
-      final String? href,
-      final String? imageUrl,
-      final String? thumbUrl,
-      final int? imgHeight,
-      final int? imgWidth,
-      final int? thumbHeight,
-      final int? thumbWidth}) = _$_GalleryImage;
+      {@JsonKey(name: 't') final String? type,
+      @JsonKey(name: 'h') final String? imgHeight,
+      @JsonKey(name: 'w') final String? imgWidth,
+      @JsonKey(ignore: true) final String? imageUrl,
+      @JsonKey(ignore: true) final String? href,
+      @JsonKey(ignore: true) final int? thumbHeight,
+      @JsonKey(ignore: true) final int? thumbWidth,
+      @JsonKey(ignore: true) final String? thumbUrl}) = _$_GalleryImage;
 
   factory _GalleryImage.fromJson(Map<String, dynamic> json) =
       _$_GalleryImage.fromJson;
 
   @override
-  int? get index;
+  @JsonKey(name: 't')
+  String? get type;
   @override
-  String? get href;
+  @JsonKey(name: 'h')
+  String? get imgHeight;
   @override
+  @JsonKey(name: 'w')
+  String? get imgWidth;
+  @override
+  @JsonKey(ignore: true)
   String? get imageUrl;
   @override
-  String? get thumbUrl;
+  @JsonKey(ignore: true)
+  String? get href;
   @override
-  int? get imgHeight;
-  @override
-  int? get imgWidth;
-  @override
+  @JsonKey(ignore: true)
   int? get thumbHeight;
   @override
+  @JsonKey(ignore: true)
   int? get thumbWidth;
+  @override
+  @JsonKey(ignore: true)
+  String? get thumbUrl;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryImageCopyWith<_$_GalleryImage> get copyWith =>

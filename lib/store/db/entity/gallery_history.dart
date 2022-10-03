@@ -6,10 +6,10 @@ part 'gallery_history.g.dart';
 class GalleryHistory {
   @Index(unique: true, replace: true)
   Id? gid;
-  String? imageKey;
+  String? mediaId;
   String? csrfToken;
   String? title;
-  String? secondTitle;
+  String? japaneseTitle;
   String? url;
   String? thumbUrl;
   int? thumbHeight;

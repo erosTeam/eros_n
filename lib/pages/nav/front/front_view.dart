@@ -27,23 +27,38 @@ class FrontPage extends StatefulHookConsumerWidget {
 class _FrontPageState extends ConsumerState<FrontPage>
     with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
+  ScrollDirection _lastScrollDirection = ScrollDirection.idle;
+  double lastScrollOffset = 0;
+  IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
 
   @override
   void initState() {
     super.initState();
     ref.read(frontProvider.notifier).loadData();
-    // _scrollListener();
     scrollController.addListener(_scrollListener);
   }
 
   void _scrollListener() {
+    const double threshold = 100;
     if (scrollController.position.userScrollDirection ==
         ScrollDirection.reverse) {
-      ref.read(indexProvider.notifier).hideNavigationBar();
+      if (_lastScrollDirection != ScrollDirection.reverse) {
+        lastScrollOffset = scrollController.offset;
+      }
+      if (scrollController.offset - lastScrollOffset > threshold) {
+        indexProviderNoti.hideNavigationBar();
+      }
+      _lastScrollDirection = ScrollDirection.reverse;
     }
     if (scrollController.position.userScrollDirection ==
         ScrollDirection.forward) {
-      ref.read(indexProvider.notifier).showNavigationBar();
+      if (_lastScrollDirection != ScrollDirection.forward) {
+        lastScrollOffset = scrollController.offset;
+      }
+      if (lastScrollOffset - scrollController.offset > threshold) {
+        indexProviderNoti.showNavigationBar();
+      }
+      _lastScrollDirection = ScrollDirection.forward;
     }
   }
 
@@ -179,7 +194,7 @@ class PopularListView extends ConsumerWidget {
                         padding: const EdgeInsets.all(4),
                         alignment: Alignment.bottomCenter,
                         child: Text(
-                          gallery.title ?? '',
+                          gallery.title.englishTitle ?? '',
                           style:
                               Theme.of(context).textTheme.bodyText2?.copyWith(
                                     color: Colors.white,

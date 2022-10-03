@@ -48,7 +48,7 @@ class ItemCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        gallery.title ?? '',
+                        gallery.title.englishTitle ?? '',
                         textAlign: TextAlign.start,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,

@@ -19,8 +19,8 @@ Gallery parseGalleryDetail(String html) {
 
   final titleElms = document.querySelectorAll('#info > .title');
   final title = titleElms.firstOrNull?.text ?? '';
-  final secondTitle = titleElms.lastOrNull?.text ?? '';
-  logger.d('title: $title, secondTitle: $secondTitle');
+  final jpnTitle = titleElms.lastOrNull?.text ?? '';
+  logger.d('title: $title, jpnTitle: $jpnTitle');
 
   const selectorButtons = '#info > div.buttons';
   final buttonsElms = document.querySelector(selectorButtons);
@@ -54,7 +54,7 @@ Gallery parseGalleryDetail(String html) {
       document.querySelectorAll(selectorThumb);
   logger.v('galleryThumbsElm ${galleryThumbsElm.length}');
 
-  final List<GalleryImage> galleryThumbs = [];
+  final List<GalleryImage> galleryImagePages = [];
   // for galleryThumbsElm
   for (final elm in galleryThumbsElm) {
     final href = elm.attributes['href'];
@@ -63,7 +63,7 @@ Gallery parseGalleryDetail(String html) {
     final imgWidth = elm.querySelector('img')?.attributes['width'];
 
     // logger.d('thumbUrl: $thumbUrl');
-    galleryThumbs.add(GalleryImage(
+    galleryImagePages.add(GalleryImage(
       href: href,
       thumbUrl: thumbUrl,
       thumbHeight: int.parse(imgHeight ?? '0'),
@@ -79,14 +79,17 @@ Gallery parseGalleryDetail(String html) {
   logger.d('uploadedDateTime: $uploadedDateTime');
 
   return Gallery(
-    title: title,
-    secondTitle: secondTitle,
-    images: galleryThumbs,
+    title: GalleryTitle(
+      englishTitle: title,
+      japaneseTitle: jpnTitle,
+    ),
+    images: GalleryImages(
+      pages: galleryImagePages,
+    ),
     isFavorited: isFav,
-    favoritedNum: favNum,
+    numFavorites: int.tryParse(favNum) ?? 0,
     moreLikeGallerys: moreLikeGalleryList,
     csrfToken: csrfToken,
-    torrentUrl: torrentUrl,
     tags: tags,
     uploadedDateTime: uploadedDateTime,
   );

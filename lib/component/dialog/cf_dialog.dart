@@ -57,14 +57,14 @@ Future<void> showInAppWebViewDialog({
           }
 
           // 使用javascript获取Webview的userAgent
-          final resultJS = await controller.evaluateJavascript(
-              source: 'navigator.userAgent;');
-          logger.d('resultJS $resultJS');
-          final userAgent = resultJS.toString();
-          Global.userAgent = userAgent;
-          globalDioConfig =
-              globalDioConfig.copyWith(userAgent: Global.userAgent);
-          hiveHelper.setUserAgent(Global.userAgent!);
+          // final resultJS = await controller.evaluateJavascript(
+          //     source: 'navigator.userAgent;');
+          // logger.d('resultJS $resultJS');
+          // final userAgent = resultJS.toString();
+          // Global.userAgent = userAgent;
+          // globalDioConfig =
+          //     globalDioConfig.copyWith(userAgent: Global.userAgent);
+          // hiveHelper.setUserAgent(Global.userAgent!);
 
           final cookies = await cookieManager.getCookies(url: uri);
           logger.d('cookies:\n${cookies.map((e) => e.toString()).join('\n')}');

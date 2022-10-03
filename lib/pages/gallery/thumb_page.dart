@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:eros_n/component/models/image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
@@ -47,13 +48,13 @@ class ThumbsView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.v('build thumbs $gid');
-    // final images = ref.watch(galleryProvider(gid).select((g) => g.images));
+    // final pages = ref.watch(galleryProvider(gid).select((g) => g.pages));
 
-    final images = ref.read(galleryProvider(gid)).images;
+    final List<GalleryImage> pages = ref.read(galleryProvider(gid)).images.pages;
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
 
-    if (pageStatus == PageStatus.loading || images.isEmpty) {
+    if (pageStatus == PageStatus.loading || pages.isEmpty) {
       return const SliverFillRemaining(
         child: Center(
           child: CircularProgressIndicator(),
@@ -61,8 +62,8 @@ class ThumbsView extends HookConsumerWidget {
       );
     }
 
-    final minRatio = images
-        .map((image) => (image.imgWidth ?? 300) / (image.imgHeight ?? 400))
+    final minRatio = pages
+        .map((image) => (int.tryParse(image.imgWidth ?? '') ?? 300) / (int.tryParse(image.imgHeight ?? '') ?? 400))
         .min;
     // logger.d('minRatio: $minRatio');
     return SliverPadding(
@@ -70,7 +71,7 @@ class ThumbsView extends HookConsumerWidget {
       sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              final image = images[index];
+              final image = pages[index];
               return GestureDetector(
                 onTap: () {
                   ref.read(galleryProvider(gid).notifier).setInitialPage(index);
@@ -102,7 +103,7 @@ class ThumbsView extends HookConsumerWidget {
                 ),
               );
             },
-            childCount: images.length,
+            childCount: pages.length,
           ),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150.0,

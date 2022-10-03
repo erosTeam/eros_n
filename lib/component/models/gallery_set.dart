@@ -1,7 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'gallery.dart';
+
 part 'gallery_set.freezed.dart';
+
 part 'gallery_set.g.dart';
 
 @freezed

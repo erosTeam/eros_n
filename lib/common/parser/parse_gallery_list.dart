@@ -87,7 +87,7 @@ List<Gallery> parseGalleryListElm(
         elm.querySelector('.lazyload')?.attributes['width'] ?? '';
 
     final gid = RegExp(r'/(\d+)/').firstMatch(url)?.group(1) ?? '';
-    final imageKey = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
+    final mediaId = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
 
     final dataTags =
         (elm.attributes['data-tags'] ?? '').split(RegExp(r'\s+')).toList();
@@ -101,8 +101,8 @@ List<Gallery> parseGalleryListElm(
 
     final Gallery gallery = Gallery(
       gid: gid,
-      imageKey: imageKey,
-      title: title,
+      mediaId: mediaId,
+      title: GalleryTitle(englishTitle: title),
       url: url,
       thumbUrl: thumbUrl,
       thumbHeight: int.parse(imageHeight),

@@ -1,6 +1,5 @@
 class NHConst {
-  static const String userAgent =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 ErosN/1.0.0';
+  static const String userAgent = 'ErosN';
 
   static const String accept =
       'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9';

@@ -17,7 +17,7 @@ GalleryImage parseGalleryImage(String html) {
 
   return GalleryImage(
     imageUrl: imageUrl,
-    imgHeight: int.tryParse(imageHeight ?? ''),
-    imgWidth: int.tryParse(imageWidth ?? ''),
+    imgHeight: imageHeight,
+    imgWidth: imageWidth,
   );
 }

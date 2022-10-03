@@ -72,14 +72,10 @@ class ReadPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     logger.d('ReadPage build');
 
-    // final currentPageIndex =
-    //     ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
-    // final images = ref.watch(galleryProvider(gid).select((g) => g.images));
-    // final imageKey = ref.watch(galleryProvider(gid).select((g) => g.imageKey));
     final Gallery gallery = ref.read(galleryProvider(gid));
     final currentPageIndex = gallery.currentPageIndex;
-    final images = gallery.images;
-    final imageKey = gallery.imageKey;
+    final pages = gallery.images.pages;
+    final mediaId = gallery.mediaId;
 
     void onPageChanged(int index) {
       ref.read(galleryProvider(gid).notifier).onPageChanged(index);
@@ -91,7 +87,7 @@ class ReadPage extends HookConsumerWidget {
       body = PreloadPhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
-          final imageUrl = getGalleryImageUrl(imageKey ?? '', index, path.extension(images[index].thumbUrl ?? '.jpg'));
+          final imageUrl = getGalleryImageUrl(mediaId ?? '', index, path.extension(pages[index].thumbUrl ?? '.jpg'));
           return PhotoViewGalleryPageOptions.customChild(
             child: ErosCachedNetworkImage(
               imageUrl: imageUrl,
@@ -111,7 +107,7 @@ class ReadPage extends HookConsumerWidget {
           );
         },
         preloadPagesCount: 3,
-        itemCount: images.length,
+        itemCount: pages.length,
         // loadingBuilder: (context, event) => Center(
         //   child: CircularProgressIndicator(
         //     value: event == null
@@ -129,7 +125,7 @@ class ReadPage extends HookConsumerWidget {
       body = PreloadPhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
-          final imageUrl = getGalleryImageUrl(imageKey ?? '', index, path.extension(images[index].thumbUrl ?? '.jpg'));
+          final imageUrl = getGalleryImageUrl(mediaId ?? '', index, path.extension(pages[index].thumbUrl ?? '.jpg'));
           return PhotoViewGalleryPageOptions(
             imageProvider: getErorsImageProvider(
               imageUrl,
@@ -145,7 +141,7 @@ class ReadPage extends HookConsumerWidget {
           );
         },
         preloadPagesCount: 3,
-        itemCount: images.length,
+        itemCount: pages.length,
         loadingBuilder: (context, event) => Center(
           child: CircularProgressIndicator(
             value: event == null

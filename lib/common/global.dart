@@ -23,12 +23,13 @@ final HiveHelper hiveHelper = HiveHelper();
 final IsarHelper isarHelper = IsarHelper();
 final erosRouter = AppRouter();
 
-final DioHttpConfig nhDioConfig = DioHttpConfig(
+const DioHttpConfig nhDioConfig =  DioHttpConfig(
   baseUrl: NHConst.baseUrl,
   connectTimeout: 10000,
   sendTimeout: 8000,
   receiveTimeout: 20000,
   maxConnectionsPerHost: null,
+  userAgent: NHConst.userAgent,
 );
 
 class Global {
@@ -40,7 +41,7 @@ class Global {
 
   static late PersistCookieJar cookieJar;
 
-  static String? userAgent;
+  // static String? userAgent;
 
   static late PackageInfo packageInfo;
 
@@ -78,7 +79,7 @@ class Global {
     await HiveHelper.init();
     await isarHelper.initIsar();
 
-    userAgent = hiveHelper.getUserAgent();
-    globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);
+    // userAgent = hiveHelper.getUserAgent();
+    // globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);
   }
 }

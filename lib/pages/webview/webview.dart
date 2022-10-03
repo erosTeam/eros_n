@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+import '../../common/const/const.dart';
+
 class NhWebViewPage extends StatelessWidget {
   const NhWebViewPage({Key? key, required this.initialUrl, this.title})
       : super(key: key);
@@ -28,7 +30,7 @@ final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(
     useShouldOverrideUrlLoading: true,
     mediaPlaybackRequiresUserGesture: false,
     // clearCache: true,
-    // userAgent: GetPlatform.isIOS ? (Global.userAgent ?? NHConst.userAgent) : '',
+    userAgent: NHConst.userAgent,
   ),
   android: AndroidInAppWebViewOptions(
     useHybridComposition: true,

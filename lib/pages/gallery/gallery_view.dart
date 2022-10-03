@@ -15,10 +15,8 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
-import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -181,7 +179,7 @@ class GalleryPage extends HookConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SelectableText(
-                            gallery.title ?? '',
+                            gallery.title.englishTitle ?? '',
                             style: Theme.of(context).textTheme.titleLarge,
                             maxLines: context.isTablet ? 2 : 3,
                             minLines: 1,
@@ -255,9 +253,10 @@ class GalleryPage extends HookConsumerWidget {
           // 副标题
           Consumer(
             builder: (context, ref, child) {
-              final secondTitle = ref.watch(galleryProvider(gid)).secondTitle;
+              final japaneseTitle =
+                  ref.watch(galleryProvider(gid)).title.japaneseTitle;
               return SelectableText(
-                secondTitle ?? '',
+                japaneseTitle ?? '',
                 style: Theme.of(context).textTheme.caption,
                 textAlign: TextAlign.start,
                 minLines: 1,
@@ -288,10 +287,10 @@ class GalleryPage extends HookConsumerWidget {
                   ),
                   const SizedBox(width: 4),
                   Consumer(builder: (context, ref, child) {
-                    final favoritedNum =
-                        ref.watch(galleryProvider(gid)).favoritedNum;
+                    final numFavorites =
+                        ref.watch(galleryProvider(gid)).numFavorites;
                     return Text(
-                      favoritedNum ?? '··',
+                      '${numFavorites ?? '··'}',
                       style: Theme.of(context).textTheme.caption,
                       textAlign: TextAlign.start,
                     );
@@ -587,7 +586,7 @@ class ThumbListView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final images = ref.read(galleryProvider(gid)).images;
+    final pages = ref.read(galleryProvider(gid)).images.pages;
     return MultiSliver(
       children: [
         Padding(
@@ -604,7 +603,7 @@ class ThumbListView extends HookConsumerWidget {
                     erosRouter.push(ThumbRoute(gid: gid));
                   },
                   child: Text(
-                    '${L10n.of(context).more} ${images.length}',
+                    '${L10n.of(context).more} ${pages.length}',
                     style: Theme.of(context).textTheme.caption,
                   )),
             ],
@@ -615,10 +614,10 @@ class ThumbListView extends HookConsumerWidget {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             scrollDirection: Axis.horizontal,
-            itemCount: images.length,
+            itemCount: pages.length,
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
-              final image = images[index];
+              final GalleryImage image = pages[index];
               return GestureDetector(
                 onTap: () {
                   ref.read(galleryProvider(gid).notifier).setInitialPage(index);
@@ -633,7 +632,7 @@ class ThumbListView extends HookConsumerWidget {
                       child: Hero(
                         tag: '${gid}_$index',
                         child: ErosCachedNetworkImage(
-                          imageUrl: image.thumbUrl ?? '',
+                          imageUrl: image.thumbUrl!,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -712,7 +711,7 @@ class MoreLikeListView extends HookConsumerWidget {
                       height: 80,
                       width: aspectRatio * 200,
                       child: Text(
-                        likeGallery.title ?? '',
+                        likeGallery.title.englishTitle ?? '',
                         style: Theme.of(context).textTheme.caption,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
@@ -914,7 +913,7 @@ class ToolBarView extends HookConsumerWidget {
                     late String savePath;
 
                     await nhDownload(
-                        url: '${gallery.torrentUrl}',
+                        url: 'g/${gallery.gid}/download',
                         savePath: (Headers headers) {
                           logger.d(headers);
                           final contentDisposition =

@@ -23,6 +23,9 @@ class FavoritePage extends StatefulHookConsumerWidget {
 class _FavoritePageState extends ConsumerState<FavoritePage>
     with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
+  ScrollDirection _lastScrollDirection = ScrollDirection.idle;
+  double lastScrollOffset = 0;
+  IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
 
   @override
   void initState() {
@@ -32,13 +35,26 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
   }
 
   void _scrollListener() {
+    const double threshold = 100;
     if (scrollController.position.userScrollDirection ==
         ScrollDirection.reverse) {
-      ref.read(indexProvider.notifier).hideNavigationBar();
+      if (_lastScrollDirection != ScrollDirection.reverse) {
+        lastScrollOffset = scrollController.offset;
+      }
+      if (scrollController.offset - lastScrollOffset > threshold) {
+        indexProviderNoti.hideNavigationBar();
+      }
+      _lastScrollDirection = ScrollDirection.reverse;
     }
     if (scrollController.position.userScrollDirection ==
         ScrollDirection.forward) {
-      ref.read(indexProvider.notifier).showNavigationBar();
+      if (_lastScrollDirection != ScrollDirection.forward) {
+        lastScrollOffset = scrollController.offset;
+      }
+      if (lastScrollOffset - scrollController.offset > threshold) {
+        indexProviderNoti.showNavigationBar();
+      }
+      _lastScrollDirection = ScrollDirection.forward;
     }
   }
 
