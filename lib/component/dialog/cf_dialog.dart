@@ -1,19 +1,17 @@
 import 'dart:async';
 import 'dart:io' as io;
-import 'package:auto_route/auto_route.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
+
+import 'package:desktop_webview_window/desktop_webview_window.dart' as dww;
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/webview/webview.dart';
-import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:webview_cef/webview_cef.dart' as cef;
-import 'package:desktop_webview_window/desktop_webview_window.dart' as dw;
 
 const kDialogTag = 'InAppWebViewDialog';
 bool _canShowDialog = true;
@@ -102,8 +100,8 @@ Future<void> showInAppWebViewDialog({
     }
 
     Future<void> initDw() async {
-      final webview = await WebviewWindow.create(
-        configuration: CreateConfiguration(
+      final webview = await dww.WebviewWindow.create(
+        configuration: dww.CreateConfiguration(
           windowHeight: 600,
           windowWidth: 800,
           title: L10n.of(context).app_title,

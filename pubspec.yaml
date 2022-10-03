@@ -54,12 +54,13 @@ dependencies:
   flutter_hooks: ^0.18.5+1
   webview_cef: ^0.0.6
   desktop_webview_window: ^0.1.6
-  package_info: ^2.0.0
+#  package_info: ^2.0.0
   url_launcher: ^6.0.3
   share: ^2.0.4
   copy_with_extension: ^4.0.0
   path: ^1.8.2
   archive: ^3.3.1
+  package_info_plus: ^1.4.3+1
 
 dev_dependencies:
   # flutter pub run apn_json2model
