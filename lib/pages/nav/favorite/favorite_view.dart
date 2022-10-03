@@ -133,6 +133,7 @@ class FavoriteListView extends HookConsumerWidget {
       gallerys: galleryList,
       lastComplete: () => ref.read(favoriteProvider.notifier).loadNextPage(),
       keepPosition: true,
+      maxPage: state.maxPage,
     );
   }
 }

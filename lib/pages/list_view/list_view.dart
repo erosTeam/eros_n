@@ -68,22 +68,24 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     required this.gallerys,
     this.tabTag,
     this.lastComplete,
-    this.lastTopitemIndex,
     this.keepPosition = false,
+    this.maxPage =1,
+    this.currentPage = 1,
   }) : super(key: key);
 
   final List<Gallery> gallerys;
   final dynamic tabTag;
   final VoidCallback? lastComplete;
-  final int? lastTopitemIndex;
   final bool keepPosition;
+  final int maxPage;
+  final int currentPage;
 
   Widget itemCardBuilder(BuildContext context, int index) {
     if (gallerys.length - 1 < index) {
       return const SizedBox.shrink();
     }
 
-    if (index == gallerys.length - 1) {
+    if (index == gallerys.length - 1 && currentPage < maxPage) {
       // 加载完成最后一项的回调
       SchedulerBinding.instance
           .addPostFrameCallback((_) => lastComplete?.call());

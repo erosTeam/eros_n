@@ -13,6 +13,7 @@ class GallerySet with _$GallerySet {
     List<Gallery>? populars,
     List<Gallery>? favorites,
     int? maxPage,
+    int? currentPage,
     bool? fromCache,
   }) = _GallerySet;
 

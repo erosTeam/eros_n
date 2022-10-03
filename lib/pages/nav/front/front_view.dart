@@ -246,6 +246,7 @@ class GalleryListView extends HookConsumerWidget {
       gallerys: galleryList,
       lastComplete: () => ref.read(frontProvider.notifier).loadNextPage(),
       keepPosition: true,
+      maxPage: state.maxPage,
     );
   }
 }

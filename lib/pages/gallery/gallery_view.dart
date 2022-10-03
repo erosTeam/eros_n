@@ -240,15 +240,6 @@ class GalleryPage extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 主标题
-          // SelectableText(
-          //   gallery.title ?? '',
-          //   style:
-          //       Theme.of(context).textTheme.titleMedium?.copyWith(height: 1.3),
-          //   maxLines: 4,
-          //   minLines: 1,
-          //   // overflow: TextOverflow.ellipsis,
-          // ),
           const SizedBox(height: 8),
           // 副标题
           Consumer(

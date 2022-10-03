@@ -61,7 +61,6 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         thumbWidth: state.thumbWidth,
         thumbHeight: state.thumbHeight,
         gid: state.gid,
-        title: state.title,
         url: state.url,
         mediaId: state.mediaId,
         currentPageIndex: state.currentPageIndex,
