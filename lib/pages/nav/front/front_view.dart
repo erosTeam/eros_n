@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -154,18 +155,17 @@ class PopularListView extends ConsumerWidget {
     final popularList = ref.watch(popularProvider);
     return MultiSliver(
       children: [
-        // Text('Popular'),
-        Container(
+        SizedBox(
           height: 240,
           child: ListView.builder(
             padding: const EdgeInsets.all(8),
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final gallery = popularList[index];
-              final card = Container(
-                width: 170,
+              final card = SizedBox(
+                width: 160,
                 child: Card(
-                  clipBehavior: Clip.antiAlias,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: Stack(
                     alignment: Alignment.bottomCenter,
                     fit: StackFit.expand,
@@ -194,7 +194,7 @@ class PopularListView extends ConsumerWidget {
                         padding: const EdgeInsets.all(4),
                         alignment: Alignment.bottomCenter,
                         child: Text(
-                          gallery.title.englishTitle ?? '',
+                          (gallery.title.englishTitle ?? '').prettyTitle,
                           style:
                               Theme.of(context).textTheme.bodyText2?.copyWith(
                                     color: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/gallery/gallery_view.dart';
@@ -35,7 +36,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
         margin: const EdgeInsets.all(0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          // crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
               tag: gallery.thumbUrl ?? '',
@@ -58,7 +59,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    gallery.title.englishTitle ?? '',
+                    (gallery.title.englishTitle ?? '').prettyTitle,
                     textAlign: TextAlign.start,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,

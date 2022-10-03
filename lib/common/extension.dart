@@ -5,9 +5,15 @@ extension DateHelpers on DateTime {
   }
 
   bool isYesterday() {
-    final yesterday = DateTime.now().subtract(Duration(days: 1));
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
     return yesterday.day == day &&
         yesterday.month == month &&
         yesterday.year == year;
   }
+}
+
+
+extension ExtString on String {
+  String get prettyTitle => replaceAll(RegExp(r'(\[.*?\]|\(.*?\))|{.*?}'), '')
+      .trim();
 }
