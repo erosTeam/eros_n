@@ -24,11 +24,9 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     IndexRoute.name: (routeData) {
-      final args = routeData.argsAs<IndexRouteArgs>(
-          orElse: () => const IndexRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: IndexPage(key: args.key),
+        child: const IndexPage(),
       );
     },
     GalleryRoute.name: (routeData) {
@@ -202,26 +200,14 @@ class SplashRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [IndexPage]
-class IndexRoute extends PageRouteInfo<IndexRouteArgs> {
-  IndexRoute({Key? key})
+class IndexRoute extends PageRouteInfo<void> {
+  const IndexRoute()
       : super(
           IndexRoute.name,
           path: '/home',
-          args: IndexRouteArgs(key: key),
         );
 
   static const String name = 'IndexRoute';
-}
-
-class IndexRouteArgs {
-  const IndexRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'IndexRouteArgs{key: $key}';
-  }
 }
 
 /// generated route for
@@ -229,7 +215,7 @@ class IndexRouteArgs {
 class GalleryRoute extends PageRouteInfo<GalleryRouteArgs> {
   GalleryRoute({
     Key? key,
-    String? gid,
+    int? gid,
   }) : super(
           GalleryRoute.name,
           path: '/gallery',
@@ -250,7 +236,7 @@ class GalleryRouteArgs {
 
   final Key? key;
 
-  final String? gid;
+  final int? gid;
 
   @override
   String toString() {
@@ -263,7 +249,7 @@ class GalleryRouteArgs {
 class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
   ReadRoute({
     Key? key,
-    String? gid,
+    int? gid,
   }) : super(
           ReadRoute.name,
           path: '/read',
@@ -284,7 +270,7 @@ class ReadRouteArgs {
 
   final Key? key;
 
-  final String? gid;
+  final int? gid;
 
   @override
   String toString() {
@@ -445,7 +431,7 @@ class LicenseRouteArgs {
 class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
   ThumbRoute({
     Key? key,
-    String? gid,
+    int? gid,
   }) : super(
           ThumbRoute.name,
           path: '/thumb',
@@ -466,7 +452,7 @@ class ThumbRouteArgs {
 
   final Key? key;
 
-  final String? gid;
+  final int? gid;
 
   @override
   String toString() {
@@ -479,7 +465,7 @@ class ThumbRouteArgs {
 class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
   CommentsRoute({
     Key? key,
-    required String? gid,
+    required int? gid,
   }) : super(
           CommentsRoute.name,
           path: '/comments',
@@ -500,7 +486,7 @@ class CommentsRouteArgs {
 
   final Key? key;
 
-  final String? gid;
+  final int? gid;
 
   @override
   String toString() {

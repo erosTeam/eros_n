@@ -32,7 +32,7 @@ class ItemCard extends StatelessWidget {
                 child: BlurImage(
                   blur: kDebugMode,
                   child: ErosCachedNetworkImage(
-                    imageUrl: gallery.thumbUrl ?? '',
+                    imageUrl: gallery.thumbUrl,
                     fit: BoxFit.scaleDown,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),

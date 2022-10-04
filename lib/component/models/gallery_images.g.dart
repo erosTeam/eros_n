@@ -13,16 +13,16 @@ _$_GalleryImages _$$_GalleryImagesFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const <GalleryImage>[],
       cover: json['cover'] == null
-          ? null
+          ? const GalleryImage()
           : GalleryImage.fromJson(json['cover'] as Map<String, dynamic>),
       thumbnail: json['thumbnail'] == null
-          ? null
+          ? const GalleryImage()
           : GalleryImage.fromJson(json['thumbnail'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_GalleryImagesToJson(_$_GalleryImages instance) =>
     <String, dynamic>{
       'pages': instance.pages.map((e) => e.toJson()).toList(),
-      'cover': instance.cover?.toJson(),
-      'thumbnail': instance.thumbnail?.toJson(),
+      'cover': instance.cover.toJson(),
+      'thumbnail': instance.thumbnail.toJson(),
     };

@@ -28,15 +28,15 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Hero(
-          tag: gallery.thumbUrl ?? '',
+          tag: gallery.thumbUrl,
           child: AspectRatio(
             aspectRatio:
-            (gallery.thumbWidth ?? 300) / (gallery.thumbHeight ?? 400),
+            (gallery.images.thumbnail.imgWidth ?? 300) / (gallery.images.thumbnail.imgHeight ?? 400),
             child: Card(
               margin: const EdgeInsets.all(0),
               clipBehavior: Clip.antiAlias,
               child: CoverImg(
-                imgUrl: gallery.thumbUrl ?? '',
+                imgUrl: gallery.thumbUrl,
                 fit: BoxFit.contain,
               ),
             ),

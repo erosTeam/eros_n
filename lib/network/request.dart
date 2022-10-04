@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
@@ -22,6 +24,99 @@ Options getOptions({bool forceRefresh = false}) {
       .toOptions();
 
   return options;
+}
+
+/// 使用API进行搜索
+/// 有严重的bug
+/// 某些情况某些页码会报 404 "error": "does not exist"
+/// 严重影响搜索 暂时不使用
+Future<GallerySearch> searchGalleryByApi({
+  bool refresh = false,
+  CancelToken? cancelToken,
+  int? page,
+  String? query,
+  SearchSort? sort,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  const url = '/api/galleries/search';
+  final params = <String, dynamic>{
+    if (page != null) 'page': page,
+    if (sort != null) 'sort': sort.value,
+    'query': query ?? '',
+  };
+
+  final httpTransformer = HttpTransformerBuilder(
+    (response) {
+      logger.d('statusCode ${response.statusCode}');
+      final data = jsonEncode(response.data).processApi;
+      final result =
+          GallerySearch.fromJson(jsonDecode(data) as Map<String, dynamic>);
+      logger.v('result $result');
+      return DioHttpResponse<GallerySearch>.success(result);
+    },
+  );
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    url,
+    queryParameters: params,
+    httpTransformer: httpTransformer,
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is GallerySearch) {
+    final data = httpResponse.data as GallerySearch;
+    return data;
+  } else {
+    throw httpResponse.error ?? HttpException('searchGalleryByApi error');
+  }
+}
+
+Future<GallerySet> searchGallery({
+  bool refresh = false,
+  CancelToken? cancelToken,
+  int? page,
+  String? query,
+  SearchSort? sort,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  const url = '/search/';
+  final params = <String, dynamic>{
+    if (page != null) 'page': page,
+    if (sort != null && sort.value.isNotEmpty) 'sort': sort.value,
+    'q': query ?? '',
+  };
+
+  int? statusCode;
+  final httpTransformer = HttpTransformerBuilder(
+    (response) {
+      logger.v('statusCode ${response.statusCode}');
+      statusCode = response.statusCode;
+      final list = parseGalleryList(response.data as String);
+      return DioHttpResponse<GallerySet>.success(list);
+    },
+  );
+
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    url,
+    queryParameters: params,
+    httpTransformer: httpTransformer,
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is GallerySet) {
+    GallerySet data = httpResponse.data as GallerySet;
+    if (statusCode == 304) {
+      data = data.copyWith(fromCache: true);
+    }
+    return data;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getGalleryList error');
+  }
 }
 
 Future<GallerySet> getGalleryList({
@@ -167,7 +262,7 @@ Future<GalleryImage> getGalleryImage({
 }
 
 Future<List<Comment>> getGalleryComments({
-  required String? gid,
+  required int? gid,
   String? token,
   bool refresh = false,
   CancelToken? cancelToken,
@@ -286,7 +381,7 @@ Future<User> getInfoFromUserPage({
 }
 
 Future<Tuple2<bool?, int?>> setFavorite({
-  required String? gid,
+  required int? gid,
   required String? csrfToken,
   bool unfavorite = false,
   bool refresh = true,
@@ -415,8 +510,8 @@ Future<void> nhDownload({
 
 Future<Map> getGithubApi(String url) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
-  DioHttpResponse httpResponse = await dioHttpClient.get(url,
-      options: getOptions(forceRefresh: true));
+  DioHttpResponse httpResponse =
+      await dioHttpClient.get(url, options: getOptions(forceRefresh: true));
   if (httpResponse.ok && httpResponse.data is Map) {
     return httpResponse.data as Map;
   } else {

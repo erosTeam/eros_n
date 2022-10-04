@@ -34,7 +34,7 @@ class GalleryPage extends HookConsumerWidget {
     this.gid,
   });
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,7 +70,7 @@ class GalleryPage extends HookConsumerWidget {
             sigma: 4,
             color: Theme.of(context).canvasColor.withOpacity(0.5),
             child: ErosCachedNetworkImage(
-              imageUrl: gallery.thumbUrl ?? '',
+              imageUrl: gallery.thumbUrl,
               filterQuality: FilterQuality.medium,
               fit: BoxFit.cover,
             ),
@@ -115,7 +115,6 @@ class GalleryPage extends HookConsumerWidget {
             ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
-          // ref.read(galleryProvider(gid).notifier).setInitialPage(index);
           context.router.push(ReadRoute(gid: gid));
         },
         scrollController: scrollController,
@@ -129,42 +128,6 @@ class GalleryPage extends HookConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           controller: scrollController,
           slivers: [
-            // SliverAppBar.medium(
-            //   pinned: true,
-            //   title: Text(
-            //     gallery.title ?? '',
-            //     maxLines: 3,
-            //   ),
-            //   // systemOverlayStyle:
-            //   //     Theme.of(context).brightness == Brightness.light
-            //   //         ? SystemUiOverlayStyle.dark
-            //   //         : SystemUiOverlayStyle.light,
-            //   // backgroundColor: MaterialStateColor.resolveWith((states) {
-            //   //   if (states.contains(MaterialState.scrolledUnder)) {
-            //   //     return Theme.of(context).colorScheme.surface;
-            //   //   }
-            //   //   return Colors.transparent;
-            //   // }),
-            //   // backgroundColor: Colors.transparent,
-            //   // expandedHeight: context.isTablet ? 300 : 200,
-            //   actions: [
-            //     IconButton(
-            //       icon: const Icon(Icons.share),
-            //       onPressed: () {
-            //         if (gallery.title != null) {
-            //           final shareText =
-            //               '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
-            //           logger.d(shareText);
-            //           Share.share(shareText);
-            //         }
-            //       },
-            //     ),
-            //     IconButton(
-            //       icon: const Icon(Icons.more_vert),
-            //       onPressed: () {},
-            //     ),
-            //   ],
-            // ),
             SliverToBoxAdapter(
               child: Container(
                 height: context.isTablet ? 400 : 430,
@@ -196,16 +159,16 @@ class GalleryPage extends HookConsumerWidget {
                                   margin: const EdgeInsets.only(right: 12),
                                   alignment: Alignment.center,
                                   child: Hero(
-                                    tag: gallery.thumbUrl ?? '',
+                                    tag: gallery.thumbUrl,
                                     child: Card(
                                       margin: const EdgeInsets.all(0),
                                       clipBehavior: Clip.antiAlias,
                                       child: AspectRatio(
                                         aspectRatio:
-                                            (gallery.thumbWidth ?? 300) /
-                                                (gallery.thumbHeight ?? 400),
+                                            (gallery.images.cover.imgWidth ?? 300) /
+                                                (gallery.images.cover.imgHeight ?? 400),
                                         child: ErosCachedNetworkImage(
-                                          imageUrl: gallery.thumbUrl ?? '',
+                                          imageUrl: gallery.thumbUrl,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -372,17 +335,6 @@ class GalleryPage extends HookConsumerWidget {
           ),
 
           ToolBarView(gid: gid),
-          // Expanded(
-          //   child: LayoutBuilder(
-          //     builder: (context, constraints) {
-          //       logger.v('constraints $constraints');
-          //       if (constraints.maxHeight > 60 && constraints.maxWidth > 100) {
-          //         return ToolBarView(gid: gid);
-          //       }
-          //       return const SizedBox();
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );
@@ -395,7 +347,7 @@ class DetailView extends HookConsumerWidget {
     this.gid,
   }) : super(key: key);
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -428,27 +380,24 @@ class TagsView extends HookConsumerWidget {
     this.gid,
   }) : super(key: key);
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tags = ref.watch(galleryProvider(gid)).tags;
     // tags group by type
-    final tagsGroupByType = useMemoized(() {
-      final tagsGroupByType = <String, List<Tag>>{};
-      for (final tag in tags) {
-        if (tag.type == 'Artists') {
-          continue;
-        }
-
-        if (tagsGroupByType.containsKey(tag.type)) {
-          tagsGroupByType[tag.type]?.add(tag);
-        } else {
-          tagsGroupByType[tag.type!] = [tag];
-        }
+    final tagsGroupByType = <String, List<Tag>>{};
+    for (final tag in tags) {
+      if (tag.type == 'Artists') {
+        continue;
       }
-      return tagsGroupByType;
-    });
+
+      if (tagsGroupByType.containsKey(tag.type)) {
+        tagsGroupByType[tag.type]?.add(tag);
+      } else {
+        tagsGroupByType[tag.type!] = [tag];
+      }
+    }
 
     const buttonPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 3);
 
@@ -573,11 +522,12 @@ class ThumbListView extends HookConsumerWidget {
     this.gid,
   }) : super(key: key);
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pages = ref.read(galleryProvider(gid)).images.pages;
+    final mediaId = ref.read(galleryProvider(gid)).mediaId;
     return MultiSliver(
       children: [
         Padding(
@@ -616,14 +566,14 @@ class ThumbListView extends HookConsumerWidget {
                 },
                 child: Center(
                   child: AspectRatio(
-                    aspectRatio: image.thumbWidth! / image.thumbHeight!,
+                    aspectRatio: image.imgWidth! / image.imgHeight!,
                     child: Card(
                       // margin: const EdgeInsets.all(0),
                       clipBehavior: Clip.antiAlias,
                       child: Hero(
                         tag: '${gid}_$index',
                         child: ErosCachedNetworkImage(
-                          imageUrl: image.thumbUrl!,
+                          imageUrl: 'https://t.nhentai.net/galleries/$mediaId/${index+1}t.${NHConst.extMap[image.type]}',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -645,11 +595,11 @@ class MoreLikeListView extends HookConsumerWidget {
     this.gid,
   }) : super(key: key);
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final moreLikeGallerys = ref.read(galleryProvider(gid)).moreLikeGallerys;
+    final moreLikeGallerys = ref.watch(galleryProvider(gid)).moreLikeGallerys;
     return MultiSliver(
       children: [
         Padding(
@@ -674,7 +624,7 @@ class MoreLikeListView extends HookConsumerWidget {
             itemBuilder: (context, index) {
               final likeGallery = moreLikeGallerys[index];
               final aspectRatio =
-                  likeGallery.thumbWidth! / likeGallery.thumbHeight!;
+                  likeGallery.images.thumbnail.imgWidth! / likeGallery.images.thumbnail.imgHeight!;
               return GestureDetector(
                 onTap: () {
                   ref
@@ -691,7 +641,7 @@ class MoreLikeListView extends HookConsumerWidget {
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             child: ErosCachedNetworkImage(
-                              imageUrl: likeGallery.thumbUrl ?? '',
+                              imageUrl: likeGallery.thumbUrl,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -726,7 +676,7 @@ class CommentsListView extends HookConsumerWidget {
     this.gid,
   }) : super(key: key);
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -867,7 +817,7 @@ class CommentsListView extends HookConsumerWidget {
 class ToolBarView extends HookConsumerWidget {
   const ToolBarView({Key? key, required this.gid}) : super(key: key);
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -919,7 +869,7 @@ class ToolBarView extends HookConsumerWidget {
                           savePath = path.joinAll([
                             Global.tempPath,
                             'torrent',
-                            gallery.gid ?? '',
+                             '${gallery.gid}',
                             fileNameDecode
                           ]);
                           return savePath;

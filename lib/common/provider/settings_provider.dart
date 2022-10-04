@@ -1,6 +1,7 @@
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/network/enum.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SettingsNotifier extends StateNotifier<Settings> {
@@ -25,6 +26,12 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(dynamicColor: value);
     hiveHelper.setSettings(state);
   }
+
+  void setSearchSort(SearchSort value) {
+    state = state.copyWith(searchSort: value);
+    hiveHelper.setSettings(state);
+  }
+
 }
 
 final settingsProvider =

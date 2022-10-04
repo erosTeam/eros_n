@@ -1,3 +1,4 @@
+import 'package:eros_n/network/enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'settings.freezed.dart';
@@ -9,6 +10,7 @@ class Settings with _$Settings {
     @Default(false) bool isCoverBlur,
     @Default(false) bool isTagTranslate,
     @Default(true) bool dynamicColor,
+    @Default(SearchSort.recent) SearchSort searchSort,
   }) = _Settings;
 
   factory Settings.fromJson(Map<String, Object?> json) =>

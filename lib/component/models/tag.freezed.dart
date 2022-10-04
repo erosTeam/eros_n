@@ -20,11 +20,11 @@ Tag _$TagFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Tag {
-  String? get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get url => throw _privateConstructorUsedError;
-  String? get count => throw _privateConstructorUsedError;
+  int? get count => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   String? get translatedName => throw _privateConstructorUsedError;
 
@@ -38,11 +38,11 @@ abstract class $TagCopyWith<$Res> {
   factory $TagCopyWith(Tag value, $Res Function(Tag) then) =
       _$TagCopyWithImpl<$Res>;
   $Res call(
-      {String? id,
+      {int? id,
       String? type,
       String? name,
       String? url,
-      String? count,
+      int? count,
       @JsonKey(ignore: true) String? translatedName});
 }
 
@@ -67,7 +67,7 @@ class _$TagCopyWithImpl<$Res> implements $TagCopyWith<$Res> {
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -83,7 +83,7 @@ class _$TagCopyWithImpl<$Res> implements $TagCopyWith<$Res> {
       count: count == freezed
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       translatedName: translatedName == freezed
           ? _value.translatedName
           : translatedName // ignore: cast_nullable_to_non_nullable
@@ -98,11 +98,11 @@ abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
       __$$_TagCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? id,
+      {int? id,
       String? type,
       String? name,
       String? url,
-      String? count,
+      int? count,
       @JsonKey(ignore: true) String? translatedName});
 }
 
@@ -128,7 +128,7 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -144,7 +144,7 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res>
       count: count == freezed
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       translatedName: translatedName == freezed
           ? _value.translatedName
           : translatedName // ignore: cast_nullable_to_non_nullable
@@ -168,7 +168,7 @@ class _$_Tag implements _Tag {
   factory _$_Tag.fromJson(Map<String, dynamic> json) => _$$_TagFromJson(json);
 
   @override
-  final String? id;
+  final int? id;
   @override
   final String? type;
   @override
@@ -176,7 +176,7 @@ class _$_Tag implements _Tag {
   @override
   final String? url;
   @override
-  final String? count;
+  final int? count;
   @override
   @JsonKey(ignore: true)
   final String? translatedName;
@@ -226,17 +226,17 @@ class _$_Tag implements _Tag {
 
 abstract class _Tag implements Tag {
   const factory _Tag(
-      {final String? id,
+      {final int? id,
       final String? type,
       final String? name,
       final String? url,
-      final String? count,
+      final int? count,
       @JsonKey(ignore: true) final String? translatedName}) = _$_Tag;
 
   factory _Tag.fromJson(Map<String, dynamic> json) = _$_Tag.fromJson;
 
   @override
-  String? get id;
+  int? get id;
   @override
   String? get type;
   @override
@@ -244,7 +244,7 @@ abstract class _Tag implements Tag {
   @override
   String? get url;
   @override
-  String? get count;
+  int? get count;
   @override
   @JsonKey(ignore: true)
   String? get translatedName;

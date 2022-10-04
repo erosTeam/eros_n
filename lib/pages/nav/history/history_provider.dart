@@ -19,11 +19,11 @@ class HistoryNotifier extends StateNotifier<FrontState> {
 
   Future<void> addHistory(Gallery gallery) async {
     final galleryHistory = GalleryHistory()
-      ..gid = int.tryParse(gallery.gid ?? '0') ?? 0
+      ..gid = gallery.gid
       ..title = gallery.title.englishTitle ?? ''
       ..thumbUrl = gallery.thumbUrl
-      ..thumbWidth = gallery.thumbWidth
-      ..thumbHeight = gallery.thumbHeight
+      ..coverImgWidth = gallery.images.cover.imgWidth
+      ..coverImgHeight = gallery.images.cover.imgHeight
       ..url = gallery.url
       ..mediaId = gallery.mediaId
       ..lastReadTime = DateTime.now().millisecondsSinceEpoch;

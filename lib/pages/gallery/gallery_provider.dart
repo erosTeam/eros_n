@@ -21,12 +21,9 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   void initFromGallery(Gallery gallery) {
     logger.d('${gallery.toString()} ');
     state = state.copyWith(
-      thumbUrl: gallery.thumbUrl,
-      thumbWidth: gallery.thumbWidth,
-      thumbHeight: gallery.thumbHeight,
+      images: gallery.images,
       gid: gallery.gid,
       title: gallery.title,
-      url: gallery.url,
       mediaId: gallery.mediaId,
     );
 
@@ -43,7 +40,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
-    logger.v('loadData refresh $refresh  url: ${state.url}');
+    logger.d('loadData refresh $refresh  url: ${state.url}');
     if (state.images.pages.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)
@@ -53,15 +50,14 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     // 获取画廊数据
     try {
       final gallery = await getGalleryDetail(
-        url: state.url ?? '',
+        url: state.url,
         refresh: refresh,
       );
       state = gallery.copyWith(
-        thumbUrl: state.thumbUrl,
-        thumbWidth: state.thumbWidth,
-        thumbHeight: state.thumbHeight,
+        images: gallery.images.copyWith(
+          thumbnail: state.images.thumbnail,
+        ),
         gid: state.gid,
-        url: state.url,
         mediaId: state.mediaId,
         currentPageIndex: state.currentPageIndex,
       );
@@ -152,19 +148,19 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 }
 
 final galleryProvider =
-    StateNotifierProvider.family<GalleryNotifier, Gallery, String?>(
+    StateNotifierProvider.family<GalleryNotifier, Gallery, int?>(
   (ref, gid) {
     return GalleryNotifier(Gallery(gid: gid), ref);
   },
 );
 
 final pageStateProvider =
-    StateProvider.family<GalleryViewState, String?>((ref, gid) {
+    StateProvider.family<GalleryViewState, int?>((ref, gid) {
   return const GalleryViewState(pageStatus: PageStatus.none);
 });
 
-String getGalleryImageUrl(String imageKey, int index, String extention) {
+String getGalleryImageUrl(String imageKey, int index, String ext) {
   final subDomain = radomList(['', '3', '5', '7']);
-  return 'https://i.nhentai.net/galleries/$imageKey/${index + 1}$extention';
+  return 'https://i.nhentai.net/galleries/$imageKey/${index + 1}.$ext';
   // return 'https://i$subDomain.nhentai.net/galleries/$imageKey/${index + 1}.jpg';
 }

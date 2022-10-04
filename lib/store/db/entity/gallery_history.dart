@@ -12,8 +12,8 @@ class GalleryHistory {
   String? japaneseTitle;
   String? url;
   String? thumbUrl;
-  int? thumbHeight;
-  int? thumbWidth;
+  int? coverImgHeight;
+  int? coverImgWidth;
   @Index()
   int? lastReadTime;
 }

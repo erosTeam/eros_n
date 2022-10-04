@@ -17,40 +17,40 @@ const GalleryHistorySchema = CollectionSchema(
   name: r'GalleryHistory',
   id: -2235609206467228336,
   properties: {
-    r'csrfToken': PropertySchema(
+    r'coverImgHeight': PropertySchema(
       id: 0,
+      name: r'coverImgHeight',
+      type: IsarType.long,
+    ),
+    r'coverImgWidth': PropertySchema(
+      id: 1,
+      name: r'coverImgWidth',
+      type: IsarType.long,
+    ),
+    r'csrfToken': PropertySchema(
+      id: 2,
       name: r'csrfToken',
       type: IsarType.string,
     ),
     r'japaneseTitle': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'japaneseTitle',
       type: IsarType.string,
     ),
     r'lastReadTime': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'lastReadTime',
       type: IsarType.long,
     ),
     r'mediaId': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'mediaId',
       type: IsarType.string,
     ),
-    r'thumbHeight': PropertySchema(
-      id: 4,
-      name: r'thumbHeight',
-      type: IsarType.long,
-    ),
     r'thumbUrl': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'thumbUrl',
       type: IsarType.string,
-    ),
-    r'thumbWidth': PropertySchema(
-      id: 6,
-      name: r'thumbWidth',
-      type: IsarType.long,
     ),
     r'title': PropertySchema(
       id: 7,
@@ -88,7 +88,7 @@ const GalleryHistorySchema = CollectionSchema(
   getId: _galleryHistoryGetId,
   getLinks: _galleryHistoryGetLinks,
   attach: _galleryHistoryAttach,
-  version: '3.0.1',
+  version: '3.0.2',
 );
 
 int _galleryHistoryEstimateSize(
@@ -142,13 +142,13 @@ void _galleryHistorySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.csrfToken);
-  writer.writeString(offsets[1], object.japaneseTitle);
-  writer.writeLong(offsets[2], object.lastReadTime);
-  writer.writeString(offsets[3], object.mediaId);
-  writer.writeLong(offsets[4], object.thumbHeight);
-  writer.writeString(offsets[5], object.thumbUrl);
-  writer.writeLong(offsets[6], object.thumbWidth);
+  writer.writeLong(offsets[0], object.coverImgHeight);
+  writer.writeLong(offsets[1], object.coverImgWidth);
+  writer.writeString(offsets[2], object.csrfToken);
+  writer.writeString(offsets[3], object.japaneseTitle);
+  writer.writeLong(offsets[4], object.lastReadTime);
+  writer.writeString(offsets[5], object.mediaId);
+  writer.writeString(offsets[6], object.thumbUrl);
   writer.writeString(offsets[7], object.title);
   writer.writeString(offsets[8], object.url);
 }
@@ -160,14 +160,14 @@ GalleryHistory _galleryHistoryDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = GalleryHistory();
-  object.csrfToken = reader.readStringOrNull(offsets[0]);
+  object.coverImgHeight = reader.readLongOrNull(offsets[0]);
+  object.coverImgWidth = reader.readLongOrNull(offsets[1]);
+  object.csrfToken = reader.readStringOrNull(offsets[2]);
   object.gid = id;
-  object.japaneseTitle = reader.readStringOrNull(offsets[1]);
-  object.lastReadTime = reader.readLongOrNull(offsets[2]);
-  object.mediaId = reader.readStringOrNull(offsets[3]);
-  object.thumbHeight = reader.readLongOrNull(offsets[4]);
-  object.thumbUrl = reader.readStringOrNull(offsets[5]);
-  object.thumbWidth = reader.readLongOrNull(offsets[6]);
+  object.japaneseTitle = reader.readStringOrNull(offsets[3]);
+  object.lastReadTime = reader.readLongOrNull(offsets[4]);
+  object.mediaId = reader.readStringOrNull(offsets[5]);
+  object.thumbUrl = reader.readStringOrNull(offsets[6]);
   object.title = reader.readStringOrNull(offsets[7]);
   object.url = reader.readStringOrNull(offsets[8]);
   return object;
@@ -181,11 +181,11 @@ P _galleryHistoryDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
-    case 1:
-      return (reader.readStringOrNull(offset)) as P;
-    case 2:
       return (reader.readLongOrNull(offset)) as P;
+    case 1:
+      return (reader.readLongOrNull(offset)) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
@@ -193,7 +193,7 @@ P _galleryHistoryDeserializeProp<P>(
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
@@ -421,6 +421,154 @@ extension GalleryHistoryQueryWhere
 
 extension GalleryHistoryQueryFilter
     on QueryBuilder<GalleryHistory, GalleryHistory, QFilterCondition> {
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgHeightIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'coverImgHeight',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgHeightIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'coverImgHeight',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgHeightEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'coverImgHeight',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgHeightGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'coverImgHeight',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgHeightLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'coverImgHeight',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgHeightBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'coverImgHeight',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgWidthIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'coverImgWidth',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgWidthIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'coverImgWidth',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgWidthEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'coverImgWidth',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgWidthGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'coverImgWidth',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgWidthLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'coverImgWidth',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgWidthBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'coverImgWidth',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       csrfTokenIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -1032,80 +1180,6 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbHeightIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'thumbHeight',
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbHeightIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'thumbHeight',
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbHeightEqualTo(int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'thumbHeight',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbHeightGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'thumbHeight',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbHeightLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'thumbHeight',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbHeightBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'thumbHeight',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       thumbUrlIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1255,80 +1329,6 @@ extension GalleryHistoryQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'thumbUrl',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbWidthIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'thumbWidth',
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbWidthIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'thumbWidth',
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbWidthEqualTo(int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'thumbWidth',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbWidthGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'thumbWidth',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbWidthLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'thumbWidth',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      thumbWidthBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'thumbWidth',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
       ));
     });
   }
@@ -1650,6 +1650,34 @@ extension GalleryHistoryQueryLinks
 
 extension GalleryHistoryQuerySortBy
     on QueryBuilder<GalleryHistory, GalleryHistory, QSortBy> {
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      sortByCoverImgHeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgHeight', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      sortByCoverImgHeightDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgHeight', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      sortByCoverImgWidth() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgWidth', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      sortByCoverImgWidthDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgWidth', Sort.desc);
+    });
+  }
+
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> sortByCsrfToken() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'csrfToken', Sort.asc);
@@ -1704,20 +1732,6 @@ extension GalleryHistoryQuerySortBy
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      sortByThumbHeight() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbHeight', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      sortByThumbHeightDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbHeight', Sort.desc);
-    });
-  }
-
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> sortByThumbUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'thumbUrl', Sort.asc);
@@ -1728,20 +1742,6 @@ extension GalleryHistoryQuerySortBy
       sortByThumbUrlDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'thumbUrl', Sort.desc);
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      sortByThumbWidth() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbWidth', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      sortByThumbWidthDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbWidth', Sort.desc);
     });
   }
 
@@ -1772,6 +1772,34 @@ extension GalleryHistoryQuerySortBy
 
 extension GalleryHistoryQuerySortThenBy
     on QueryBuilder<GalleryHistory, GalleryHistory, QSortThenBy> {
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      thenByCoverImgHeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgHeight', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      thenByCoverImgHeightDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgHeight', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      thenByCoverImgWidth() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgWidth', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
+      thenByCoverImgWidthDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coverImgWidth', Sort.desc);
+    });
+  }
+
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> thenByCsrfToken() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'csrfToken', Sort.asc);
@@ -1838,20 +1866,6 @@ extension GalleryHistoryQuerySortThenBy
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      thenByThumbHeight() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbHeight', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      thenByThumbHeightDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbHeight', Sort.desc);
-    });
-  }
-
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy> thenByThumbUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'thumbUrl', Sort.asc);
@@ -1862,20 +1876,6 @@ extension GalleryHistoryQuerySortThenBy
       thenByThumbUrlDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'thumbUrl', Sort.desc);
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      thenByThumbWidth() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbWidth', Sort.asc);
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
-      thenByThumbWidthDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'thumbWidth', Sort.desc);
     });
   }
 
@@ -1906,6 +1906,20 @@ extension GalleryHistoryQuerySortThenBy
 
 extension GalleryHistoryQueryWhereDistinct
     on QueryBuilder<GalleryHistory, GalleryHistory, QDistinct> {
+  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct>
+      distinctByCoverImgHeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'coverImgHeight');
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct>
+      distinctByCoverImgWidth() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'coverImgWidth');
+    });
+  }
+
   QueryBuilder<GalleryHistory, GalleryHistory, QDistinct> distinctByCsrfToken(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1935,24 +1949,10 @@ extension GalleryHistoryQueryWhereDistinct
     });
   }
 
-  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct>
-      distinctByThumbHeight() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'thumbHeight');
-    });
-  }
-
   QueryBuilder<GalleryHistory, GalleryHistory, QDistinct> distinctByThumbUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'thumbUrl', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QDistinct>
-      distinctByThumbWidth() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'thumbWidth');
     });
   }
 
@@ -1976,6 +1976,19 @@ extension GalleryHistoryQueryProperty
   QueryBuilder<GalleryHistory, int, QQueryOperations> gidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'gid');
+    });
+  }
+
+  QueryBuilder<GalleryHistory, int?, QQueryOperations>
+      coverImgHeightProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'coverImgHeight');
+    });
+  }
+
+  QueryBuilder<GalleryHistory, int?, QQueryOperations> coverImgWidthProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'coverImgWidth');
     });
   }
 
@@ -2004,21 +2017,9 @@ extension GalleryHistoryQueryProperty
     });
   }
 
-  QueryBuilder<GalleryHistory, int?, QQueryOperations> thumbHeightProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'thumbHeight');
-    });
-  }
-
   QueryBuilder<GalleryHistory, String?, QQueryOperations> thumbUrlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'thumbUrl');
-    });
-  }
-
-  QueryBuilder<GalleryHistory, int?, QQueryOperations> thumbWidthProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'thumbWidth');
     });
   }
 

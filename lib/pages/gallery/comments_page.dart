@@ -11,7 +11,7 @@ class CommentsPage extends HookConsumerWidget {
     Key? key,
     required this.gid,
   }) : super(key: key);
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

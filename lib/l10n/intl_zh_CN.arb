@@ -40,5 +40,9 @@
   "tag_type_artists": "作者",
   "tag_type_groups": "团队",
   "tag_type_languages": "语言",
-  "tag_type_categories": "类别"
+  "tag_type_categories": "类别",
+  "recent": "最新发布",
+  "popular_today": "本日热门",
+  "popular_week": "本周热门",
+  "popular_all": "所有热门"
 }

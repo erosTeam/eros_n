@@ -30,4 +30,11 @@ class NHConst {
   static const double gridMainAxisSpacing = 6.0;
   static const double gridMaxCrossAxisExtent = 150.0;
   static const double gridChildAspectRatio = 1 / 1.8;
+
+  // 扩展名map
+  static const Map<String, String> extMap = {
+    'j': 'jpg',
+    'p': 'png',
+    'g': 'gif',
+  };
 }

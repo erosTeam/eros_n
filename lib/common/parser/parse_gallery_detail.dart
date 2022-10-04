@@ -58,16 +58,20 @@ Gallery parseGalleryDetail(String html) {
   // for galleryThumbsElm
   for (final elm in galleryThumbsElm) {
     final href = elm.attributes['href'];
-    final thumbUrl = elm.querySelector('img')?.attributes['data-src'];
+    final thumbUrl = elm.querySelector('img')?.attributes['data-src'] ?? '';
     final imgHeight = elm.querySelector('img')?.attributes['height'];
     final imgWidth = elm.querySelector('img')?.attributes['width'];
+
+    // 扩展名
+    final ext = RegExp(r'\.(\w+)$').firstMatch(thumbUrl)?.group(1) ?? '';
+    final type = ext.substring(0, 1);
 
     // logger.d('thumbUrl: $thumbUrl');
     galleryImagePages.add(GalleryImage(
       href: href,
-      thumbUrl: thumbUrl,
-      thumbHeight: int.parse(imgHeight ?? '0'),
-      thumbWidth: int.parse(imgWidth ?? '0'),
+      type: type,
+      imgHeight: int.parse(imgHeight ?? '0'),
+      imgWidth: int.parse(imgWidth ?? '0'),
     ));
   }
 
@@ -75,8 +79,8 @@ Gallery parseGalleryDetail(String html) {
   final tags = tuple.item1;
   final uploadedDateTime = tuple.item2;
 
-  logger.d('tags: $tags');
-  logger.d('uploadedDateTime: $uploadedDateTime');
+  logger.v('tags: $tags');
+  logger.v('uploadedDateTime: $uploadedDateTime');
 
   return Gallery(
     title: GalleryTitle(
@@ -123,11 +127,11 @@ Tuple2<List<Tag>, String> parseGalleryTags(Document document) {
       final tagCount = tagElm.querySelector('.count')?.text.trim() ?? '';
       final tagUrl = tagElm.attributes['href'] ?? '';
       tags.add(Tag(
-        id: tagId,
+        id: int.tryParse(tagId) ?? 0,
         name: tagName,
         url: tagUrl,
         type: tagType,
-        count: tagCount,
+        count: int.tryParse(tagCount) ?? 0,
       ));
     }
   }

@@ -1,3 +1,4 @@
+import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
@@ -66,7 +67,7 @@ class ReadPage extends HookConsumerWidget {
     Key? key,
     this.gid,
   }) : super(key: key);
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,49 +84,11 @@ class ReadPage extends HookConsumerWidget {
 
     late Widget body;
 
-    if (false) {
-      body = PreloadPhotoViewGallery.builder(
-        scrollPhysics: const BouncingScrollPhysics(),
-        builder: (BuildContext context, int index) {
-          final imageUrl = getGalleryImageUrl(mediaId ?? '', index, path.extension(pages[index].thumbUrl ?? '.jpg'));
-          return PhotoViewGalleryPageOptions.customChild(
-            child: ErosCachedNetworkImage(
-              imageUrl: imageUrl,
-              placeholder: (context, url) => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-            scaleStateCycle: customChildScaleStateCycle,
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained * 0.8,
-            maxScale: PhotoViewComputedScale.contained * 2,
-            // maxScale: 3.0,
-            childSize: MediaQuery.of(context).size * 2,
-            heroAttributes: currentPageIndex == index
-                ? PhotoViewHeroAttributes(tag: '${gid}_$index')
-                : null,
-          );
-        },
-        preloadPagesCount: 3,
-        itemCount: pages.length,
-        // loadingBuilder: (context, event) => Center(
-        //   child: CircularProgressIndicator(
-        //     value: event == null
-        //         ? null
-        //         : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
-        //   ),
-        // ),
-        // backgroundDecoration: widget.backgroundDecoration,
-        pageController: PreloadPageController(initialPage: 0),
-        onPageChanged: onPageChanged,
-      );
-    }
-
     if (true) {
       body = PreloadPhotoViewGallery.builder(
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
-          final imageUrl = getGalleryImageUrl(mediaId ?? '', index, path.extension(pages[index].thumbUrl ?? '.jpg'));
+          final imageUrl = getGalleryImageUrl(mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');
           return PhotoViewGalleryPageOptions(
             imageProvider: getErorsImageProvider(
               imageUrl,

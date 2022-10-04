@@ -52,7 +52,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "please_login_web":
             MessageLookupByLibrary.simpleMessage("Please login with web"),
         "popular": MessageLookupByLibrary.simpleMessage("Popular"),
+        "popular_all": MessageLookupByLibrary.simpleMessage("Popular All"),
+        "popular_today": MessageLookupByLibrary.simpleMessage("Popular Today"),
+        "popular_week": MessageLookupByLibrary.simpleMessage("Popular Week"),
         "read": MessageLookupByLibrary.simpleMessage("Read"),
+        "recent": MessageLookupByLibrary.simpleMessage("Recent"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),

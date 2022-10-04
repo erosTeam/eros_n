@@ -23,9 +23,9 @@ mixin _$GalleryImages {
   @JsonKey(name: 'pages')
   List<GalleryImage> get pages => throw _privateConstructorUsedError;
   @JsonKey(name: 'cover')
-  GalleryImage? get cover => throw _privateConstructorUsedError;
+  GalleryImage get cover => throw _privateConstructorUsedError;
   @JsonKey(name: 'thumbnail')
-  GalleryImage? get thumbnail => throw _privateConstructorUsedError;
+  GalleryImage get thumbnail => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,11 +40,11 @@ abstract class $GalleryImagesCopyWith<$Res> {
       _$GalleryImagesCopyWithImpl<$Res>;
   $Res call(
       {@JsonKey(name: 'pages') List<GalleryImage> pages,
-      @JsonKey(name: 'cover') GalleryImage? cover,
-      @JsonKey(name: 'thumbnail') GalleryImage? thumbnail});
+      @JsonKey(name: 'cover') GalleryImage cover,
+      @JsonKey(name: 'thumbnail') GalleryImage thumbnail});
 
-  $GalleryImageCopyWith<$Res>? get cover;
-  $GalleryImageCopyWith<$Res>? get thumbnail;
+  $GalleryImageCopyWith<$Res> get cover;
+  $GalleryImageCopyWith<$Res> get thumbnail;
 }
 
 /// @nodoc
@@ -70,32 +70,24 @@ class _$GalleryImagesCopyWithImpl<$Res>
       cover: cover == freezed
           ? _value.cover
           : cover // ignore: cast_nullable_to_non_nullable
-              as GalleryImage?,
+              as GalleryImage,
       thumbnail: thumbnail == freezed
           ? _value.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
-              as GalleryImage?,
+              as GalleryImage,
     ));
   }
 
   @override
-  $GalleryImageCopyWith<$Res>? get cover {
-    if (_value.cover == null) {
-      return null;
-    }
-
-    return $GalleryImageCopyWith<$Res>(_value.cover!, (value) {
+  $GalleryImageCopyWith<$Res> get cover {
+    return $GalleryImageCopyWith<$Res>(_value.cover, (value) {
       return _then(_value.copyWith(cover: value));
     });
   }
 
   @override
-  $GalleryImageCopyWith<$Res>? get thumbnail {
-    if (_value.thumbnail == null) {
-      return null;
-    }
-
-    return $GalleryImageCopyWith<$Res>(_value.thumbnail!, (value) {
+  $GalleryImageCopyWith<$Res> get thumbnail {
+    return $GalleryImageCopyWith<$Res>(_value.thumbnail, (value) {
       return _then(_value.copyWith(thumbnail: value));
     });
   }
@@ -110,13 +102,13 @@ abstract class _$$_GalleryImagesCopyWith<$Res>
   @override
   $Res call(
       {@JsonKey(name: 'pages') List<GalleryImage> pages,
-      @JsonKey(name: 'cover') GalleryImage? cover,
-      @JsonKey(name: 'thumbnail') GalleryImage? thumbnail});
+      @JsonKey(name: 'cover') GalleryImage cover,
+      @JsonKey(name: 'thumbnail') GalleryImage thumbnail});
 
   @override
-  $GalleryImageCopyWith<$Res>? get cover;
+  $GalleryImageCopyWith<$Res> get cover;
   @override
-  $GalleryImageCopyWith<$Res>? get thumbnail;
+  $GalleryImageCopyWith<$Res> get thumbnail;
 }
 
 /// @nodoc
@@ -144,11 +136,11 @@ class __$$_GalleryImagesCopyWithImpl<$Res>
       cover: cover == freezed
           ? _value.cover
           : cover // ignore: cast_nullable_to_non_nullable
-              as GalleryImage?,
+              as GalleryImage,
       thumbnail: thumbnail == freezed
           ? _value.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
-              as GalleryImage?,
+              as GalleryImage,
     ));
   }
 }
@@ -161,9 +153,9 @@ class _$_GalleryImages implements _GalleryImages {
       {@JsonKey(name: 'pages')
           final List<GalleryImage> pages = const <GalleryImage>[],
       @JsonKey(name: 'cover')
-          this.cover,
+          this.cover = const GalleryImage(),
       @JsonKey(name: 'thumbnail')
-          this.thumbnail})
+          this.thumbnail = const GalleryImage()})
       : _pages = pages;
 
   factory _$_GalleryImages.fromJson(Map<String, dynamic> json) =>
@@ -179,10 +171,10 @@ class _$_GalleryImages implements _GalleryImages {
 
   @override
   @JsonKey(name: 'cover')
-  final GalleryImage? cover;
+  final GalleryImage cover;
   @override
   @JsonKey(name: 'thumbnail')
-  final GalleryImage? thumbnail;
+  final GalleryImage thumbnail;
 
   @override
   String toString() {
@@ -223,8 +215,8 @@ class _$_GalleryImages implements _GalleryImages {
 abstract class _GalleryImages implements GalleryImages {
   const factory _GalleryImages(
           {@JsonKey(name: 'pages') final List<GalleryImage> pages,
-          @JsonKey(name: 'cover') final GalleryImage? cover,
-          @JsonKey(name: 'thumbnail') final GalleryImage? thumbnail}) =
+          @JsonKey(name: 'cover') final GalleryImage cover,
+          @JsonKey(name: 'thumbnail') final GalleryImage thumbnail}) =
       _$_GalleryImages;
 
   factory _GalleryImages.fromJson(Map<String, dynamic> json) =
@@ -235,10 +227,10 @@ abstract class _GalleryImages implements GalleryImages {
   List<GalleryImage> get pages;
   @override
   @JsonKey(name: 'cover')
-  GalleryImage? get cover;
+  GalleryImage get cover;
   @override
   @JsonKey(name: 'thumbnail')
-  GalleryImage? get thumbnail;
+  GalleryImage get thumbnail;
   @override
   @JsonKey(ignore: true)
   _$$_GalleryImagesCopyWith<_$_GalleryImages> get copyWith =>

@@ -54,7 +54,7 @@ class AppDio with DioMixin implements Dio {
       ),
       policy: CachePolicy.forceCache,
       // hitCacheOnErrorExcept: [401, 403],
-      maxStale: const Duration(days: 7),
+      maxStale: const Duration(days: 2),
       priority: CachePriority.normal,
       cipher: null,
       keyBuilder: CacheOptions.defaultCacheKeyBuilder,
@@ -86,17 +86,18 @@ class AppDio with DioMixin implements Dio {
       interceptors.add(CookieManager(Global.cookieJar));
     }
 
-    // interceptors.add(PrettyDioLogger(
-    //   requestHeader: true,
-    //   requestBody: true,
-    //   responseHeader: true,
-    //   responseBody: false,
-    //   error: false,
-    //   maxWidth: 120,
-    //   // logPrint: (_) {},
-    //   // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
-    //   logPrint: loggerSimpleOnlyFile.d,
-    // ));
+    interceptors.add(PrettyDioLogger(
+      request: false,
+      requestHeader: false,
+      requestBody: false,
+      responseHeader: false,
+      responseBody: false,
+      error: true,
+      maxWidth: 120,
+      // logPrint: (_) {},
+      // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
+      logPrint: loggerSimpleOnlyFile.d,
+    ));
 
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);

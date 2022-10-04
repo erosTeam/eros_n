@@ -3,10 +3,9 @@ import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
 import 'package:eros_n/pages/nav/history/history_view.dart';
 import 'package:eros_n/pages/nav/more/more_view.dart';
+import 'package:eros_n/pages/nav/search/search_view.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
-import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'index_provider.dart';
@@ -22,6 +21,7 @@ class _IndexPageState extends ConsumerState<IndexPage> {
   final pages = <Widget>[
     const FrontPage(),
     const FavoritePage(),
+    const SearchPage(query: ''),
     const HistoryPage(),
     const MorePage(),
   ];
@@ -64,6 +64,10 @@ class _IndexPageState extends ConsumerState<IndexPage> {
               icon: const Icon(Icons.favorite_outline),
               selectedIcon: const Icon(Icons.favorite),
               label: L10n.of(context).favorites,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.search),
+              label: L10n.of(context).search,
             ),
             NavigationDestination(
               icon: const Icon(Icons.history),

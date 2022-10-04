@@ -6,6 +6,7 @@ export 'comment.dart';
 export 'comment_poster.dart';
 export 'gallery.dart';
 export 'gallery_images.dart';
+export 'gallery_search.dart';
 export 'gallery_set.dart';
 export 'gallery_title.dart';
 export 'image.dart';

@@ -154,19 +154,21 @@ class HistoryItem extends HookConsumerWidget {
     return InkWell(
       onTap: () {
         final gallery = Gallery(
-          gid: '${history.gid}',
-          url: history.url,
+          gid: history.gid,
           mediaId: history.mediaId,
           title: GalleryTitle(
             englishTitle: history.title,
             japaneseTitle: history.japaneseTitle,
           ),
-          thumbUrl: history.thumbUrl,
-          thumbWidth: history.thumbWidth,
-          thumbHeight: history.thumbHeight,
+          images: GalleryImages(
+            cover: GalleryImage(
+              imgHeight: history.coverImgHeight,
+              imgWidth: history.coverImgWidth,
+            ),
+          ),
         );
         ref
-            .read(galleryProvider('${history.gid}').notifier)
+            .read(galleryProvider(history.gid).notifier)
             .initFromGallery(gallery);
         erosRouter.push(GalleryRoute(gid: gallery.gid));
       },

@@ -52,7 +52,7 @@ class GallerySliverListView extends StatelessWidget {
     return FlutterSliverList(
       delegate: FlutterListViewDelegate(
         itemCardBuilder,
-        onItemKey: (index) => gallerys[index].gid ?? '',
+        onItemKey: (index) => '${gallerys[index].gid}',
         childCount: gallerys.length,
         keepPosition: keepPosition,
         // onItemHeight: (index) => 180,

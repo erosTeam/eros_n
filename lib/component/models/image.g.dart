@@ -8,9 +8,9 @@ part of 'image.dart';
 
 _$_GalleryImage _$$_GalleryImageFromJson(Map<String, dynamic> json) =>
     _$_GalleryImage(
-      type: json['t'] as String?,
-      imgHeight: json['h'] as String?,
-      imgWidth: json['w'] as String?,
+      type: json['t'] as String? ?? 'j',
+      imgHeight: json['h'] as int?,
+      imgWidth: json['w'] as int?,
     );
 
 Map<String, dynamic> _$$_GalleryImageToJson(_$_GalleryImage instance) =>

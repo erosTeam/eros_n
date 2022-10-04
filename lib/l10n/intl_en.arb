@@ -40,5 +40,9 @@
   "tag_type_artists": "Artists",
   "tag_type_groups": "Groups",
   "tag_type_languages": "Languages",
-  "tag_type_categories": "Categories"
+  "tag_type_categories": "Categories",
+  "recent": "Recent",
+  "popular_today": "Popular Today",
+  "popular_week": "Popular Week",
+  "popular_all": "Popular All"
 }

@@ -469,6 +469,46 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Recent`
+  String get recent {
+    return Intl.message(
+      'Recent',
+      name: 'recent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Popular Today`
+  String get popular_today {
+    return Intl.message(
+      'Popular Today',
+      name: 'popular_today',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Popular Week`
+  String get popular_week {
+    return Intl.message(
+      'Popular Week',
+      name: 'popular_week',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Popular All`
+  String get popular_all {
+    return Intl.message(
+      'Popular All',
+      name: 'popular_all',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

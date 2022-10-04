@@ -45,7 +45,7 @@ class IndexNotifier extends StateNotifier<IndexState> {
 
   void addScrollController(ScrollController scrollController) {
     scrollControllerMap[state.selectedIndex] = scrollController;
-    logger.d('state.scrollControllerMap len ${scrollControllerMap.length}');
+    logger.v('state.scrollControllerMap len ${scrollControllerMap.length}');
   }
 
   /// 双击bar的处理

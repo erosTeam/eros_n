@@ -9,11 +9,11 @@ part 'tag.g.dart';
 class Tag with _$Tag {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory Tag({
-    String? id,
+    int? id,
     String? type,
     String? name,
     String? url,
-    String? count,
+    int? count,
     @JsonKey(ignore: true) String? translatedName,
   }) = _Tag;
 

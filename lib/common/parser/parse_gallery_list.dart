@@ -89,24 +89,33 @@ List<Gallery> parseGalleryListElm(
     final gid = RegExp(r'/(\d+)/').firstMatch(url)?.group(1) ?? '';
     final mediaId = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
 
+    // 扩展名
+    final ext = RegExp(r'\.(\w+)$').firstMatch(thumbUrl)?.group(1) ?? '';
+    final type = ext.substring(0, 1);
+
     final dataTags =
         (elm.attributes['data-tags'] ?? '').split(RegExp(r'\s+')).toList();
-    // logger.d('dataTags: $dataTags');
     if (dataTags.any((e) => blacklistTagsList.contains(e))) {
       logger.v('$gid $title is blacklisted');
       continue;
     }
 
-    // logger.d('${elm.attributes['class']}  $gid');
-
     final Gallery gallery = Gallery(
-      gid: gid,
+      gid: int.parse(gid),
       mediaId: mediaId,
       title: GalleryTitle(englishTitle: title),
-      url: url,
-      thumbUrl: thumbUrl,
-      thumbHeight: int.parse(imageHeight),
-      thumbWidth: int.parse(imageWidth),
+      images: GalleryImages(
+        // cover: GalleryImage(
+        //   type: type,
+        //   imgHeight: int.parse(imageHeight),
+        //   imgWidth: int.parse(imageWidth),
+        // ),
+        thumbnail: GalleryImage(
+          type: type,
+          imgHeight: int.parse(imageHeight),
+          imgWidth: int.parse(imageWidth),
+        ),
+      ),
     );
     // logger.d('gallery ${gallery.toJson()}');
     galleryList.add(gallery);

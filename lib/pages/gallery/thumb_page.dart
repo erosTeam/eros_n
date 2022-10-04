@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/component/models/image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -15,7 +16,7 @@ class ThumbPage extends HookConsumerWidget {
     Key? key,
     this.gid,
   }) : super(key: key);
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,7 +44,7 @@ class ThumbsView extends HookConsumerWidget {
     this.gid,
   }) : super(key: key);
 
-  final String? gid;
+  final int? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,6 +52,7 @@ class ThumbsView extends HookConsumerWidget {
     // final pages = ref.watch(galleryProvider(gid).select((g) => g.pages));
 
     final List<GalleryImage> pages = ref.read(galleryProvider(gid)).images.pages;
+    final mediaId = ref.read(galleryProvider(gid)).mediaId;
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
 
@@ -63,7 +65,7 @@ class ThumbsView extends HookConsumerWidget {
     }
 
     final minRatio = pages
-        .map((image) => (int.tryParse(image.imgWidth ?? '') ?? 300) / (int.tryParse(image.imgHeight ?? '') ?? 400))
+        .map((image) => (image.imgWidth ?? 300) / (image.imgHeight ?? 400))
         .min;
     // logger.d('minRatio: $minRatio');
     return SliverPadding(
@@ -71,7 +73,7 @@ class ThumbsView extends HookConsumerWidget {
       sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              final image = pages[index];
+              final thumb = pages[index];
               return GestureDetector(
                 onTap: () {
                   ref.read(galleryProvider(gid).notifier).setInitialPage(index);
@@ -84,13 +86,13 @@ class ThumbsView extends HookConsumerWidget {
                     Expanded(
                       child: Center(
                         child: AspectRatio(
-                          aspectRatio: image.thumbWidth! / image.thumbHeight!,
+                          aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             child: Hero(
                               tag: '${gid}_$index',
                               child: ErosCachedNetworkImage(
-                                imageUrl: image.thumbUrl ?? '',
+                                imageUrl: 'https://t.nhentai.net/galleries/$mediaId/${index+1}t.${NHConst.extMap[thumb.type]}',
                                 fit: BoxFit.cover,
                               ),
                             ),

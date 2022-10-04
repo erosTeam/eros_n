@@ -195,7 +195,7 @@ class PopularListView extends ConsumerWidget {
                         },
                         blendMode: BlendMode.darken,
                         child: CoverImg(
-                          imgUrl: gallery.thumbUrl ?? '',
+                          imgUrl: gallery.thumbUrl,
                           fit: BoxFit.cover,
                         ),
                       ),

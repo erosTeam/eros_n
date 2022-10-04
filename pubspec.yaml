@@ -62,6 +62,7 @@ dependencies:
   archive: ^3.3.1
   package_info_plus: ^1.4.3+1
 
+
 dev_dependencies:
   # flutter pub run apn_json2model
   apn_json2model: ^2.3.0
@@ -80,6 +81,7 @@ dev_dependencies:
   freezed: ^2.1.0+1
   # flutter pub run intl_utils:generate
   intl_utils: ^2.5.1
+  nhentai: ^1.0.0-dev.9
 
 dependency_overrides:
   json_serializable: ^6.0.1

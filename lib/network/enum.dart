@@ -1,8 +1,8 @@
 enum SearchSort {
-  date('date'),
   popularWeek('popular-week'),
   popularToday('popular-today'),
-  popular('popular');
+  popular('popular'),
+  recent('');
 
   const SearchSort(this.value);
 
