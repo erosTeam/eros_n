@@ -35,6 +35,8 @@ mixin _$Gallery {
   int? get numFavorites => throw _privateConstructorUsedError;
   List<Tag> get tags => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
+  String? get languageCode => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
   int? get viewTime => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   List<Comment> get comments => throw _privateConstructorUsedError;
@@ -68,6 +70,7 @@ abstract class $GalleryCopyWith<$Res> {
       @JsonKey(name: 'num_pages') int? numPages,
       @JsonKey(name: 'num_favorites') int? numFavorites,
       List<Tag> tags,
+      @JsonKey(ignore: true) String? languageCode,
       @JsonKey(ignore: true) int? viewTime,
       @JsonKey(ignore: true) List<Comment> comments,
       @JsonKey(ignore: true) List<Gallery> moreLikeGallerys,
@@ -99,6 +102,7 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? numPages = freezed,
     Object? numFavorites = freezed,
     Object? tags = freezed,
+    Object? languageCode = freezed,
     Object? viewTime = freezed,
     Object? comments = freezed,
     Object? moreLikeGallerys = freezed,
@@ -144,6 +148,10 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
+      languageCode: languageCode == freezed
+          ? _value.languageCode
+          : languageCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       viewTime: viewTime == freezed
           ? _value.viewTime
           : viewTime // ignore: cast_nullable_to_non_nullable
@@ -206,6 +214,7 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       @JsonKey(name: 'num_pages') int? numPages,
       @JsonKey(name: 'num_favorites') int? numFavorites,
       List<Tag> tags,
+      @JsonKey(ignore: true) String? languageCode,
       @JsonKey(ignore: true) int? viewTime,
       @JsonKey(ignore: true) List<Comment> comments,
       @JsonKey(ignore: true) List<Gallery> moreLikeGallerys,
@@ -240,6 +249,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? numPages = freezed,
     Object? numFavorites = freezed,
     Object? tags = freezed,
+    Object? languageCode = freezed,
     Object? viewTime = freezed,
     Object? comments = freezed,
     Object? moreLikeGallerys = freezed,
@@ -285,6 +295,10 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
+      languageCode: languageCode == freezed
+          ? _value.languageCode
+          : languageCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       viewTime: viewTime == freezed
           ? _value.viewTime
           : viewTime // ignore: cast_nullable_to_non_nullable
@@ -335,6 +349,8 @@ class _$_Gallery extends _Gallery {
       @JsonKey(name: 'num_favorites')
           this.numFavorites,
       final List<Tag> tags = const <Tag>[],
+      @JsonKey(ignore: true)
+          this.languageCode,
       @JsonKey(ignore: true)
           this.viewTime,
       @JsonKey(ignore: true)
@@ -390,6 +406,9 @@ class _$_Gallery extends _Gallery {
 
   @override
   @JsonKey(ignore: true)
+  final String? languageCode;
+  @override
+  @JsonKey(ignore: true)
   final int? viewTime;
   final List<Comment> _comments;
   @override
@@ -422,7 +441,7 @@ class _$_Gallery extends _Gallery {
 
   @override
   String toString() {
-    return 'Gallery(gid: $gid, mediaId: $mediaId, title: $title, images: $images, scanlator: $scanlator, uploadDate: $uploadDate, numPages: $numPages, numFavorites: $numFavorites, tags: $tags, viewTime: $viewTime, comments: $comments, moreLikeGallerys: $moreLikeGallerys, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, uploadedDateTime: $uploadedDateTime, csrfToken: $csrfToken)';
+    return 'Gallery(gid: $gid, mediaId: $mediaId, title: $title, images: $images, scanlator: $scanlator, uploadDate: $uploadDate, numPages: $numPages, numFavorites: $numFavorites, tags: $tags, languageCode: $languageCode, viewTime: $viewTime, comments: $comments, moreLikeGallerys: $moreLikeGallerys, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, uploadedDateTime: $uploadedDateTime, csrfToken: $csrfToken)';
   }
 
   @override
@@ -441,6 +460,8 @@ class _$_Gallery extends _Gallery {
             const DeepCollectionEquality()
                 .equals(other.numFavorites, numFavorites) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
+            const DeepCollectionEquality()
+                .equals(other.languageCode, languageCode) &&
             const DeepCollectionEquality().equals(other.viewTime, viewTime) &&
             const DeepCollectionEquality().equals(other._comments, _comments) &&
             const DeepCollectionEquality()
@@ -467,6 +488,7 @@ class _$_Gallery extends _Gallery {
       const DeepCollectionEquality().hash(numPages),
       const DeepCollectionEquality().hash(numFavorites),
       const DeepCollectionEquality().hash(_tags),
+      const DeepCollectionEquality().hash(languageCode),
       const DeepCollectionEquality().hash(viewTime),
       const DeepCollectionEquality().hash(_comments),
       const DeepCollectionEquality().hash(_moreLikeGallerys),
@@ -499,6 +521,7 @@ abstract class _Gallery extends Gallery {
       @JsonKey(name: 'num_pages') final int? numPages,
       @JsonKey(name: 'num_favorites') final int? numFavorites,
       final List<Tag> tags,
+      @JsonKey(ignore: true) final String? languageCode,
       @JsonKey(ignore: true) final int? viewTime,
       @JsonKey(ignore: true) final List<Comment> comments,
       @JsonKey(ignore: true) final List<Gallery> moreLikeGallerys,
@@ -533,6 +556,9 @@ abstract class _Gallery extends Gallery {
   int? get numFavorites;
   @override
   List<Tag> get tags;
+  @override
+  @JsonKey(ignore: true)
+  String? get languageCode;
   @override
   @JsonKey(ignore: true)
   int? get viewTime;

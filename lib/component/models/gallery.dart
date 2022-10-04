@@ -22,6 +22,7 @@ class Gallery with _$Gallery {
     @JsonKey(name: 'num_pages') int? numPages,
     @JsonKey(name: 'num_favorites') int? numFavorites,
     @Default(<Tag>[]) List<Tag> tags,
+    @JsonKey(ignore: true) String? languageCode,
     @JsonKey(ignore: true) int? viewTime,
     @JsonKey(ignore: true) @Default(<Comment>[]) List<Comment> comments,
     @JsonKey(ignore: true) @Default(<Gallery>[]) List<Gallery> moreLikeGallerys,

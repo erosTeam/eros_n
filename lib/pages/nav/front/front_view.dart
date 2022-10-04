@@ -14,6 +14,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'front_provider.dart';
@@ -175,44 +176,57 @@ class PopularListView extends ConsumerWidget {
                 width: 160,
                 child: Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    fit: StackFit.expand,
-                    children: [
-                      ShaderMask(
-                        shaderCallback: (Rect bounds) {
-                          return const LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.transparent,
-                                Colors.transparent,
-                                Colors.black87,
-                              ]).createShader(
-                            Rect.fromLTRB(0, 0, bounds.width, bounds.height),
-                          );
-                        },
-                        blendMode: BlendMode.darken,
-                        child: CoverImg(
-                          imgUrl: gallery.thumbUrl,
-                          fit: BoxFit.cover,
-                        ),
+                  child: Container(
+                    foregroundDecoration: (gallery.languageCode == 'ja' ||
+                        gallery.languageCode == null)
+                        ? null
+                        : RotatedCornerDecoration(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                      geometry: const BadgeGeometry(width: 38, height: 28),
+                      textSpan: TextSpan(
+                        text: gallery.languageCode?.toUpperCase() ?? '',
+                        style: const TextStyle(fontSize: 10,fontWeight: FontWeight.bold),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          (gallery.title.englishTitle ?? '').prettyTitle,
-                          style:
-                              Theme.of(context).textTheme.bodyText2?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                    ),
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      fit: StackFit.expand,
+                      children: [
+                        ShaderMask(
+                          shaderCallback: (Rect bounds) {
+                            return const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.transparent,
+                                  Colors.transparent,
+                                  Colors.black87,
+                                ]).createShader(
+                              Rect.fromLTRB(0, 0, bounds.width, bounds.height),
+                            );
+                          },
+                          blendMode: BlendMode.darken,
+                          child: CoverImg(
+                            imgUrl: gallery.thumbUrl,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            (gallery.title.englishTitle ?? '').prettyTitle,
+                            style:
+                                Theme.of(context).textTheme.bodyText2?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

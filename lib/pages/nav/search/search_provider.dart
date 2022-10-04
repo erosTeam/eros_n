@@ -1,5 +1,7 @@
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
@@ -81,10 +83,29 @@ class SearchNotifier extends StateNotifier<FrontState> {
         status: LoadStatus.success,
         curPage: toPage,
       );
-    } catch (e) {
-      state = state.copyWith(status: LoadStatus.error);
-      if (showWebViewDialogOnFail) {
-        // await showWebViewDialog(ref, e);
+    } on HttpException catch (e) {
+      logger.d('state.status ${state.status}');
+      if (showWebViewDialogOnFail &&
+          (e.code == 403 || e.code == 503) &&
+          state.status != LoadStatus.getToken) {
+        logger.e('code ${e.code}');
+        // if (!mounted) {
+        //   return false;
+        // }
+        state = state.copyWith(status: LoadStatus.getToken);
+        await showInAppWebViewDialog(
+          statusCode: e.code,
+          onComplete: () async => await getGalleryData(
+            refresh: refresh,
+            showWebViewDialogOnFail: false,
+            next: next,
+            prev: prev,
+          ),
+        );
+        state = state.copyWith(status: LoadStatus.none);
+      } else {
+        state = state.copyWith(status: LoadStatus.error);
+        rethrow;
       }
     }
 

@@ -8,6 +8,7 @@ import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 
 class ItemWaterfallFlowCard extends HookConsumerWidget {
   const ItemWaterfallFlowCard({
@@ -30,14 +31,27 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
         Hero(
           tag: gallery.thumbUrl,
           child: AspectRatio(
-            aspectRatio:
-            (gallery.images.thumbnail.imgWidth ?? 300) / (gallery.images.thumbnail.imgHeight ?? 400),
+            aspectRatio: (gallery.images.thumbnail.imgWidth ?? 300) /
+                (gallery.images.thumbnail.imgHeight ?? 400),
             child: Card(
               margin: const EdgeInsets.all(0),
               clipBehavior: Clip.antiAlias,
-              child: CoverImg(
-                imgUrl: gallery.thumbUrl,
-                fit: BoxFit.contain,
+              child: Container(
+                foregroundDecoration: (gallery.languageCode == 'ja' ||
+                        gallery.languageCode == null)
+                    ? null
+                    : RotatedCornerDecoration(
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                        geometry: const BadgeGeometry(width: 38, height: 28),
+                        textSpan: TextSpan(
+                          text: gallery.languageCode?.toUpperCase() ?? '',
+                          style: const TextStyle(fontSize: 10,fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                child: CoverImg(
+                  imgUrl: gallery.thumbUrl,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),

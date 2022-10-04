@@ -34,7 +34,7 @@ GallerySet parseGalleryList(String html) {
   const selectorFavoriteList = '#favcontainer';
 
   const selectorGallery = '.gallery:not(.blacklisted)';
-  const selectorFavoriteGallery = '.gallery-favorite';
+  const selectorFavoriteGallery = '.gallery-favorite > .gallery';
   const selectorMaxPage = '.last';
 
   final Element? popularElm = document.querySelector(selectorPopular);
@@ -77,7 +77,9 @@ List<Gallery> parseGalleryListElm(
   for (final Element elm in galleryElmList) {
     // logger.d('elm: ${elm.outerHtml}');
 
-    final title = elm.querySelector('.caption')?.text ?? '';
+    final captionElm = elm.querySelector('.caption');
+
+    final title = captionElm?.text ?? '';
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
     final thumbUrl =
         elm.querySelector('.lazyload')?.attributes['data-src'] ?? '';
@@ -100,9 +102,12 @@ List<Gallery> parseGalleryListElm(
       continue;
     }
 
+    // logger.d('dataTags $dataTags');
+
     final Gallery gallery = Gallery(
       gid: int.parse(gid),
       mediaId: mediaId,
+      languageCode: getLanguageCode(dataTags),
       title: GalleryTitle(englishTitle: title),
       images: GalleryImages(
         // cover: GalleryImage(
@@ -121,4 +126,16 @@ List<Gallery> parseGalleryListElm(
     galleryList.add(gallery);
   }
   return galleryList;
+}
+
+String? getLanguageCode(List<String> tagIds) {
+  if (tagIds.any((e) => e.trim() == '6346')) {
+    return 'ja';
+  } else if (tagIds.any((e) => e.trim() == '29963')) {
+    return 'zh';
+  }  else if (tagIds.any((e) => e.trim() == '12227')) {
+    return 'en';
+  } else {
+    return null;
+  }
 }
