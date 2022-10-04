@@ -21,8 +21,8 @@ class NHConst {
   // static const double waterfallFlowMaxCrossAxisExtentTablet = 220.0;
 
   // 瀑布流视图参数 large
-  static const double waterfallFlowLargeCrossAxisSpacing = 10.0;
-  static const double waterfallFlowLargeMainAxisSpacing = 10.0;
+  static const double waterfallFlowLargeCrossAxisSpacing = 12.0;
+  static const double waterfallFlowLargeMainAxisSpacing = 12.0;
   static const double waterfallFlowLargeMaxCrossAxisExtent = 190.0;
 
   // Grid视图参数

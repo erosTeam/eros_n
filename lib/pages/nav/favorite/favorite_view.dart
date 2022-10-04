@@ -25,11 +25,13 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
   final ScrollController scrollController = ScrollController();
   ScrollDirection _lastScrollDirection = ScrollDirection.idle;
   double lastScrollOffset = 0;
+
   IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
 
   @override
   void initState() {
     super.initState();
+    indexProviderNoti.addScrollController(scrollController);
     ref.read(favoriteProvider.notifier).loadData();
     scrollController.addListener(_scrollListener);
   }
@@ -65,6 +67,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
     super.build(context);
     return Scaffold(
       body: RefreshIndicator(
+        edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
         onRefresh: isUserLoggedIn
             ? ref.read(favoriteProvider.notifier).reloadData
             : () async {},
@@ -73,7 +76,19 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverAppBar(
-              title: Text(L10n.of(context).favorites),
+              title: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: Row(
+                  children: [
+                    Text(L10n.of(context).favorites),
+                  ],
+                ),
+                onTap: () {
+                  scrollController.animateTo(0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease);
+                },
+              ),
               floating: true,
               pinned: true,
               bottom: const PreferredSize(

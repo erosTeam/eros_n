@@ -10,10 +10,12 @@ class IndexState {
 
   final PageController pageController = PageController();
 
+
+
   IndexState copyWith({int? selectedIndex, bool? hideNavigationBar}) {
     return IndexState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
-      hideNavigationBar: hideNavigationBar ?? this.hideNavigationBar,
+      hideNavigationBar: hideNavigationBar ?? this.hideNavigationBar
     );
   }
 }

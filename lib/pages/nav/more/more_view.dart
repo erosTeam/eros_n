@@ -3,22 +3,39 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MorePage extends StatelessWidget {
+class MorePage extends StatefulHookConsumerWidget {
   const MorePage({super.key});
 
   @override
+  ConsumerState<MorePage> createState() => _MorePageState();
+}
+
+class _MorePageState extends ConsumerState<MorePage> with AutomaticKeepAliveClientMixin {
+   final ScrollController scrollController = ScrollController();
+  IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
+
+  @override
+  void initState() {
+    super.initState();
+    indexProviderNoti.addScrollController(scrollController);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(L10n.of(context).more),
       ),
       body: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           children: <Widget>[
             Consumer(builder: (context, ref, child) {
@@ -111,4 +128,7 @@ class MorePage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

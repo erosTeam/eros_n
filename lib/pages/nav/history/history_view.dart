@@ -31,7 +31,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
   @override
   void initState() {
     super.initState();
-    // ref.read(favoriteProvider.notifier).loadData();
+    indexProviderNoti.addScrollController(scrollController);
     scrollController.addListener(_scrollListener);
   }
 

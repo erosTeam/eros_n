@@ -27,14 +27,16 @@ class FrontPage extends StatefulHookConsumerWidget {
 
 class _FrontPageState extends ConsumerState<FrontPage>
     with AutomaticKeepAliveClientMixin {
-  final ScrollController scrollController = ScrollController();
+   final ScrollController scrollController = ScrollController();
   ScrollDirection _lastScrollDirection = ScrollDirection.idle;
   double lastScrollOffset = 0;
+
   IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
 
   @override
   void initState() {
     super.initState();
+    indexProviderNoti.addScrollController(scrollController);
     ref.read(frontProvider.notifier).loadData();
     scrollController.addListener(_scrollListener);
   }
@@ -109,14 +111,21 @@ class _FrontPageState extends ConsumerState<FrontPage>
               pushPinnedChildren: true,
               children: [
                 SliverPinnedHeader(
-                  child: Container(
-                    height: kToolbarHeight,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      L10n.of(context).newest,
-                      style: Theme.of(context).textTheme.titleLarge,
+                  child: GestureDetector(
+                    onTap: () {
+                      scrollController.animateTo(0,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease);
+                    },
+                    child: Container(
+                      height: kToolbarHeight,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        L10n.of(context).newest,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
                   ),
                 ),

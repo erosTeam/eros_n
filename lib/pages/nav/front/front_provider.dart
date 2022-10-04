@@ -115,9 +115,9 @@ class FrontNotifier extends StateNotifier<FrontState> {
           (e.code == 403 || e.code == 503) &&
           state.status != LoadStatus.getToken) {
         logger.e('code ${e.code}');
-        if (!mounted) {
-          return false;
-        }
+        // if (!mounted) {
+        //   return false;
+        // }
         state = state.copyWith(status: LoadStatus.getToken);
         await showInAppWebViewDialog(
           statusCode: e.code,

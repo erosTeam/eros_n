@@ -23,6 +23,48 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Widget item = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Hero(
+          tag: gallery.thumbUrl ?? '',
+          child: AspectRatio(
+            aspectRatio:
+            (gallery.thumbWidth ?? 300) / (gallery.thumbHeight ?? 400),
+            child: Card(
+              margin: const EdgeInsets.all(0),
+              clipBehavior: Clip.antiAlias,
+              child: CoverImg(
+                imgUrl: gallery.thumbUrl ?? '',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                (gallery.title.englishTitle ?? '').prettyTitle,
+                textAlign: TextAlign.start,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    item = Card(
+      // clipBehavior: Clip.antiAlias,
+      margin: const EdgeInsets.all(0),
+      child: item,
+    );
+
     return GestureDetector(
       onTap: () {
         ref
@@ -31,45 +73,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
         // context.router.pushNamed(NHRoutes.gallery);
         context.router.push(GalleryRoute(gid: gallery.gid));
       },
-      child: Card(
-        // clipBehavior: Clip.antiAlias,
-        margin: const EdgeInsets.all(0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Hero(
-              tag: gallery.thumbUrl ?? '',
-              child: AspectRatio(
-                aspectRatio:
-                    (gallery.thumbWidth ?? 300) / (gallery.thumbHeight ?? 400),
-                child: Card(
-                  margin: const EdgeInsets.all(0),
-                  clipBehavior: Clip.antiAlias,
-                  child: CoverImg(
-                    imgUrl: gallery.thumbUrl ?? '',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    (gallery.title.englishTitle ?? '').prettyTitle,
-                    textAlign: TextAlign.start,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: item,
     );
   }
 }

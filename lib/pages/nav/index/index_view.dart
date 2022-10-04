@@ -6,13 +6,19 @@ import 'package:eros_n/pages/nav/more/more_view.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'index_provider.dart';
 
-class IndexPage extends HookConsumerWidget {
-  IndexPage({super.key});
+class IndexPage extends StatefulHookConsumerWidget {
+  const IndexPage({super.key});
 
+  @override
+  ConsumerState<IndexPage> createState() => _IndexPageState();
+}
+
+class _IndexPageState extends ConsumerState<IndexPage> {
   final pages = <Widget>[
     const FrontPage(),
     const FavoritePage(),
@@ -21,17 +27,20 @@ class IndexPage extends HookConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(indexProvider);
     return Scaffold(
-      // extendBody: true,
-      // extendBodyBehindAppBar: true,
       body: PageView(
         controller: state.pageController,
         // physics: const NeverScrollableScrollPhysics(),
         children: pages,
         onPageChanged: (index) {
-          ref.read(indexProvider.notifier).setIndex(index);
+          ref.read(indexProvider.notifier).setIndex(index, context: context);
         },
       ),
       bottomNavigationBar: AnimatedContainer(
@@ -66,7 +75,7 @@ class IndexPage extends HookConsumerWidget {
             ),
           ],
           onDestinationSelected: (index) {
-            ref.read(indexProvider.notifier).setIndex(index, jumpToPage: true);
+            ref.read(indexProvider.notifier).setIndex(index, context:context, jumpToPage: true);
           },
         ),
       ),
