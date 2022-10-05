@@ -33,4 +33,5 @@ class FrontState {
   bool get isLoadEmpty => status == LoadStatus.empty;
   bool get isLoadError => status == LoadStatus.error;
   bool get isLoadSuccess => status == LoadStatus.success;
+  bool get isGetToken => status == LoadStatus.getToken;
 }

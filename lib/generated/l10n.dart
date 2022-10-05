@@ -509,6 +509,26 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Clear History`
+  String get clear_history {
+    return Intl.message(
+      'Clear History',
+      name: 'clear_history',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure to clear all history?`
+  String get clear_history_tip {
+    return Intl.message(
+      'Are you sure to clear all history?',
+      name: 'clear_history_tip',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

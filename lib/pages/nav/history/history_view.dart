@@ -63,9 +63,6 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('History'),
-      // ),
       body: Scrollbar(
         controller: scrollController,
         child: CustomScrollView(
@@ -80,6 +77,43 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                 preferredSize: Size.fromHeight(0),
                 child: SizedBox(height: 0),
               ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: IconButton(
+                    icon: const Icon(Icons.delete_sweep_outlined),
+                    onPressed: () {
+                      // dialog show
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(L10n.of(context).clear_history),
+                            content: Text(L10n.of(context).clear_history_tip),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(L10n.of(context).cancel),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  ref
+                                      .read(historyProvider.notifier)
+                                      .clearHistory();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(L10n.of(context).ok),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
             Consumer(
               builder: (context, ref, child) {

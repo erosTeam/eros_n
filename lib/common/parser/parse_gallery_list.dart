@@ -108,6 +108,7 @@ List<Gallery> parseGalleryListElm(
       gid: int.parse(gid),
       mediaId: mediaId,
       languageCode: getLanguageCode(dataTags),
+      simpleTags: dataTags.map((e) => Tag(id: int.tryParse(e))).toList(),
       title: GalleryTitle(englishTitle: title),
       images: GalleryImages(
         // cover: GalleryImage(
@@ -133,7 +134,7 @@ String? getLanguageCode(List<String> tagIds) {
     return 'ja';
   } else if (tagIds.any((e) => e.trim() == '29963')) {
     return 'zh';
-  }  else if (tagIds.any((e) => e.trim() == '12227')) {
+  } else if (tagIds.any((e) => e.trim() == '12227')) {
     return 'en';
   } else {
     return null;

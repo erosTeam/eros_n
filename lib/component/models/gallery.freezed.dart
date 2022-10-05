@@ -35,6 +35,8 @@ mixin _$Gallery {
   int? get numFavorites => throw _privateConstructorUsedError;
   List<Tag> get tags => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
+  List<Tag> get simpleTags => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
   String? get languageCode => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   int? get viewTime => throw _privateConstructorUsedError;
@@ -70,6 +72,7 @@ abstract class $GalleryCopyWith<$Res> {
       @JsonKey(name: 'num_pages') int? numPages,
       @JsonKey(name: 'num_favorites') int? numFavorites,
       List<Tag> tags,
+      @JsonKey(ignore: true) List<Tag> simpleTags,
       @JsonKey(ignore: true) String? languageCode,
       @JsonKey(ignore: true) int? viewTime,
       @JsonKey(ignore: true) List<Comment> comments,
@@ -102,6 +105,7 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
     Object? numPages = freezed,
     Object? numFavorites = freezed,
     Object? tags = freezed,
+    Object? simpleTags = freezed,
     Object? languageCode = freezed,
     Object? viewTime = freezed,
     Object? comments = freezed,
@@ -147,6 +151,10 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
       tags: tags == freezed
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
+              as List<Tag>,
+      simpleTags: simpleTags == freezed
+          ? _value.simpleTags
+          : simpleTags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
       languageCode: languageCode == freezed
           ? _value.languageCode
@@ -214,6 +222,7 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       @JsonKey(name: 'num_pages') int? numPages,
       @JsonKey(name: 'num_favorites') int? numFavorites,
       List<Tag> tags,
+      @JsonKey(ignore: true) List<Tag> simpleTags,
       @JsonKey(ignore: true) String? languageCode,
       @JsonKey(ignore: true) int? viewTime,
       @JsonKey(ignore: true) List<Comment> comments,
@@ -249,6 +258,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
     Object? numPages = freezed,
     Object? numFavorites = freezed,
     Object? tags = freezed,
+    Object? simpleTags = freezed,
     Object? languageCode = freezed,
     Object? viewTime = freezed,
     Object? comments = freezed,
@@ -294,6 +304,10 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
       tags: tags == freezed
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
+              as List<Tag>,
+      simpleTags: simpleTags == freezed
+          ? _value._simpleTags
+          : simpleTags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
       languageCode: languageCode == freezed
           ? _value.languageCode
@@ -350,6 +364,8 @@ class _$_Gallery extends _Gallery {
           this.numFavorites,
       final List<Tag> tags = const <Tag>[],
       @JsonKey(ignore: true)
+          final List<Tag> simpleTags = const <Tag>[],
+      @JsonKey(ignore: true)
           this.languageCode,
       @JsonKey(ignore: true)
           this.viewTime,
@@ -366,6 +382,7 @@ class _$_Gallery extends _Gallery {
       @JsonKey(ignore: true)
           this.csrfToken})
       : _tags = tags,
+        _simpleTags = simpleTags,
         _comments = comments,
         _moreLikeGallerys = moreLikeGallerys,
         super._();
@@ -402,6 +419,14 @@ class _$_Gallery extends _Gallery {
   List<Tag> get tags {
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_tags);
+  }
+
+  final List<Tag> _simpleTags;
+  @override
+  @JsonKey(ignore: true)
+  List<Tag> get simpleTags {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_simpleTags);
   }
 
   @override
@@ -441,7 +466,7 @@ class _$_Gallery extends _Gallery {
 
   @override
   String toString() {
-    return 'Gallery(gid: $gid, mediaId: $mediaId, title: $title, images: $images, scanlator: $scanlator, uploadDate: $uploadDate, numPages: $numPages, numFavorites: $numFavorites, tags: $tags, languageCode: $languageCode, viewTime: $viewTime, comments: $comments, moreLikeGallerys: $moreLikeGallerys, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, uploadedDateTime: $uploadedDateTime, csrfToken: $csrfToken)';
+    return 'Gallery(gid: $gid, mediaId: $mediaId, title: $title, images: $images, scanlator: $scanlator, uploadDate: $uploadDate, numPages: $numPages, numFavorites: $numFavorites, tags: $tags, simpleTags: $simpleTags, languageCode: $languageCode, viewTime: $viewTime, comments: $comments, moreLikeGallerys: $moreLikeGallerys, currentPageIndex: $currentPageIndex, isFavorited: $isFavorited, uploadedDateTime: $uploadedDateTime, csrfToken: $csrfToken)';
   }
 
   @override
@@ -460,6 +485,8 @@ class _$_Gallery extends _Gallery {
             const DeepCollectionEquality()
                 .equals(other.numFavorites, numFavorites) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
+            const DeepCollectionEquality()
+                .equals(other._simpleTags, _simpleTags) &&
             const DeepCollectionEquality()
                 .equals(other.languageCode, languageCode) &&
             const DeepCollectionEquality().equals(other.viewTime, viewTime) &&
@@ -488,6 +515,7 @@ class _$_Gallery extends _Gallery {
       const DeepCollectionEquality().hash(numPages),
       const DeepCollectionEquality().hash(numFavorites),
       const DeepCollectionEquality().hash(_tags),
+      const DeepCollectionEquality().hash(_simpleTags),
       const DeepCollectionEquality().hash(languageCode),
       const DeepCollectionEquality().hash(viewTime),
       const DeepCollectionEquality().hash(_comments),
@@ -521,6 +549,7 @@ abstract class _Gallery extends Gallery {
       @JsonKey(name: 'num_pages') final int? numPages,
       @JsonKey(name: 'num_favorites') final int? numFavorites,
       final List<Tag> tags,
+      @JsonKey(ignore: true) final List<Tag> simpleTags,
       @JsonKey(ignore: true) final String? languageCode,
       @JsonKey(ignore: true) final int? viewTime,
       @JsonKey(ignore: true) final List<Comment> comments,
@@ -556,6 +585,9 @@ abstract class _Gallery extends Gallery {
   int? get numFavorites;
   @override
   List<Tag> get tags;
+  @override
+  @JsonKey(ignore: true)
+  List<Tag> get simpleTags;
   @override
   @JsonKey(ignore: true)
   String? get languageCode;

@@ -15,6 +15,7 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -164,9 +165,12 @@ class GalleryPage extends HookConsumerWidget {
                                       margin: const EdgeInsets.all(0),
                                       clipBehavior: Clip.antiAlias,
                                       child: AspectRatio(
-                                        aspectRatio:
-                                            (gallery.images.cover.imgWidth ?? 300) /
-                                                (gallery.images.cover.imgHeight ?? 400),
+                                        aspectRatio: (gallery.images.thumbnail
+                                                    .imgWidth ??
+                                                300) /
+                                            (gallery.images.thumbnail
+                                                    .imgHeight ??
+                                                400),
                                         child: ErosCachedNetworkImage(
                                           imageUrl: gallery.thumbUrl,
                                           fit: BoxFit.cover,
@@ -279,7 +283,7 @@ class GalleryPage extends HookConsumerWidget {
                     .map((tag) {
                   final TagTranslate? translated = isarHelper.findTagTranslate(
                       tag.name ?? '',
-                      namespace: _getTagNamespace(tag.type ?? ''));
+                      namespace: getTagNamespace(tag.type ?? ''));
                   final translatedName =
                       translated?.translateNameNotMD ?? tag.name ?? '';
                   return tag.copyWith(
@@ -450,7 +454,7 @@ class TagsView extends HookConsumerWidget {
                       child: Consumer(builder: (context, ref, child) {
                         final TagTranslate? translated =
                             isarHelper.findTagTranslate(tag.name ?? '',
-                                namespace: _getTagNamespace(type));
+                                namespace: getTagNamespace(type));
                         final translatedName =
                             translated?.translateNameNotMD ?? tag.name ?? '';
                         final isTagTranslate = ref.watch(settingsProvider
@@ -492,27 +496,6 @@ String _getTagTypeTranslate(BuildContext context, String tagType) {
       return L10n.of(context).tag_type_categories;
     default:
       return tagType;
-  }
-}
-
-String? _getTagNamespace(String tagType) {
-  switch (tagType) {
-    case 'Parodies':
-      return 'parody';
-    case 'Characters':
-      return 'character';
-    case 'Tags':
-      return null;
-    case 'Artists':
-      return 'artist';
-    case 'Groups':
-      return 'group';
-    case 'Languages':
-      return 'language';
-    case 'Categories':
-      return null;
-    default:
-      return null;
   }
 }
 
@@ -573,7 +556,8 @@ class ThumbListView extends HookConsumerWidget {
                       child: Hero(
                         tag: '${gid}_$index',
                         child: ErosCachedNetworkImage(
-                          imageUrl: 'https://t.nhentai.net/galleries/$mediaId/${index+1}t.${NHConst.extMap[image.type]}',
+                          imageUrl:
+                              'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -623,8 +607,8 @@ class MoreLikeListView extends HookConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
               final likeGallery = moreLikeGallerys[index];
-              final aspectRatio =
-                  likeGallery.images.thumbnail.imgWidth! / likeGallery.images.thumbnail.imgHeight!;
+              final aspectRatio = likeGallery.images.thumbnail.imgWidth! /
+                  likeGallery.images.thumbnail.imgHeight!;
               return GestureDetector(
                 onTap: () {
                   ref
@@ -869,7 +853,7 @@ class ToolBarView extends HookConsumerWidget {
                           savePath = path.joinAll([
                             Global.tempPath,
                             'torrent',
-                             '${gallery.gid}',
+                            '${gallery.gid}',
                             fileNameDecode
                           ]);
                           return savePath;

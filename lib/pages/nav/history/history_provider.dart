@@ -11,12 +11,6 @@ class HistoryNotifier extends StateNotifier<FrontState> {
   HistoryGalleryNotifier get historyGalleryNotifier =>
       ref.read(historyGallerysProvider.notifier);
 
-  // Future<void> getAllHistoryData() async {
-  //   final historys = isarHelper.getAllHistory();
-  //   historyGalleryNotifier.clearGallerys();
-  //   historyGalleryNotifier.addGallerys(historys);
-  // }
-
   Future<void> addHistory(Gallery gallery) async {
     final galleryHistory = GalleryHistory()
       ..gid = gallery.gid
@@ -35,6 +29,11 @@ class HistoryNotifier extends StateNotifier<FrontState> {
   Future<void> removeHistory(int? gid) async {
     historyGalleryNotifier.deleteGallerys(gid);
     await isarHelper.removeHistory(gid);
+  }
+
+  void clearHistory() {
+    historyGalleryNotifier.clearGallerys();
+    isarHelper.clearHistory();
   }
 }
 

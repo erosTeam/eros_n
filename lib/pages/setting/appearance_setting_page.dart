@@ -5,6 +5,8 @@ import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'setting_base.dart';
+
 class AppearanceSettingPage extends StatelessWidget {
   const AppearanceSettingPage({Key? key}) : super(key: key);
 
@@ -16,20 +18,26 @@ class AppearanceSettingPage extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          Consumer(builder: (context, ref, child) {
-            final isCoverBlur = ref.watch(
-                settingsProvider.select((settings) => settings.isCoverBlur));
-            return ListTile(
-              title: Text('Cover blur'),
-              trailing: Switch(
-                activeColor: Theme.of(context).colorScheme.primary,
-                value: isCoverBlur,
-                onChanged: (value) {
-                  ref.read(settingsProvider.notifier).setCoverBlur(value);
-                },
-              ),
-            );
-          }),
+          SmallTitle(title: 'Theme'),
+          // Switch dynamic color
+          if (GetPlatform.isAndroid)
+            Consumer(builder: (context, ref, child) {
+              final dynamicColor = ref.watch(
+                  settingsProvider.select((settings) => settings.dynamicColor));
+              return ListTile(
+                title: Text('Dynamic color'),
+                subtitle: Text('Only works on Android 12+'),
+                trailing: Switch(
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  value: dynamicColor,
+                  onChanged: (value) {
+                    ref.read(settingsProvider.notifier).setDynamicColor(value);
+                  },
+                ),
+              );
+            }),
+          Divider(thickness: 1.0, height: 1.0),
+          SmallTitle(title: 'List style'),
           // Switch tag translate
           Consumer(builder: (context, ref, child) {
             final isTagTranslate = ref.watch(
@@ -50,23 +58,40 @@ class AppearanceSettingPage extends StatelessWidget {
               },
             );
           }),
-          // Switch dynamic color
-          if (GetPlatform.isAndroid)
-            Consumer(builder: (context, ref, child) {
-              final dynamicColor = ref.watch(
-                  settingsProvider.select((settings) => settings.dynamicColor));
-              return ListTile(
-                title: Text('Dynamic color'),
-                subtitle: Text('Only works on Android 10+'),
-                trailing: Switch(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  value: dynamicColor,
-                  onChanged: (value) {
-                    ref.read(settingsProvider.notifier).setDynamicColor(value);
-                  },
-                ),
-              );
-            }),
+          // Switch show tags
+          Consumer(builder: (context, ref, child) {
+            final showTags = ref.watch(
+                settingsProvider.select((settings) => settings.showTags));
+            return ListTile(
+              title: Text('Show tags'),
+              subtitle: Text('Show tags in list'),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: showTags,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setShowTags(value);
+                },
+              ),
+              onLongPress: () {
+                ref.read(tagTranslateProvider.notifier).updateNhTags();
+              },
+            );
+          }),
+          Consumer(builder: (context, ref, child) {
+            final isCoverBlur = ref.watch(
+                settingsProvider.select((settings) => settings.isCoverBlur));
+            return ListTile(
+              title: Text('Cover blur'),
+              subtitle: Text('Blur cover image in list'),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: isCoverBlur,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setCoverBlur(value);
+                },
+              ),
+            );
+          }),
         ],
       ),
     );

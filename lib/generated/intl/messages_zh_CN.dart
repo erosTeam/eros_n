@@ -28,6 +28,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "appearance": MessageLookupByLibrary.simpleMessage("外观"),
         "auto": MessageLookupByLibrary.simpleMessage("自动"),
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
+        "clear_history_tip":
+            MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗？"),
         "comments": MessageLookupByLibrary.simpleMessage("评论"),
         "download": MessageLookupByLibrary.simpleMessage("下载"),
         "favorites": MessageLookupByLibrary.simpleMessage("收藏"),

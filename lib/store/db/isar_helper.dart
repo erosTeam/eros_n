@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
+import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:isar/isar.dart';
 
@@ -28,6 +29,12 @@ class IsarHelper {
   Future<void> removeHistory(int? gid) async {
     await isar.writeTxn(() async {
       await isar.galleryHistorys.delete(gid ?? 0);
+    });
+  }
+
+  void clearHistory() {
+    isar.writeTxn(() async {
+      await isar.galleryHistorys.where().deleteAll();
     });
   }
 
@@ -78,5 +85,15 @@ class IsarHelper {
     logger.d('result.len ${result.length}');
 
     return result;
+  }
+
+  Future<void> putAllNhTag(List<NhTag> tags) async {
+    await isar.writeTxn(() async {
+      await isar.nhTags.putAll(tags);
+    });
+  }
+
+  NhTag? findNhTag(int? id) {
+    return isar.nhTags.where().idEqualTo(id ?? 0).findFirstSync();
   }
 }
