@@ -82,40 +82,31 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                   final isTagTranslate = ref.watch(
                       settingsProvider.select((value) => value.isTagTranslate));
 
-                  final nhTag = useMemoized(
-                      () => isarHelper.findNhTag(gallery.simpleTags[index].id));
-                  if (nhTag == null) {
+                  final tag = gallery.simpleTags[index];
+
+                  if (tag.name == null) {
                     return const SizedBox();
                   }
 
-                  final TagTranslate? translated = useMemoized(() =>
-                      isarHelper.findTagTranslate(nhTag.name ?? '',
-                          namespace: getTagNamespace(nhTag.type ?? '')));
-
-                  final translatedName =
-                      translated?.translateNameNotMD ?? nhTag.name ?? '';
-
+                  // 圆角边框
                   return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(color: Colors.grey[600]!),
+                    ),
                     margin: const EdgeInsets.only(right: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     alignment: Alignment.center,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 3),
-                        minimumSize: const Size(0, 0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0),
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    child: Text(
+                      isTagTranslate
+                          ? tag.translatedName ?? ''
+                          : tag.name ?? '',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
                       ),
-                      child: Text(
-                        isTagTranslate ? translatedName : nhTag.name ?? '',
-                      ),
-                      onPressed: () {},
                     ),
                   );
                 });

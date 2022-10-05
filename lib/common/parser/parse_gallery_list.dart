@@ -1,4 +1,6 @@
+import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
@@ -108,7 +110,7 @@ List<Gallery> parseGalleryListElm(
       gid: int.parse(gid),
       mediaId: mediaId,
       languageCode: getLanguageCode(dataTags),
-      simpleTags: dataTags.map((e) => Tag(id: int.tryParse(e))).toList(),
+      simpleTags: getTags(dataTags),
       title: GalleryTitle(englishTitle: title),
       images: GalleryImages(
         // cover: GalleryImage(
@@ -127,6 +129,23 @@ List<Gallery> parseGalleryListElm(
     galleryList.add(gallery);
   }
   return galleryList;
+}
+
+List<Tag> getTags(List<String> dataTags) {
+  final List<Tag> tags = [];
+  for (final String tag in dataTags) {
+    final id = int.tryParse(tag) ?? 0;
+    final nhTag = isarHelper.findNhTag(id);
+    final translated = isarHelper.findTagTranslate(nhTag?.name ?? '',
+        namespace: getTagNamespace(nhTag?.type ?? ''));
+    final Tag t = Tag(
+      id: id,
+      name: nhTag?.name,
+      translatedName: translated?.translateNameNotMD ?? nhTag?.name ?? '',
+    );
+    tags.add(t);
+  }
+  return tags;
 }
 
 String? getLanguageCode(List<String> tagIds) {
