@@ -29,7 +29,7 @@ class FrontPage extends StatefulHookConsumerWidget {
 
 class _FrontPageState extends ConsumerState<FrontPage>
     with AutomaticKeepAliveClientMixin {
-   final ScrollController scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
   ScrollDirection _lastScrollDirection = ScrollDirection.idle;
   double lastScrollOffset = 0;
 
@@ -86,7 +86,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
               const SliverAppBar(
                 floating: true,
                 pinned: true,
-                scrolledUnderElevation: 0,
+                // scrolledUnderElevation: 0,
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(0),
                   child: SizedBox(height: 0),
@@ -182,16 +182,21 @@ class PopularListView extends ConsumerWidget {
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: Container(
                     foregroundDecoration: (gallery.languageCode == 'ja' ||
-                        gallery.languageCode == null)
+                            gallery.languageCode == null)
                         ? null
                         : RotatedCornerDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                      geometry: const BadgeGeometry(width: 38, height: 28),
-                      textSpan: TextSpan(
-                        text: gallery.languageCode?.toUpperCase() ?? '',
-                        style: const TextStyle(fontSize: 10,fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.8),
+                            geometry:
+                                const BadgeGeometry(width: 38, height: 28),
+                            textSpan: TextSpan(
+                              text: gallery.languageCode?.toUpperCase() ?? '',
+                              style: const TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.bold),
+                            ),
+                          ),
                     child: Stack(
                       alignment: Alignment.bottomCenter,
                       fit: StackFit.expand,
