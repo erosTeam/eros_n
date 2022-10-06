@@ -24,6 +24,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
+import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share/share.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -90,8 +91,7 @@ class GalleryPage extends HookConsumerWidget {
           }
           return Colors.transparent;
         }),
-        systemOverlayStyle:
-        Theme.of(context).brightness == Brightness.light
+        systemOverlayStyle: Theme.of(context).brightness == Brightness.light
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
         actions: [
@@ -275,7 +275,8 @@ class GalleryPage extends HookConsumerWidget {
                 final artistTags = ref
                     .watch(galleryProvider(gid))
                     .tags
-                    .where((e) => e.type == 'Artists').toList();
+                    .where((e) => e.type == 'Artists')
+                    .toList();
 
                 final textStyle = Theme.of(context)
                     .textTheme
@@ -441,7 +442,9 @@ class TagsView extends HookConsumerWidget {
                         final isTagTranslate = ref.watch(settingsProvider
                             .select((value) => value.isTagTranslate));
                         return Text(
-                          isTagTranslate ? tag.translatedName ?? '' : tag.name ?? '',
+                          isTagTranslate
+                              ? tag.translatedName ?? ''
+                              : tag.name ?? '',
                         );
                       }),
                       onPressed: () {
@@ -579,7 +582,7 @@ class MoreLikeListView extends HookConsumerWidget {
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 280,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -605,9 +608,31 @@ class MoreLikeListView extends HookConsumerWidget {
                           aspectRatio: aspectRatio,
                           child: Card(
                             clipBehavior: Clip.antiAlias,
-                            child: ErosCachedNetworkImage(
-                              imageUrl: likeGallery.thumbUrl,
-                              fit: BoxFit.cover,
+                            child: Container(
+                              foregroundDecoration:
+                                  (likeGallery.languageCode == 'ja' ||
+                                          likeGallery.languageCode == null)
+                                      ? null
+                                      : RotatedCornerDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.8),
+                                          geometry: const BadgeGeometry(
+                                              width: 38, height: 28),
+                                          textSpan: TextSpan(
+                                            text: likeGallery.languageCode
+                                                    ?.toUpperCase() ??
+                                                '',
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                              child: ErosCachedNetworkImage(
+                                imageUrl: likeGallery.thumbUrl,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -819,7 +844,7 @@ class ToolBarView extends HookConsumerWidget {
                     late String savePath;
 
                     await nhDownload(
-                        url: 'g/${gallery.gid}/download',
+                        url: '/g/${gallery.gid}/download',
                         savePath: (Headers headers) {
                           logger.d(headers);
                           final contentDisposition =

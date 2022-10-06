@@ -1,3 +1,4 @@
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/models/index.dart';
@@ -37,6 +38,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     if (value) {
       ref.read(tagTranslateProvider.notifier).updateNhTags();
     }
+    hiveHelper.setSettings(state);
+  }
+
+  void setTagLayoutOnCard(TagLayoutOnCard value) {
+    state = state.copyWith(tagLayoutOnCard: value);
     hiveHelper.setSettings(state);
   }
 }

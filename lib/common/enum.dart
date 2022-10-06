@@ -5,6 +5,14 @@ enum TagCategory {
   parodies('parodies'),
   characters('characters');
 
-  final String value;
   const TagCategory(this.value);
+  final String value;
+}
+
+enum TagLayoutOnCard {
+  horizontal,
+
+  row,
+
+  wrap,
 }

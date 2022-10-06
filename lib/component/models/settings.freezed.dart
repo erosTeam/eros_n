@@ -25,6 +25,7 @@ mixin _$Settings {
   bool get dynamicColor => throw _privateConstructorUsedError;
   SearchSort get searchSort => throw _privateConstructorUsedError;
   bool get showTags => throw _privateConstructorUsedError;
+  TagLayoutOnCard get tagLayoutOnCard => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +42,8 @@ abstract class $SettingsCopyWith<$Res> {
       bool isTagTranslate,
       bool dynamicColor,
       SearchSort searchSort,
-      bool showTags});
+      bool showTags,
+      TagLayoutOnCard tagLayoutOnCard});
 }
 
 /// @nodoc
@@ -59,6 +61,7 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? dynamicColor = freezed,
     Object? searchSort = freezed,
     Object? showTags = freezed,
+    Object? tagLayoutOnCard = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -81,6 +84,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.showTags
           : showTags // ignore: cast_nullable_to_non_nullable
               as bool,
+      tagLayoutOnCard: tagLayoutOnCard == freezed
+          ? _value.tagLayoutOnCard
+          : tagLayoutOnCard // ignore: cast_nullable_to_non_nullable
+              as TagLayoutOnCard,
     ));
   }
 }
@@ -96,7 +103,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       bool isTagTranslate,
       bool dynamicColor,
       SearchSort searchSort,
-      bool showTags});
+      bool showTags,
+      TagLayoutOnCard tagLayoutOnCard});
 }
 
 /// @nodoc
@@ -116,6 +124,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? dynamicColor = freezed,
     Object? searchSort = freezed,
     Object? showTags = freezed,
+    Object? tagLayoutOnCard = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -138,6 +147,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.showTags
           : showTags // ignore: cast_nullable_to_non_nullable
               as bool,
+      tagLayoutOnCard: tagLayoutOnCard == freezed
+          ? _value.tagLayoutOnCard
+          : tagLayoutOnCard // ignore: cast_nullable_to_non_nullable
+              as TagLayoutOnCard,
     ));
   }
 }
@@ -150,7 +163,8 @@ class _$_Settings implements _Settings {
       this.isTagTranslate = false,
       this.dynamicColor = true,
       this.searchSort = SearchSort.recent,
-      this.showTags = false});
+      this.showTags = false,
+      this.tagLayoutOnCard = TagLayoutOnCard.wrap});
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsFromJson(json);
@@ -170,10 +184,13 @@ class _$_Settings implements _Settings {
   @override
   @JsonKey()
   final bool showTags;
+  @override
+  @JsonKey()
+  final TagLayoutOnCard tagLayoutOnCard;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnCard: $tagLayoutOnCard)';
   }
 
   @override
@@ -189,7 +206,9 @@ class _$_Settings implements _Settings {
                 .equals(other.dynamicColor, dynamicColor) &&
             const DeepCollectionEquality()
                 .equals(other.searchSort, searchSort) &&
-            const DeepCollectionEquality().equals(other.showTags, showTags));
+            const DeepCollectionEquality().equals(other.showTags, showTags) &&
+            const DeepCollectionEquality()
+                .equals(other.tagLayoutOnCard, tagLayoutOnCard));
   }
 
   @JsonKey(ignore: true)
@@ -200,7 +219,8 @@ class _$_Settings implements _Settings {
       const DeepCollectionEquality().hash(isTagTranslate),
       const DeepCollectionEquality().hash(dynamicColor),
       const DeepCollectionEquality().hash(searchSort),
-      const DeepCollectionEquality().hash(showTags));
+      const DeepCollectionEquality().hash(showTags),
+      const DeepCollectionEquality().hash(tagLayoutOnCard));
 
   @JsonKey(ignore: true)
   @override
@@ -221,7 +241,8 @@ abstract class _Settings implements Settings {
       final bool isTagTranslate,
       final bool dynamicColor,
       final SearchSort searchSort,
-      final bool showTags}) = _$_Settings;
+      final bool showTags,
+      final TagLayoutOnCard tagLayoutOnCard}) = _$_Settings;
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
 
@@ -235,6 +256,8 @@ abstract class _Settings implements Settings {
   SearchSort get searchSort;
   @override
   bool get showTags;
+  @override
+  TagLayoutOnCard get tagLayoutOnCard;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

@@ -1,3 +1,4 @@
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'setting_base.dart';
+import 'settings_page.dart';
 
 class AppearanceSettingPage extends StatelessWidget {
   const AppearanceSettingPage({Key? key}) : super(key: key);
@@ -77,6 +79,23 @@ class AppearanceSettingPage extends StatelessWidget {
               },
             );
           }),
+          Consumer(builder: (context, ref, child) {
+            final tagLayoutOnCard = ref.watch(settingsProvider
+                .select((settings) => settings.tagLayoutOnCard));
+            return RadioDialogListTile<TagLayoutOnCard>(
+              title: Text('Tag layout on card'),
+              groupValue: tagLayoutOnCard,
+              radioTitleMap: {
+                TagLayoutOnCard.wrap: Text('Wrap'),
+                TagLayoutOnCard.horizontal: Text('Horizontal'),
+                // TagLayoutOnCard.row: Text('Row'),
+              },
+              onChanged: (value) {
+                ref.read(settingsProvider.notifier).setTagLayoutOnCard(value);
+              },
+            );
+          }),
+
           Consumer(builder: (context, ref, child) {
             final isCoverBlur = ref.watch(
                 settingsProvider.select((settings) => settings.isCoverBlur));

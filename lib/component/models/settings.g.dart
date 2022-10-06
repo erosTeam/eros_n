@@ -14,6 +14,9 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
           $enumDecodeNullable(_$SearchSortEnumMap, json['searchSort']) ??
               SearchSort.recent,
       showTags: json['showTags'] as bool? ?? false,
+      tagLayoutOnCard: $enumDecodeNullable(
+              _$TagLayoutOnCardEnumMap, json['tagLayoutOnCard']) ??
+          TagLayoutOnCard.wrap,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -23,6 +26,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'dynamicColor': instance.dynamicColor,
       'searchSort': _$SearchSortEnumMap[instance.searchSort]!,
       'showTags': instance.showTags,
+      'tagLayoutOnCard': _$TagLayoutOnCardEnumMap[instance.tagLayoutOnCard]!,
     };
 
 const _$SearchSortEnumMap = {
@@ -30,4 +34,10 @@ const _$SearchSortEnumMap = {
   SearchSort.popularToday: 'popularToday',
   SearchSort.popular: 'popular',
   SearchSort.recent: 'recent',
+};
+
+const _$TagLayoutOnCardEnumMap = {
+  TagLayoutOnCard.horizontal: 'horizontal',
+  TagLayoutOnCard.row: 'row',
+  TagLayoutOnCard.wrap: 'wrap',
 };
