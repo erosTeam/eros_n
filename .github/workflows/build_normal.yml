@@ -1,0 +1,60 @@
+name: Build normal push
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags-ignore:
+      - v*
+
+jobs:
+  build_and_upload:
+    uses: ./.github/workflows/build_upload_call.yml
+  Publish_releases:
+    if: startsWith(github.ref, 'refs/tags/')
+    name: Publish releases
+    needs: Build_and_upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - run: mkdir /tmp/artifacts
+      - name: Download all Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: /tmp/artifacts
+
+      - run: ls -R /tmp/artifacts
+
+      # Get app version
+      - name: Get app version
+        id: get_version
+        shell: bash
+        run: |
+          echo "::set-output name=version::$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)"
+
+      - name: Upload to release
+        uses: ncipollo/release-action@v1
+        with:
+#          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
+          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa"
+          tag: ${{ github.ref_name }}
+          bodyFile: changelog/v${{ steps.get_version.outputs.version }}.md
+          prerelease: false
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          replacesArtifacts: true
+
+      - name: Post release notes
+        run: |
+          changelog=$(cat changelog/v${{ steps.get_version.outputs.version }}.md)
+          curl 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' \
+          --header 'Content-Type: application/x-www-form-urlencoded' \
+          -d parse_mode=markdown \
+          -d chat_id=${{ secrets.TELEGRAM_CHANNEL_ID }} \
+          --data-urlencode text="[Eros-N_${{ github.ref_name }}](https://github.com/honjow/eros_n/releases/tag/${{ github.ref_name }})
+          $changelog" \
+          -d disable_web_page_preview=true
