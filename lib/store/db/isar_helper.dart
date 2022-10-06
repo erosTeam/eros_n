@@ -72,6 +72,26 @@ class IsarHelper {
     }
   }
 
+  Future<TagTranslate?> findTagTranslateAsync(String name,
+      {String? namespace}) async {
+    if (name.contains('|')) {
+      name = name.split('|').first.trim();
+    }
+    if (namespace != null && namespace.isNotEmpty) {
+      final result = await isar.tagTranslates
+          .where()
+          .nameEqualTo(name)
+          .filter()
+          .namespaceEqualTo(namespace)
+          .findAll();
+      return result.lastOrNull;
+    } else {
+      final result =
+          await isar.tagTranslates.where().nameEqualTo(name).findAll();
+      return result.lastOrNull;
+    }
+  }
+
   Future<List<TagTranslate>> findTagTranslateContains(
       String text, int limit) async {
     final result = await isar.tagTranslates
@@ -95,5 +115,9 @@ class IsarHelper {
 
   NhTag? findNhTag(int? id) {
     return isar.nhTags.where().idEqualTo(id ?? 0).findFirstSync();
+  }
+
+  Future<NhTag?> findNhTagAsync(int? id) async {
+    return await isar.nhTags.where().idEqualTo(id ?? 0).findFirst();
   }
 }

@@ -5,7 +5,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 
-GallerySet parseGalleryList(String html) {
+Future<GallerySet> parseGalleryList(String html) async {
   final Document document = parse(html);
 
   const selectorScript = 'body > script';
@@ -60,21 +60,31 @@ GallerySet parseGalleryList(String html) {
           ?.group(0) ??
       '1';
 
-  final galleryList = parseGalleryListElm(galleryElmList, blacklistTagsList);
-  final popularList =
+  final galleryListFuture =
+      parseGalleryListElm(galleryElmList, blacklistTagsList);
+  final popularListFuture =
       parseGalleryListElm(galleryElmListOfPopular, blacklistTagsList);
-  final favoriteList = parseGalleryListElm(favoriteGalleryElmList, []);
+  final favoriteListFuture = parseGalleryListElm(favoriteGalleryElmList, []);
 
-  return GallerySet(
+  final result = await Future.wait(
+      [galleryListFuture, popularListFuture, favoriteListFuture]);
+
+  final galleryList = result[0];
+  final popularList = result[1];
+  final favoriteList = result[2];
+
+  final gallerySet = GallerySet(
     gallerys: galleryList,
     populars: popularList,
     favorites: favoriteList,
     maxPage: int.parse(maxPage),
   );
+
+  return gallerySet;
 }
 
-List<Gallery> parseGalleryListElm(
-    List<Element> galleryElmList, List<String> blacklistTagsList) {
+Future<List<Gallery>> parseGalleryListElm(
+    List<Element> galleryElmList, List<String> blacklistTagsList) async {
   final List<Gallery> galleryList = [];
   for (final Element elm in galleryElmList) {
     // logger.d('elm: ${elm.outerHtml}');
@@ -110,7 +120,7 @@ List<Gallery> parseGalleryListElm(
       gid: int.parse(gid),
       mediaId: mediaId,
       languageCode: getLanguageCode(dataTags),
-      simpleTags: getTags(dataTags),
+      simpleTags: await getTags(dataTags),
       title: GalleryTitle(englishTitle: title),
       images: GalleryImages(
         // cover: GalleryImage(
@@ -131,12 +141,12 @@ List<Gallery> parseGalleryListElm(
   return galleryList;
 }
 
-List<Tag> getTags(List<String> dataTags) {
+Future<List<Tag>> getTags(List<String> dataTags) async {
   final List<Tag> tags = [];
   for (final String tag in dataTags) {
     final id = int.tryParse(tag) ?? 0;
     final nhTag = isarHelper.findNhTag(id);
-    final translated = isarHelper.findTagTranslate(nhTag?.name ?? '',
+    final translated = await isarHelper.findTagTranslateAsync(nhTag?.name ?? '',
         namespace: getTagNamespace(nhTag?.type ?? ''));
     final Tag t = Tag(
       id: id,

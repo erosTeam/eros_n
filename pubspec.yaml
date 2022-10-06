@@ -62,6 +62,7 @@ dependencies:
   archive: ^3.3.1
   package_info_plus: ^1.4.3+1
   rotated_corner_decoration: ^2.0.0
+  keframe: ^3.0.0
 
 
 dev_dependencies:

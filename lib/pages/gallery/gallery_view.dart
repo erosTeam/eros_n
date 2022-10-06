@@ -83,37 +83,33 @@ class GalleryPage extends HookConsumerWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: false
-          ? null
-          : AppBar(
-              backgroundColor: MaterialStateColor.resolveWith((states) {
-                if (states.contains(MaterialState.scrolledUnder)) {
-                  return Theme.of(context).colorScheme.surface;
-                }
-                return Colors.transparent;
-              }),
-              systemOverlayStyle:
-                  Theme.of(context).brightness == Brightness.light
-                      ? SystemUiOverlayStyle.dark
-                      : SystemUiOverlayStyle.light,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () {
-                    if (gallery.title != null) {
-                      final shareText =
-                          '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
-                      logger.d(shareText);
-                      Share.share(shareText);
-                    }
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {},
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        backgroundColor: MaterialStateColor.resolveWith((states) {
+          if (states.contains(MaterialState.scrolledUnder)) {
+            return Theme.of(context).colorScheme.surface;
+          }
+          return Colors.transparent;
+        }),
+        systemOverlayStyle:
+        Theme.of(context).brightness == Brightness.light
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              final shareText =
+                  '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
+              logger.d(shareText);
+              Share.share(shareText);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
+      ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
           context.router.push(ReadRoute(gid: gid));
@@ -279,17 +275,7 @@ class GalleryPage extends HookConsumerWidget {
                 final artistTags = ref
                     .watch(galleryProvider(gid))
                     .tags
-                    .where((e) => e.type == 'Artists')
-                    .map((tag) {
-                  final TagTranslate? translated = isarHelper.findTagTranslate(
-                      tag.name ?? '',
-                      namespace: getTagNamespace(tag.type ?? ''));
-                  final translatedName =
-                      translated?.translateNameNotMD ?? tag.name ?? '';
-                  return tag.copyWith(
-                    translatedName: translatedName,
-                  );
-                }).toList();
+                    .where((e) => e.type == 'Artists').toList();
 
                 final textStyle = Theme.of(context)
                     .textTheme
@@ -452,15 +438,10 @@ class TagsView extends HookConsumerWidget {
                         ),
                       ),
                       child: Consumer(builder: (context, ref, child) {
-                        final TagTranslate? translated =
-                            isarHelper.findTagTranslate(tag.name ?? '',
-                                namespace: getTagNamespace(type));
-                        final translatedName =
-                            translated?.translateNameNotMD ?? tag.name ?? '';
                         final isTagTranslate = ref.watch(settingsProvider
                             .select((value) => value.isTagTranslate));
                         return Text(
-                          isTagTranslate ? translatedName : tag.name ?? '',
+                          isTagTranslate ? tag.translatedName ?? '' : tag.name ?? '',
                         );
                       }),
                       onPressed: () {

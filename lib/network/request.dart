@@ -91,10 +91,10 @@ Future<GallerySet> searchGallery({
 
   int? statusCode;
   final httpTransformer = HttpTransformerBuilder(
-    (response) {
+    (response) async {
       logger.v('statusCode ${response.statusCode}');
       statusCode = response.statusCode;
-      final list = parseGalleryList(response.data as String);
+      final list = await parseGalleryList(response.data as String);
       return DioHttpResponse<GallerySet>.success(list);
     },
   );
@@ -134,10 +134,10 @@ Future<GallerySet> getGalleryList({
   int? statusCode;
 
   final httpTransformer = HttpTransformerBuilder(
-    (response) {
+    (response) async {
       logger.v('statusCode ${response.statusCode}');
       statusCode = response.statusCode;
-      final list = parseGalleryList(response.data as String);
+      final list = await parseGalleryList(response.data as String);
       return DioHttpResponse<GallerySet>.success(list);
     },
   );
@@ -177,10 +177,10 @@ Future<GallerySet> getFavoriteList({
   int? statusCode;
 
   final httpTransformer = HttpTransformerBuilder(
-    (response) {
+    (response) async {
       logger.v('statusCode ${response.statusCode}');
       statusCode = response.statusCode;
-      final list = parseGalleryList(response.data as String);
+      final list = await parseGalleryList(response.data as String);
       return DioHttpResponse<GallerySet>.success(list);
     },
   );
@@ -215,9 +215,9 @@ Future<Gallery> getGalleryDetail({
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,
     httpTransformer: HttpTransformerBuilder(
-      (response) {
+      (response) async {
         logger.d('statusCode ${response.statusCode}');
-        final gallery = parseGalleryDetail(response.data as String);
+        final gallery = await parseGalleryDetail(response.data as String);
         return DioHttpResponse<Gallery>.success(gallery);
       },
     ),

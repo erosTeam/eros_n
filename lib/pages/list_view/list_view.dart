@@ -8,6 +8,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_list_view/flutter_list_view.dart';
+import 'package:keframe/keframe.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 import 'item/item_card.dart';
@@ -93,9 +94,12 @@ class GalleryWaterfallFlowView extends StatelessWidget {
 
     final Gallery gallery = gallerys[index];
 
-    return ItemWaterfallFlowCard(
-      gallery: gallery,
+    return FrameSeparateWidget(
       index: index,
+      child: ItemWaterfallFlowCard(
+        gallery: gallery,
+        index: index,
+      ),
     );
   }
 

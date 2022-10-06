@@ -595,6 +595,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.4.1"
+  keframe:
+    dependency: "direct main"
+    description:
+      name: keframe
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   lints:
     dependency: transitive
     description:

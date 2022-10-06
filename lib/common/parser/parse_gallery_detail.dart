@@ -1,12 +1,15 @@
 import 'package:collection/collection.dart';
+import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parse_gallery_list.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/store/db/entity/tag_translate.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:html/dom.dart' hide Comment;
 import 'package:html/parser.dart' show parse;
 import 'package:tuple/tuple.dart';
 
-Gallery parseGalleryDetail(String html) {
+Future<Gallery> parseGalleryDetail(String html) async {
   final Document document = parse(html);
   // logger.d('html\n$html');
 
@@ -46,7 +49,8 @@ Gallery parseGalleryDetail(String html) {
           .querySelector(selectorMoreLikeGalleryList)
           ?.querySelectorAll(selectorGallery) ??
       [];
-  final moreLikeGalleryList = parseGalleryListElm(moreLikeGalleryElmList, []);
+  final moreLikeGalleryList =
+      await parseGalleryListElm(moreLikeGalleryElmList, []);
 
   const selectorThumb = '.gallerythumb';
 
@@ -79,6 +83,18 @@ Gallery parseGalleryDetail(String html) {
   final tags = tuple.item1;
   final uploadedDateTime = tuple.item2;
 
+  final List<Future<Tag>> tagsTranslatedFutures = tags.map((tag) async {
+    final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
+        tag.name ?? '',
+        namespace: getTagNamespace(tag.type ?? ''));
+    final translatedName = translated?.translateNameNotMD ?? tag.name ?? '';
+    return tag.copyWith(
+      translatedName: translatedName,
+    );
+  }).toList();
+
+  final tagsTranslated = await Future.wait(tagsTranslatedFutures);
+
   logger.v('tags: $tags');
   logger.v('uploadedDateTime: $uploadedDateTime');
 
@@ -94,7 +110,7 @@ Gallery parseGalleryDetail(String html) {
     numFavorites: int.tryParse(favNum) ?? 0,
     moreLikeGallerys: moreLikeGalleryList,
     csrfToken: csrfToken,
-    tags: tags,
+    tags: tagsTranslated,
     uploadedDateTime: uploadedDateTime,
   );
 }
