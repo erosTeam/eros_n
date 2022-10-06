@@ -24,3 +24,9 @@ An unofficial Nhentai app.
 - [x] History
 - [x] Search
 - [ ] More settings
+
+## Screenshots
+|                                                                                              |                                                                                              |                                                                                              |
+|:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
+|   Front![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/home_1.jpg)    | Gallery![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_1.jpg) | Gallery![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_2.jpg) |
+| Comment![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/comment_1.jpg) | History![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/history_1.jpg) ||

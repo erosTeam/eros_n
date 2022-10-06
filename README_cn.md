@@ -27,15 +27,8 @@
 - [ ] 更多设置
 
 ## 截图
-### 首页
-| ![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/home_1.jpg) |     |
-|:----------------------------------------------------------------------------------:|:---:|
-### 画廊
-| ![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_1.jpg) | ![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_2.jpg) |
-|:-------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|
-### 评论
-| ![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/comment_1.jpg) |     |
-|:-------------------------------------------------------------------------------------:|:---:|
-### 历史
-| ![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/history_1.jpg) |     |
-|:-------------------------------------------------------------------------------------:|:---:|
+|                                                                                         |                                                                                         |                                                                                         |
+|:---------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|
+|  首页![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/home_1.jpg)   | 画廊![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_1.jpg) | 画廊![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_2.jpg) |
+| 评论![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/comment_1.jpg) | 历史![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/history_1.jpg) ||
+
