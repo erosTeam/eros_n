@@ -3,8 +3,8 @@ name: Build and upload
 on:
   workflow_call:
 jobs:
-  Build_and_upload:
-    name: Build releases
+  build_upload:
+    name: Build upload
     strategy:
       fail-fast: false
       matrix:

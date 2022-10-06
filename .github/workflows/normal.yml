@@ -1,0 +1,10 @@
+name: Normal
+
+on:
+  push:
+    tags-ignore:
+      - v*
+
+jobs:
+  build_upload:
+    uses: ./.github/workflows/build_upload_call.yml
