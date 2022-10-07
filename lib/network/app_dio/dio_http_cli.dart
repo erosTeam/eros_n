@@ -20,12 +20,11 @@ class DioHttpClient {
   late final AppDio _dio;
 
   void initThroughInterceptor(Future<bool> Function(DioError err) handler) {
-    print("initThroughInterceptor");
-    _dio.interceptors.removeWhere((element) => element is DioThroughInterceptor);
-    _dio.interceptors.add(DioThroughInterceptor(
-        dio: _dio,
-        throughHandler: handler
-    ));
+    print('initThroughInterceptor');
+    _dio.interceptors
+        .removeWhere((element) => element is DioThroughInterceptor);
+    _dio.interceptors
+        .add(DioThroughInterceptor(dio: _dio, throughHandler: handler));
   }
 
   Future<DioHttpResponse> get(String uri,
@@ -34,7 +33,7 @@ class DioHttpClient {
       CancelToken? cancelToken,
       ProgressCallback? onReceiveProgress,
       HttpTransformer? httpTransformer}) async {
-    print("get $uri");
+    print('get $uri');
 
     try {
       Response response = await _dio.get(

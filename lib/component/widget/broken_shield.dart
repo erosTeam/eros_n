@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart' hide Cookie;
 import 'package:webview_windows/webview_windows.dart';
@@ -26,16 +27,15 @@ class _BrokenShieldState extends State<BrokenShield> {
   OverlayEntry? entry;
   Completer<bool>? completer;
 
-
   GlobalKey<OverlayState> overlay = GlobalKey();
 
   bool get isRunning => !(completer?.isCompleted ?? true);
 
   Future<bool> throughHandler(DioError error) {
-    if(overlay.currentState == null){
+    if (overlay.currentState == null) {
       return Future.value(false);
     }
-    print("throughHandler: $error");
+    print('throughHandler: $error');
 
     if (completer != null && !completer!.isCompleted) {
       return completer!.future;
@@ -43,9 +43,53 @@ class _BrokenShieldState extends State<BrokenShield> {
 
     completer = Completer();
     entry = OverlayEntry(builder: (BuildContext context) {
-      return webView();
+      const showWebview = kDebugMode;
+      if (showWebview) {
+        return webView();
+      } else {
+        return Center(
+          child: Container(
+            // shadow
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3), // changes position of shadow
+                ),
+              ],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                color: Theme.of(context).colorScheme.surface,
+                alignment: Alignment.center,
+                width: 100,
+                height: 100,
+                child: Stack(
+                  // mainAxisSize: MainAxisSize.min,
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      height: 100,
+                      child: webView(),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      color: Theme.of(context).colorScheme.surface,
+                      child: const CircularProgressIndicator(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
     });
-
 
     overlay.currentState!.insert(entry!);
 
@@ -59,7 +103,8 @@ class _BrokenShieldState extends State<BrokenShield> {
     super.initState();
   }
 
-  injectionCookieAndUA(List<Cookie> cookies, String userAgent) async {
+  Future<void> injectionCookieAndUA(
+      List<Cookie> cookies, String userAgent) async {
     logger.d('cookies: \n${cookies.join('\n')}\nuserAgent: \n$userAgent');
     await Global.setUserAgent(userAgent);
     await Global.setCookies(NHConst.baseUrl, cookies);
@@ -146,10 +191,10 @@ class _BrokenShieldMobileWebViewState extends State<BrokenShieldMobileWebView> {
           final cookies = await cookieManager.getCookies(url: uri);
           if (cookies.length >= 2 &&
               cookies.any((element) => element.name == 'csrftoken')) {
-            final ioCookies = cookies
-                .map((e) => Cookie(e.name, '${e.value}'))
-                .toList();
-            final ua = await controller.evaluateJavascript(source: 'navigator.userAgent');
+            final ioCookies =
+                cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
+            final ua = await controller.evaluateJavascript(
+                source: 'navigator.userAgent');
             widget.callback(ioCookies, ua as String);
           }
         },
@@ -163,11 +208,12 @@ class BrokenShieldWindowsWebView extends StatefulWidget {
   const BrokenShieldWindowsWebView({super.key, required this.callback});
   final Function(List<Cookie>, String) callback;
   @override
-  State<BrokenShieldWindowsWebView> createState() => _BrokenShieldWindowsWebViewState();
+  State<BrokenShieldWindowsWebView> createState() =>
+      _BrokenShieldWindowsWebViewState();
 }
 
-class _BrokenShieldWindowsWebViewState extends State<BrokenShieldWindowsWebView> {
-
+class _BrokenShieldWindowsWebViewState
+    extends State<BrokenShieldWindowsWebView> {
   final _controller = WebviewController();
   final List<StreamSubscription> _subscriptions = [];
 
@@ -195,7 +241,8 @@ class _BrokenShieldWindowsWebViewState extends State<BrokenShieldWindowsWebView>
       this.url = url;
     }));
     _subscriptions.add(_controller.loadingState.listen((state) async {
-      if(state == LoadingState.navigationCompleted || state == LoadingState.loading) {
+      if (state == LoadingState.navigationCompleted ||
+          state == LoadingState.loading) {
         final cookies = await _controller.getCookies([Uri.parse(url)]);
         if (cookies != null &&
             cookies.length >= 2 &&
@@ -250,13 +297,11 @@ class _BrokenShieldWindowsWebViewState extends State<BrokenShieldWindowsWebView>
           fontWeight: FontWeight.w900,
         ),
       );
-    }else {
+    } else {
       return Webview(
         _controller,
         permissionRequested: _onPermissionRequested,
       );
     }
   }
-
 }
-

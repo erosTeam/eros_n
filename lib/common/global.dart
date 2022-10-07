@@ -49,10 +49,15 @@ class Global {
     hiveHelper.setUserAgent(ua);
     return Future.value();
   }
+
   static Future<void> setCookies(String url, List<Cookie> cookies) async {
-    await Global.cookieJar.saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
-    final savedCookies = await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    imageCookie = savedCookies.map((cookie) => '${cookie.name}=${cookie.value}').join('; ');
+    await Global.cookieJar
+        .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+    final savedCookies =
+        await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    imageCookie = savedCookies
+        .map((cookie) => '${cookie.name}=${cookie.value}')
+        .join('; ');
   }
 
   static late PackageInfo packageInfo;
@@ -72,8 +77,6 @@ class Global {
         : '';
 
     cookieJar = PersistCookieJar(storage: FileStorage(Global.appSupportPath));
-
-
 
     if (!kDebugMode) {
       Logger.level = Level.info;
@@ -97,7 +100,10 @@ class Global {
     userAgent ??= NHConst.userAgent;
     globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);
 
-    final savedCookies = await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    imageCookie = savedCookies.map((cookie) => '${cookie.name}=${cookie.value}').join('; ');
+    final savedCookies =
+        await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    imageCookie = savedCookies
+        .map((cookie) => '${cookie.name}=${cookie.value}')
+        .join('; ');
   }
 }

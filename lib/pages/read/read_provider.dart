@@ -1,14 +1,86 @@
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
+import 'package:eros_n/pages/gallery/gallery_provider.dart';
+import 'package:eros_n/pages/read/read_state.dart';
+import 'package:eros_n/pages/read/read_view.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final galleryImageProvider =
-    FutureProvider.autoDispose.family<GalleryImage, String?>((ref, href) async {
-  final galleryThumb = await getGalleryImage(url: href ?? '');
-  return GalleryImage(
-    href: href,
-    imageUrl: galleryThumb.imageUrl,
-    imgHeight: galleryThumb.imgHeight,
-    imgWidth: galleryThumb.imgWidth,
-  );
+import '../../utils/logger.dart';
+
+class ReadNotifier extends StateNotifier<ReadState> {
+  ReadNotifier(this.ref) : super(const ReadState());
+  final Ref ref;
+
+  GalleryNotifier get galleryNotifier =>
+      ref.read(galleryProvider(state.gid).notifier);
+
+  void setGid(int? gid) {
+    state = state.copyWith(gid: gid);
+  }
+
+  void toPrev() {}
+
+  void toNext() {}
+
+  void tapLeft() {}
+
+  void tapRight() {}
+
+  void handOnTapCenter() {
+    logger.d('handOnTapCenter');
+    if (state.showAppBar) {
+      hideAppBar();
+    } else {
+      showAppBar();
+    }
+  }
+
+  void init(BuildContext context) {
+    final bottomBarHeight = context.mediaQueryPadding.bottom +
+        (!context.isTablet ? kBottomBarHeight : 0) +
+        kSliderBarHeight +
+        (state.showThumbList ? kThumbListViewHeight : 0);
+
+    _offsetTopHide = -kTopBarHeight - context.mediaQueryPadding.top;
+    // logger.d('initBar _offsetTopHide $_offsetTopHide');
+
+    state = state.copyWith(
+      bottomBarHeight: bottomBarHeight,
+      context: context,
+      topBarOffset: _offsetTopHide,
+      bottomBarOffset: -bottomBarHeight,
+    );
+
+    // if (state.bottomBarHeight != bottomBarHeight || state.topBarOffset != 0) {
+    //   state = state.copyWith(
+    //     bottomBarHeight: bottomBarHeight,
+    //     context: context,
+    //     topBarOffset: _offsetTopHide,
+    //   );
+    // }
+  }
+
+  late double _offsetTopHide;
+
+  void showAppBar() {
+    state = state.copyWith(
+      showAppBar: true,
+      bottomBarOffset: 0,
+      topBarOffset: 0,
+    );
+  }
+
+  void hideAppBar() {
+    state = state.copyWith(
+      showAppBar: false,
+      bottomBarOffset: -(state.bottomBarHeight ?? 0),
+      topBarOffset: _offsetTopHide,
+    );
+  }
+}
+
+final readProvider = StateNotifierProvider<ReadNotifier, ReadState>((ref) {
+  return ReadNotifier(ref);
 });

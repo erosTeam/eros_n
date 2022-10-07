@@ -6,6 +6,7 @@ import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
+import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,8 @@ class ThumbsView extends HookConsumerWidget {
     logger.v('build thumbs $gid');
     // final pages = ref.watch(galleryProvider(gid).select((g) => g.pages));
 
-    final List<GalleryImage> pages = ref.read(galleryProvider(gid)).images.pages;
+    final List<GalleryImage> pages =
+        ref.read(galleryProvider(gid)).images.pages;
     final mediaId = ref.read(galleryProvider(gid)).mediaId;
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
@@ -77,6 +79,7 @@ class ThumbsView extends HookConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   ref.read(galleryProvider(gid).notifier).setInitialPage(index);
+                  ref.read(readProvider.notifier).init(context);
 
                   ///
                   context.router.push(ReadRoute(gid: gid));
@@ -92,7 +95,8 @@ class ThumbsView extends HookConsumerWidget {
                             child: Hero(
                               tag: '${gid}_$index',
                               child: ErosCachedNetworkImage(
-                                imageUrl: 'https://t.nhentai.net/galleries/$mediaId/${index+1}t.${NHConst.extMap[thumb.type]}',
+                                imageUrl:
+                                    'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[thumb.type]}',
                                 fit: BoxFit.cover,
                               ),
                             ),

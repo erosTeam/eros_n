@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
-import '../../common/global.dart';
-
 class DioThroughInterceptor extends Interceptor {
   DioThroughInterceptor({required this.dio, required this.throughHandler});
 
@@ -12,10 +10,9 @@ class DioThroughInterceptor extends Interceptor {
 
   @override
   Future<dynamic> onError(DioError err, ErrorInterceptorHandler handler) async {
-
     if (!err.requestOptions.disableThrough) {
       if (err.response?.statusCode == 403 || err.response?.statusCode == 503) {
-        print("DioThroughInterceptor onError");
+        print('DioThroughInterceptor onError');
         print(err);
         final ok = await throughHandler(err);
         if (ok) {

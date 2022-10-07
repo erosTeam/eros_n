@@ -12,6 +12,7 @@ import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
@@ -41,7 +42,7 @@ class GalleryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.read(galleryProvider(gid));
-    logger.v('build gallery $gid ${gallery.title}');
+    logger.d('build gallery $gid ${gallery.title}');
 
     late ScrollController scrollController;
     useEffect(() {
@@ -342,6 +343,7 @@ class DetailView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logger.d('DetailView build');
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
     if (pageStatus == PageStatus.loading) {
@@ -493,6 +495,7 @@ class ThumbListView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logger.d('ThumbListView build');
     final pages = ref.read(galleryProvider(gid)).images.pages;
     final mediaId = ref.read(galleryProvider(gid)).mediaId;
     return MultiSliver(
@@ -517,7 +520,7 @@ class ThumbListView extends HookConsumerWidget {
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 200,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -529,6 +532,7 @@ class ThumbListView extends HookConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   ref.read(galleryProvider(gid).notifier).setInitialPage(index);
+                  ref.read(readProvider.notifier).init(context);
                   context.router.push(ReadRoute(gid: gid));
                 },
                 child: Center(
@@ -638,7 +642,7 @@ class MoreLikeListView extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 80,
                       width: aspectRatio * 200,
                       child: Text(
