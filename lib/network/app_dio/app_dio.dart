@@ -11,12 +11,17 @@ import 'package:eros_n/common/global.dart';
 
 import 'package:eros_n/utils/logger.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:system_network_proxy/system_network_proxy.dart';
+import 'package:system_proxy/system_proxy.dart';
 
+import 'dio_user_agent.dart';
 import 'http_config.dart';
 
 export 'http_config.dart';
 
+
 class AppDio with DioMixin implements Dio {
+
   AppDio({BaseOptions? options, this.dioConfig}) {
     options ??= BaseOptions(
       baseUrl: dioConfig?.baseUrl ?? '',
@@ -38,6 +43,7 @@ class AppDio with DioMixin implements Dio {
       logger.v('set userAgent from dioConfig');
       this.options.headers['User-Agent'] = dioConfig?.userAgent;
     }
+
 
     // DioCacheManager
     // final cacheOptions = CacheConfig(
@@ -75,6 +81,7 @@ class AppDio with DioMixin implements Dio {
     //     return handler.next(options);
     //   },
     // ));
+    interceptors.add(DioUserAgentInterceptor((options) => Global.userAgent));
 
     interceptors.add(DioCacheInterceptor(options: cacheOptions));
 
@@ -105,6 +112,8 @@ class AppDio with DioMixin implements Dio {
     httpClientAdapter = DefaultHttpClientAdapter();
     if (dioConfig?.proxy?.isNotEmpty ?? false) {
       setProxy(dioConfig!.proxy!);
+    } else {
+      getSystemProxy().then(setProxy);
     }
 
     (httpClientAdapter as DefaultHttpClientAdapter)
@@ -112,7 +121,6 @@ class AppDio with DioMixin implements Dio {
       client
         ..maxConnectionsPerHost = dioConfig?.maxConnectionsPerHost
         ..idleTimeout = const Duration(seconds: 6);
-      ;
     });
   }
 
@@ -131,6 +139,27 @@ class AppDio with DioMixin implements Dio {
       // you can also create a HttpClient to dio
       // return HttpClient();
     });
+  }
+
+
+  Future<String> getSystemProxy() async {
+    if (Platform.isAndroid || Platform.isIOS) {
+      Map<String, String>? systemProxy = await SystemProxy.getProxySettings();
+      if (systemProxy != null) {
+        return 'PROXY ${systemProxy['host']}:${systemProxy['port']}';
+      }
+    }else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      SystemNetworkProxy.init();
+      final proxyEnable = await SystemNetworkProxy.getProxyEnable();
+      final proxyServer = await SystemNetworkProxy.getProxyServer();
+      print("proxyEnable: $proxyEnable; proxyServer: $proxyServer");
+      if (proxyEnable && proxyServer.isNotEmpty) {
+        return 'PROXY $proxyServer';
+      }
+    }else if (Platform.isWindows) {
+      // SystemNetworkProxyWindows
+    }
+    return 'DIRECT';
   }
 
   /// DioMixin 没有实现下载

@@ -45,3 +45,5 @@ app.*.map.json
 
 GPUCache/
 .fvm/flutter_sdk
+
+.local-chromium/

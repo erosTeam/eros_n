@@ -30,7 +30,7 @@ final InAppWebViewGroupOptions inAppWebViewOptions = InAppWebViewGroupOptions(
     useShouldOverrideUrlLoading: true,
     mediaPlaybackRequiresUserGesture: false,
     // clearCache: true,
-    userAgent: NHConst.userAgent,
+    // userAgent: NHConst.userAgent,
   ),
   android: AndroidInAppWebViewOptions(
     useHybridComposition: true,

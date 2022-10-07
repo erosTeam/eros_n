@@ -25,6 +25,10 @@ An unofficial Nhentai app.
 - [x] Search
 - [ ] More settings
 
+## Windows platform requirements
+- [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- Windows 10 1809+
+
 ## Screenshots
 |                                                                                              |                                                                                              |                                                                                              |
 |:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|

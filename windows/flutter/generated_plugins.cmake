@@ -3,11 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  desktop_webview_window
   dynamic_color
   isar_flutter_libs
   url_launcher_windows
-  webview_cef
+  webview_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:eros_n/utils/logger.dart';
 
 import 'app_dio.dart';
+import 'dio_through.dart';
 import 'http_response.dart';
 import 'http_transformer.dart';
 
@@ -18,12 +19,23 @@ class DioHttpClient {
 
   late final AppDio _dio;
 
+  void initThroughInterceptor(Future<bool> Function(DioError err) handler) {
+    print("initThroughInterceptor");
+    _dio.interceptors.removeWhere((element) => element is DioThroughInterceptor);
+    _dio.interceptors.add(DioThroughInterceptor(
+        dio: _dio,
+        throughHandler: handler
+    ));
+  }
+
   Future<DioHttpResponse> get(String uri,
       {Map<String, dynamic>? queryParameters,
       Options? options,
       CancelToken? cancelToken,
       ProgressCallback? onReceiveProgress,
       HttpTransformer? httpTransformer}) async {
+    print("get $uri");
+
     try {
       Response response = await _dio.get(
         uri,

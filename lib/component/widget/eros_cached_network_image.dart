@@ -69,10 +69,9 @@ class ErosCachedNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final defHttpHeaders = {
-      // 'Cookie': Global.profile.user.cookie,
+      'Cookie': Global.imageCookie!,
       'Host': Uri.parse(imageUrl).host,
-      // 'User-Agent': Global.userAgent ?? NHConst.userAgent,
-      'User-Agent': NHConst.userAgent,
+      'User-Agent': Global.userAgent ?? NHConst.userAgent,
       'Accept-Encoding': 'gzip, deflate, br'
     };
     if (httpHeaders != null) {
@@ -120,9 +119,9 @@ ImageProvider getErorsImageProvider(String url) {
     url,
     cacheManager: imageCacheManager,
     headers: {
+      'Cookie': Global.imageCookie!,
       'Host': Uri.parse(url).host,
-      // 'User-Agent': Global.userAgent ?? NHConst.userAgent,
-      'User-Agent': NHConst.userAgent,
+      'User-Agent': Global.userAgent ?? NHConst.userAgent,
       'Accept-Encoding': 'gzip, deflate, br'
     },
     cacheKey: buildImageCacheKey(url),

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-import 'package:desktop_webview_window/desktop_webview_window.dart' as dww;
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -11,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:webview_cef/webview_cef.dart' as cef;
 
 const kDialogTag = 'InAppWebViewDialog';
 bool _canShowDialog = true;
@@ -24,6 +22,7 @@ Future<void> showInAppWebViewDialog({
   // if (!_canShowDialog) {
   //   return;
   // }
+  /*
   final isPlatformPhone =
       io.Platform.isAndroid || io.Platform.isIOS || io.Platform.isFuchsia;
 
@@ -34,10 +33,10 @@ Future<void> showInAppWebViewDialog({
   final showWebview = !kReleaseMode;
   // final showWebview = !kReleaseMode && io.Platform.isIOS;
 
-  final cefController = cef.WebviewController();
+  // final cefController = cef.WebviewController();
 
   Widget dialogBuilder(BuildContext context) {
-    Widget iw() {
+    Widget mobileWebView() {
       return InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(NHConst.baseUrl),
@@ -83,32 +82,32 @@ Future<void> showInAppWebViewDialog({
     }
 
     Future<void> initCef() async {
-      await cefController.initialize();
-      await cefController.loadUrl(NHConst.baseUrl);
+      // await cefController.initialize();
+      // await cefController.loadUrl(NHConst.baseUrl);
     }
 
-    Widget cefWebView() {
-      return FutureBuilder<void>(
-          future: initCef(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return cef.Webview(cefController);
-            } else {
-              return const Center(child: Text('W'));
-            }
-          });
-    }
+    // Widget cefWebView() {
+    //   return FutureBuilder<void>(
+    //       future: initCef(),
+    //       builder: (context, snapshot) {
+    //         if (snapshot.connectionState == ConnectionState.done) {
+    //           return cef.Webview(cefController);
+    //         } else {
+    //           return const Center(child: Text('W'));
+    //         }
+    //       });
+    // }
 
     Future<void> initDw() async {
-      final webview = await dww.WebviewWindow.create(
-        configuration: dww.CreateConfiguration(
-          windowHeight: 600,
-          windowWidth: 800,
-          title: L10n.of(context).app_title,
-          titleBarTopPadding: io.Platform.isMacOS ? 20 : 0,
-        ),
-      );
-      webview.launch(NHConst.baseUrl);
+      // final webview = await dww.WebviewWindow.create(
+      //   configuration: dww.CreateConfiguration(
+      //     windowHeight: 600,
+      //     windowWidth: 800,
+      //     title: L10n.of(context).app_title,
+      //     titleBarTopPadding: io.Platform.isMacOS ? 20 : 0,
+      //   ),
+      // );
+      // webview.launch(NHConst.baseUrl);
     }
 
     Widget dw() {
@@ -185,5 +184,5 @@ Future<void> showInAppWebViewDialog({
     await onComplete?.call();
   }
 
-  _canShowDialog = true;
+  _canShowDialog = true;*/
 }

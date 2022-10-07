@@ -1,7 +1,7 @@
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
 #include <windows.h>
-#include "webview_cef/webview_cef_plugin_c_api.h"
+// #include "webview_cef/webview_cef_plugin_c_api.h"
 
 #include "flutter_window.h"
 #include "utils.h"
@@ -9,7 +9,7 @@
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
   //start cef deamon processes. MUST CALL FIRST
-  initCEFProcesses();
+  //initCEFProcesses();
 
   // Attach to console when present (e.g., 'flutter run') or create a
   // new console when running with a debugger.

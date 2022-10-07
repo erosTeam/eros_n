@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
@@ -11,19 +12,23 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'component/widget/broken_shield.dart';
 import 'generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Global.init();
 
   initLogger();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: MyApp()));
+  // runApp(ProviderScope(child: MyApp()));
 }
 
 bool _isDemoUsingDynamicColors = false;
 
 const _brandBlue = Colors.blue;
+
 
 class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
@@ -31,7 +36,7 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dynamicColor =
-        ref.watch(settingsProvider.select((settings) => settings.dynamicColor));
+    ref.watch(settingsProvider.select((settings) => settings.dynamicColor));
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         ColorScheme lightColorScheme;
@@ -77,13 +82,19 @@ class MyApp extends HookConsumerWidget {
           routeInformationProvider: erosRouter.routeInfoProvider(),
           routerDelegate: AutoRouterDelegate(
             erosRouter,
-            navigatorObservers: () => [
+            navigatorObservers: () =>
+            [
               AppRouteObserver(),
               FlutterSmartDialog.observer,
             ],
           ),
-          builder: FlutterSmartDialog.init(),
-          onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
+          builder: (BuildContext context, Widget? child) {
+            return BrokenShield(child: FlutterSmartDialog.init()(context, child));
+          },
+          onGenerateTitle: (BuildContext context) =>
+          L10n
+              .of(context)
+              .app_title,
           // debugShowCheckedModeBanner: false,
           theme: ThemeConfig.lightTheme,
           darkTheme: ThemeConfig.darkTheme,
