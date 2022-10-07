@@ -84,10 +84,6 @@ class ViewBottomBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // logic.vState.bottomBarHeight = context.mediaQueryPadding.bottom +
-    //     (!context.isTablet ? kBottomBarHeight : 0) +
-    //     kSliderBarHeight +
-    //     (logic.vState.showThumbList ? kThumbListViewHeight : 0);
     final bottomBarHeight =
         ref.watch(readProvider.select((val) => val.bottomBarHeight));
     final showThumbList =
@@ -315,8 +311,8 @@ class ReadScaffold extends HookConsumerWidget {
               ref.watch(readProvider.select((state) => state.topBarOffset));
           final bottomBarOffset =
               ref.watch(readProvider.select((state) => state.bottomBarOffset));
-          // logger.d(
-          //     'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset');
+          logger.v(
+              'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset');
 
           return Stack(
             children: [

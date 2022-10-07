@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
@@ -43,8 +45,9 @@ class ReadNotifier extends StateNotifier<ReadState> {
         kSliderBarHeight +
         (state.showThumbList ? kThumbListViewHeight : 0);
 
-    _offsetTopHide = -kTopBarHeight - context.mediaQueryPadding.top;
-    // logger.d('initBar _offsetTopHide $_offsetTopHide');
+    _offsetTopHide =
+        -kTopBarHeight - MediaQueryData.fromWindow(window).padding.top;
+    logger.d('init _offsetTopHide $_offsetTopHide');
 
     state = state.copyWith(
       bottomBarHeight: bottomBarHeight,
@@ -52,14 +55,6 @@ class ReadNotifier extends StateNotifier<ReadState> {
       topBarOffset: _offsetTopHide,
       bottomBarOffset: -bottomBarHeight,
     );
-
-    // if (state.bottomBarHeight != bottomBarHeight || state.topBarOffset != 0) {
-    //   state = state.copyWith(
-    //     bottomBarHeight: bottomBarHeight,
-    //     context: context,
-    //     topBarOffset: _offsetTopHide,
-    //   );
-    // }
   }
 
   late double _offsetTopHide;
