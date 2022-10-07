@@ -143,6 +143,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 focusNode: _usernameFocusNode,
                 decoration: InputDecoration(
                   labelText: L10n.of(context).username,
+                  border: const OutlineInputBorder(),
                   // hintText: 'Enter your username',
                 ),
                 onEditingComplete: () {
@@ -150,21 +151,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   FocusScope.of(context).requestFocus(_passwordFocusNode);
                 },
               ),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 focusNode: _passwordFocusNode,
                 decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
                   labelText: L10n.of(context).password,
                   // hintText: 'Enter your password',
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                      icon: _obscurePassword
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off)),
+                  suffixIcon: Container(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                        icon: _obscurePassword
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off)),
+                  ),
                 ),
                 obscureText: _obscurePassword,
                 onEditingComplete: () {

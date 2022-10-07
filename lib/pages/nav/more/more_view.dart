@@ -17,8 +17,9 @@ class MorePage extends StatefulHookConsumerWidget {
   ConsumerState<MorePage> createState() => _MorePageState();
 }
 
-class _MorePageState extends ConsumerState<MorePage> with AutomaticKeepAliveClientMixin {
-   final ScrollController scrollController = ScrollController();
+class _MorePageState extends ConsumerState<MorePage>
+    with AutomaticKeepAliveClientMixin {
+  final ScrollController scrollController = ScrollController();
   IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
 
   @override
@@ -38,63 +39,67 @@ class _MorePageState extends ConsumerState<MorePage> with AutomaticKeepAliveClie
         controller: scrollController,
         child: Column(
           children: <Widget>[
-            Consumer(builder: (context, ref, child) {
-              final user = ref.watch(userProvider);
-              if (!user.isLogin) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Icon(
-                      Icons.person,
-                      color: Theme.of(context).colorScheme.onPrimary,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Consumer(builder: (context, ref, child) {
+                final user = ref.watch(userProvider);
+                if (!user.isLogin) {
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      child: Icon(
+                        Icons.person,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     ),
-                  ),
-                  title: Text(L10n.of(context).login),
-                  onTap: () {
-                    erosRouter.pushNamed(NHRoutes.login);
-                  },
-                );
-              } else {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    backgroundImage: user.avatarUrl != null
-                        ? CachedNetworkImageProvider(user.avatarUrl ?? '')
-                        : null,
-                  ),
-                  title: Text(user.userName ?? '...'),
-                  onTap: () {
-                    // dialog to logout
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          logger.d('logout $user');
-                          return AlertDialog(
-                            title: Text(L10n.of(context).logout),
-                            content: Text('Are you sure to logout?'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text(L10n.of(context).cancel),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: Text(L10n.of(context).logout),
-                                onPressed: () {
-                                  ref.read(userProvider.notifier).logout();
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                );
-              }
-            }),
+                    title: Text(L10n.of(context).login),
+                    onTap: () {
+                      erosRouter.pushNamed(NHRoutes.login);
+                    },
+                  );
+                } else {
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      backgroundImage: user.avatarUrl != null
+                          ? CachedNetworkImageProvider(user.avatarUrl ?? '')
+                          : null,
+                    ),
+                    title: Text(user.userName ?? '...'),
+                    onTap: () {
+                      // dialog to logout
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            logger.d('logout $user');
+                            return AlertDialog(
+                              title: Text(L10n.of(context).logout),
+                              content: Text('Are you sure to logout?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(L10n.of(context).cancel),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text(L10n.of(context).logout),
+                                  onPressed: () {
+                                    ref.read(userProvider.notifier).logout();
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                    },
+                  );
+                }
+              }),
+            ),
             const Divider(
               thickness: 1.0,
+              height: 1.0,
             ),
             ListTile(
               leading: const Icon(Icons.download_outlined),
@@ -106,6 +111,7 @@ class _MorePageState extends ConsumerState<MorePage> with AutomaticKeepAliveClie
             ),
             const Divider(
               thickness: 1.0,
+              height: 1.0,
             ),
             ListTile(
               leading: const Icon(Icons.settings_outlined),

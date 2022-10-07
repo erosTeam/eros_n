@@ -23,6 +23,7 @@ mixin _$TagTranslateInfo {
   String? get version => throw _privateConstructorUsedError;
   String? get remoteVersion => throw _privateConstructorUsedError;
   String? get lastReleaseUrl => throw _privateConstructorUsedError;
+  String? get nhTagVersion => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,11 @@ abstract class $TagTranslateInfoCopyWith<$Res> {
   factory $TagTranslateInfoCopyWith(
           TagTranslateInfo value, $Res Function(TagTranslateInfo) then) =
       _$TagTranslateInfoCopyWithImpl<$Res>;
-  $Res call({String? version, String? remoteVersion, String? lastReleaseUrl});
+  $Res call(
+      {String? version,
+      String? remoteVersion,
+      String? lastReleaseUrl,
+      String? nhTagVersion});
 }
 
 /// @nodoc
@@ -52,6 +57,7 @@ class _$TagTranslateInfoCopyWithImpl<$Res>
     Object? version = freezed,
     Object? remoteVersion = freezed,
     Object? lastReleaseUrl = freezed,
+    Object? nhTagVersion = freezed,
   }) {
     return _then(_value.copyWith(
       version: version == freezed
@@ -66,6 +72,10 @@ class _$TagTranslateInfoCopyWithImpl<$Res>
           ? _value.lastReleaseUrl
           : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      nhTagVersion: nhTagVersion == freezed
+          ? _value.nhTagVersion
+          : nhTagVersion // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -77,7 +87,11 @@ abstract class _$$_TagTranslateInfoCopyWith<$Res>
           _$_TagTranslateInfo value, $Res Function(_$_TagTranslateInfo) then) =
       __$$_TagTranslateInfoCopyWithImpl<$Res>;
   @override
-  $Res call({String? version, String? remoteVersion, String? lastReleaseUrl});
+  $Res call(
+      {String? version,
+      String? remoteVersion,
+      String? lastReleaseUrl,
+      String? nhTagVersion});
 }
 
 /// @nodoc
@@ -96,6 +110,7 @@ class __$$_TagTranslateInfoCopyWithImpl<$Res>
     Object? version = freezed,
     Object? remoteVersion = freezed,
     Object? lastReleaseUrl = freezed,
+    Object? nhTagVersion = freezed,
   }) {
     return _then(_$_TagTranslateInfo(
       version: version == freezed
@@ -110,6 +125,10 @@ class __$$_TagTranslateInfoCopyWithImpl<$Res>
           ? _value.lastReleaseUrl
           : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      nhTagVersion: nhTagVersion == freezed
+          ? _value.nhTagVersion
+          : nhTagVersion // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -119,7 +138,10 @@ class __$$_TagTranslateInfoCopyWithImpl<$Res>
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _$_TagTranslateInfo implements _TagTranslateInfo {
   const _$_TagTranslateInfo(
-      {this.version, this.remoteVersion, this.lastReleaseUrl});
+      {this.version,
+      this.remoteVersion,
+      this.lastReleaseUrl,
+      this.nhTagVersion});
 
   factory _$_TagTranslateInfo.fromJson(Map<String, dynamic> json) =>
       _$$_TagTranslateInfoFromJson(json);
@@ -130,10 +152,12 @@ class _$_TagTranslateInfo implements _TagTranslateInfo {
   final String? remoteVersion;
   @override
   final String? lastReleaseUrl;
+  @override
+  final String? nhTagVersion;
 
   @override
   String toString() {
-    return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl)';
+    return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion)';
   }
 
   @override
@@ -145,7 +169,9 @@ class _$_TagTranslateInfo implements _TagTranslateInfo {
             const DeepCollectionEquality()
                 .equals(other.remoteVersion, remoteVersion) &&
             const DeepCollectionEquality()
-                .equals(other.lastReleaseUrl, lastReleaseUrl));
+                .equals(other.lastReleaseUrl, lastReleaseUrl) &&
+            const DeepCollectionEquality()
+                .equals(other.nhTagVersion, nhTagVersion));
   }
 
   @JsonKey(ignore: true)
@@ -154,7 +180,8 @@ class _$_TagTranslateInfo implements _TagTranslateInfo {
       runtimeType,
       const DeepCollectionEquality().hash(version),
       const DeepCollectionEquality().hash(remoteVersion),
-      const DeepCollectionEquality().hash(lastReleaseUrl));
+      const DeepCollectionEquality().hash(lastReleaseUrl),
+      const DeepCollectionEquality().hash(nhTagVersion));
 
   @JsonKey(ignore: true)
   @override
@@ -173,7 +200,8 @@ abstract class _TagTranslateInfo implements TagTranslateInfo {
   const factory _TagTranslateInfo(
       {final String? version,
       final String? remoteVersion,
-      final String? lastReleaseUrl}) = _$_TagTranslateInfo;
+      final String? lastReleaseUrl,
+      final String? nhTagVersion}) = _$_TagTranslateInfo;
 
   factory _TagTranslateInfo.fromJson(Map<String, dynamic> json) =
       _$_TagTranslateInfo.fromJson;
@@ -184,6 +212,8 @@ abstract class _TagTranslateInfo implements TagTranslateInfo {
   String? get remoteVersion;
   @override
   String? get lastReleaseUrl;
+  @override
+  String? get nhTagVersion;
   @override
   @JsonKey(ignore: true)
   _$$_TagTranslateInfoCopyWith<_$_TagTranslateInfo> get copyWith =>

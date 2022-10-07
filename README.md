@@ -9,3 +9,24 @@ English | [简体中文](https://github.com/honjow/eros_n/blob/master/README_cn.
 
 ## Introduction
 An unofficial Nhentai app.
+
+## Features
+- [x] Front page
+- [x] User login
+- [x] Favorites
+- [x] View gallery
+- [x] Gallery tags
+- [ ] More view settings
+- [ ] Download gallery
+- [x] Similar galleries
+- [x] Gallery comments
+- [ ] Post comments
+- [x] History
+- [x] Search
+- [ ] More settings
+
+## Screenshots
+|                                                                                              |                                                                                              |                                                                                              |
+|:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
+|   Front![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/home_1.jpg)    | Gallery![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_1.jpg) | Gallery![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/gallery_2.jpg) |
+| Comment![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/comment_1.jpg) | History![](https://raw.githubusercontent.com/honjow/eros_n/master/screenshots/history_1.jpg) ||

@@ -15,6 +15,7 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
+import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share/share.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -82,37 +84,32 @@ class GalleryPage extends HookConsumerWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: false
-          ? null
-          : AppBar(
-              backgroundColor: MaterialStateColor.resolveWith((states) {
-                if (states.contains(MaterialState.scrolledUnder)) {
-                  return Theme.of(context).colorScheme.surface;
-                }
-                return Colors.transparent;
-              }),
-              systemOverlayStyle:
-                  Theme.of(context).brightness == Brightness.light
-                      ? SystemUiOverlayStyle.dark
-                      : SystemUiOverlayStyle.light,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () {
-                    if (gallery.title != null) {
-                      final shareText =
-                          '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
-                      logger.d(shareText);
-                      Share.share(shareText);
-                    }
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {},
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        backgroundColor: MaterialStateColor.resolveWith((states) {
+          if (states.contains(MaterialState.scrolledUnder)) {
+            return Theme.of(context).colorScheme.surface;
+          }
+          return Colors.transparent;
+        }),
+        systemOverlayStyle: Theme.of(context).brightness == Brightness.light
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              final shareText =
+                  '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
+              logger.d(shareText);
+              Share.share(shareText);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
+      ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
           context.router.push(ReadRoute(gid: gid));
@@ -164,9 +161,12 @@ class GalleryPage extends HookConsumerWidget {
                                       margin: const EdgeInsets.all(0),
                                       clipBehavior: Clip.antiAlias,
                                       child: AspectRatio(
-                                        aspectRatio:
-                                            (gallery.images.cover.imgWidth ?? 300) /
-                                                (gallery.images.cover.imgHeight ?? 400),
+                                        aspectRatio: (gallery.images.thumbnail
+                                                    .imgWidth ??
+                                                300) /
+                                            (gallery.images.thumbnail
+                                                    .imgHeight ??
+                                                400),
                                         child: ErosCachedNetworkImage(
                                           imageUrl: gallery.thumbUrl,
                                           fit: BoxFit.cover,
@@ -276,16 +276,7 @@ class GalleryPage extends HookConsumerWidget {
                     .watch(galleryProvider(gid))
                     .tags
                     .where((e) => e.type == 'Artists')
-                    .map((tag) {
-                  final TagTranslate? translated = isarHelper.findTagTranslate(
-                      tag.name ?? '',
-                      namespace: _getTagNamespace(tag.type ?? ''));
-                  final translatedName =
-                      translated?.translateNameNotMD ?? tag.name ?? '';
-                  return tag.copyWith(
-                    translatedName: translatedName,
-                  );
-                }).toList();
+                    .toList();
 
                 final textStyle = Theme.of(context)
                     .textTheme
@@ -448,15 +439,12 @@ class TagsView extends HookConsumerWidget {
                         ),
                       ),
                       child: Consumer(builder: (context, ref, child) {
-                        final TagTranslate? translated =
-                            isarHelper.findTagTranslate(tag.name ?? '',
-                                namespace: _getTagNamespace(type));
-                        final translatedName =
-                            translated?.translateNameNotMD ?? tag.name ?? '';
                         final isTagTranslate = ref.watch(settingsProvider
                             .select((value) => value.isTagTranslate));
                         return Text(
-                          isTagTranslate ? translatedName : tag.name ?? '',
+                          isTagTranslate
+                              ? tag.translatedName ?? ''
+                              : tag.name ?? '',
                         );
                       }),
                       onPressed: () {
@@ -492,27 +480,6 @@ String _getTagTypeTranslate(BuildContext context, String tagType) {
       return L10n.of(context).tag_type_categories;
     default:
       return tagType;
-  }
-}
-
-String? _getTagNamespace(String tagType) {
-  switch (tagType) {
-    case 'Parodies':
-      return 'parody';
-    case 'Characters':
-      return 'character';
-    case 'Tags':
-      return null;
-    case 'Artists':
-      return 'artist';
-    case 'Groups':
-      return 'group';
-    case 'Languages':
-      return 'language';
-    case 'Categories':
-      return null;
-    default:
-      return null;
   }
 }
 
@@ -573,7 +540,8 @@ class ThumbListView extends HookConsumerWidget {
                       child: Hero(
                         tag: '${gid}_$index',
                         child: ErosCachedNetworkImage(
-                          imageUrl: 'https://t.nhentai.net/galleries/$mediaId/${index+1}t.${NHConst.extMap[image.type]}',
+                          imageUrl:
+                              'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -614,7 +582,7 @@ class MoreLikeListView extends HookConsumerWidget {
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 280,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -623,8 +591,8 @@ class MoreLikeListView extends HookConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
               final likeGallery = moreLikeGallerys[index];
-              final aspectRatio =
-                  likeGallery.images.thumbnail.imgWidth! / likeGallery.images.thumbnail.imgHeight!;
+              final aspectRatio = likeGallery.images.thumbnail.imgWidth! /
+                  likeGallery.images.thumbnail.imgHeight!;
               return GestureDetector(
                 onTap: () {
                   ref
@@ -640,9 +608,31 @@ class MoreLikeListView extends HookConsumerWidget {
                           aspectRatio: aspectRatio,
                           child: Card(
                             clipBehavior: Clip.antiAlias,
-                            child: ErosCachedNetworkImage(
-                              imageUrl: likeGallery.thumbUrl,
-                              fit: BoxFit.cover,
+                            child: Container(
+                              foregroundDecoration:
+                                  (likeGallery.languageCode == 'ja' ||
+                                          likeGallery.languageCode == null)
+                                      ? null
+                                      : RotatedCornerDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.8),
+                                          geometry: const BadgeGeometry(
+                                              width: 38, height: 28),
+                                          textSpan: TextSpan(
+                                            text: likeGallery.languageCode
+                                                    ?.toUpperCase() ??
+                                                '',
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                              child: ErosCachedNetworkImage(
+                                imageUrl: likeGallery.thumbUrl,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -854,7 +844,7 @@ class ToolBarView extends HookConsumerWidget {
                     late String savePath;
 
                     await nhDownload(
-                        url: 'g/${gallery.gid}/download',
+                        url: '/g/${gallery.gid}/download',
                         savePath: (Headers headers) {
                           logger.d(headers);
                           final contentDisposition =
@@ -869,7 +859,7 @@ class ToolBarView extends HookConsumerWidget {
                           savePath = path.joinAll([
                             Global.tempPath,
                             'torrent',
-                             '${gallery.gid}',
+                            '${gallery.gid}',
                             fileNameDecode
                           ]);
                           return savePath;

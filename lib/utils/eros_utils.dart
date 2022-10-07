@@ -15,3 +15,24 @@ String buildImageCacheKey(String url) {
   }
   return url;
 }
+
+String? getTagNamespace(String tagType) {
+  switch (tagType) {
+    case 'Parodies':
+      return 'parody';
+    case 'Characters':
+      return 'character';
+    case 'Tags':
+      return null;
+    case 'Artists':
+      return 'artist';
+    case 'Groups':
+      return 'group';
+    case 'Languages':
+      return 'language';
+    case 'Categories':
+      return null;
+    default:
+      return null;
+  }
+}

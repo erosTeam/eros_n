@@ -37,7 +37,7 @@ class SearchNotifier extends StateNotifier<FrontState> {
     bool prev = false,
     bool first = false,
   }) async {
-    if (state.isLoading || state.isLoadMore) {
+    if (state.isLoading || state.isLoadMore || state.isGetToken) {
       return;
     }
 
@@ -108,8 +108,6 @@ class SearchNotifier extends StateNotifier<FrontState> {
         rethrow;
       }
     }
-
-
   }
 
   Future<void> loadData() async {
@@ -138,13 +136,10 @@ class SearchGalleryNotifier extends GallerysNotifier {
 }
 
 final searchGallerysProvider =
-    StateNotifierProvider<SearchGalleryNotifier, List<Gallery>>(
-        (ref) {
+    StateNotifierProvider<SearchGalleryNotifier, List<Gallery>>((ref) {
   return SearchGalleryNotifier();
 });
 
-final searchProvider =
-    StateNotifierProvider<SearchNotifier, FrontState>(
-        (ref) {
+final searchProvider = StateNotifierProvider<SearchNotifier, FrontState>((ref) {
   return SearchNotifier(ref);
 });

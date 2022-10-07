@@ -11,9 +11,8 @@ class TagTranslateInfo with _$TagTranslateInfo {
     String? version,
     String? remoteVersion,
     String? lastReleaseUrl,
+    String? nhTagVersion,
   }) = _TagTranslateInfo;
-  
-  
 
   factory TagTranslateInfo.fromJson(Map<String, dynamic> json) =>
       _$TagTranslateInfoFromJson(json);

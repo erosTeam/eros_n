@@ -14,6 +14,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:keframe/keframe.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -28,7 +29,7 @@ class FrontPage extends StatefulHookConsumerWidget {
 
 class _FrontPageState extends ConsumerState<FrontPage>
     with AutomaticKeepAliveClientMixin {
-   final ScrollController scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
   ScrollDirection _lastScrollDirection = ScrollDirection.idle;
   double lastScrollOffset = 0;
 
@@ -77,69 +78,72 @@ class _FrontPageState extends ConsumerState<FrontPage>
       body: RefreshIndicator(
         onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-            const SliverAppBar(
-              floating: true,
-              pinned: true,
-              scrolledUnderElevation: 0,
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: SizedBox(height: 0),
-              ),
-              toolbarHeight: 0,
-            ),
-            MultiSliver(
-              pushPinnedChildren: true,
-              children: [
-                SliverPinnedHeader(
-                  child: Container(
-                    height: kToolbarHeight,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      L10n.of(context).popular,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
+        child: SizeCacheWidget(
+          child: CustomScrollView(
+            controller: scrollController,
+            cacheExtent: 500,
+            slivers: [
+              const SliverAppBar(
+                floating: true,
+                pinned: true,
+                // scrolledUnderElevation: 0,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(0),
+                  child: SizedBox(height: 0),
                 ),
-                const PopularListView(),
-              ],
-            ),
-            MultiSliver(
-              pushPinnedChildren: true,
-              children: [
-                SliverPinnedHeader(
-                  child: GestureDetector(
-                    onTap: () {
-                      scrollController.animateTo(0,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                    },
+                toolbarHeight: 0,
+              ),
+              MultiSliver(
+                pushPinnedChildren: true,
+                children: [
+                  SliverPinnedHeader(
                     child: Container(
                       height: kToolbarHeight,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       color: Theme.of(context).scaffoldBackgroundColor,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        L10n.of(context).newest,
+                        L10n.of(context).popular,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
                   ),
-                ),
-                const GalleryListView(),
-              ],
-            ),
-            Consumer(builder: (context, ref, _) {
-              final state = ref.watch(frontProvider);
-              return EndIndicator(
-                loadStatus: state.status,
-              );
-            }),
-          ],
+                  const PopularListView(),
+                ],
+              ),
+              MultiSliver(
+                pushPinnedChildren: true,
+                children: [
+                  SliverPinnedHeader(
+                    child: GestureDetector(
+                      onTap: () {
+                        scrollController.animateTo(0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.ease);
+                      },
+                      child: Container(
+                        height: kToolbarHeight,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          L10n.of(context).newest,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const GalleryListView(),
+                ],
+              ),
+              Consumer(builder: (context, ref, _) {
+                final state = ref.watch(frontProvider);
+                return EndIndicator(
+                  loadStatus: state.status,
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
@@ -178,16 +182,21 @@ class PopularListView extends ConsumerWidget {
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: Container(
                     foregroundDecoration: (gallery.languageCode == 'ja' ||
-                        gallery.languageCode == null)
+                            gallery.languageCode == null)
                         ? null
                         : RotatedCornerDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                      geometry: const BadgeGeometry(width: 38, height: 28),
-                      textSpan: TextSpan(
-                        text: gallery.languageCode?.toUpperCase() ?? '',
-                        style: const TextStyle(fontSize: 10,fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.8),
+                            geometry:
+                                const BadgeGeometry(width: 38, height: 28),
+                            textSpan: TextSpan(
+                              text: gallery.languageCode?.toUpperCase() ?? '',
+                              style: const TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.bold),
+                            ),
+                          ),
                     child: Stack(
                       alignment: Alignment.bottomCenter,
                       fit: StackFit.expand,

@@ -44,5 +44,7 @@
   "recent": "Recent",
   "popular_today": "Popular Today",
   "popular_week": "Popular Week",
-  "popular_all": "Popular All"
+  "popular_all": "Popular All",
+  "clear_history": "Clear History",
+  "clear_history_tip": "Are you sure to clear all history?"
 }

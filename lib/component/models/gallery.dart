@@ -22,6 +22,7 @@ class Gallery with _$Gallery {
     @JsonKey(name: 'num_pages') int? numPages,
     @JsonKey(name: 'num_favorites') int? numFavorites,
     @Default(<Tag>[]) List<Tag> tags,
+    @JsonKey(ignore: true) @Default(<Tag>[]) List<Tag> simpleTags,
     @JsonKey(ignore: true) String? languageCode,
     @JsonKey(ignore: true) int? viewTime,
     @JsonKey(ignore: true) @Default(<Comment>[]) List<Comment> comments,
@@ -42,9 +43,11 @@ class Gallery with _$Gallery {
       DateTime.tryParse(uploadedDateTime ?? '')?.toLocal();
 
   @JsonKey(ignore: true)
-  String get thumbUrl => 'https://t.nhentai.net/galleries/$mediaId/thumb.${NHConst.extMap[images.thumbnail.type]}';
+  String get thumbUrl =>
+      'https://t.nhentai.net/galleries/$mediaId/thumb.${NHConst.extMap[images.thumbnail.type]}';
   @JsonKey(ignore: true)
-  String get coverUrl => 'https://t.nhentai.net/galleries/$mediaId/cover.${NHConst.extMap[images.cover.type]}';
+  String get coverUrl =>
+      'https://t.nhentai.net/galleries/$mediaId/cover.${NHConst.extMap[images.cover.type]}';
   @JsonKey(ignore: true)
   String get url => 'https://nhentai.net/g/$gid/';
 }

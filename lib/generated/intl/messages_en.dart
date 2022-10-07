@@ -28,6 +28,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
         "auto": MessageLookupByLibrary.simpleMessage("Auto"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "clear_history": MessageLookupByLibrary.simpleMessage("Clear History"),
+        "clear_history_tip": MessageLookupByLibrary.simpleMessage(
+            "Are you sure to clear all history?"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),

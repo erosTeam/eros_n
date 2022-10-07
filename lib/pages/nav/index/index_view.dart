@@ -1,3 +1,4 @@
+import 'package:eros_n/component/widget/scroll.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
@@ -36,6 +37,7 @@ class _IndexPageState extends ConsumerState<IndexPage> {
     final state = ref.watch(indexProvider);
     return Scaffold(
       body: PageView(
+        physics: const CustomScrollPhysics(),
         controller: state.pageController,
         // physics: const NeverScrollableScrollPhysics(),
         children: pages,
@@ -79,7 +81,9 @@ class _IndexPageState extends ConsumerState<IndexPage> {
             ),
           ],
           onDestinationSelected: (index) {
-            ref.read(indexProvider.notifier).setIndex(index, context:context, jumpToPage: true);
+            ref
+                .read(indexProvider.notifier)
+                .setIndex(index, context: context, jumpToPage: true);
           },
         ),
       ),

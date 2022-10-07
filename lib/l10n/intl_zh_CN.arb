@@ -44,5 +44,7 @@
   "recent": "最新发布",
   "popular_today": "本日热门",
   "popular_week": "本周热门",
-  "popular_all": "所有热门"
+  "popular_all": "所有热门",
+  "clear_history": "清除历史",
+  "clear_history_tip": "确定要清除所有历史记录吗？"
 }

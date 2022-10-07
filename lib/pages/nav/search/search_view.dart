@@ -8,6 +8,7 @@ import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:keframe/keframe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'search_provider.dart';
@@ -48,118 +49,121 @@ class _SearchPageState extends ConsumerState<SearchPage>
       body: RefreshIndicator(
         onRefresh: () => searchProviderNoti.reloadData(),
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-            SliverAppBar(
-              title: TextField(
-                controller: searchProviderNoti.searchController,
-                focusNode: searchProviderNoti.searchFocusNode,
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.search),
-                  hintText: L10n.of(context).search,
-                  // border: InputBorder.none,
-                  // contentPadding: EdgeInsets.all(16),
-                ),
-                textInputAction: TextInputAction.search,
-                onEditingComplete: () {
-                  //focusNode
-                  searchProviderNoti.searchFocusNode.unfocus();
-                  searchProviderNoti.search();
-                },
-              ),
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: SizedBox(height: 0),
-              ),
-              actions: [
-                // IconButton(
-                //   icon: const Icon(Icons.search),
-                //   onPressed: () {
-                //     searchProviderNoti.searchFocusNode.unfocus();
-                //     searchProviderNoti.search();
-                //   },
-                // ),
-                PopupMenuButton<SearchSort>(
-                  onSelected: (value) {
-                    ref.read(settingsProvider.notifier).setSearchSort(value);
+        child: SizeCacheWidget(
+          child: CustomScrollView(
+            cacheExtent: 500,
+            controller: scrollController,
+            slivers: [
+              SliverAppBar(
+                title: TextField(
+                  controller: searchProviderNoti.searchController,
+                  focusNode: searchProviderNoti.searchFocusNode,
+                  decoration: InputDecoration(
+                    icon: const Icon(Icons.search),
+                    hintText: L10n.of(context).search,
+                    // border: InputBorder.none,
+                    // contentPadding: EdgeInsets.all(16),
+                  ),
+                  textInputAction: TextInputAction.search,
+                  onEditingComplete: () {
+                    //focusNode
+                    searchProviderNoti.searchFocusNode.unfocus();
+                    searchProviderNoti.search();
                   },
-                  icon: const Icon(Icons.sort),
-                  offset: const Offset(0, kToolbarHeight),
-                  color: Theme.of(context).colorScheme.onInverseSurface,
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: SearchSort.recent,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.access_time,
-                            color: ref.watch(settingsProvider).searchSort ==
-                                    SearchSort.recent
-                                ? Theme.of(context).colorScheme.primary
-                                : null,
-                          ),
-                          SizedBox(width: 8),
-                          Text(L10n.of(context).recent),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: SearchSort.popularToday,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.whatshot,
-                            color: ref.watch(settingsProvider).searchSort ==
-                                    SearchSort.popularToday
-                                ? Theme.of(context).colorScheme.primary
-                                : null,
-                          ),
-                          SizedBox(width: 8),
-                          Text(L10n.of(context).popular_today),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: SearchSort.popularWeek,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.whatshot,
-                            color: ref.watch(settingsProvider).searchSort ==
-                                SearchSort.popularWeek
-                                ? Theme.of(context).colorScheme.primary
-                                : null,
-                          ),
-                          SizedBox(width: 8),
-                          Text(L10n.of(context).popular_week),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: SearchSort.popular,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.whatshot,
-                            color: ref.watch(settingsProvider).searchSort ==
-                                SearchSort.popular
-                                ? Theme.of(context).colorScheme.primary
-                                : null,
-                          ),
-                          SizedBox(width: 8),
-                          Text(L10n.of(context).popular_all),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
-              ],
-              floating: true,
-              pinned: true,
-            ),
-            const SearchListView(),
-          ],
+                bottom: const PreferredSize(
+                  preferredSize: Size.fromHeight(0),
+                  child: SizedBox(height: 0),
+                ),
+                actions: [
+                  // IconButton(
+                  //   icon: const Icon(Icons.search),
+                  //   onPressed: () {
+                  //     searchProviderNoti.searchFocusNode.unfocus();
+                  //     searchProviderNoti.search();
+                  //   },
+                  // ),
+                  PopupMenuButton<SearchSort>(
+                    onSelected: (value) {
+                      ref.read(settingsProvider.notifier).setSearchSort(value);
+                    },
+                    icon: const Icon(Icons.sort),
+                    offset: const Offset(0, kToolbarHeight),
+                    color: Theme.of(context).colorScheme.onInverseSurface,
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: SearchSort.recent,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              color: ref.watch(settingsProvider).searchSort ==
+                                      SearchSort.recent
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
+                            ),
+                            SizedBox(width: 8),
+                            Text(L10n.of(context).recent),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: SearchSort.popularToday,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.whatshot,
+                              color: ref.watch(settingsProvider).searchSort ==
+                                      SearchSort.popularToday
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
+                            ),
+                            SizedBox(width: 8),
+                            Text(L10n.of(context).popular_today),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: SearchSort.popularWeek,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.whatshot,
+                              color: ref.watch(settingsProvider).searchSort ==
+                                  SearchSort.popularWeek
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
+                            ),
+                            SizedBox(width: 8),
+                            Text(L10n.of(context).popular_week),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: SearchSort.popular,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.whatshot,
+                              color: ref.watch(settingsProvider).searchSort ==
+                                  SearchSort.popular
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
+                            ),
+                            SizedBox(width: 8),
+                            Text(L10n.of(context).popular_all),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                floating: true,
+                pinned: true,
+              ),
+              const SearchListView(),
+            ],
+          ),
         ),
       ),
     );
