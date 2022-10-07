@@ -23,7 +23,7 @@ final HiveHelper hiveHelper = HiveHelper();
 final IsarHelper isarHelper = IsarHelper();
 final erosRouter = AppRouter();
 
-const DioHttpConfig nhDioConfig =  DioHttpConfig(
+const DioHttpConfig nhDioConfig = DioHttpConfig(
   baseUrl: NHConst.baseUrl,
   connectTimeout: 10000,
   sendTimeout: 8000,
@@ -41,7 +41,19 @@ class Global {
 
   static late PersistCookieJar cookieJar;
 
-  // static String? userAgent;
+  static String? userAgent;
+  static String? imageCookie;
+
+  static Future<void> setUserAgent(String ua) {
+    userAgent = ua;
+    hiveHelper.setUserAgent(ua);
+    return Future.value();
+  }
+  static Future<void> setCookies(String url, List<Cookie> cookies) async {
+    await Global.cookieJar.saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+    final savedCookies = await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    imageCookie = savedCookies.map((cookie) => '${cookie.name}=${cookie.value}').join('; ');
+  }
 
   static late PackageInfo packageInfo;
 
@@ -61,6 +73,8 @@ class Global {
 
     cookieJar = PersistCookieJar(storage: FileStorage(Global.appSupportPath));
 
+
+
     if (!kDebugMode) {
       Logger.level = Level.info;
     } else {
@@ -79,7 +93,11 @@ class Global {
     await HiveHelper.init();
     await isarHelper.initIsar();
 
-    // userAgent = hiveHelper.getUserAgent();
-    // globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);
+    userAgent = hiveHelper.getUserAgent();
+    userAgent ??= NHConst.userAgent;
+    globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);
+
+    final savedCookies = await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    imageCookie = savedCookies.map((cookie) => '${cookie.name}=${cookie.value}').join('; ');
   }
 }
