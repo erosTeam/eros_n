@@ -2,8 +2,10 @@ name: Normal
 
 on:
   push:
-    tags-ignore:
-      - v*
+    branches:
+      - master
+    tags:
+      - '!v*'
 
 jobs:
   build_upload:

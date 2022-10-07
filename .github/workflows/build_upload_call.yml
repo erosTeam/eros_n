@@ -24,11 +24,11 @@ jobs:
 #            flutter_version: '3.3.2'
 #            artifact_name: release-mac
 #            artifact_path: build/macos/*.zip
-#          - target: windows
-#            os: windows-latest
-#            flutter_version: '3.0.5'
-#            artifact_name: release-windows
-#            artifact_path: build/windows/*.zip
+          - target: windows
+            os: windows-latest
+            flutter_version: '3.3.4'
+            artifact_name: release-windows
+            artifact_path: build/windows/*.zip
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -171,16 +171,16 @@ jobs:
       #          cp -a $APP_PATH ./build
       #          cd build && zip -qroy macos/Eros_N_macos.zip eros_n.app
 
-      #      - name: Build windows
-      #        if: matrix.target == 'windows'
-      #        run: |
-      #          flutter build windows --release
-      #          $DestDir = "build\windows\Eros_N"
-      #          $SrcDir = "build\windows\runner\Release"
-      #          New-Item -Path $DestDir -ItemType Directory
-      #          Copy-Item $SrcDir\* -Recurse $DestDir
-      #          Copy-Item -Filter *.dll -Path windows\* -Destination $DestDir -Force
-      #          Compress-Archive $DestDir build\windows\Eros_N_windows.zip
+      - name: Build windows
+        if: matrix.target == 'windows'
+        run: |
+          flutter build windows --release
+          $DestDir = "build\windows\Eros_N"
+          $SrcDir = "build\windows\runner\Release"
+          New-Item -Path $DestDir -ItemType Directory
+          Copy-Item $SrcDir\* -Recurse $DestDir
+          Copy-Item -Filter *.dll -Path windows\* -Destination $DestDir -Force
+          Compress-Archive $DestDir build\windows\Eros_N_windows_${{ steps.get_version.outputs.version }}.zip
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
