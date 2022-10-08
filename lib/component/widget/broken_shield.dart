@@ -54,8 +54,8 @@ class _BrokenShieldState extends State<BrokenShield> {
               color: Theme.of(context).colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  spreadRadius: 5,
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 4,
                   blurRadius: 7,
                   offset: const Offset(0, 3), // changes position of shadow
                 ),

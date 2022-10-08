@@ -153,6 +153,7 @@ Future<GallerySet> getGalleryList({
   if (httpResponse.ok && httpResponse.data is GallerySet) {
     GallerySet data = httpResponse.data as GallerySet;
     if (statusCode == 304) {
+      logger.d('fromCache');
       data = data.copyWith(fromCache: true);
     }
     return data;

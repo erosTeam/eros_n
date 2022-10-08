@@ -37,7 +37,11 @@ class SearchNotifier extends StateNotifier<FrontState> {
     bool prev = false,
     bool first = false,
   }) async {
-    if (state.isLoading || state.isLoadMore || state.isGetToken) {
+    if (state.isLoading) {
+      return;
+    }
+
+    if (next && state.isLoadMore) {
       return;
     }
 
@@ -83,30 +87,10 @@ class SearchNotifier extends StateNotifier<FrontState> {
         status: LoadStatus.success,
         curPage: toPage,
       );
-    } on HttpException catch (e) {
+    } on Exception catch (e) {
       logger.d('state.status ${state.status}');
-      if (showWebViewDialogOnFail &&
-          (e.code == 403 || e.code == 503) &&
-          state.status != LoadStatus.getToken) {
-        logger.e('code ${e.code}');
-        // if (!mounted) {
-        //   return false;
-        // }
-        state = state.copyWith(status: LoadStatus.getToken);
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async => await getGalleryData(
-            refresh: refresh,
-            showWebViewDialogOnFail: false,
-            next: next,
-            prev: prev,
-          ),
-        );
-        state = state.copyWith(status: LoadStatus.none);
-      } else {
-        state = state.copyWith(status: LoadStatus.error);
-        rethrow;
-      }
+      state = state.copyWith(status: LoadStatus.error);
+      rethrow;
     }
   }
 

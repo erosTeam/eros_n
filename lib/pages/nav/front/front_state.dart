@@ -13,8 +13,6 @@ class FrontState {
   final int curPage;
   final int maxPage;
 
-
-
   FrontState copyWith({
     LoadStatus? status,
     int? curPage,
@@ -33,5 +31,5 @@ class FrontState {
   bool get isLoadEmpty => status == LoadStatus.empty;
   bool get isLoadError => status == LoadStatus.error;
   bool get isLoadSuccess => status == LoadStatus.success;
-  bool get isGetToken => status == LoadStatus.getToken;
+  // bool get isGetToken => status == LoadStatus.getToken;
 }
