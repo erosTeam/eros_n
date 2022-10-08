@@ -1,14 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eros_n/common/const/const.dart';
-import 'package:eros_n/common/global.dart';
 import 'package:eros_n/network/app_dio/dio_file_service.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/retry.dart' as retry;
 
+final imageCacheManager = CacheManager(
+  Config(
+      'CachedNetworkImage',
+      fileService: DioFileService()
+  ),
+);
 
 class ErosCachedNetworkImage extends StatelessWidget {
   const ErosCachedNetworkImage({
@@ -69,20 +71,10 @@ class ErosCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defHttpHeaders = {
-      'Cookie': Global.imageCookie!,
-      'Host': Uri.parse(imageUrl).host,
-      'User-Agent': Global.userAgent ?? NHConst.userAgent,
-      'Accept-Encoding': 'gzip, deflate, br'
-    };
-    if (httpHeaders != null) {
-      defHttpHeaders.addAll(httpHeaders!);
-    }
-
     final image = CachedNetworkImage(
       cacheManager: imageCacheManager,
       // imageBuilder: imageWidgetBuilder,
-      httpHeaders: defHttpHeaders,
+      httpHeaders: httpHeaders,
       filterQuality: filterQuality,
       width: width,
       height: height,
@@ -98,40 +90,13 @@ class ErosCachedNetworkImage extends StatelessWidget {
     );
 
     return image;
-    // return Opacity(opacity: 0.3, child: image);
   }
 }
-
-final client = retry.RetryClient(
-  http.Client(),
-);
-
-// final imageCacheManager = CacheManager(
-//   Config(
-//     'CachedNetworkImage',
-//     fileService: HttpFileService(
-//       httpClient: client,
-//     ),
-//   ),
-// );
-
-final imageCacheManager = CacheManager(
-  Config(
-    'CachedNetworkImage',
-    fileService: DioFileService()
-  ),
-);
 
 ImageProvider getErorsImageProvider(String url) {
   return CachedNetworkImageProvider(
     url,
     cacheManager: imageCacheManager,
-    headers: {
-      'Cookie': Global.imageCookie!,
-      'Host': Uri.parse(url).host,
-      'User-Agent': Global.userAgent ?? NHConst.userAgent,
-      'Accept-Encoding': 'gzip, deflate, br'
-    },
     cacheKey: buildImageCacheKey(url),
   );
 }

@@ -27,10 +27,10 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
   if(Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     doWhenWindowReady(() {
+
       const initialSize = Size(600, 450);
       appWindow.minSize = initialSize;
-      appWindow.size = initialSize;
-      appWindow.alignment = Alignment.center;
+      appWindow.size = Size(appWindow.size.width, appWindow.size.height + 1);
       appWindow.show();
     });
   }
