@@ -1,6 +1,7 @@
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -22,6 +23,17 @@ class SettingsPage extends StatelessWidget {
                 erosRouter.pushNamed(NHRoutes.appearanceSetting);
               },
             ),
+
+
+            if(kDebugMode) ListTile(
+              iconColor: Theme.of(context).colorScheme.primary,
+              leading: const Icon(Icons.cookie_outlined),
+              title: Text('清理COOKIE'),
+              onTap: () {
+                Global.cookieJar.deleteAll();
+              },
+            ),
+
           ],
         ));
   }

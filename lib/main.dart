@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -11,8 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import 'component/widget/broken_shield.dart';
+import 'component/widget/desktop.dart';
 import 'generated/l10n.dart';
 
 Future<void> main() async {
@@ -21,8 +24,16 @@ Future<void> main() async {
   await Global.init();
 
   initLogger();
-  runApp(ProviderScope(child: MyApp()));
-  // runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
+  if(Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    doWhenWindowReady(() {
+      const initialSize = Size(600, 450);
+      appWindow.minSize = initialSize;
+      appWindow.size = initialSize;
+      appWindow.alignment = Alignment.center;
+      appWindow.show();
+    });
+  }
 }
 
 bool _isDemoUsingDynamicColors = false;
@@ -89,7 +100,11 @@ class MyApp extends HookConsumerWidget {
             ],
           ),
           builder: (BuildContext context, Widget? child) {
-            return BrokenShield(child: FlutterSmartDialog.init()(context, child));
+            final widget = BrokenShield(child: FlutterSmartDialog.init()(context, child));
+            if(Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+              return Desktop(child: widget);
+            }
+            return widget;
           },
           onGenerateTitle: (BuildContext context) =>
           L10n

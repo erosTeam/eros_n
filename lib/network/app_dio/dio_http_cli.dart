@@ -27,14 +27,13 @@ class DioHttpClient {
         .add(DioThroughInterceptor(dio: _dio, throughHandler: handler));
   }
 
+
   Future<DioHttpResponse> get(String uri,
       {Map<String, dynamic>? queryParameters,
       Options? options,
       CancelToken? cancelToken,
       ProgressCallback? onReceiveProgress,
       HttpTransformer? httpTransformer}) async {
-    print('get $uri');
-
     try {
       Response response = await _dio.get(
         uri,

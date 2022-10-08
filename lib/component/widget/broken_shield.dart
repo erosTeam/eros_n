@@ -27,11 +27,17 @@ class _BrokenShieldState extends State<BrokenShield> {
   OverlayEntry? entry;
   Completer<bool>? completer;
 
+  List<RequestOptions> pendingConnections = [];
+
   GlobalKey<OverlayState> overlay = GlobalKey();
+
+  StateSetter? urlListSetState;
 
   bool get isRunning => !(completer?.isCompleted ?? true);
 
   Future<bool> throughHandler(DioError error) {
+    pendingConnections.add(error.requestOptions);
+
     if (overlay.currentState == null) {
       return Future.value(false);
     }
@@ -42,53 +48,42 @@ class _BrokenShieldState extends State<BrokenShield> {
     }
 
     completer = Completer();
-    entry = OverlayEntry(builder: (BuildContext context) {
+    entry = OverlayEntry(maintainState: true, builder: (BuildContext context) {
       const showWebview = kDebugMode;
-      if (showWebview) {
-        return webView();
-      } else {
-        return Center(
-          child: Container(
-            // shadow
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                color: Theme.of(context).colorScheme.surface,
-                alignment: Alignment.center,
-                width: 100,
-                height: 100,
-                child: Stack(
-                  // mainAxisSize: MainAxisSize.min,
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      height: 100,
-                      child: webView(),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      color: Theme.of(context).colorScheme.surface,
-                      child: const CircularProgressIndicator(),
-                    ),
-                  ],
+      return Stack(
+        children: [
+          Positioned.fill(child: Opacity(opacity: showWebview ? 1 : 0, child: webView())),
+          Positioned.fill(child: Container(color: Colors.black38)),
+          if(!showWebview)const Center(
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.all(32.0),
+                  child: CircularProgressIndicator(),
                 ),
               ),
             ),
           ),
-        );
-      }
+          if(showWebview) Center(
+            child: SizedBox(
+              width: 400,
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.all(32.0),
+                  child:  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for(final request in pendingConnections) Text(request.uri.toString())
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
     });
 
     overlay.currentState!.insert(entry!);
@@ -108,8 +103,10 @@ class _BrokenShieldState extends State<BrokenShield> {
     logger.d('cookies: \n${cookies.join('\n')}\nuserAgent: \n$userAgent');
     await Global.setUserAgent(userAgent);
     await Global.setCookies(NHConst.baseUrl, cookies);
+    this.pendingConnections.clear();
     completer?.complete(true);
     entry?.remove();
+    entry = null;
   }
 
   Widget webView() {

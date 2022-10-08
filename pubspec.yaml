@@ -69,7 +69,8 @@ dependencies:
   system_network_proxy: ^1.0.2
   system_proxy: ^0.1.0
   keframe: ^3.0.0
-
+  bitsdojo_window: ^0.1.5
+  fluentui_system_icons: ^1.1.183
 
 dev_dependencies:
   # flutter pub run apn_json2model

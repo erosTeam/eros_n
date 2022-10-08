@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:eros_n/component/models/index.dart';
@@ -45,8 +46,8 @@ class ReadNotifier extends StateNotifier<ReadState> {
         kSliderBarHeight +
         (state.showThumbList ? kThumbListViewHeight : 0);
 
-    _offsetTopHide =
-        -kTopBarHeight - MediaQueryData.fromWindow(window).padding.top;
+    final paddingTop = max(MediaQueryData.fromWindow(window).padding.top, context.mediaQueryPadding.top);
+    _offsetTopHide = -kTopBarHeight - paddingTop;
     logger.d('init _offsetTopHide $_offsetTopHide');
 
     state = state.copyWith(
