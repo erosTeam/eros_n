@@ -27,7 +27,9 @@ An unofficial Nhentai app.
 
 ## Windows platform requirements
 - [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 - Windows 10 1809+
+
 
 ## Screenshots
 |                                                                                              |                                                                                              |                                                                                              |
