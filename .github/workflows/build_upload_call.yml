@@ -27,7 +27,7 @@ jobs:
 #            artifact_name: release-mac
 #            artifact_path: build/macos/*.zip
           - target: windows
-            os: windows-latest
+            os: windows-2022
             flutter_version: '3.4'
             flutter_channel: 'beta'
             artifact_name: release-windows
