@@ -27,7 +27,8 @@
 - [ ] 更多设置
 
 ## Windows 平台需求
-- [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- [WebView2 运行时](https://developer.microsoft.com/zh-CN/microsoft-edge/webview2/)
+- [Microsoft Visual C++ 可再发行程序包](https://learn.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 - Windows 10 1809+
 
 ## 截图
