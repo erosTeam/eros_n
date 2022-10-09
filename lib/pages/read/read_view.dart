@@ -84,7 +84,7 @@ PhotoViewScaleState imageScaleStateCycle(PhotoViewScaleState actual) {
       desc = PhotoViewScaleState.initial;
   }
 
-  logger.d('actual $actual to $desc');
+  logger.v('actual $actual to $desc');
   return desc;
 }
 
@@ -99,6 +99,7 @@ class ReadPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     logger.d('ReadPage build');
 
+    final ReadNotifier readNotifier = ref.read(readProvider.notifier);
     final Gallery gallery = ref.watch(galleryProvider(gid));
     final currentPageIndex = gallery.currentPageIndex;
     final pages = gallery.images.pages;
@@ -143,8 +144,7 @@ class ReadPage extends HookConsumerWidget {
       //   color: Colors.black,
       // ),
 
-      pageController: PreloadPageController(
-          initialPage: currentPageIndex, viewportFraction: 1),
+      pageController: readNotifier.preloadPageController,
       // pageController: PageController(
       //     initialPage: currentPageIndex, viewportFraction: 1.1),
       onPageChanged: onPageChanged,

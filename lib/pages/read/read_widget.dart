@@ -124,6 +124,7 @@ class BottomBarControlWidget extends HookConsumerWidget {
         ref.watch(galleryProvider(gid).select((val) => val.currentPageIndex));
     final totNum = ref
         .watch(galleryProvider(gid).select((val) => val.images.pages.length));
+    final readNotifier = ref.watch(readProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -137,9 +138,12 @@ class BottomBarControlWidget extends HookConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: ViewPageSlider(
               max: totNum - 1.0,
-              sliderValue:
+              initValue:
                   math.min(currentItemIndex.roundToDouble(), totNum - 1.0),
-              onChangedEnd: (_) {},
+              onChangedEnd: (val) {
+                logger.d('onChangedEnd ${val + 1}');
+                readNotifier.jumpToPage(val.round());
+              },
               onChanged: (_) {},
             ),
           ),
@@ -161,14 +165,14 @@ class ViewPageSlider extends StatefulWidget {
   const ViewPageSlider({
     Key? key,
     required this.max,
-    required this.sliderValue,
+    required this.initValue,
     required this.onChangedEnd,
     required this.onChanged,
     this.reverse = false,
   }) : super(key: key);
 
   final double max;
-  final double sliderValue;
+  final double initValue;
   final ValueChanged<double> onChangedEnd;
   final ValueChanged<double> onChanged;
   final bool reverse;
@@ -183,19 +187,19 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
   @override
   void initState() {
     super.initState();
-    _value = widget.sliderValue;
+    _value = widget.initValue;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _value = widget.sliderValue;
+    _value = widget.initValue;
   }
 
   @override
   Widget build(BuildContext context) {
     final minText = Text(
-      '${widget.sliderValue.round() + 1}',
+      '${widget.initValue.round() + 1}',
       style: Theme.of(context).textTheme.titleMedium,
     );
 
@@ -217,7 +221,8 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
             child: Slider(
               min: 0,
               max: widget.max,
-              value: widget.sliderValue,
+              value: _value,
+              divisions: widget.max.round(),
               onChanged: (double newValue) {
                 setState(() {
                   _value = newValue;

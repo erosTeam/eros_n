@@ -11,7 +11,7 @@ jobs:
         include:
           - target: android
             os: ubuntu-latest
-            flutter_version: '3.3.4'
+            flutter_version: '3.4.0-34.1.pre'
             artifact_name: release-apk
             artifact_path: build/app/outputs/apk/release/*.apk
           - target: ios

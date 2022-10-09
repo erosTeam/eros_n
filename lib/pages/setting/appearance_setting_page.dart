@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'setting_base.dart';
-import 'settings_page.dart';
 
 class AppearanceSettingPage extends StatelessWidget {
   const AppearanceSettingPage({Key? key}) : super(key: key);
@@ -21,24 +20,42 @@ class AppearanceSettingPage extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           SmallTitle(title: 'Theme'),
+          // ThemeMode
+          Consumer(builder: (context, ref, child) {
+            final themeMode = ref.watch(
+                settingsProvider.select((settings) => settings.themeMode));
+            return RadioDialogListTile<ThemeMode>(
+              title: Text('Theme mode'),
+              groupValue: themeMode,
+              radioTitleMap: {
+                ThemeMode.system: Text('System'),
+                ThemeMode.light: Text('Light'),
+                ThemeMode.dark: Text('Dark'),
+                // TagLayoutOnCard.row: Text('Row'),
+              },
+              onChanged: (value) {
+                ref.read(settingsProvider.notifier).setThemeMode(value);
+              },
+            );
+          }),
+
           // Switch dynamic color
-          if (GetPlatform.isAndroid)
-            Consumer(builder: (context, ref, child) {
-              final dynamicColor = ref.watch(
-                  settingsProvider.select((settings) => settings.dynamicColor));
-              return ListTile(
-                title: Text('Dynamic color'),
-                subtitle: Text('Only works on Android 12+'),
-                trailing: Switch(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  value: dynamicColor,
-                  onChanged: (value) {
-                    ref.read(settingsProvider.notifier).setDynamicColor(value);
-                  },
-                ),
-              );
-            }),
-          Divider(thickness: 1.0, height: 1.0),
+          Consumer(builder: (context, ref, child) {
+            final dynamicColor = ref.watch(
+                settingsProvider.select((settings) => settings.dynamicColor));
+            return ListTile(
+              title: Text('Dynamic color'),
+              subtitle: Text('Color from wallpaper'),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: dynamicColor,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setDynamicColor(value);
+                },
+              ),
+            );
+          }),
+          Divider(height: 1.0),
           SmallTitle(title: 'List style'),
           // Switch tag translate
           Consumer(builder: (context, ref, child) {

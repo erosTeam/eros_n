@@ -1,5 +1,6 @@
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/network/enum.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'settings.freezed.dart';
@@ -14,6 +15,7 @@ class Settings with _$Settings {
     @Default(SearchSort.recent) SearchSort searchSort,
     @Default(false) bool showTags,
     @Default(TagLayoutOnCard.wrap) TagLayoutOnCard tagLayoutOnCard,
+    @Default(ThemeMode.system) ThemeMode themeMode,
   }) = _Settings;
 
   factory Settings.fromJson(Map<String, Object?> json) =>

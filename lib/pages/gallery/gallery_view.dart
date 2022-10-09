@@ -530,9 +530,9 @@ class ThumbListView extends HookConsumerWidget {
             itemBuilder: (context, index) {
               final GalleryImage image = pages[index];
               return GestureDetector(
-                onTap: () {
+                onTap: () async {
                   ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-                  ref.read(readProvider.notifier).init(context);
+                  ref.read(readProvider.notifier).init(context, index);
                   context.router.push(ReadRoute(gid: gid));
                 },
                 child: Center(

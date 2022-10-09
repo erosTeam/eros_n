@@ -3,6 +3,7 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/enum.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SettingsNotifier extends StateNotifier<Settings> {
@@ -43,6 +44,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
 
   void setTagLayoutOnCard(TagLayoutOnCard value) {
     state = state.copyWith(tagLayoutOnCard: value);
+    hiveHelper.setSettings(state);
+  }
+
+  void setThemeMode(ThemeMode value) {
+    state = state.copyWith(themeMode: value);
     hiveHelper.setSettings(state);
   }
 }

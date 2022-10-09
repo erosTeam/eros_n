@@ -97,10 +97,7 @@ class _MorePageState extends ConsumerState<MorePage>
                 }
               }),
             ),
-            const Divider(
-              thickness: 1.0,
-              height: 1.0,
-            ),
+            const Divider(height: 1.0),
             ListTile(
               leading: const Icon(Icons.download_outlined),
               iconColor: Theme.of(context).colorScheme.primary,
@@ -109,10 +106,7 @@ class _MorePageState extends ConsumerState<MorePage>
                 Navigator.pushNamed(context, '/download');
               },
             ),
-            const Divider(
-              thickness: 1.0,
-              height: 1.0,
-            ),
+            const Divider(height: 1.0),
             ListTile(
               leading: const Icon(Icons.settings_outlined),
               iconColor: Theme.of(context).colorScheme.primary,

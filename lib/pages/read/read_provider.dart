@@ -8,6 +8,7 @@ import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
 import '../../utils/logger.dart';
 
@@ -17,6 +18,8 @@ class ReadNotifier extends StateNotifier<ReadState> {
 
   GalleryNotifier get galleryNotifier =>
       ref.read(galleryProvider(state.gid).notifier);
+
+  late PreloadPageController preloadPageController;
 
   void setGid(int? gid) {
     state = state.copyWith(gid: gid);
@@ -30,6 +33,10 @@ class ReadNotifier extends StateNotifier<ReadState> {
 
   void tapRight() {}
 
+  void jumpToPage(int index) {
+    preloadPageController.jumpToPage(index);
+  }
+
   void handOnTapCenter() {
     logger.d('handOnTapCenter');
     if (state.showAppBar) {
@@ -39,7 +46,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
     }
   }
 
-  void init(BuildContext context) {
+  void init(BuildContext context, int index) {
     final bottomBarHeight = context.mediaQueryPadding.bottom +
         (!context.isTablet ? kBottomBarHeight : 0) +
         kSliderBarHeight +
@@ -54,6 +61,11 @@ class ReadNotifier extends StateNotifier<ReadState> {
       context: context,
       topBarOffset: _offsetTopHide,
       bottomBarOffset: -bottomBarHeight,
+    );
+
+    preloadPageController = PreloadPageController(
+      initialPage: index,
+      viewportFraction: 1,
     );
   }
 
