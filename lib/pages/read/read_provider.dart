@@ -15,14 +15,14 @@ import 'package:preload_page_view/preload_page_view.dart';
 import '../../utils/logger.dart';
 
 class ReadNotifier extends StateNotifier<ReadState> {
-  ReadNotifier(this.ref, int gid)
-      : galleryNotifier = ref.read(galleryProvider(gid).notifier),
-        preloadPageController = PreloadPageController(
-            initialPage: ref.read(galleryProvider(gid)).currentPageIndex),
-        super(ReadState(gid: gid));
+  ReadNotifier(this.ref)
+      : preloadPageController = PreloadPageController(
+            initialPage: ref
+                .read(galleryProvider(ref.read(currentGidProvider)))
+                .currentPageIndex),
+        super(const ReadState());
   final Ref ref;
 
-  final GalleryNotifier galleryNotifier;
   final PreloadPageController preloadPageController;
 
   void toPrev() {}
@@ -107,10 +107,10 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 }
 
-final readProvider = StateNotifierProvider.autoDispose
-    .family<ReadNotifier, ReadState, int>((ref, gid) {
+final readProvider =
+    StateNotifierProvider.autoDispose<ReadNotifier, ReadState>((ref) {
   ref.onDispose(() {
-    logger.d('readProvider $gid dispose');
+    logger.d('readProvider dispose');
   });
-  return ReadNotifier(ref, gid);
+  return ReadNotifier(ref);
 });

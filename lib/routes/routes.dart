@@ -79,7 +79,7 @@ class RouteUtil {
     }
     final realIndex =
         ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
-    ref.watch(readProvider(gid).notifier).init(context, realIndex);
+    ref.watch(readProvider.notifier).init(context, realIndex);
     await context.router.push(ReadRoute(gid: gid));
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,

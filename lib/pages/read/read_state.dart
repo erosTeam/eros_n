@@ -14,7 +14,6 @@ class ReadState with _$ReadState {
     @Default(0.0) double bottomBarOffset,
     double? bottomBarHeight,
     @Default(false) bool showThumbList,
-    @Default(0) int gid,
     @JsonKey(ignore: true) BuildContext? context,
   }) = _ReadState;
 

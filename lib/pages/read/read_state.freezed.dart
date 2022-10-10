@@ -25,7 +25,6 @@ mixin _$ReadState {
   double get bottomBarOffset => throw _privateConstructorUsedError;
   double? get bottomBarHeight => throw _privateConstructorUsedError;
   bool get showThumbList => throw _privateConstructorUsedError;
-  int get gid => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   BuildContext? get context => throw _privateConstructorUsedError;
 
@@ -45,7 +44,6 @@ abstract class $ReadStateCopyWith<$Res> {
       double bottomBarOffset,
       double? bottomBarHeight,
       bool showThumbList,
-      int gid,
       @JsonKey(ignore: true) BuildContext? context});
 }
 
@@ -64,7 +62,6 @@ class _$ReadStateCopyWithImpl<$Res> implements $ReadStateCopyWith<$Res> {
     Object? bottomBarOffset = freezed,
     Object? bottomBarHeight = freezed,
     Object? showThumbList = freezed,
-    Object? gid = freezed,
     Object? context = freezed,
   }) {
     return _then(_value.copyWith(
@@ -88,10 +85,6 @@ class _$ReadStateCopyWithImpl<$Res> implements $ReadStateCopyWith<$Res> {
           ? _value.showThumbList
           : showThumbList // ignore: cast_nullable_to_non_nullable
               as bool,
-      gid: gid == freezed
-          ? _value.gid
-          : gid // ignore: cast_nullable_to_non_nullable
-              as int,
       context: context == freezed
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
@@ -112,7 +105,6 @@ abstract class _$$_ReadStateCopyWith<$Res> implements $ReadStateCopyWith<$Res> {
       double bottomBarOffset,
       double? bottomBarHeight,
       bool showThumbList,
-      int gid,
       @JsonKey(ignore: true) BuildContext? context});
 }
 
@@ -133,7 +125,6 @@ class __$$_ReadStateCopyWithImpl<$Res> extends _$ReadStateCopyWithImpl<$Res>
     Object? bottomBarOffset = freezed,
     Object? bottomBarHeight = freezed,
     Object? showThumbList = freezed,
-    Object? gid = freezed,
     Object? context = freezed,
   }) {
     return _then(_$_ReadState(
@@ -157,10 +148,6 @@ class __$$_ReadStateCopyWithImpl<$Res> extends _$ReadStateCopyWithImpl<$Res>
           ? _value.showThumbList
           : showThumbList // ignore: cast_nullable_to_non_nullable
               as bool,
-      gid: gid == freezed
-          ? _value.gid
-          : gid // ignore: cast_nullable_to_non_nullable
-              as int,
       context: context == freezed
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
@@ -179,7 +166,6 @@ class _$_ReadState implements _ReadState {
       this.bottomBarOffset = 0.0,
       this.bottomBarHeight,
       this.showThumbList = false,
-      this.gid = 0,
       @JsonKey(ignore: true) this.context});
 
   factory _$_ReadState.fromJson(Map<String, dynamic> json) =>
@@ -200,15 +186,12 @@ class _$_ReadState implements _ReadState {
   @JsonKey()
   final bool showThumbList;
   @override
-  @JsonKey()
-  final int gid;
-  @override
   @JsonKey(ignore: true)
   final BuildContext? context;
 
   @override
   String toString() {
-    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, gid: $gid, context: $context)';
+    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, context: $context)';
   }
 
   @override
@@ -226,7 +209,6 @@ class _$_ReadState implements _ReadState {
                 .equals(other.bottomBarHeight, bottomBarHeight) &&
             const DeepCollectionEquality()
                 .equals(other.showThumbList, showThumbList) &&
-            const DeepCollectionEquality().equals(other.gid, gid) &&
             const DeepCollectionEquality().equals(other.context, context));
   }
 
@@ -239,7 +221,6 @@ class _$_ReadState implements _ReadState {
       const DeepCollectionEquality().hash(bottomBarOffset),
       const DeepCollectionEquality().hash(bottomBarHeight),
       const DeepCollectionEquality().hash(showThumbList),
-      const DeepCollectionEquality().hash(gid),
       const DeepCollectionEquality().hash(context));
 
   @JsonKey(ignore: true)
@@ -262,7 +243,6 @@ abstract class _ReadState implements ReadState {
       final double bottomBarOffset,
       final double? bottomBarHeight,
       final bool showThumbList,
-      final int gid,
       @JsonKey(ignore: true) final BuildContext? context}) = _$_ReadState;
 
   factory _ReadState.fromJson(Map<String, dynamic> json) =
@@ -278,8 +258,6 @@ abstract class _ReadState implements ReadState {
   double? get bottomBarHeight;
   @override
   bool get showThumbList;
-  @override
-  int get gid;
   @override
   @JsonKey(ignore: true)
   BuildContext? get context;

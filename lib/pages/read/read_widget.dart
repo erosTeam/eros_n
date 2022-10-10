@@ -13,8 +13,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'read_view.dart';
 
 class ViewTopBar extends HookConsumerWidget {
-  const ViewTopBar({Key? key, required this.gid}) : super(key: key);
-  final int gid;
+  const ViewTopBar({Key? key}) : super(key: key);
+  // final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,7 +59,7 @@ class ViewTopBar extends HookConsumerWidget {
                   ],
                 ),
                 Consumer(builder: (context, ref, child) {
-                  // final gid = ref.watch(readProvider).gid;
+                  final gid = ref.watch(currentGidProvider);
                   final currentItemIndex = ref.watch(galleryProvider(gid)
                       .select((val) => val.currentPageIndex));
                   final totalItem = ref.watch(galleryProvider(gid)
@@ -83,15 +83,15 @@ class ViewTopBar extends HookConsumerWidget {
 }
 
 class ViewBottomBar extends HookConsumerWidget {
-  const ViewBottomBar({Key? key, required this.gid}) : super(key: key);
-  final int gid;
+  const ViewBottomBar({Key? key}) : super(key: key);
+  // final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarHeight =
-        ref.watch(readProvider(gid).select((val) => val.bottomBarHeight));
+        ref.watch(readProvider.select((val) => val.bottomBarHeight));
     final showThumbList =
-        ref.watch(readProvider(gid).select((val) => val.showThumbList));
+        ref.watch(readProvider.select((val) => val.showThumbList));
 
     return AnimatedContainer(
       color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.9),
@@ -109,7 +109,7 @@ class ViewBottomBar extends HookConsumerWidget {
             child: const ThumbnailListView(),
           ),
           // 控制栏
-          BottomBarControlWidget(gid: gid),
+          BottomBarControlWidget(),
         ],
       ),
     );
@@ -119,19 +119,16 @@ class ViewBottomBar extends HookConsumerWidget {
 class BottomBarControlWidget extends HookConsumerWidget {
   const BottomBarControlWidget({
     Key? key,
-    required this.gid,
   }) : super(key: key);
-
-  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final gid = ref.watch(readProvider(gid)).gid;
+    final gid = ref.watch(currentGidProvider);
     final currentItemIndex =
         ref.watch(galleryProvider(gid).select((val) => val.currentPageIndex));
     final totNum = ref
         .watch(galleryProvider(gid).select((val) => val.images.pages.length));
-    final readNotifier = ref.watch(readProvider(gid).notifier);
+    final readNotifier = ref.watch(readProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -399,13 +396,11 @@ class ReadScaffold extends HookConsumerWidget {
     required this.child,
     required this.topBar,
     required this.bottomBar,
-    required this.gid,
   }) : super(key: key);
 
   final Widget child;
   final Widget topBar;
   final Widget bottomBar;
-  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -414,10 +409,10 @@ class ReadScaffold extends HookConsumerWidget {
       children: [
         child,
         Consumer(builder: (context, ref, child) {
-          final topBarOffset = ref
-              .watch(readProvider(gid).select((state) => state.topBarOffset));
-          final bottomBarOffset = ref.watch(
-              readProvider(gid).select((state) => state.bottomBarOffset));
+          final topBarOffset =
+              ref.watch(readProvider.select((state) => state.topBarOffset));
+          final bottomBarOffset =
+              ref.watch(readProvider.select((state) => state.bottomBarOffset));
           logger.v(
               'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset');
 
@@ -458,7 +453,7 @@ class ImageGestureDetector extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final readNoti = ref.watch(readProvider(gid).notifier);
+    final readNoti = ref.watch(readProvider.notifier);
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
       onTapUp: (details) {

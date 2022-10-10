@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
@@ -153,9 +154,20 @@ final galleryProvider =
     StateNotifierProvider.autoDispose.family<GalleryNotifier, Gallery, int>(
   (ref, gid) {
     logger.d('galleryProvider gid $gid');
-    // final readNotifier = ref.watch(readProvider.notifier);
+    ref.watch(gidListProvider.notifier).update((state) {
+      if (state.firstOrNull != gid) {
+        return [gid, ...state];
+      }
+      return state;
+    });
+
     ref.onDispose(() {
       logger.d('galleryProvider $gid onDispose');
+      // remove first
+      ref.watch(gidListProvider.notifier).update((state) {
+        state.remove(gid);
+        return state = state;
+      });
     });
     return GalleryNotifier(Gallery(gid: gid), ref.read);
   },
@@ -165,6 +177,14 @@ final pageStateProvider =
     StateProvider.family<GalleryViewState, int>((ref, gid) {
   return const GalleryViewState(pageStatus: PageStatus.none);
 });
+
+// 当前画廊id
+final currentGidProvider = StateProvider.autoDispose<int>((ref) {
+  return ref.watch(gidListProvider).first;
+});
+
+// 画廊id列表堆栈
+final gidListProvider = StateProvider.autoDispose<List<int>>((ref) => []);
 
 String getGalleryImageUrl(String imageKey, int index, String ext) {
   final subDomain = radomList(['', '3', '5', '7']);

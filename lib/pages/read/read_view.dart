@@ -99,7 +99,7 @@ class ReadPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     logger.d('ReadPage build $gid');
 
-    final ReadNotifier readNotifier = ref.watch(readProvider(gid).notifier);
+    final ReadNotifier readNotifier = ref.watch(readProvider.notifier);
 
     final Gallery gallery = ref.watch(galleryProvider(gid));
     final currentPageIndex = gallery.currentPageIndex;
@@ -151,9 +151,8 @@ class ReadPage extends HookConsumerWidget {
     );
 
     readView = ReadScaffold(
-      gid: gid,
-      topBar: ViewTopBar(gid: gid),
-      bottomBar: ViewBottomBar(gid: gid),
+      topBar: ViewTopBar(),
+      bottomBar: ViewBottomBar(),
       child: readView,
     );
 
