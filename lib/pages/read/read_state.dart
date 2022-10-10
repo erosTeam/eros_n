@@ -12,9 +12,10 @@ class ReadState with _$ReadState {
     @Default(false) bool showAppBar,
     @Default(0.0) double topBarOffset,
     @Default(0.0) double bottomBarOffset,
-    double? bottomBarHeight,
+    @Default(0.0) double bottomBarHeight,
     @Default(false) bool showThumbList,
-    @JsonKey(ignore: true) BuildContext? context,
+    @Default(0.0) double paddingTop,
+    @Default(0.0) double paddingBottom,
   }) = _ReadState;
 
   factory ReadState.fromJson(Map<String, dynamic> json) =>

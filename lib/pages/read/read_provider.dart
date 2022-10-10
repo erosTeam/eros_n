@@ -15,12 +15,11 @@ import 'package:preload_page_view/preload_page_view.dart';
 import '../../utils/logger.dart';
 
 class ReadNotifier extends StateNotifier<ReadState> {
-  ReadNotifier(this.ref)
+  ReadNotifier(super.state, this.ref)
       : preloadPageController = PreloadPageController(
             initialPage: ref
                 .read(galleryProvider(ref.read(currentGidProvider)))
-                .currentPageIndex),
-        super(const ReadState());
+                .currentPageIndex);
   final Ref ref;
 
   final PreloadPageController preloadPageController;
@@ -37,52 +36,63 @@ class ReadNotifier extends StateNotifier<ReadState> {
     preloadPageController.jumpToPage(index);
   }
 
-  void handOnTapCenter() {
+  Future<void> handOnTapCenter(BuildContext context) async {
     logger.d('handOnTapCenter');
+
+    // initBar(context);
     if (state.showAppBar) {
       hideAppBar();
     } else {
-      showAppBar();
+      await showAppBar();
+      if (mounted) {
+        calculateBar(context);
+      }
     }
   }
 
-  void init(BuildContext context, int index) {
-    final bottomBarHeight = context.mediaQueryPadding.bottom +
-        (!context.isTablet ? kBottomBarHeight : 0) +
+  //
+  void calculateBar(BuildContext context) {
+    final bottomBarHeight = (!context.isTablet ? kBottomBarHeight : 0) +
         kSliderBarHeight +
-        (state.showThumbList ? kThumbListViewHeight : 0);
+        (state.showThumbList ? kThumbListViewHeight : 0) +
+        context.mediaQueryPadding.bottom;
 
-    _offsetTopHide =
+    offsetTopHide =
         -kTopBarHeight - MediaQueryData.fromWindow(window).padding.top;
-    logger.d('init _offsetTopHide $_offsetTopHide');
 
     state = state.copyWith(
+      paddingBottom: context.mediaQueryPadding.bottom,
+      paddingTop: context.mediaQueryPadding.top,
       bottomBarHeight: bottomBarHeight,
-      context: context,
-      topBarOffset: _offsetTopHide,
-      bottomBarOffset: -bottomBarHeight,
-      showAppBar: false,
     );
-
-    setFullscreen();
   }
 
-  late double _offsetTopHide;
+  void resetBottomBarHeight(BuildContext context) {
+    final bottomBarHeight = (!context.isTablet ? kBottomBarHeight : 0) +
+        kSliderBarHeight +
+        (state.showThumbList ? kThumbListViewHeight : 0) +
+        context.mediaQueryPadding.bottom;
+    if (state.bottomBarHeight != bottomBarHeight) {
+      state = state.copyWith(bottomBarHeight: bottomBarHeight);
+    }
+  }
 
-  void showAppBar() {
+  late double offsetTopHide;
+
+  Future<void> showAppBar() async {
+    await unFullscreen();
     state = state.copyWith(
       showAppBar: true,
       bottomBarOffset: 0,
       topBarOffset: 0,
     );
-    unFullscreen();
   }
 
   void hideAppBar() {
     state = state.copyWith(
       showAppBar: false,
-      bottomBarOffset: -(state.bottomBarHeight ?? 0),
-      topBarOffset: _offsetTopHide,
+      bottomBarOffset: -state.bottomBarHeight,
+      topBarOffset: offsetTopHide,
     );
     setFullscreen();
   }
@@ -98,12 +108,11 @@ class ReadNotifier extends StateNotifier<ReadState> {
     }
   }
 
-  void unFullscreen() {
-    400.milliseconds.delay(() {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.edgeToEdge,
-      );
-    });
+  Future<void> unFullscreen() async {
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
+    );
+    await 300.milliseconds.delay();
   }
 }
 
@@ -112,5 +121,16 @@ final readProvider =
   ref.onDispose(() {
     logger.d('readProvider dispose');
   });
-  return ReadNotifier(ref);
+
+  const bottomBarHeight =
+      kBottomBarHeight + kSliderBarHeight + kThumbListViewHeight;
+
+  return ReadNotifier(
+      const ReadState(
+        showAppBar: false,
+        bottomBarOffset: -bottomBarHeight,
+        topBarOffset: -300,
+        bottomBarHeight: bottomBarHeight,
+      ),
+      ref);
 });

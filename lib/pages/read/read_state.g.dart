@@ -10,8 +10,10 @@ _$_ReadState _$$_ReadStateFromJson(Map<String, dynamic> json) => _$_ReadState(
       showAppBar: json['show_app_bar'] as bool? ?? false,
       topBarOffset: (json['top_bar_offset'] as num?)?.toDouble() ?? 0.0,
       bottomBarOffset: (json['bottom_bar_offset'] as num?)?.toDouble() ?? 0.0,
-      bottomBarHeight: (json['bottom_bar_height'] as num?)?.toDouble(),
+      bottomBarHeight: (json['bottom_bar_height'] as num?)?.toDouble() ?? 0.0,
       showThumbList: json['show_thumb_list'] as bool? ?? false,
+      paddingTop: (json['padding_top'] as num?)?.toDouble() ?? 0.0,
+      paddingBottom: (json['padding_bottom'] as num?)?.toDouble() ?? 0.0,
     );
 
 Map<String, dynamic> _$$_ReadStateToJson(_$_ReadState instance) =>
@@ -21,4 +23,6 @@ Map<String, dynamic> _$$_ReadStateToJson(_$_ReadState instance) =>
       'bottom_bar_offset': instance.bottomBarOffset,
       'bottom_bar_height': instance.bottomBarHeight,
       'show_thumb_list': instance.showThumbList,
+      'padding_top': instance.paddingTop,
+      'padding_bottom': instance.paddingBottom,
     };

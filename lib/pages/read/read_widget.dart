@@ -14,7 +14,6 @@ import 'read_view.dart';
 
 class ViewTopBar extends HookConsumerWidget {
   const ViewTopBar({Key? key}) : super(key: key);
-  // final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,19 +42,10 @@ class ViewTopBar extends HookConsumerWidget {
                         Icons.arrow_back,
                       ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (context.isTablet) SizedBox(),
-                        // 菜单页面入口
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.more_vert,
-                          ),
-                        ),
-                      ],
-                    ),
+                    if (context.isTablet)
+                      const ControllerButtonBar(
+                        mainAxisSize: MainAxisSize.min,
+                      ),
                   ],
                 ),
                 Consumer(builder: (context, ref, child) {
@@ -84,7 +74,6 @@ class ViewTopBar extends HookConsumerWidget {
 
 class ViewBottomBar extends HookConsumerWidget {
   const ViewBottomBar({Key? key}) : super(key: key);
-  // final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -109,7 +98,7 @@ class ViewBottomBar extends HookConsumerWidget {
             child: const ThumbnailListView(),
           ),
           // 控制栏
-          BottomBarControlWidget(),
+          const BottomBarControlWidget(),
         ],
       ),
     );
@@ -154,10 +143,9 @@ class BottomBarControlWidget extends HookConsumerWidget {
           ),
           // 按钮栏
           if (!context.isTablet)
-            ControllerButtonBar(
+            const ControllerButtonBar(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
-              // showLable: false,
             ),
         ],
       ),
@@ -256,12 +244,12 @@ class ControllerButtonBar extends StatelessWidget {
     Key? key,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.mainAxisSize = MainAxisSize.max,
-    this.showLable = true,
+    this.showLabel = true,
   }) : super(key: key);
 
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
-  final bool showLable;
+  final bool showLabel;
 
   static const buttonWidth = 44.0;
 
@@ -273,7 +261,7 @@ class ControllerButtonBar extends StatelessWidget {
       children: [
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.share_outlined),
+          icon: const Icon(Icons.share_outlined),
         ),
         IconButton(
           onPressed: () {
@@ -287,7 +275,7 @@ class ControllerButtonBar extends StatelessWidget {
               ),
             );
           },
-          icon: Icon(Icons.settings_outlined),
+          icon: const Icon(Icons.settings_outlined),
         ),
       ],
     );
@@ -333,34 +321,15 @@ class _BottomSheetWidgetState extends ConsumerState<BottomSheetWidget>
                   ref
                       .read(settingsProvider.notifier)
                       .setFullScreenReader(value);
+                  if (value) {
+                    ref.read(readProvider.notifier).setFullscreen();
+                  } else {
+                    ref.read(readProvider.notifier).unFullscreen();
+                  }
                 },
               ),
             );
           }),
-        ],
-      ),
-    );
-
-    return Container(
-      height: context.height * 0.8,
-      child: Column(
-        children: [
-          TabBar(
-            controller: tabController,
-            tabs: [
-              Tab(text: '设置'),
-              Tab(text: '下载'),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: tabController,
-              children: [
-                Container(),
-                Container(),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -405,6 +374,9 @@ class ReadScaffold extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ref.read(readProvider.notifier).init(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(readProvider.notifier).resetBottomBarHeight(context);
+    });
     return Stack(
       children: [
         child,
@@ -443,10 +415,8 @@ class ImageGestureDetector extends HookConsumerWidget {
   const ImageGestureDetector({
     Key? key,
     required this.child,
-    required this.gid,
   }) : super(key: key);
   final Widget child;
-  final int gid;
 
   static const lrRatio = 1 / 3;
   static const tbRatio = 1 / 5;
@@ -467,7 +437,7 @@ class ImageGestureDetector extends HookConsumerWidget {
           } else if (globalPosition.dy > context.height * (1 - tbRatio)) {
             readNoti.toNext();
           } else {
-            readNoti.handOnTapCenter();
+            readNoti.handOnTapCenter(context);
           }
         }
 

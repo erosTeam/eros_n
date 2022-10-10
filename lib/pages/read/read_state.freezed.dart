@@ -23,10 +23,10 @@ mixin _$ReadState {
   bool get showAppBar => throw _privateConstructorUsedError;
   double get topBarOffset => throw _privateConstructorUsedError;
   double get bottomBarOffset => throw _privateConstructorUsedError;
-  double? get bottomBarHeight => throw _privateConstructorUsedError;
+  double get bottomBarHeight => throw _privateConstructorUsedError;
   bool get showThumbList => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  BuildContext? get context => throw _privateConstructorUsedError;
+  double get paddingTop => throw _privateConstructorUsedError;
+  double get paddingBottom => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,9 +42,10 @@ abstract class $ReadStateCopyWith<$Res> {
       {bool showAppBar,
       double topBarOffset,
       double bottomBarOffset,
-      double? bottomBarHeight,
+      double bottomBarHeight,
       bool showThumbList,
-      @JsonKey(ignore: true) BuildContext? context});
+      double paddingTop,
+      double paddingBottom});
 }
 
 /// @nodoc
@@ -62,7 +63,8 @@ class _$ReadStateCopyWithImpl<$Res> implements $ReadStateCopyWith<$Res> {
     Object? bottomBarOffset = freezed,
     Object? bottomBarHeight = freezed,
     Object? showThumbList = freezed,
-    Object? context = freezed,
+    Object? paddingTop = freezed,
+    Object? paddingBottom = freezed,
   }) {
     return _then(_value.copyWith(
       showAppBar: showAppBar == freezed
@@ -80,15 +82,19 @@ class _$ReadStateCopyWithImpl<$Res> implements $ReadStateCopyWith<$Res> {
       bottomBarHeight: bottomBarHeight == freezed
           ? _value.bottomBarHeight
           : bottomBarHeight // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as double,
       showThumbList: showThumbList == freezed
           ? _value.showThumbList
           : showThumbList // ignore: cast_nullable_to_non_nullable
               as bool,
-      context: context == freezed
-          ? _value.context
-          : context // ignore: cast_nullable_to_non_nullable
-              as BuildContext?,
+      paddingTop: paddingTop == freezed
+          ? _value.paddingTop
+          : paddingTop // ignore: cast_nullable_to_non_nullable
+              as double,
+      paddingBottom: paddingBottom == freezed
+          ? _value.paddingBottom
+          : paddingBottom // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -103,9 +109,10 @@ abstract class _$$_ReadStateCopyWith<$Res> implements $ReadStateCopyWith<$Res> {
       {bool showAppBar,
       double topBarOffset,
       double bottomBarOffset,
-      double? bottomBarHeight,
+      double bottomBarHeight,
       bool showThumbList,
-      @JsonKey(ignore: true) BuildContext? context});
+      double paddingTop,
+      double paddingBottom});
 }
 
 /// @nodoc
@@ -125,7 +132,8 @@ class __$$_ReadStateCopyWithImpl<$Res> extends _$ReadStateCopyWithImpl<$Res>
     Object? bottomBarOffset = freezed,
     Object? bottomBarHeight = freezed,
     Object? showThumbList = freezed,
-    Object? context = freezed,
+    Object? paddingTop = freezed,
+    Object? paddingBottom = freezed,
   }) {
     return _then(_$_ReadState(
       showAppBar: showAppBar == freezed
@@ -143,15 +151,19 @@ class __$$_ReadStateCopyWithImpl<$Res> extends _$ReadStateCopyWithImpl<$Res>
       bottomBarHeight: bottomBarHeight == freezed
           ? _value.bottomBarHeight
           : bottomBarHeight // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as double,
       showThumbList: showThumbList == freezed
           ? _value.showThumbList
           : showThumbList // ignore: cast_nullable_to_non_nullable
               as bool,
-      context: context == freezed
-          ? _value.context
-          : context // ignore: cast_nullable_to_non_nullable
-              as BuildContext?,
+      paddingTop: paddingTop == freezed
+          ? _value.paddingTop
+          : paddingTop // ignore: cast_nullable_to_non_nullable
+              as double,
+      paddingBottom: paddingBottom == freezed
+          ? _value.paddingBottom
+          : paddingBottom // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -164,9 +176,10 @@ class _$_ReadState implements _ReadState {
       {this.showAppBar = false,
       this.topBarOffset = 0.0,
       this.bottomBarOffset = 0.0,
-      this.bottomBarHeight,
+      this.bottomBarHeight = 0.0,
       this.showThumbList = false,
-      @JsonKey(ignore: true) this.context});
+      this.paddingTop = 0.0,
+      this.paddingBottom = 0.0});
 
   factory _$_ReadState.fromJson(Map<String, dynamic> json) =>
       _$$_ReadStateFromJson(json);
@@ -181,17 +194,21 @@ class _$_ReadState implements _ReadState {
   @JsonKey()
   final double bottomBarOffset;
   @override
-  final double? bottomBarHeight;
+  @JsonKey()
+  final double bottomBarHeight;
   @override
   @JsonKey()
   final bool showThumbList;
   @override
-  @JsonKey(ignore: true)
-  final BuildContext? context;
+  @JsonKey()
+  final double paddingTop;
+  @override
+  @JsonKey()
+  final double paddingBottom;
 
   @override
   String toString() {
-    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, context: $context)';
+    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, paddingTop: $paddingTop, paddingBottom: $paddingBottom)';
   }
 
   @override
@@ -209,7 +226,10 @@ class _$_ReadState implements _ReadState {
                 .equals(other.bottomBarHeight, bottomBarHeight) &&
             const DeepCollectionEquality()
                 .equals(other.showThumbList, showThumbList) &&
-            const DeepCollectionEquality().equals(other.context, context));
+            const DeepCollectionEquality()
+                .equals(other.paddingTop, paddingTop) &&
+            const DeepCollectionEquality()
+                .equals(other.paddingBottom, paddingBottom));
   }
 
   @JsonKey(ignore: true)
@@ -221,7 +241,8 @@ class _$_ReadState implements _ReadState {
       const DeepCollectionEquality().hash(bottomBarOffset),
       const DeepCollectionEquality().hash(bottomBarHeight),
       const DeepCollectionEquality().hash(showThumbList),
-      const DeepCollectionEquality().hash(context));
+      const DeepCollectionEquality().hash(paddingTop),
+      const DeepCollectionEquality().hash(paddingBottom));
 
   @JsonKey(ignore: true)
   @override
@@ -241,9 +262,10 @@ abstract class _ReadState implements ReadState {
       {final bool showAppBar,
       final double topBarOffset,
       final double bottomBarOffset,
-      final double? bottomBarHeight,
+      final double bottomBarHeight,
       final bool showThumbList,
-      @JsonKey(ignore: true) final BuildContext? context}) = _$_ReadState;
+      final double paddingTop,
+      final double paddingBottom}) = _$_ReadState;
 
   factory _ReadState.fromJson(Map<String, dynamic> json) =
       _$_ReadState.fromJson;
@@ -255,12 +277,13 @@ abstract class _ReadState implements ReadState {
   @override
   double get bottomBarOffset;
   @override
-  double? get bottomBarHeight;
+  double get bottomBarHeight;
   @override
   bool get showThumbList;
   @override
-  @JsonKey(ignore: true)
-  BuildContext? get context;
+  double get paddingTop;
+  @override
+  double get paddingBottom;
   @override
   @JsonKey(ignore: true)
   _$$_ReadStateCopyWith<_$_ReadState> get copyWith =>

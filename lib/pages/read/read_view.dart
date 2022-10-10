@@ -147,12 +147,11 @@ class ReadPage extends HookConsumerWidget {
 
     readView = ImageGestureDetector(
       child: Container(color: Colors.black, child: readView),
-      gid: gid,
     );
 
     readView = ReadScaffold(
-      topBar: ViewTopBar(),
-      bottomBar: ViewBottomBar(),
+      topBar: const ViewTopBar(),
+      bottomBar: const ViewBottomBar(),
       child: readView,
     );
 
