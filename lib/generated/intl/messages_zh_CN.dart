@@ -30,8 +30,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
         "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
         "clear_history_tip":
-            MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗？"),
+            MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
         "comments": MessageLookupByLibrary.simpleMessage("评论"),
+        "continue_read": MessageLookupByLibrary.simpleMessage("继续"),
         "download": MessageLookupByLibrary.simpleMessage("下载"),
         "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
         "gallery": MessageLookupByLibrary.simpleMessage("画廊"),

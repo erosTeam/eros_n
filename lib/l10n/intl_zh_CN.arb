@@ -23,6 +23,7 @@
   "thumbs": "缩略图",
   "more_like_this": "更多相似",
   "read": "阅读",
+  "continue_read": "继续",
   "share": "分享",
   "please_login_first": "请先登录",
   "login_need_captcha": "登录需要验证码",
@@ -46,5 +47,6 @@
   "popular_week": "本周热门",
   "popular_all": "所有热门",
   "clear_history": "清除历史",
-  "clear_history_tip": "确定要清除所有历史记录吗？"
+  "clear_history_tip": "确定要清除所有历史记录吗?"
+
 }

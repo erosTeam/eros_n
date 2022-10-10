@@ -24,13 +24,23 @@ class ReadNotifier extends StateNotifier<ReadState> {
 
   final PreloadPageController preloadPageController;
 
-  void toPrev() {}
+  void toPrev() {
+    preloadPageController.previousPage(
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
 
-  void toNext() {}
+  void toNext() {
+    preloadPageController.nextPage(
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
 
-  void tapLeft() {}
+  void tapLeft() {
+    toPrev();
+  }
 
-  void tapRight() {}
+  void tapRight() {
+    toNext();
+  }
 
   void jumpToPage(int index) {
     preloadPageController.jumpToPage(index);

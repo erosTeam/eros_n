@@ -116,11 +116,17 @@ class GalleryPage extends HookConsumerWidget {
       ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
-          // context.router.push(ReadRoute(gid: gid));
-          RouteUtil.goRead(context, ref, gid: gid);
+          RouteUtil.goRead(ref);
         },
         scrollController: scrollController,
-        label: Text(L10n.of(context).read),
+        label: Consumer(builder: (context, ref, child) {
+          final currentPageIndex =
+              ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+          final label = currentPageIndex == 0
+              ? L10n.of(context).read
+              : '${L10n.of(context).continue_read} ${currentPageIndex + 1}';
+          return Text(label);
+        }),
         icon: const Icon(Icons.play_arrow),
       ),
       body: RefreshIndicator(
@@ -537,10 +543,7 @@ class ThumbListView extends HookConsumerWidget {
               final GalleryImage image = pages[index];
               return GestureDetector(
                 onTap: () async {
-                  // ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-                  // ref.read(readProvider.notifier).init(context, index);
-                  // context.router.push(ReadRoute(gid: gid));
-                  RouteUtil.goRead(context, ref, index: index, gid: gid);
+                  RouteUtil.goRead(ref, index: index);
                 },
                 child: Center(
                   child: AspectRatio(

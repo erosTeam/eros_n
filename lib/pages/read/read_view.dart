@@ -91,20 +91,25 @@ PhotoViewScaleState imageScaleStateCycle(PhotoViewScaleState actual) {
 class ReadPage extends HookConsumerWidget {
   const ReadPage({
     Key? key,
-    required this.gid,
+    this.index,
   }) : super(key: key);
-  final int gid;
+  final int? index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final gid = ref.watch(currentGidProvider);
     logger.d('ReadPage build $gid');
+    // ref.watch(galleryProvider(gid).notifier).setInitialPage(index ?? 0);
+    useEffect(() {
+      ref.read(readProvider.notifier).setFullscreen();
+      return () {
+        SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.edgeToEdge,
+        );
+      };
+    });
 
     final ReadNotifier readNotifier = ref.watch(readProvider.notifier);
-
-    final Gallery gallery = ref.watch(galleryProvider(gid));
-    final currentPageIndex = gallery.currentPageIndex;
-    final pages = gallery.images.pages;
-    final mediaId = gallery.mediaId;
 
     void onPageChanged(int index) {
       ref.read(galleryProvider(gid).notifier).onPageChanged(index);
@@ -112,38 +117,47 @@ class ReadPage extends HookConsumerWidget {
 
     late Widget readView;
 
-    readView = PreloadPhotoViewGallery.builder(
-      scrollPhysics: const CustomScrollPhysics(),
-      builder: (BuildContext context, int index) {
-        final imageUrl = getGalleryImageUrl(
-            mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');
-        return PhotoViewGalleryPageOptions(
-          imageProvider: getErorsImageProvider(
-            imageUrl,
+    readView = Consumer(builder: (context, ref, child) {
+      final pages =
+          ref.watch(galleryProvider(gid).select((g) => g.images.pages));
+      final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
+      final currentPageIndex =
+          ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+
+      return PreloadPhotoViewGallery.builder(
+        // scrollPhysics: const CustomScrollPhysics(),
+        builder: (BuildContext context, int index) {
+          final imageUrl = getGalleryImageUrl(
+              mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');
+
+          return PhotoViewGalleryPageOptions(
+            imageProvider: getErorsImageProvider(
+              imageUrl,
+            ),
+            scaleStateCycle: imageScaleStateCycle,
+            filterQuality: FilterQuality.medium,
+            initialScale: PhotoViewComputedScale.contained * 0.99,
+            minScale: PhotoViewComputedScale.contained * 0.8,
+            maxScale: PhotoViewComputedScale.contained * 2,
+            heroAttributes: currentPageIndex == index
+                ? PhotoViewHeroAttributes(tag: '${gid}_$index')
+                : null,
+          );
+        },
+        customSize: MediaQuery.of(context).size,
+        preloadPagesCount: 3,
+        itemCount: pages.length,
+        loadingBuilder: (context, event) => Center(
+          child: CircularProgressIndicator(
+            value: event == null
+                ? null
+                : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
           ),
-          scaleStateCycle: imageScaleStateCycle,
-          filterQuality: FilterQuality.medium,
-          initialScale: PhotoViewComputedScale.contained * 0.99,
-          minScale: PhotoViewComputedScale.contained * 0.8,
-          maxScale: PhotoViewComputedScale.contained * 2,
-          heroAttributes: currentPageIndex == index
-              ? PhotoViewHeroAttributes(tag: '${gid}_$index')
-              : null,
-        );
-      },
-      customSize: MediaQuery.of(context).size,
-      preloadPagesCount: 3,
-      itemCount: pages.length,
-      loadingBuilder: (context, event) => Center(
-        child: CircularProgressIndicator(
-          value: event == null
-              ? null
-              : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
         ),
-      ),
-      pageController: readNotifier.preloadPageController,
-      onPageChanged: onPageChanged,
-    );
+        pageController: readNotifier.preloadPageController,
+        onPageChanged: onPageChanged,
+      );
+    });
 
     readView = ImageGestureDetector(
       child: Container(color: Colors.black, child: readView),

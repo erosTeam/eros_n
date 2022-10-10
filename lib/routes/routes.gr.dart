@@ -40,12 +40,13 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     ReadRoute.name: (routeData) {
-      final args = routeData.argsAs<ReadRouteArgs>();
+      final args =
+          routeData.argsAs<ReadRouteArgs>(orElse: () => const ReadRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: ReadPage(
           key: args.key,
-          gid: args.gid,
+          index: args.index,
         ),
       );
     },
@@ -256,13 +257,13 @@ class GalleryRouteArgs {
 class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
   ReadRoute({
     Key? key,
-    required int gid,
+    int? index,
   }) : super(
           ReadRoute.name,
           path: '/read',
           args: ReadRouteArgs(
             key: key,
-            gid: gid,
+            index: index,
           ),
         );
 
@@ -272,16 +273,16 @@ class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
 class ReadRouteArgs {
   const ReadRouteArgs({
     this.key,
-    required this.gid,
+    this.index,
   });
 
   final Key? key;
 
-  final int gid;
+  final int? index;
 
   @override
   String toString() {
-    return 'ReadRouteArgs{key: $key, gid: $gid}';
+    return 'ReadRouteArgs{key: $key, index: $index}';
   }
 }
 

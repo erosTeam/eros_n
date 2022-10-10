@@ -290,6 +290,16 @@ class L10n {
     );
   }
 
+  /// `Continue`
+  String get continue_read {
+    return Intl.message(
+      'Continue',
+      name: 'continue_read',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Share`
   String get share {
     return Intl.message(

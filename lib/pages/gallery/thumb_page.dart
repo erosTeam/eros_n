@@ -78,10 +78,7 @@ class ThumbsView extends HookConsumerWidget {
               final thumb = pages[index];
               return GestureDetector(
                 onTap: () {
-                  // ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-                  // ref.read(readProvider.notifier).init(context, index);
-                  // context.router.push(ReadRoute(gid: gid));
-                  RouteUtil.goRead(context, ref, index: index, gid: gid);
+                  RouteUtil.goRead(ref, index: index);
                 },
                 child: Column(
                   children: [

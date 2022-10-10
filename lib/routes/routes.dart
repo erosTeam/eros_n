@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/gallery/comments_page.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
@@ -69,17 +70,13 @@ class AppRouter extends _$AppRouter {}
 
 class RouteUtil {
   static Future<void> goRead(
-    BuildContext context,
     WidgetRef ref, {
     int? index,
-    required int gid,
   }) async {
+    final gid = ref.watch(currentGidProvider);
     if (index != null) {
       ref.watch(galleryProvider(gid).notifier).setInitialPage(index);
     }
-    await context.router.push(ReadRoute(gid: gid));
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-    );
+    await erosRouter.push(ReadRoute(index: index));
   }
 }

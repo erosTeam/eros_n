@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_history_tip": MessageLookupByLibrary.simpleMessage(
             "Are you sure to clear all history?"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
+        "continue_read": MessageLookupByLibrary.simpleMessage("Continue"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
