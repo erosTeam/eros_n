@@ -243,7 +243,7 @@ class PopularListView extends ConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   ref
-                      .read(galleryProvider(gallery.gid).notifier)
+                      .watch(galleryProvider(gallery.gid).notifier)
                       .initFromGallery(gallery);
                   context.router.push(GalleryRoute(gid: gallery.gid));
                 },

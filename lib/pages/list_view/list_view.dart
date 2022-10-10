@@ -70,7 +70,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     this.tabTag,
     this.lastComplete,
     this.keepPosition = false,
-    this.maxPage =1,
+    this.maxPage = 1,
     this.currentPage = 1,
   }) : super(key: key);
 
@@ -94,13 +94,19 @@ class GalleryWaterfallFlowView extends StatelessWidget {
 
     final Gallery gallery = gallerys[index];
 
-    return FrameSeparateWidget(
+    Widget item = ItemWaterfallFlowCard(
+      gallery: gallery,
       index: index,
-      child: ItemWaterfallFlowCard(
-        gallery: gallery,
-        index: index,
-      ),
     );
+
+    if (!GetPlatform.isDesktop) {
+      item = FrameSeparateWidget(
+        index: index,
+        child: item,
+      );
+    }
+
+    return item;
   }
 
   @override

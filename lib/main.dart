@@ -21,7 +21,12 @@ Future<void> main() async {
   await Global.init();
 
   initLogger();
-  runApp(ProviderScope(child: MyApp()));
+  runApp(ProviderScope(
+    child: MyApp(),
+    observers: [
+      // LoggerObserver(),
+    ],
+  ));
   // runApp(ProviderScope(child: MyApp()));
 }
 
@@ -72,6 +77,9 @@ class MyApp extends HookConsumerWidget {
             thickness: 1,
             space: 0,
           ),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: lightColorScheme.surfaceVariant,
+          ),
         );
 
         ThemeConfig.darkColorScheme = darkColorScheme;
@@ -82,6 +90,9 @@ class MyApp extends HookConsumerWidget {
             color: Colors.white24,
             thickness: 1,
             space: 0,
+          ),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: darkColorScheme.surfaceVariant,
           ),
         );
 
@@ -115,5 +126,22 @@ class MyApp extends HookConsumerWidget {
         );
       },
     );
+  }
+}
+
+class LoggerObserver extends ProviderObserver {
+  @override
+  void didUpdateProvider(
+    ProviderBase provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
+    logger.d('''
+{
+  "provider": "${provider.name ?? provider.runtimeType}",
+  "previousValue": "$previousValue",
+  "newValue": "$newValue"
+}''');
   }
 }

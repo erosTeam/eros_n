@@ -1,17 +1,20 @@
 import 'dart:math' as math;
 
 import 'package:auto_route/auto_route.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'read_view.dart';
 
 class ViewTopBar extends HookConsumerWidget {
-  const ViewTopBar({Key? key}) : super(key: key);
+  const ViewTopBar({Key? key, required this.gid}) : super(key: key);
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +59,7 @@ class ViewTopBar extends HookConsumerWidget {
                   ],
                 ),
                 Consumer(builder: (context, ref, child) {
-                  final gid = ref.read(readProvider).gid;
+                  // final gid = ref.watch(readProvider).gid;
                   final currentItemIndex = ref.watch(galleryProvider(gid)
                       .select((val) => val.currentPageIndex));
                   final totalItem = ref.watch(galleryProvider(gid)
@@ -80,14 +83,15 @@ class ViewTopBar extends HookConsumerWidget {
 }
 
 class ViewBottomBar extends HookConsumerWidget {
-  const ViewBottomBar({Key? key}) : super(key: key);
+  const ViewBottomBar({Key? key, required this.gid}) : super(key: key);
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarHeight =
-        ref.watch(readProvider.select((val) => val.bottomBarHeight));
+        ref.watch(readProvider(gid).select((val) => val.bottomBarHeight));
     final showThumbList =
-        ref.watch(readProvider.select((val) => val.showThumbList));
+        ref.watch(readProvider(gid).select((val) => val.showThumbList));
 
     return AnimatedContainer(
       color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.9),
@@ -105,7 +109,7 @@ class ViewBottomBar extends HookConsumerWidget {
             child: const ThumbnailListView(),
           ),
           // 控制栏
-          const BottomBarControlWidget(),
+          BottomBarControlWidget(gid: gid),
         ],
       ),
     );
@@ -115,16 +119,19 @@ class ViewBottomBar extends HookConsumerWidget {
 class BottomBarControlWidget extends HookConsumerWidget {
   const BottomBarControlWidget({
     Key? key,
+    required this.gid,
   }) : super(key: key);
+
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gid = ref.read(readProvider).gid;
+    // final gid = ref.watch(readProvider(gid)).gid;
     final currentItemIndex =
         ref.watch(galleryProvider(gid).select((val) => val.currentPageIndex));
     final totNum = ref
         .watch(galleryProvider(gid).select((val) => val.images.pages.length));
-    final readNotifier = ref.watch(readProvider.notifier);
+    final readNotifier = ref.watch(readProvider(gid).notifier);
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -137,9 +144,10 @@ class BottomBarControlWidget extends HookConsumerWidget {
             height: kSliderBarHeight,
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: ViewPageSlider(
-              max: totNum - 1.0,
-              initValue:
-                  math.min(currentItemIndex.roundToDouble(), totNum - 1.0),
+              key: ValueKey('ViewPageSlider_$currentItemIndex'),
+              max: math.max(0, totNum - 1.0),
+              initValue: math.max(
+                  0, math.min(currentItemIndex.roundToDouble(), totNum - 1.0)),
               onChangedEnd: (val) {
                 logger.d('onChangedEnd ${val + 1}');
                 readNotifier.jumpToPage(val.round());
@@ -190,11 +198,11 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
     _value = widget.initValue;
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _value = widget.initValue;
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _value = widget.initValue;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +230,8 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
               min: 0,
               max: widget.max,
               value: _value,
-              divisions: widget.max.round(),
+              label: '${_value.round() + 1}',
+              divisions: widget.max > 0 ? widget.max.round() : null,
               onChanged: (double newValue) {
                 setState(() {
                   _value = newValue;
@@ -270,12 +279,103 @@ class ControllerButtonBar extends StatelessWidget {
           icon: Icon(Icons.share_outlined),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            // showModalBottomSheet
+            showMaterialModalBottomSheet(
+              context: context,
+              bounce: true,
+              builder: (context) => SingleChildScrollView(
+                controller: ModalScrollController.of(context),
+                child: const BottomSheetWidget(),
+              ),
+            );
+          },
           icon: Icon(Icons.settings_outlined),
         ),
       ],
     );
   }
+}
+
+class BottomSheetWidget extends StatefulHookConsumerWidget {
+  const BottomSheetWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState<BottomSheetWidget> createState() => _BottomSheetWidgetState();
+}
+
+class _BottomSheetWidgetState extends ConsumerState<BottomSheetWidget>
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+  late final TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Container(
+      padding: EdgeInsets.only(bottom: context.mediaQueryPadding.bottom + 10),
+      height: 300,
+      child: Column(
+        children: [
+          Consumer(builder: (context, ref, child) {
+            final fullScreenReader = ref.watch(settingsProvider
+                .select((settings) => settings.fullScreenReader));
+            return ListTile(
+              title: Text('Full screen'),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: fullScreenReader,
+                onChanged: (value) {
+                  ref
+                      .read(settingsProvider.notifier)
+                      .setFullScreenReader(value);
+                },
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+
+    return Container(
+      height: context.height * 0.8,
+      child: Column(
+        children: [
+          TabBar(
+            controller: tabController,
+            tabs: [
+              Tab(text: '设置'),
+              Tab(text: '下载'),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                Container(),
+                Container(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class ThumbnailListView extends HookConsumerWidget {
@@ -299,11 +399,13 @@ class ReadScaffold extends HookConsumerWidget {
     required this.child,
     required this.topBar,
     required this.bottomBar,
+    required this.gid,
   }) : super(key: key);
 
   final Widget child;
   final Widget topBar;
   final Widget bottomBar;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -312,10 +414,10 @@ class ReadScaffold extends HookConsumerWidget {
       children: [
         child,
         Consumer(builder: (context, ref, child) {
-          final topBarOffset =
-              ref.watch(readProvider.select((state) => state.topBarOffset));
-          final bottomBarOffset =
-              ref.watch(readProvider.select((state) => state.bottomBarOffset));
+          final topBarOffset = ref
+              .watch(readProvider(gid).select((state) => state.topBarOffset));
+          final bottomBarOffset = ref.watch(
+              readProvider(gid).select((state) => state.bottomBarOffset));
           logger.v(
               'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset');
 
@@ -346,15 +448,17 @@ class ImageGestureDetector extends HookConsumerWidget {
   const ImageGestureDetector({
     Key? key,
     required this.child,
+    required this.gid,
   }) : super(key: key);
   final Widget child;
+  final int gid;
 
   static const lrRatio = 1 / 3;
   static const tbRatio = 1 / 5;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final readNoti = ref.watch(readProvider.notifier);
+    final readNoti = ref.watch(readProvider(gid).notifier);
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
       onTapUp: (details) {

@@ -69,6 +69,7 @@ dependencies:
   system_network_proxy: ^1.0.2
   system_proxy: ^0.1.0
   keframe: ^3.0.0
+  modal_bottom_sheet: ^2.1.2
 
 
 dev_dependencies:

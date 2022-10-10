@@ -5,7 +5,7 @@ part 'gallery_history.g.dart';
 @Collection()
 class GalleryHistory {
   @Index(unique: true, replace: true)
-  Id? gid;
+  Id gid = 0;
   String? mediaId;
   String? csrfToken;
   String? title;

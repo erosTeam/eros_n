@@ -22,6 +22,15 @@ class SettingsPage extends StatelessWidget {
                 erosRouter.pushNamed(NHRoutes.appearanceSetting);
               },
             ),
+            // read setting
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.primary,
+              leading: const Icon(Icons.chrome_reader_mode_outlined),
+              title: Text(L10n.of(context).read),
+              onTap: () {
+                erosRouter.pushNamed(NHRoutes.readSetting);
+              },
+            ),
           ],
         ));
   }

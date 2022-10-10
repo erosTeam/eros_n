@@ -15,11 +15,11 @@ import 'package:tuple/tuple.dart';
 import 'gallery_page_state.dart';
 
 class GalleryNotifier extends StateNotifier<Gallery> {
-  GalleryNotifier(super.state, this.ref);
+  GalleryNotifier(super.state, this.reader);
 
-  final Ref ref;
+  final Reader reader;
 
-  ReadNotifier get readNotifier => ref.read(readProvider.notifier);
+  // ReadNotifier get readNotifier => reader(readProvider.notifier);
 
   void initFromGallery(Gallery gallery) {
     logger.d('${gallery.toString()} ');
@@ -33,10 +33,10 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     loadData();
     // add history
     500.milliseconds.delay(() {
-      ref.read(historyProvider.notifier).addHistory(gallery);
+      reader(historyProvider.notifier).addHistory(gallery);
     });
 
-    readNotifier.setGid(gallery.gid);
+    // readNotifier.setGid(gallery.gid);
   }
 
   void setInitialPage(int page) {
@@ -47,8 +47,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   Future<void> loadData({bool refresh = false}) async {
     logger.d('loadData refresh $refresh  url: ${state.url}');
     if (state.images.pages.isEmpty) {
-      ref
-          .read(pageStateProvider(state.gid).notifier)
+      reader(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.loading));
     }
 
@@ -80,8 +79,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         rethrow;
       }
     } finally {
-      ref
-          .read(pageStateProvider(state.gid).notifier)
+      reader(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.none));
     }
 
@@ -106,8 +104,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         rethrow;
       }
     } finally {
-      ref
-          .read(pageStateProvider(state.gid).notifier)
+      reader(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.none));
     }
   }
@@ -153,14 +150,19 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 }
 
 final galleryProvider =
-    StateNotifierProvider.family<GalleryNotifier, Gallery, int?>(
+    StateNotifierProvider.autoDispose.family<GalleryNotifier, Gallery, int>(
   (ref, gid) {
-    return GalleryNotifier(Gallery(gid: gid), ref);
+    logger.d('galleryProvider gid $gid');
+    // final readNotifier = ref.watch(readProvider.notifier);
+    ref.onDispose(() {
+      logger.d('galleryProvider $gid onDispose');
+    });
+    return GalleryNotifier(Gallery(gid: gid), ref.read);
   },
 );
 
 final pageStateProvider =
-    StateProvider.family<GalleryViewState, int?>((ref, gid) {
+    StateProvider.family<GalleryViewState, int>((ref, gid) {
   return const GalleryViewState(pageStatus: PageStatus.none);
 });
 

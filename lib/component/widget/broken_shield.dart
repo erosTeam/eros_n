@@ -248,7 +248,7 @@ class _BrokenShieldWindowsWebViewState
             cookies.length >= 2 &&
             cookies.any((element) => element.name == 'csrftoken')) {
           final ua = await _controller.executeScript('navigator.userAgent');
-          widget.callback(cookies!, ua as String);
+          widget.callback(cookies, ua as String);
         }
       }
     }));

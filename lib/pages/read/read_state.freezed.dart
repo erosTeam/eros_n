@@ -25,7 +25,7 @@ mixin _$ReadState {
   double get bottomBarOffset => throw _privateConstructorUsedError;
   double? get bottomBarHeight => throw _privateConstructorUsedError;
   bool get showThumbList => throw _privateConstructorUsedError;
-  int? get gid => throw _privateConstructorUsedError;
+  int get gid => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   BuildContext? get context => throw _privateConstructorUsedError;
 
@@ -45,7 +45,7 @@ abstract class $ReadStateCopyWith<$Res> {
       double bottomBarOffset,
       double? bottomBarHeight,
       bool showThumbList,
-      int? gid,
+      int gid,
       @JsonKey(ignore: true) BuildContext? context});
 }
 
@@ -91,7 +91,7 @@ class _$ReadStateCopyWithImpl<$Res> implements $ReadStateCopyWith<$Res> {
       gid: gid == freezed
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       context: context == freezed
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ abstract class _$$_ReadStateCopyWith<$Res> implements $ReadStateCopyWith<$Res> {
       double bottomBarOffset,
       double? bottomBarHeight,
       bool showThumbList,
-      int? gid,
+      int gid,
       @JsonKey(ignore: true) BuildContext? context});
 }
 
@@ -160,7 +160,7 @@ class __$$_ReadStateCopyWithImpl<$Res> extends _$ReadStateCopyWithImpl<$Res>
       gid: gid == freezed
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       context: context == freezed
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
@@ -179,7 +179,7 @@ class _$_ReadState implements _ReadState {
       this.bottomBarOffset = 0.0,
       this.bottomBarHeight,
       this.showThumbList = false,
-      this.gid,
+      this.gid = 0,
       @JsonKey(ignore: true) this.context});
 
   factory _$_ReadState.fromJson(Map<String, dynamic> json) =>
@@ -200,7 +200,8 @@ class _$_ReadState implements _ReadState {
   @JsonKey()
   final bool showThumbList;
   @override
-  final int? gid;
+  @JsonKey()
+  final int gid;
   @override
   @JsonKey(ignore: true)
   final BuildContext? context;
@@ -261,7 +262,7 @@ abstract class _ReadState implements ReadState {
       final double bottomBarOffset,
       final double? bottomBarHeight,
       final bool showThumbList,
-      final int? gid,
+      final int gid,
       @JsonKey(ignore: true) final BuildContext? context}) = _$_ReadState;
 
   factory _ReadState.fromJson(Map<String, dynamic> json) =
@@ -278,7 +279,7 @@ abstract class _ReadState implements ReadState {
   @override
   bool get showThumbList;
   @override
-  int? get gid;
+  int get gid;
   @override
   @JsonKey(ignore: true)
   BuildContext? get context;

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
@@ -7,23 +8,22 @@ import 'package:eros_n/pages/read/read_state.dart';
 import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import '../../utils/logger.dart';
 
 class ReadNotifier extends StateNotifier<ReadState> {
-  ReadNotifier(this.ref) : super(const ReadState());
+  ReadNotifier(this.ref, int gid)
+      : galleryNotifier = ref.read(galleryProvider(gid).notifier),
+        preloadPageController = PreloadPageController(
+            initialPage: ref.read(galleryProvider(gid)).currentPageIndex),
+        super(ReadState(gid: gid));
   final Ref ref;
 
-  GalleryNotifier get galleryNotifier =>
-      ref.read(galleryProvider(state.gid).notifier);
-
-  late PreloadPageController preloadPageController;
-
-  void setGid(int? gid) {
-    state = state.copyWith(gid: gid);
-  }
+  final GalleryNotifier galleryNotifier;
+  final PreloadPageController preloadPageController;
 
   void toPrev() {}
 
@@ -61,12 +61,10 @@ class ReadNotifier extends StateNotifier<ReadState> {
       context: context,
       topBarOffset: _offsetTopHide,
       bottomBarOffset: -bottomBarHeight,
+      showAppBar: false,
     );
 
-    preloadPageController = PreloadPageController(
-      initialPage: index,
-      viewportFraction: 1,
-    );
+    setFullscreen();
   }
 
   late double _offsetTopHide;
@@ -77,6 +75,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
       bottomBarOffset: 0,
       topBarOffset: 0,
     );
+    unFullscreen();
   }
 
   void hideAppBar() {
@@ -85,9 +84,33 @@ class ReadNotifier extends StateNotifier<ReadState> {
       bottomBarOffset: -(state.bottomBarHeight ?? 0),
       topBarOffset: _offsetTopHide,
     );
+    setFullscreen();
+  }
+
+  void setFullscreen() {
+    final fullScreenReader = ref.watch(settingsProvider).fullScreenReader;
+    if (fullScreenReader) {
+      400.milliseconds.delay(() {
+        SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.immersiveSticky,
+        );
+      });
+    }
+  }
+
+  void unFullscreen() {
+    400.milliseconds.delay(() {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.edgeToEdge,
+      );
+    });
   }
 }
 
-final readProvider = StateNotifierProvider<ReadNotifier, ReadState>((ref) {
-  return ReadNotifier(ref);
+final readProvider = StateNotifierProvider.autoDispose
+    .family<ReadNotifier, ReadState, int>((ref, gid) {
+  ref.onDispose(() {
+    logger.d('readProvider $gid dispose');
+  });
+  return ReadNotifier(ref, gid);
 });

@@ -19,9 +19,7 @@ import 'http_config.dart';
 
 export 'http_config.dart';
 
-
 class AppDio with DioMixin implements Dio {
-
   AppDio({BaseOptions? options, this.dioConfig}) {
     options ??= BaseOptions(
       baseUrl: dioConfig?.baseUrl ?? '',
@@ -43,7 +41,6 @@ class AppDio with DioMixin implements Dio {
       logger.v('set userAgent from dioConfig');
       this.options.headers['User-Agent'] = dioConfig?.userAgent;
     }
-
 
     // DioCacheManager
     // final cacheOptions = CacheConfig(
@@ -93,18 +90,18 @@ class AppDio with DioMixin implements Dio {
       interceptors.add(CookieManager(Global.cookieJar));
     }
 
-    interceptors.add(PrettyDioLogger(
-      request: false,
-      requestHeader: false,
-      requestBody: false,
-      responseHeader: false,
-      responseBody: false,
-      error: true,
-      maxWidth: 120,
-      // logPrint: (_) {},
-      // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
-      logPrint: loggerSimpleOnlyFile.d,
-    ));
+    // interceptors.add(PrettyDioLogger(
+    //   request: false,
+    //   requestHeader: false,
+    //   requestBody: false,
+    //   responseHeader: false,
+    //   responseBody: false,
+    //   error: true,
+    //   maxWidth: 120,
+    //   // logPrint: (_) {},
+    //   // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
+    //   logPrint: loggerSimpleOnlyFile.d,
+    // ));
 
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);
@@ -141,14 +138,13 @@ class AppDio with DioMixin implements Dio {
     });
   }
 
-
   Future<String> getSystemProxy() async {
     if (Platform.isAndroid || Platform.isIOS) {
       Map<String, String>? systemProxy = await SystemProxy.getProxySettings();
       if (systemProxy != null) {
         return 'PROXY ${systemProxy['host']}:${systemProxy['port']}';
       }
-    }else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    } else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
       SystemNetworkProxy.init();
       final proxyEnable = await SystemNetworkProxy.getProxyEnable();
       final proxyServer = await SystemNetworkProxy.getProxyServer();
@@ -156,7 +152,7 @@ class AppDio with DioMixin implements Dio {
       if (proxyEnable && proxyServer.isNotEmpty) {
         return 'PROXY $proxyServer';
       }
-    }else if (Platform.isWindows) {
+    } else if (Platform.isWindows) {
       // SystemNetworkProxyWindows
     }
     return 'DIRECT';

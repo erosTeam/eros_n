@@ -91,15 +91,16 @@ PhotoViewScaleState imageScaleStateCycle(PhotoViewScaleState actual) {
 class ReadPage extends HookConsumerWidget {
   const ReadPage({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('ReadPage build');
+    logger.d('ReadPage build $gid');
 
-    final ReadNotifier readNotifier = ref.read(readProvider.notifier);
+    final ReadNotifier readNotifier = ref.watch(readProvider(gid).notifier);
+
     final Gallery gallery = ref.watch(galleryProvider(gid));
     final currentPageIndex = gallery.currentPageIndex;
     final pages = gallery.images.pages;
@@ -140,23 +141,19 @@ class ReadPage extends HookConsumerWidget {
               : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
         ),
       ),
-      // backgroundDecoration: const BoxDecoration(
-      //   color: Colors.black,
-      // ),
-
       pageController: readNotifier.preloadPageController,
-      // pageController: PageController(
-      //     initialPage: currentPageIndex, viewportFraction: 1.1),
       onPageChanged: onPageChanged,
     );
 
     readView = ImageGestureDetector(
       child: Container(color: Colors.black, child: readView),
+      gid: gid,
     );
 
     readView = ReadScaffold(
-      topBar: const ViewTopBar(),
-      bottomBar: const ViewBottomBar(),
+      gid: gid,
+      topBar: ViewTopBar(gid: gid),
+      bottomBar: ViewBottomBar(gid: gid),
       child: readView,
     );
 

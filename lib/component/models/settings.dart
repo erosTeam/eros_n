@@ -16,6 +16,7 @@ class Settings with _$Settings {
     @Default(false) bool showTags,
     @Default(TagLayoutOnCard.wrap) TagLayoutOnCard tagLayoutOnCard,
     @Default(ThemeMode.system) ThemeMode themeMode,
+    @Default(true) bool fullScreenReader,
   }) = _Settings;
 
   factory Settings.fromJson(Map<String, Object?> json) =>

@@ -27,6 +27,7 @@ mixin _$Settings {
   bool get showTags => throw _privateConstructorUsedError;
   TagLayoutOnCard get tagLayoutOnCard => throw _privateConstructorUsedError;
   ThemeMode get themeMode => throw _privateConstructorUsedError;
+  bool get fullScreenReader => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +46,8 @@ abstract class $SettingsCopyWith<$Res> {
       SearchSort searchSort,
       bool showTags,
       TagLayoutOnCard tagLayoutOnCard,
-      ThemeMode themeMode});
+      ThemeMode themeMode,
+      bool fullScreenReader});
 }
 
 /// @nodoc
@@ -65,6 +67,7 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? showTags = freezed,
     Object? tagLayoutOnCard = freezed,
     Object? themeMode = freezed,
+    Object? fullScreenReader = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -95,6 +98,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as ThemeMode,
+      fullScreenReader: fullScreenReader == freezed
+          ? _value.fullScreenReader
+          : fullScreenReader // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -112,7 +119,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       SearchSort searchSort,
       bool showTags,
       TagLayoutOnCard tagLayoutOnCard,
-      ThemeMode themeMode});
+      ThemeMode themeMode,
+      bool fullScreenReader});
 }
 
 /// @nodoc
@@ -134,6 +142,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? showTags = freezed,
     Object? tagLayoutOnCard = freezed,
     Object? themeMode = freezed,
+    Object? fullScreenReader = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -164,6 +173,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as ThemeMode,
+      fullScreenReader: fullScreenReader == freezed
+          ? _value.fullScreenReader
+          : fullScreenReader // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -178,7 +191,8 @@ class _$_Settings implements _Settings {
       this.searchSort = SearchSort.recent,
       this.showTags = false,
       this.tagLayoutOnCard = TagLayoutOnCard.wrap,
-      this.themeMode = ThemeMode.system});
+      this.themeMode = ThemeMode.system,
+      this.fullScreenReader = true});
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsFromJson(json);
@@ -204,10 +218,13 @@ class _$_Settings implements _Settings {
   @override
   @JsonKey()
   final ThemeMode themeMode;
+  @override
+  @JsonKey()
+  final bool fullScreenReader;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnCard: $tagLayoutOnCard, themeMode: $themeMode)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnCard: $tagLayoutOnCard, themeMode: $themeMode, fullScreenReader: $fullScreenReader)';
   }
 
   @override
@@ -226,7 +243,9 @@ class _$_Settings implements _Settings {
             const DeepCollectionEquality().equals(other.showTags, showTags) &&
             const DeepCollectionEquality()
                 .equals(other.tagLayoutOnCard, tagLayoutOnCard) &&
-            const DeepCollectionEquality().equals(other.themeMode, themeMode));
+            const DeepCollectionEquality().equals(other.themeMode, themeMode) &&
+            const DeepCollectionEquality()
+                .equals(other.fullScreenReader, fullScreenReader));
   }
 
   @JsonKey(ignore: true)
@@ -239,7 +258,8 @@ class _$_Settings implements _Settings {
       const DeepCollectionEquality().hash(searchSort),
       const DeepCollectionEquality().hash(showTags),
       const DeepCollectionEquality().hash(tagLayoutOnCard),
-      const DeepCollectionEquality().hash(themeMode));
+      const DeepCollectionEquality().hash(themeMode),
+      const DeepCollectionEquality().hash(fullScreenReader));
 
   @JsonKey(ignore: true)
   @override
@@ -262,7 +282,8 @@ abstract class _Settings implements Settings {
       final SearchSort searchSort,
       final bool showTags,
       final TagLayoutOnCard tagLayoutOnCard,
-      final ThemeMode themeMode}) = _$_Settings;
+      final ThemeMode themeMode,
+      final bool fullScreenReader}) = _$_Settings;
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
 
@@ -280,6 +301,8 @@ abstract class _Settings implements Settings {
   TagLayoutOnCard get tagLayoutOnCard;
   @override
   ThemeMode get themeMode;
+  @override
+  bool get fullScreenReader;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

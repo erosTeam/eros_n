@@ -25,6 +25,11 @@ class FrontState {
     );
   }
 
+  @override
+  String toString() {
+    return 'FrontState{status: $status, curPage: $curPage, maxPage: $maxPage}';
+  }
+
   bool get isNone => status == LoadStatus.none;
   bool get isLoadMore => status == LoadStatus.loadingMore;
   bool get isLoading => status == LoadStatus.loading;

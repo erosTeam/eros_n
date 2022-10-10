@@ -19,6 +19,7 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
           TagLayoutOnCard.wrap,
       themeMode: $enumDecodeNullable(_$ThemeModeEnumMap, json['themeMode']) ??
           ThemeMode.system,
+      fullScreenReader: json['fullScreenReader'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'showTags': instance.showTags,
       'tagLayoutOnCard': _$TagLayoutOnCardEnumMap[instance.tagLayoutOnCard]!,
       'themeMode': _$ThemeModeEnumMap[instance.themeMode]!,
+      'fullScreenReader': instance.fullScreenReader,
     };
 
 const _$SearchSortEnumMap = {

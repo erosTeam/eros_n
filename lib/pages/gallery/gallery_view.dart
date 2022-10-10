@@ -34,14 +34,17 @@ import 'gallery_provider.dart';
 class GalleryPage extends HookConsumerWidget {
   const GalleryPage({
     super.key,
-    this.gid,
+    required this.gid,
   });
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.read(galleryProvider(gid));
+    // 避免 currentPageIndex 变化时，重新构建 GalleryPage
+    // final Gallery gallery = ref.watch(galleryProvider(gid)
+    //     .select((gallery) => gallery.copyWith(currentPageIndex: 0)));
     logger.d('build gallery $gid ${gallery.title}');
 
     late ScrollController scrollController;
@@ -113,7 +116,8 @@ class GalleryPage extends HookConsumerWidget {
       ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
-          context.router.push(ReadRoute(gid: gid));
+          // context.router.push(ReadRoute(gid: gid));
+          RouteUtil.goRead(context, ref, gid: gid);
         },
         scrollController: scrollController,
         label: Text(L10n.of(context).read),
@@ -336,10 +340,10 @@ class GalleryPage extends HookConsumerWidget {
 class DetailView extends HookConsumerWidget {
   const DetailView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -370,10 +374,10 @@ class DetailView extends HookConsumerWidget {
 class TagsView extends HookConsumerWidget {
   const TagsView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -488,16 +492,18 @@ String _getTagTypeTranslate(BuildContext context, String tagType) {
 class ThumbListView extends HookConsumerWidget {
   const ThumbListView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.d('ThumbListView build');
-    final pages = ref.read(galleryProvider(gid)).images.pages;
-    final mediaId = ref.read(galleryProvider(gid)).mediaId;
+    final pages = ref
+        .watch(galleryProvider(gid).select((gallery) => gallery.images.pages));
+    final mediaId =
+        ref.watch(galleryProvider(gid).select((gallery) => gallery.mediaId));
     return MultiSliver(
       children: [
         Padding(
@@ -531,9 +537,10 @@ class ThumbListView extends HookConsumerWidget {
               final GalleryImage image = pages[index];
               return GestureDetector(
                 onTap: () async {
-                  ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-                  ref.read(readProvider.notifier).init(context, index);
-                  context.router.push(ReadRoute(gid: gid));
+                  // ref.read(galleryProvider(gid).notifier).setInitialPage(index);
+                  // ref.read(readProvider.notifier).init(context, index);
+                  // context.router.push(ReadRoute(gid: gid));
+                  RouteUtil.goRead(context, ref, index: index, gid: gid);
                 },
                 child: Center(
                   child: AspectRatio(
@@ -564,10 +571,10 @@ class ThumbListView extends HookConsumerWidget {
 class MoreLikeListView extends HookConsumerWidget {
   const MoreLikeListView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -600,7 +607,7 @@ class MoreLikeListView extends HookConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   ref
-                      .read(galleryProvider(likeGallery.gid).notifier)
+                      .watch(galleryProvider(likeGallery.gid).notifier)
                       .initFromGallery(likeGallery);
                   context.router.push(GalleryRoute(gid: likeGallery.gid));
                 },
@@ -667,10 +674,10 @@ class MoreLikeListView extends HookConsumerWidget {
 class CommentsListView extends HookConsumerWidget {
   const CommentsListView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -811,7 +818,7 @@ class CommentsListView extends HookConsumerWidget {
 class ToolBarView extends HookConsumerWidget {
   const ToolBarView({Key? key, required this.gid}) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

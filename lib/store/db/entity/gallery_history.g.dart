@@ -204,7 +204,7 @@ P _galleryHistoryDeserializeProp<P>(
 }
 
 Id _galleryHistoryGetId(GalleryHistory object) {
-  return object.gid ?? Isar.autoIncrement;
+  return object.gid;
 }
 
 List<IsarLinkBase<dynamic>> _galleryHistoryGetLinks(GalleryHistory object) {
@@ -724,25 +724,7 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      gidIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'gid',
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      gidIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'gid',
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      gidEqualTo(Id? value) {
+      gidEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'gid',
@@ -753,7 +735,7 @@ extension GalleryHistoryQueryFilter
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       gidGreaterThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -767,7 +749,7 @@ extension GalleryHistoryQueryFilter
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       gidLessThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -781,8 +763,8 @@ extension GalleryHistoryQueryFilter
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       gidBetween(
-    Id? lower,
-    Id? upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

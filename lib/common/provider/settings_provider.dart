@@ -51,6 +51,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(themeMode: value);
     hiveHelper.setSettings(state);
   }
+
+  void setFullScreenReader(bool value) {
+    state = state.copyWith(fullScreenReader: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =
