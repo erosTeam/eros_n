@@ -61,6 +61,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
 
   @override
   Widget build(BuildContext context) {
+    logger.d('build HistoryPage');
     super.build(context);
     return Scaffold(
       body: Scrollbar(

@@ -8,3 +8,14 @@ enum SearchSort {
 
   final String value;
 }
+
+enum ReadModel {
+  leftToRight,
+  rightToLeft,
+  curlLeftToRight,
+  curlRightToLeft,
+  vertical,
+  curlVertical,
+  webtoon,
+  defaultModel,
+}

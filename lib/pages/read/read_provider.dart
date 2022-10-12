@@ -9,6 +9,7 @@ import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:fullscreen/fullscreen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
@@ -96,6 +97,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
       bottomBarOffset: 0,
       topBarOffset: 0,
     );
+    // FullScreen.exitFullScreen();
   }
 
   void hideAppBar() {
@@ -108,20 +110,23 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void setFullscreen() {
-    final fullScreenReader = ref.watch(settingsProvider).fullScreenReader;
+    final fullScreenReader =
+        ref.watch(settingsProvider.select((s) => s.fullScreenReader));
     if (fullScreenReader) {
       400.milliseconds.delay(() {
         SystemChrome.setEnabledSystemUIMode(
-          SystemUiMode.immersiveSticky,
+          SystemUiMode.leanBack,
         );
+        // FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
       });
     }
   }
 
   Future<void> unFullscreen() async {
-    await SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-    );
+    // await SystemChrome.setEnabledSystemUIMode(
+    //   SystemUiMode.edgeToEdge,
+    // );
+    FullScreen.exitFullScreen();
     await 300.milliseconds.delay();
   }
 }

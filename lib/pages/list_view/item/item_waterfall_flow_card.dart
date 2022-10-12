@@ -122,8 +122,9 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
 
   Widget buildTags() {
     return Consumer(builder: (context, ref, child) {
-      final showTags = ref.watch(settingsProvider).showTags;
-      final tagLayoutOnCard = ref.watch(settingsProvider).tagLayoutOnCard;
+      final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
+      final tagLayoutOnCard =
+          ref.watch(settingsProvider.select((s) => s.tagLayoutOnCard));
 
       if (!showTags || gallery.simpleTags.isEmpty) {
         return const SizedBox();

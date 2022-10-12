@@ -295,6 +295,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.0"
+  dropdown_button2:
+    dependency: "direct main"
+    description:
+      name: dropdown_button2
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.8.5"
   dynamic_color:
     dependency: "direct main"
     description:
@@ -455,6 +462,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.3"
+  fullscreen:
+    dependency: "direct main"
+    description:
+      name: fullscreen
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.3"
   glob:
     dependency: transitive
     description:

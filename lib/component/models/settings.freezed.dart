@@ -28,6 +28,7 @@ mixin _$Settings {
   TagLayoutOnCard get tagLayoutOnCard => throw _privateConstructorUsedError;
   ThemeMode get themeMode => throw _privateConstructorUsedError;
   bool get fullScreenReader => throw _privateConstructorUsedError;
+  ReadModel get readModel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +48,8 @@ abstract class $SettingsCopyWith<$Res> {
       bool showTags,
       TagLayoutOnCard tagLayoutOnCard,
       ThemeMode themeMode,
-      bool fullScreenReader});
+      bool fullScreenReader,
+      ReadModel readModel});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? tagLayoutOnCard = freezed,
     Object? themeMode = freezed,
     Object? fullScreenReader = freezed,
+    Object? readModel = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -102,6 +105,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.fullScreenReader
           : fullScreenReader // ignore: cast_nullable_to_non_nullable
               as bool,
+      readModel: readModel == freezed
+          ? _value.readModel
+          : readModel // ignore: cast_nullable_to_non_nullable
+              as ReadModel,
     ));
   }
 }
@@ -120,7 +127,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       bool showTags,
       TagLayoutOnCard tagLayoutOnCard,
       ThemeMode themeMode,
-      bool fullScreenReader});
+      bool fullScreenReader,
+      ReadModel readModel});
 }
 
 /// @nodoc
@@ -143,6 +151,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? tagLayoutOnCard = freezed,
     Object? themeMode = freezed,
     Object? fullScreenReader = freezed,
+    Object? readModel = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -177,6 +186,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.fullScreenReader
           : fullScreenReader // ignore: cast_nullable_to_non_nullable
               as bool,
+      readModel: readModel == freezed
+          ? _value.readModel
+          : readModel // ignore: cast_nullable_to_non_nullable
+              as ReadModel,
     ));
   }
 }
@@ -192,7 +205,8 @@ class _$_Settings implements _Settings {
       this.showTags = false,
       this.tagLayoutOnCard = TagLayoutOnCard.wrap,
       this.themeMode = ThemeMode.system,
-      this.fullScreenReader = true});
+      this.fullScreenReader = false,
+      this.readModel = ReadModel.leftToRight});
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsFromJson(json);
@@ -221,10 +235,13 @@ class _$_Settings implements _Settings {
   @override
   @JsonKey()
   final bool fullScreenReader;
+  @override
+  @JsonKey()
+  final ReadModel readModel;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnCard: $tagLayoutOnCard, themeMode: $themeMode, fullScreenReader: $fullScreenReader)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnCard: $tagLayoutOnCard, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel)';
   }
 
   @override
@@ -245,7 +262,8 @@ class _$_Settings implements _Settings {
                 .equals(other.tagLayoutOnCard, tagLayoutOnCard) &&
             const DeepCollectionEquality().equals(other.themeMode, themeMode) &&
             const DeepCollectionEquality()
-                .equals(other.fullScreenReader, fullScreenReader));
+                .equals(other.fullScreenReader, fullScreenReader) &&
+            const DeepCollectionEquality().equals(other.readModel, readModel));
   }
 
   @JsonKey(ignore: true)
@@ -259,7 +277,8 @@ class _$_Settings implements _Settings {
       const DeepCollectionEquality().hash(showTags),
       const DeepCollectionEquality().hash(tagLayoutOnCard),
       const DeepCollectionEquality().hash(themeMode),
-      const DeepCollectionEquality().hash(fullScreenReader));
+      const DeepCollectionEquality().hash(fullScreenReader),
+      const DeepCollectionEquality().hash(readModel));
 
   @JsonKey(ignore: true)
   @override
@@ -283,7 +302,8 @@ abstract class _Settings implements Settings {
       final bool showTags,
       final TagLayoutOnCard tagLayoutOnCard,
       final ThemeMode themeMode,
-      final bool fullScreenReader}) = _$_Settings;
+      final bool fullScreenReader,
+      final ReadModel readModel}) = _$_Settings;
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
 
@@ -303,6 +323,8 @@ abstract class _Settings implements Settings {
   ThemeMode get themeMode;
   @override
   bool get fullScreenReader;
+  @override
+  ReadModel get readModel;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

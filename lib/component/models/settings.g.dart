@@ -19,7 +19,9 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
           TagLayoutOnCard.wrap,
       themeMode: $enumDecodeNullable(_$ThemeModeEnumMap, json['themeMode']) ??
           ThemeMode.system,
-      fullScreenReader: json['fullScreenReader'] as bool? ?? true,
+      fullScreenReader: json['fullScreenReader'] as bool? ?? false,
+      readModel: $enumDecodeNullable(_$ReadModelEnumMap, json['readModel']) ??
+          ReadModel.leftToRight,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -32,6 +34,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'tagLayoutOnCard': _$TagLayoutOnCardEnumMap[instance.tagLayoutOnCard]!,
       'themeMode': _$ThemeModeEnumMap[instance.themeMode]!,
       'fullScreenReader': instance.fullScreenReader,
+      'readModel': _$ReadModelEnumMap[instance.readModel]!,
     };
 
 const _$SearchSortEnumMap = {
@@ -51,4 +54,15 @@ const _$ThemeModeEnumMap = {
   ThemeMode.system: 'system',
   ThemeMode.light: 'light',
   ThemeMode.dark: 'dark',
+};
+
+const _$ReadModelEnumMap = {
+  ReadModel.leftToRight: 'leftToRight',
+  ReadModel.rightToLeft: 'rightToLeft',
+  ReadModel.curlLeftToRight: 'curlLeftToRight',
+  ReadModel.curlRightToLeft: 'curlRightToLeft',
+  ReadModel.vertical: 'vertical',
+  ReadModel.curlVertical: 'curlVertical',
+  ReadModel.webtoon: 'webtoon',
+  ReadModel.defaultModel: 'defaultModel',
 };

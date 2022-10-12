@@ -69,9 +69,9 @@ class Global {
       statusBarColor: Colors.transparent,
     ));
 
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-    );
+    // SystemChrome.setEnabledSystemUIMode(
+    //   SystemUiMode.edgeToEdge,
+    // );
 
     appSupportPath = (await getApplicationSupportDirectory()).path;
     appDocPath = (await getApplicationDocumentsDirectory()).path;

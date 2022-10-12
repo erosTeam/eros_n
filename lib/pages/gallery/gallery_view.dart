@@ -24,6 +24,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share/share.dart';
@@ -110,7 +111,46 @@ class GalleryPage extends HookConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.more_vert),
-            onPressed: () {},
+            onPressed: () {
+              showMaterialModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) => Material(
+                    child: SafeArea(
+                  top: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        title: Text('Edit'),
+                        leading: Icon(Icons.edit),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                      ListTile(
+                        title: Text('Copy'),
+                        leading: Icon(Icons.content_copy),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                      ListTile(
+                        title: Text('Cut'),
+                        leading: Icon(Icons.content_cut),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                      ListTile(
+                        title: Text('Move'),
+                        leading: Icon(Icons.folder_open),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                      ListTile(
+                        title: Text('Delete'),
+                        leading: Icon(Icons.delete),
+                        onTap: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  ),
+                )),
+              );
+            },
           ),
         ],
       ),
@@ -353,9 +393,9 @@ class DetailView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('DetailView build');
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
+    logger.d('DetailView build $pageStatus');
     if (pageStatus == PageStatus.loading) {
       return const SliverFillRemaining(
         child: Center(

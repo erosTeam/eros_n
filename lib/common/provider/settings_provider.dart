@@ -56,6 +56,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(fullScreenReader: value);
     hiveHelper.setSettings(state);
   }
+
+  void setReadModel(ReadModel value) {
+    state = state.copyWith(readModel: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

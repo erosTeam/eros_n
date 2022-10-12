@@ -1,7 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:auto_route/auto_route.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
@@ -259,6 +261,7 @@ class ControllerButtonBar extends StatelessWidget {
       mainAxisAlignment: mainAxisAlignment,
       mainAxisSize: mainAxisSize,
       children: [
+        const ReadModelButton(),
         IconButton(
           onPressed: () {},
           icon: const Icon(Icons.share_outlined),
@@ -266,14 +269,29 @@ class ControllerButtonBar extends StatelessWidget {
         IconButton(
           onPressed: () {
             // showModalBottomSheet
-            showMaterialModalBottomSheet(
+            // showMaterialModalBottomSheet(
+            //   context: context,
+            //   enableDrag: true,
+            //   builder: (context) => ReadSettings(),
+            // );
+            showDialog(
               context: context,
-              bounce: true,
-              builder: (context) => SingleChildScrollView(
-                controller: ModalScrollController.of(context),
-                child: const BottomSheetWidget(),
+              builder: (context) => AlertDialog(
+                title: const Text('Read Setting'),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                content: ReadSettings(),
               ),
             );
+            // showBottomSheet(
+            //   context: context,
+            //   builder: (context) => BottomSheet(
+            //     onClosing: () {},
+            //     enableDrag: false,
+            //     builder: (BuildContext context) {
+            //       return const ReadSettings();
+            //     },
+            //   ),
+            // );
           },
           icon: const Icon(Icons.settings_outlined),
         ),
@@ -282,16 +300,80 @@ class ControllerButtonBar extends StatelessWidget {
   }
 }
 
-class BottomSheetWidget extends StatefulHookConsumerWidget {
-  const BottomSheetWidget({
+class ReadModelButton extends HookConsumerWidget {
+  const ReadModelButton({
     Key? key,
   }) : super(key: key);
 
   @override
-  ConsumerState<BottomSheetWidget> createState() => _BottomSheetWidgetState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final itemMap = {
+      ReadModel.leftToRight: Text('Left to Right'),
+      ReadModel.rightToLeft: Text('Right to Left'),
+      ReadModel.webtoon: Text('Webtoon'),
+      ReadModel.curlVertical: Text('Curl Vertical'),
+    };
+
+    final readModelIconMap = <ReadModel, Widget>{
+      ReadModel.leftToRight: const Icon(Icons.send_to_mobile_outlined),
+      ReadModel.rightToLeft: Transform.rotate(
+          angle: math.pi, child: const Icon(Icons.send_to_mobile_outlined)),
+      ReadModel.webtoon: const Icon(Icons.system_update_outlined),
+      ReadModel.curlVertical: const Icon(Icons.system_security_update_outlined),
+    };
+
+    final items = itemMap.entries.map((e) {
+      return PopupMenuItem<ReadModel>(
+        value: e.key,
+        child: e.value,
+      );
+    }).toList();
+
+    // return IconButton(
+    //     onPressed: () {
+    //       showMenu(
+    //         context: context,
+    //         position: RelativeRect.fromLTRB(100,
+    //             context.height - context.mediaQueryPadding.bottom, 300, 400),
+    //         items: items,
+    //       ).then((value) {
+    //         if (value != null) {
+    //           // ref.read(readModelProvider.notifier).setReadModel(value);
+    //         }
+    //       });
+    //     },
+    //     icon: const Icon(Icons.app_settings_alt_outlined));
+
+    return PopupMenuButton<ReadModel>(
+      icon: Consumer(builder: (context, ref, child) {
+        final readModel =
+            ref.watch(settingsProvider.select((setting) => setting.readModel));
+        return readModelIconMap[readModel]!;
+      }),
+      color: Theme.of(context).colorScheme.surfaceVariant,
+      elevation: 2,
+      onSelected: (val) {
+        ref.read(settingsProvider.notifier).setReadModel(val);
+      },
+      // position: PopupMenuPosition.over,
+      offset: context.isTablet
+          ? const Offset(0, kToolbarHeight)
+          : const Offset(0, -240),
+      itemBuilder: (context) => items,
+    );
+  }
 }
 
-class _BottomSheetWidgetState extends ConsumerState<BottomSheetWidget>
+class ReadSettings extends StatefulHookConsumerWidget {
+  const ReadSettings({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState<ReadSettings> createState() => _BottomSheetWidgetState();
+}
+
+class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   late final TabController tabController;
 
@@ -305,9 +387,10 @@ class _BottomSheetWidgetState extends ConsumerState<BottomSheetWidget>
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-      padding: EdgeInsets.only(bottom: context.mediaQueryPadding.bottom + 10),
-      height: 300,
+      height: 400,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Consumer(builder: (context, ref, child) {
             final fullScreenReader = ref.watch(settingsProvider

@@ -12,6 +12,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fullscreen/fullscreen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -106,6 +107,7 @@ class ReadPage extends HookConsumerWidget {
         SystemChrome.setEnabledSystemUIMode(
           SystemUiMode.edgeToEdge,
         );
+        // FullScreen.exitFullScreen();
       };
     });
 
@@ -185,6 +187,10 @@ class ReadPage extends HookConsumerWidget {
     //   ),
     //   child: readView,
     // );
+
+    readView = Scaffold(
+      body: readView,
+    );
 
     return readView;
   }

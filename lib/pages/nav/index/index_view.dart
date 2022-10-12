@@ -9,16 +9,12 @@ import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../utils/logger.dart';
 import 'index_provider.dart';
 
-class IndexPage extends StatefulHookConsumerWidget {
-  const IndexPage({super.key});
+class IndexPage extends HookConsumerWidget {
+  IndexPage({super.key});
 
-  @override
-  ConsumerState<IndexPage> createState() => _IndexPageState();
-}
-
-class _IndexPageState extends ConsumerState<IndexPage> {
   final pages = <Widget>[
     const FrontPage(),
     const FavoritePage(),
@@ -28,12 +24,8 @@ class _IndexPageState extends ConsumerState<IndexPage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    logger.d('build IndexPage');
     final state = ref.watch(indexProvider);
     return Scaffold(
       body: PageView(
