@@ -77,6 +77,22 @@ class AppearanceSettingPage extends StatelessWidget {
               },
             );
           }),
+          Consumer(builder: (context, ref, child) {
+            final allNhTag = ref.watch(allNhTagProvider);
+            return ListTile(
+              title: Text('Tags data'),
+              // subtitle: Text('total: ${ref.watch(tagTranslateProvider).total}, long press to update'),
+              subtitle: allNhTag.when(
+                data: (data) =>
+                    Text('total: ${data.length}, long press to update'),
+                loading: () => Text('loading...'),
+                error: (error, stack) => Text('error: $error'),
+              ),
+              onLongPress: () {
+                ref.read(tagTranslateProvider.notifier).updateNhTags();
+              },
+            );
+          }),
           // Switch show tags
           Consumer(builder: (context, ref, child) {
             final showTags = ref.watch(

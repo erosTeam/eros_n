@@ -178,63 +178,69 @@ class PopularListView extends ConsumerWidget {
               final gallery = popularList[index];
               final card = SizedBox(
                 width: 160,
-                child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: Container(
-                    foregroundDecoration: (gallery.languageCode == 'ja' ||
-                            gallery.languageCode == null)
-                        ? null
-                        : RotatedCornerDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.8),
-                            geometry:
-                                const BadgeGeometry(width: 38, height: 28),
-                            textSpan: TextSpan(
-                              text: gallery.languageCode?.toUpperCase() ?? '',
-                              style: const TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.bold),
+                child: Hero(
+                  tag: gallery.thumbUrl,
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Container(
+                      foregroundDecoration: (gallery.languageCode == 'ja' ||
+                              gallery.languageCode == null)
+                          ? null
+                          : RotatedCornerDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.8),
+                              geometry:
+                                  const BadgeGeometry(width: 38, height: 28),
+                              textSpan: TextSpan(
+                                text: gallery.languageCode?.toUpperCase() ?? '',
+                                style: const TextStyle(
+                                    fontSize: 10, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        fit: StackFit.expand,
+                        children: [
+                          ShaderMask(
+                            shaderCallback: (Rect bounds) {
+                              return const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.black87,
+                                  ]).createShader(
+                                Rect.fromLTRB(
+                                    0, 0, bounds.width, bounds.height),
+                              );
+                            },
+                            blendMode: BlendMode.darken,
+                            child: CoverImg(
+                              imgUrl: gallery.thumbUrl,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      fit: StackFit.expand,
-                      children: [
-                        ShaderMask(
-                          shaderCallback: (Rect bounds) {
-                            return const LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.transparent,
-                                  Colors.transparent,
-                                  Colors.black87,
-                                ]).createShader(
-                              Rect.fromLTRB(0, 0, bounds.width, bounds.height),
-                            );
-                          },
-                          blendMode: BlendMode.darken,
-                          child: CoverImg(
-                            imgUrl: gallery.thumbUrl,
-                            fit: BoxFit.cover,
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            alignment: Alignment.bottomCenter,
+                            child: Text(
+                              (gallery.title.englishTitle ?? '').prettyTitle,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          alignment: Alignment.bottomCenter,
-                          child: Text(
-                            (gallery.title.englishTitle ?? '').prettyTitle,
-                            style:
-                                Theme.of(context).textTheme.bodyText2?.copyWith(
-                                      color: Colors.white,
-                                    ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

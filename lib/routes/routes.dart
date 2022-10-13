@@ -80,7 +80,11 @@ class RouteUtil {
 
   static Future<void> goGallery(WidgetRef ref, Gallery gallery) async {
     ref.watch(galleryProvider(gallery.gid).notifier).initFromGallery(gallery);
-    await erosRouter.push(GalleryRoute(gid: gallery.gid));
-    popGalleryPage();
+    pushGalleryPage(gallery.gid);
+    try {
+      await erosRouter.push(GalleryRoute(gid: gallery.gid));
+    } finally {
+      popGalleryPage();
+    }
   }
 }

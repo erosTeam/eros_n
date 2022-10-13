@@ -37,7 +37,9 @@ const nhTagUrlCategoryMap = {
 };
 
 class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
-  TagTranslateNotifier() : super(hiveHelper.getTagTranslateInfo());
+  TagTranslateNotifier(this.ref) : super(hiveHelper.getTagTranslateInfo());
+
+  final Ref ref;
 
   /// 检查更新
   Future<void> getUpdateInfo({bool force = false}) async {
@@ -132,6 +134,7 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
       }
       await isarHelper.putAllNhTag(nhTags);
     }
+    ref.refresh(allNhTagProvider);
   }
 
   Future<List<NhTag>> _fetchNhTags(TagCategory category) async {
@@ -160,5 +163,10 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
 
 final tagTranslateProvider =
     StateNotifierProvider<TagTranslateNotifier, TagTranslateInfo>((ref) {
-  return TagTranslateNotifier();
+  return TagTranslateNotifier(ref);
+});
+
+final allNhTagProvider = FutureProvider.autoDispose<List<NhTag>>((ref) async {
+  final nhTags = await isarHelper.getAllNhTag();
+  return nhTags;
 });

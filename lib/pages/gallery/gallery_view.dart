@@ -107,46 +107,7 @@ class GalleryPage extends HookConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              showMaterialModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.transparent,
-                builder: (context) => Material(
-                    child: SafeArea(
-                  top: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Text('Edit'),
-                        leading: Icon(Icons.edit),
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                      ListTile(
-                        title: Text('Copy'),
-                        leading: Icon(Icons.content_copy),
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                      ListTile(
-                        title: Text('Cut'),
-                        leading: Icon(Icons.content_cut),
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                      ListTile(
-                        title: Text('Move'),
-                        leading: Icon(Icons.folder_open),
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                      ListTile(
-                        title: Text('Delete'),
-                        leading: Icon(Icons.delete),
-                        onTap: () => Navigator.of(context).pop(),
-                      )
-                    ],
-                  ),
-                )),
-              );
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -744,7 +705,7 @@ class CommentsListView extends HookConsumerWidget {
         if (comments.isEmpty)
           const SizedBox(height: 8)
         else
-          Container(
+          SizedBox(
             height: 190,
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -757,14 +718,14 @@ class CommentsListView extends HookConsumerWidget {
                     (comment.postDate ?? 0) * 1000);
                 final dateFormatted =
                     DateFormat('yyyy-MM-dd HH:mm').format(date.toLocal());
-                return InkWell(
-                  onTap: () {
-                    erosRouter.push(CommentsRoute(gid: gid));
-                  },
-                  child: Container(
-                    width: 280,
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
+                return SizedBox(
+                  width: 280,
+                  child: Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                      onTap: () {
+                        erosRouter.push(CommentsRoute(gid: gid));
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(

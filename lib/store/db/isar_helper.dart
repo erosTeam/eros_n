@@ -120,4 +120,8 @@ class IsarHelper {
   Future<NhTag?> findNhTagAsync(int? id) async {
     return await isar.nhTags.where().idEqualTo(id ?? 0).findFirst();
   }
+
+  Future<List<NhTag>> getAllNhTag() {
+    return isar.nhTags.where().findAll();
+  }
 }

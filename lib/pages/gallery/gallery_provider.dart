@@ -133,7 +133,7 @@ final galleryProvider =
     StateNotifierProvider.autoDispose.family<GalleryNotifier, Gallery, int>(
   (ref, gid) {
     logger.d('galleryProvider gid $gid');
-    pushGalleryPage(gid);
+
     ref.onDispose(() {
       logger.d('galleryProvider $gid onDispose');
     });
@@ -149,10 +149,12 @@ final pageStateProvider =
 final _gidList = <int>[];
 void pushGalleryPage(int gid) {
   _gidList.add(gid);
+  logger.d('pushGalleryPage $_gidList');
 }
 
 void popGalleryPage() {
   _gidList.removeLast();
+  logger.d('popGalleryPage $_gidList');
 }
 
 int get currentGalleryGid {

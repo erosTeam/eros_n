@@ -56,14 +56,7 @@ class _ScrollingFabState extends State<ScrollingFab> {
   void initState() {
     super.initState();
     _isExtended = true;
-    logger.d('initState: _isExtended: $_isExtended');
     widget.scrollController?.addListener(_scrollListener);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    logger.d('didChangeDependencies: _isExtended: $_isExtended');
   }
 
   @override
