@@ -290,11 +290,11 @@ class L10n {
     );
   }
 
-  /// `Continue`
-  String get continue_read {
+  /// `Resume`
+  String get resume {
     return Intl.message(
-      'Continue',
-      name: 'continue_read',
+      'Resume',
+      name: 'resume',
       desc: '',
       args: [],
     );

@@ -133,6 +133,16 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SearchRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SearchPage(
+          key: args.key,
+          query: args.query,
+        ),
+      );
+    },
   };
 
   @override
@@ -192,6 +202,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           CommentsRoute.name,
           path: '/comments',
+        ),
+        RouteConfig(
+          SearchRoute.name,
+          path: '/search',
         ),
       ];
 }
@@ -525,5 +539,39 @@ class CommentsRouteArgs {
   @override
   String toString() {
     return 'CommentsRouteArgs{key: $key, gid: $gid}';
+  }
+}
+
+/// generated route for
+/// [SearchPage]
+class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
+  SearchRoute({
+    Key? key,
+    required String query,
+  }) : super(
+          SearchRoute.name,
+          path: '/search',
+          args: SearchRouteArgs(
+            key: key,
+            query: query,
+          ),
+        );
+
+  static const String name = 'SearchRoute';
+}
+
+class SearchRouteArgs {
+  const SearchRouteArgs({
+    this.key,
+    required this.query,
+  });
+
+  final Key? key;
+
+  final String query;
+
+  @override
+  String toString() {
+    return 'SearchRouteArgs{key: $key, query: $query}';
   }
 }

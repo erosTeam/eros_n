@@ -32,7 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_history_tip": MessageLookupByLibrary.simpleMessage(
             "Are you sure to clear all history?"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
-        "continue_read": MessageLookupByLibrary.simpleMessage("Continue"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
@@ -62,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "read": MessageLookupByLibrary.simpleMessage("Read"),
         "recent": MessageLookupByLibrary.simpleMessage("Recent"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
+        "resume": MessageLookupByLibrary.simpleMessage("Resume"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),

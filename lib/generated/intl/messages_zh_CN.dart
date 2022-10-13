@@ -32,7 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_history_tip":
             MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
         "comments": MessageLookupByLibrary.simpleMessage("评论"),
-        "continue_read": MessageLookupByLibrary.simpleMessage("继续"),
         "download": MessageLookupByLibrary.simpleMessage("下载"),
         "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
         "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
@@ -58,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "read": MessageLookupByLibrary.simpleMessage("阅读"),
         "recent": MessageLookupByLibrary.simpleMessage("最新发布"),
         "register": MessageLookupByLibrary.simpleMessage("注册"),
+        "resume": MessageLookupByLibrary.simpleMessage("继续"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "share": MessageLookupByLibrary.simpleMessage("分享"),

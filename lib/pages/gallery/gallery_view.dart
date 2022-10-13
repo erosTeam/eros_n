@@ -1,10 +1,7 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
-import 'package:eros_n/component/models/comment.dart';
-import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
@@ -12,11 +9,8 @@ import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
-import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
-import 'package:eros_n/store/db/entity/tag_translate.dart';
-import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +18,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share/share.dart';
@@ -121,14 +114,14 @@ class GalleryPage extends HookConsumerWidget {
               ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
           final label = currentPageIndex == 0
               ? L10n.of(context).read
-              : '${L10n.of(context).continue_read} ${currentPageIndex + 1}';
+              : '${L10n.of(context).resume} ${currentPageIndex + 1}';
           return Text(label);
         }),
         icon: const Icon(Icons.play_arrow),
       ),
       body: RefreshIndicator(
         onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
-        edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
+        edgeOffset: MediaQuery.of(context).padding.top,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: scrollController,
@@ -274,6 +267,7 @@ class GalleryPage extends HookConsumerWidget {
             ],
           ),
           const SizedBox(height: 8),
+          // 作者
           Expanded(
             child: SingleChildScrollView(
               child: Consumer(builder: (context, ref, child) {
@@ -288,7 +282,7 @@ class GalleryPage extends HookConsumerWidget {
 
                 final textStyle = Theme.of(context)
                     .textTheme
-                    .caption
+                    .bodySmall
                     ?.copyWith(color: Theme.of(context).colorScheme.primary);
 
                 final artistTagsWidgets = artistTags
@@ -301,7 +295,9 @@ class GalleryPage extends HookConsumerWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          RouteUtil.goSearch(tag: tag);
+                        },
                         child: isTagTranslate
                             ? Text(
                                 tag.translatedName ?? tag.name ?? '',
@@ -457,7 +453,7 @@ class TagsView extends HookConsumerWidget {
                         );
                       }),
                       onPressed: () {
-                        // ref.read(searchProvider).searchByTag(tag);
+                        RouteUtil.goSearch(tag: tag);
                       },
                     );
                   }).toList(),

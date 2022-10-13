@@ -17,7 +17,7 @@ class SearchNotifier extends StateNotifier<FrontState> {
   final FocusNode searchFocusNode = FocusNode();
 
   SearchGalleryNotifier get searchGalleryNotifier =>
-      ref.read(searchGallerysProvider.notifier);
+      ref.read(searchGallerysProvider(currentSearchDepth).notifier);
 
   Future<void> search() async {
     query = searchController.text;
@@ -56,7 +56,10 @@ class SearchNotifier extends StateNotifier<FrontState> {
       state = state.copyWith(status: LoadStatus.loadingMore);
     } else {
       if (searchGalleryNotifier.state.isEmpty) {
-        state = state.copyWith(status: LoadStatus.loading);
+        // state = state.copyWith(status: LoadStatus.loading);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          state = state.copyWith(status: LoadStatus.loading);
+        });
       }
     }
 
@@ -117,11 +120,30 @@ class SearchGalleryNotifier extends GallerysNotifier {
   SearchGalleryNotifier() : super([]);
 }
 
-final searchGallerysProvider =
-    StateNotifierProvider<SearchGalleryNotifier, List<Gallery>>((ref) {
+final searchGallerysProvider = StateNotifierProvider.autoDispose
+    .family<SearchGalleryNotifier, List<Gallery>, int>((ref, depth) {
+  ref.onDispose(() {
+    logger.d('searchGallerysProvider $depth dispose');
+  });
   return SearchGalleryNotifier();
 });
 
-final searchProvider = StateNotifierProvider<SearchNotifier, FrontState>((ref) {
+final searchProvider =
+    StateNotifierProvider.family<SearchNotifier, FrontState, int>((ref, depth) {
   return SearchNotifier(ref);
 });
+
+final _searchDepthList = <int>[0];
+int get currentSearchDepth {
+  return _searchDepthList.last;
+}
+
+void pushSearchDepth() {
+  _searchDepthList.add(_searchDepthList.last + 1);
+  logger.d('pushSearchDepth $_searchDepthList');
+}
+
+void popSearchDepth() {
+  _searchDepthList.removeLast();
+  logger.d('popSearchDepth $_searchDepthList');
+}
