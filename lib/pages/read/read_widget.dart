@@ -51,7 +51,7 @@ class ViewTopBar extends HookConsumerWidget {
                   ],
                 ),
                 Consumer(builder: (context, ref, child) {
-                  final gid = ref.watch(currentGidProvider);
+                  final gid = currentGalleryGid;
                   final currentItemIndex = ref.watch(galleryProvider(gid)
                       .select((val) => val.currentPageIndex));
                   final totalItem = ref.watch(galleryProvider(gid)
@@ -114,7 +114,7 @@ class BottomBarControlWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gid = ref.watch(currentGidProvider);
+    final gid = currentGalleryGid;
     final currentItemIndex =
         ref.watch(galleryProvider(gid).select((val) => val.currentPageIndex));
     final totNum = ref

@@ -60,8 +60,14 @@ class _ScrollingFabState extends State<ScrollingFab> {
   }
 
   @override
+  void dispose() {
+    widget.scrollController?.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final lableSizeAnimation = AnimatedSize(
+    final labelSizeAnimation = AnimatedSize(
       duration: widget.duration ?? const Duration(milliseconds: 300),
       curve: widget.curve ?? Curves.easeInOut,
       child: SizedBox(
@@ -75,7 +81,7 @@ class _ScrollingFabState extends State<ScrollingFab> {
       curve: widget.curve ?? Curves.easeInOut,
       child: FloatingActionButton.extended(
         onPressed: widget.onPressed,
-        label: lableSizeAnimation,
+        label: labelSizeAnimation,
         icon: widget.icon,
         isExtended: true,
         extendedIconLabelSpacing:

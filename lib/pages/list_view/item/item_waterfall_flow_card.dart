@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
+import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/models/index.dart';
@@ -109,12 +110,9 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () {
-        ref
-            .watch(galleryProvider(gallery.gid).notifier)
-            .initFromGallery(gallery);
-        // context.router.pushNamed(NHRoutes.gallery);
-        context.router.push(GalleryRoute(gid: gallery.gid));
+      onTap: () async {
+        // items
+        await RouteUtil.goGallery(ref, gallery);
       },
       child: item,
     );

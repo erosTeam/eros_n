@@ -16,14 +16,15 @@ import 'package:tuple/tuple.dart';
 import 'gallery_page_state.dart';
 
 class GalleryNotifier extends StateNotifier<Gallery> {
-  GalleryNotifier(super.state, this.reader);
+  GalleryNotifier(super.state, this.ref);
 
-  final Reader reader;
+  final Ref ref;
 
   // ReadNotifier get readNotifier => reader(readProvider.notifier);
 
   void initFromGallery(Gallery gallery) {
-    logger.d('${gallery.toString()} ');
+    logger.d('init ${gallery.toString()} ');
+
     state = state.copyWith(
       images: gallery.images,
       gid: gallery.gid,
@@ -32,12 +33,9 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     );
 
     loadData();
-    // add history
     500.milliseconds.delay(() {
-      reader(historyProvider.notifier).addHistory(gallery);
+      ref.read(historyProvider.notifier).addHistory(gallery);
     });
-
-    // readNotifier.setGid(gallery.gid);
   }
 
   void setInitialPage(int page) {
@@ -46,9 +44,10 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
-    logger.d('loadData refresh $refresh  url: ${state.url}');
+    logger.v('loadData refresh $refresh  url: ${state.url}');
     if (state.images.pages.isEmpty) {
-      reader(pageStateProvider(state.gid).notifier)
+      ref
+          .read(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.loading));
     }
 
@@ -67,20 +66,10 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         currentPageIndex: state.currentPageIndex,
       );
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-        if (!mounted) {
-          return;
-        }
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async => await loadData(refresh: refresh),
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     } finally {
-      reader(pageStateProvider(state.gid).notifier)
+      ref
+          .watch(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.none));
     }
 
@@ -92,20 +81,10 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       );
       state = state.copyWith(comments: comments);
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-        if (!mounted) {
-          return;
-        }
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async => await loadData(refresh: refresh),
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     } finally {
-      reader(pageStateProvider(state.gid).notifier)
+      ref
+          .read(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.none));
     }
   }
@@ -154,22 +133,11 @@ final galleryProvider =
     StateNotifierProvider.autoDispose.family<GalleryNotifier, Gallery, int>(
   (ref, gid) {
     logger.d('galleryProvider gid $gid');
-    ref.watch(gidListProvider.notifier).update((state) {
-      if (state.firstOrNull != gid) {
-        return [gid, ...state];
-      }
-      return state;
-    });
-
+    pushGalleryPage(gid);
     ref.onDispose(() {
       logger.d('galleryProvider $gid onDispose');
-      // remove first
-      ref.watch(gidListProvider.notifier).update((state) {
-        state.remove(gid);
-        return state = state;
-      });
     });
-    return GalleryNotifier(Gallery(gid: gid), ref.read);
+    return GalleryNotifier(Gallery(gid: gid), ref);
   },
 );
 
@@ -178,13 +146,18 @@ final pageStateProvider =
   return const GalleryViewState(pageStatus: PageStatus.none);
 });
 
-// 当前画廊id
-final currentGidProvider = StateProvider.autoDispose<int>((ref) {
-  return ref.watch(gidListProvider).first;
-});
+final _gidList = <int>[];
+void pushGalleryPage(int gid) {
+  _gidList.add(gid);
+}
 
-// 画廊id列表堆栈
-final gidListProvider = StateProvider.autoDispose<List<int>>((ref) => []);
+void popGalleryPage() {
+  _gidList.removeLast();
+}
+
+int get currentGalleryGid {
+  return _gidList.lastOrNull ?? 0;
+}
 
 String getGalleryImageUrl(String imageKey, int index, String ext) {
   final subDomain = radomList(['', '3', '5', '7']);

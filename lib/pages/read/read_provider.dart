@@ -18,9 +18,8 @@ import '../../utils/logger.dart';
 class ReadNotifier extends StateNotifier<ReadState> {
   ReadNotifier(super.state, this.ref)
       : preloadPageController = PreloadPageController(
-            initialPage: ref
-                .read(galleryProvider(ref.read(currentGidProvider)))
-                .currentPageIndex);
+            initialPage:
+                ref.read(galleryProvider(currentGalleryGid)).currentPageIndex);
   final Ref ref;
 
   final PreloadPageController preloadPageController;

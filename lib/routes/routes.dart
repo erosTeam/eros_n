@@ -7,7 +7,6 @@ import 'package:eros_n/pages/gallery/comments_page.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/gallery/thumb_page.dart';
 import 'package:eros_n/pages/nav/index/index_view.dart';
-import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/pages/setting/about_page.dart';
 import 'package:eros_n/pages/setting/appearance_setting_page.dart';
@@ -18,7 +17,6 @@ import 'package:eros_n/pages/user/login_page.dart';
 import 'package:eros_n/pages/user/web_login_page.dart';
 import 'package:eros_n/pages/webview/webview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../pages/gallery/gallery_view.dart';
@@ -73,10 +71,16 @@ class RouteUtil {
     WidgetRef ref, {
     int? index,
   }) async {
-    final gid = ref.watch(currentGidProvider);
+    final gid = currentGalleryGid;
     if (index != null) {
-      ref.watch(galleryProvider(gid).notifier).setInitialPage(index);
+      ref.read(galleryProvider(gid).notifier).setInitialPage(index);
     }
     await erosRouter.push(ReadRoute(index: index));
+  }
+
+  static Future<void> goGallery(WidgetRef ref, Gallery gallery) async {
+    ref.watch(galleryProvider(gallery.gid).notifier).initFromGallery(gallery);
+    await erosRouter.push(GalleryRoute(gid: gallery.gid));
+    popGalleryPage();
   }
 }

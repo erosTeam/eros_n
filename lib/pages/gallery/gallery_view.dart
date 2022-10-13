@@ -46,7 +46,7 @@ class GalleryPage extends HookConsumerWidget {
     // 避免 currentPageIndex 变化时，重新构建 GalleryPage
     // final Gallery gallery = ref.watch(galleryProvider(gid)
     //     .select((gallery) => gallery.copyWith(currentPageIndex: 0)));
-    logger.d('build gallery $gid ${gallery.title}');
+    logger.v('build gallery $gid ${gallery.title}');
 
     late ScrollController scrollController;
     useEffect(() {
@@ -395,7 +395,7 @@ class DetailView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
-    logger.d('DetailView build $pageStatus');
+    logger.v('DetailView build $pageStatus');
     if (pageStatus == PageStatus.loading) {
       return const SliverFillRemaining(
         child: Center(
@@ -545,7 +545,7 @@ class ThumbListView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('ThumbListView build');
+    logger.v('ThumbListView build');
     final pages = ref
         .watch(galleryProvider(gid).select((gallery) => gallery.images.pages));
     final mediaId =
@@ -649,10 +649,7 @@ class MoreLikeListView extends HookConsumerWidget {
                   likeGallery.images.thumbnail.imgHeight!;
               return GestureDetector(
                 onTap: () {
-                  ref
-                      .watch(galleryProvider(likeGallery.gid).notifier)
-                      .initFromGallery(likeGallery);
-                  context.router.push(GalleryRoute(gid: likeGallery.gid));
+                  RouteUtil.goGallery(ref, likeGallery);
                 },
                 child: Column(
                   children: [

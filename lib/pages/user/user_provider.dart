@@ -22,20 +22,7 @@ class UserNotifier extends StateNotifier<User> {
     try {
       csrfToken = await getLoginToken() ?? '';
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-        if (!mounted) {
-          return false;
-        }
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async {
-            csrfToken = await getLoginToken() ?? '';
-          },
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     }
 
     logger.d('csrfToken $csrfToken');
@@ -60,18 +47,7 @@ class UserNotifier extends StateNotifier<User> {
     try {
       userFromIndex = await getInfoFromIndex(refresh: true);
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async {
-            userFromIndex = await getInfoFromIndex(refresh: true);
-          },
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     }
     // log userFromIndex
     logger.d('userFromIndex $userFromIndex');
@@ -91,19 +67,7 @@ class UserNotifier extends StateNotifier<User> {
       userFromProfile = await getInfoFromUserPage(
           url: userFromIndex.userUrl ?? '', refresh: true);
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async {
-            userFromProfile = await getInfoFromUserPage(
-                url: userFromIndex.userUrl ?? '', refresh: true);
-          },
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     }
 
     state = state.copyWith(

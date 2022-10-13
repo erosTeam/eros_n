@@ -66,7 +66,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
       return false;
     }
 
-    logger.d('page: $page, next: $next, prev: $prev, first: $first');
+    logger.v('page: $page, next: $next, prev: $prev, first: $first');
 
     final rCookies =
         await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
@@ -87,7 +87,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
 
     final toPage =
         page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
-    logger.d('toPage: $toPage');
+    logger.v('toPage: $toPage');
 
     try {
       final gallerySet = await getGalleryList(
@@ -125,7 +125,6 @@ class FrontNotifier extends StateNotifier<FrontState> {
   Future<void> loadData() async {
     final fromCache = await getGalleryData(first: true);
     if (fromCache) {
-      logger.d('fromCache');
       await 1.seconds.delay();
       await reloadData();
     }

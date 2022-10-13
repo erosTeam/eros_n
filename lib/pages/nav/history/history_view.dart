@@ -202,10 +202,8 @@ class HistoryItem extends HookConsumerWidget {
             ),
           ),
         );
-        ref
-            .watch(galleryProvider(history.gid).notifier)
-            .initFromGallery(gallery);
-        erosRouter.push(GalleryRoute(gid: gallery.gid));
+
+        RouteUtil.goGallery(ref, gallery);
       },
       child: Container(
         height: 84,

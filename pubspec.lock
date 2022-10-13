@@ -56,7 +56,7 @@ packages:
       name: auto_route
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.0.1"
+    version: "5.0.2"
   auto_route_generator:
     dependency: "direct dev"
     description:
@@ -105,7 +105,7 @@ packages:
       name: build_runner
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.2.1"
+    version: "2.3.0"
   build_runner_core:
     dependency: transitive
     description:
@@ -203,7 +203,7 @@ packages:
       name: convert
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.1"
   cookie_jar:
     dependency: "direct main"
     description:
@@ -217,14 +217,14 @@ packages:
       name: copy_with_extension
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.4"
   copy_with_extension_gen:
     dependency: "direct dev"
     description:
       name: copy_with_extension_gen
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.4"
   crypto:
     dependency: transitive
     description:
@@ -416,7 +416,7 @@ packages:
       name: flutter_riverpod
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.2"
   flutter_smart_dialog:
     dependency: "direct main"
     description:
@@ -503,7 +503,7 @@ packages:
       name: hooks_riverpod
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.2"
   html:
     dependency: "direct main"
     description:
@@ -538,7 +538,7 @@ packages:
       name: index_generator
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.3.2"
+    version: "3.3.3"
   intl:
     dependency: "direct main"
     description:
@@ -601,7 +601,7 @@ packages:
       name: json_serializable
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "6.4.1"
+    version: "6.5.1"
   keframe:
     dependency: "direct main"
     description:
@@ -650,7 +650,7 @@ packages:
       name: mek_data_class
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.0"
   meta:
     dependency: transitive
     description:
@@ -699,42 +699,42 @@ packages:
       name: package_info_plus
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.4.3+1"
+    version: "2.0.0"
   package_info_plus_linux:
     dependency: transitive
     description:
       name: package_info_plus_linux
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.5"
+    version: "2.0.0"
   package_info_plus_macos:
     dependency: transitive
     description:
       name: package_info_plus_macos
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.3.0"
+    version: "2.0.0"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
       name: package_info_plus_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.2"
+    version: "2.0.0"
   package_info_plus_web:
     dependency: transitive
     description:
       name: package_info_plus_web
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.6"
+    version: "2.0.0"
   package_info_plus_windows:
     dependency: transitive
     description:
       name: package_info_plus_windows
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.0"
+    version: "3.0.0"
   path:
     dependency: "direct main"
     description:
@@ -888,7 +888,7 @@ packages:
       name: riverpod
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.3"
+    version: "2.0.2"
   rotated_corner_decoration:
     dependency: "direct main"
     description:
@@ -942,7 +942,7 @@ packages:
       name: source_gen
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.2.5"
+    version: "1.2.6"
   source_helper:
     dependency: transitive
     description:

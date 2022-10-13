@@ -98,10 +98,11 @@ class ReadPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gid = ref.watch(currentGidProvider);
+    final gid = currentGalleryGid;
     logger.d('ReadPage build $gid');
     // ref.watch(galleryProvider(gid).notifier).setInitialPage(index ?? 0);
     useEffect(() {
+      // ref.watch(galleryProvider(gid).notifier).setInitialPage(index ?? 0);
       ref.read(readProvider.notifier).setFullscreen();
       return () {
         SystemChrome.setEnabledSystemUIMode(
