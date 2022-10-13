@@ -48,11 +48,7 @@ class GalleryPage extends HookConsumerWidget {
     //     .select((gallery) => gallery.copyWith(currentPageIndex: 0)));
     logger.v('build gallery $gid ${gallery.title}');
 
-    late ScrollController scrollController;
-    useEffect(() {
-      scrollController = ScrollController();
-      return scrollController.dispose;
-    });
+    final ScrollController scrollController = useScrollController();
 
     Widget backGround() {
       return ShaderMask(

@@ -114,7 +114,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
     if (fullScreenReader) {
       400.milliseconds.delay(() {
         SystemChrome.setEnabledSystemUIMode(
-          SystemUiMode.leanBack,
+          SystemUiMode.immersiveSticky,
         );
         // FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
       });
