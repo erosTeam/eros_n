@@ -32,7 +32,7 @@ jobs:
         id: get_version
         shell: bash
         run: |
-          echo "::set-output name=version::$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)"
+          echo "{version}={$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)}" >> $GITHUB_ENV
 
       - name: Upload to release
         uses: ncipollo/release-action@v1
@@ -40,7 +40,7 @@ jobs:
 #          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
           artifacts: /tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa
           tag: ${{ github.ref_name }}
-          bodyFile: changelog/v${{ steps.get_version.outputs.version }}.md
+          bodyFile: changelog/v${{ env.version }}.md
           prerelease: false
           allowUpdates: true
           artifactErrorsFailBuild: true
@@ -48,7 +48,7 @@ jobs:
 
       - name: Post release notes
         run: |
-          changelog=$(cat changelog/v${{ steps.get_version.outputs.version }}.md)
+          changelog=$(cat changelog/v${{ env.version }}.md)
           curl 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' \
           --header 'Content-Type: application/x-www-form-urlencoded' \
           -d parse_mode=markdown \

@@ -16,13 +16,13 @@ jobs:
             artifact_name: release-apk
             artifact_path: build/app/outputs/apk/release/*.apk
           - target: ios
-            os: macos-latest
+            os: macos-12
             flutter_version: '3.4'
             flutter_channel: 'beta'
             artifact_name: release-ios
             artifact_path: build/**/*.ipa
 #          - target: macos
-#            os: macos-latest
+#            os: macos-12
 #            flutter_version: '3.3.2'
 #            artifact_name: release-mac
 #            artifact_path: build/macos/*.zip
@@ -137,7 +137,7 @@ jobs:
         id: get_version
         shell: bash
         run: |
-          echo "::set-output name=version::$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)"
+          echo "{version}={$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)}" >> $GITHUB_ENV
 
       # 打包 apk
       - name: Collect Apks
@@ -164,7 +164,7 @@ jobs:
           cd build
           mkdir -p Payload
           mv ios/iphoneos/*.app Payload
-          zip -9 Eros-N_${{ steps.get_version.outputs.version }}.ipa -r Payload
+          zip -9 Eros-N_${{ env.version }}.ipa -r Payload
 
       # 打包 mac
       #      - name: Build mac app
@@ -185,7 +185,7 @@ jobs:
           New-Item -Path $DestDir -ItemType Directory
           Copy-Item $SrcDir\* -Recurse $DestDir
           Copy-Item -Filter *.dll -Path windows\* -Destination $DestDir -Force
-          Compress-Archive $DestDir build\windows\Eros_N_windows_${{ steps.get_version.outputs.version }}.zip
+          Compress-Archive $DestDir build\windows\Eros_N_windows_${{ env.version }}.zip
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
