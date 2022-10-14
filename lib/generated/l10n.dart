@@ -570,6 +570,26 @@ class L10n {
     );
   }
 
+  /// `Vertical`
+  String get vertical {
+    return Intl.message(
+      'Vertical',
+      name: 'vertical',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Curl Vertical`
+  String get curl_vertical {
+    return Intl.message(
+      'Curl Vertical',
+      name: 'curl_vertical',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Full Screen`
   String get full_screen {
     return Intl.message(

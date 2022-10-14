@@ -33,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure to clear all history?"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
         "cover_blur": MessageLookupByLibrary.simpleMessage("Cover Blur"),
+        "curl_vertical": MessageLookupByLibrary.simpleMessage("Curl Vertical"),
         "dark": MessageLookupByLibrary.simpleMessage("Dark"),
         "display": MessageLookupByLibrary.simpleMessage("Display"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
@@ -100,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "vertical": MessageLookupByLibrary.simpleMessage("Vertical"),
         "webtoon": MessageLookupByLibrary.simpleMessage("Webtoon"),
         "wrap": MessageLookupByLibrary.simpleMessage("Wrap"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday")

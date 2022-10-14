@@ -128,6 +128,12 @@ class ReadPage extends HookConsumerWidget {
         readView = const ReadPageView(reverse: true);
         break;
       case ReadModel.webtoon:
+        readView = const ReadListView(separator: false);
+        break;
+      case ReadModel.vertical:
+        readView = const ReadPageView(scrollDirection: Axis.vertical);
+        break;
+      case ReadModel.curlVertical:
         readView = const ReadListView();
         break;
       case ReadModel.leftToRight:
@@ -174,7 +180,8 @@ class ReadPage extends HookConsumerWidget {
 }
 
 class ReadListView extends StatefulHookConsumerWidget {
-  const ReadListView({Key? key}) : super(key: key);
+  const ReadListView({Key? key, this.separator = true}) : super(key: key);
+  final bool separator;
 
   @override
   ConsumerState<ReadListView> createState() => _ReadListViewState();
@@ -239,7 +246,7 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
     final pages = ref.watch(galleryProvider(gid).select((g) => g.images.pages));
     final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
 
-    Widget listView = ScrollablePositionedList.builder(
+    Widget listView = ScrollablePositionedList.separated(
       minCacheExtent: 0.0,
       padding: EdgeInsets.only(
         top: context.mediaQueryPadding.top,
@@ -255,15 +262,24 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
 
         Widget image = buildImage(imageUrl);
 
-        image = GestureZoomBox(
-          child: image,
-        );
-
-        return AspectRatio(
+        image = AspectRatio(
           aspectRatio: (page.imgWidth ?? 300) / (page.imgHeight ?? 400),
           child: image,
         );
+
+        return image;
       },
+      separatorBuilder: (BuildContext context, int index) {
+        if (widget.separator) {
+          return const SizedBox(height: 10);
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
+
+    return GestureZoomBox(
+      child: listView,
     );
 
     // return Container(
@@ -295,8 +311,13 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
 
 /// 翻页模式
 class ReadPageView extends HookConsumerWidget {
-  const ReadPageView({Key? key, this.reverse = false}) : super(key: key);
+  const ReadPageView({
+    Key? key,
+    this.reverse = false,
+    this.scrollDirection = Axis.horizontal,
+  }) : super(key: key);
   final bool reverse;
+  final Axis scrollDirection;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -326,6 +347,7 @@ class ReadPageView extends HookConsumerWidget {
           ref.read(galleryProvider(gid).select((g) => g.currentPageIndex));
 
       return PreloadPhotoViewGallery.builder(
+        scrollDirection: scrollDirection,
         // scrollPhysics: const CustomScrollPhysics(),
         builder: (BuildContext context, int index) {
           final imageUrl = getGalleryImageUrl(

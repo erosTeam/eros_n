@@ -51,6 +51,8 @@
   "left_to_right": "Left to Right",
   "right_to_left": "Right to Left",
   "webtoon": "Webtoon",
+  "vertical": "Vertical",
+  "curl_vertical": "Curl Vertical",
   "full_screen": "Full Screen",
   "display": "Display",
   "theme_mode": "Theme Mode",

@@ -51,6 +51,8 @@
   "left_to_right": "从左到右",
   "right_to_left": "从右到左",
   "webtoon": "条漫",
+  "vertical": "垂直",
+  "curl_vertical": "垂直(连续)",
   "full_screen": "全屏",
   "display": "显示",
   "theme_mode": "主题模式",

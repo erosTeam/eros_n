@@ -33,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
         "comments": MessageLookupByLibrary.simpleMessage("评论"),
         "cover_blur": MessageLookupByLibrary.simpleMessage("封面模糊"),
+        "curl_vertical": MessageLookupByLibrary.simpleMessage("垂直(连续)"),
         "dark": MessageLookupByLibrary.simpleMessage("深色"),
         "display": MessageLookupByLibrary.simpleMessage("显示"),
         "download": MessageLookupByLibrary.simpleMessage("下载"),
@@ -91,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "thumbs": MessageLookupByLibrary.simpleMessage("缩略图"),
         "today": MessageLookupByLibrary.simpleMessage("今天"),
         "username": MessageLookupByLibrary.simpleMessage("用户名"),
+        "vertical": MessageLookupByLibrary.simpleMessage("垂直"),
         "webtoon": MessageLookupByLibrary.simpleMessage("条漫"),
         "wrap": MessageLookupByLibrary.simpleMessage("换行"),
         "yesterday": MessageLookupByLibrary.simpleMessage("昨天")

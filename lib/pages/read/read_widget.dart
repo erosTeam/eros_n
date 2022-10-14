@@ -307,7 +307,8 @@ class ReadModelButton extends HookConsumerWidget {
       ReadModel.leftToRight: Text(L10n.of(context).left_to_right),
       ReadModel.rightToLeft: Text(L10n.of(context).right_to_left),
       ReadModel.webtoon: Text(L10n.of(context).webtoon),
-      // ReadModel.curlVertical: Text('Curl Vertical'),
+      ReadModel.curlVertical: Text(L10n.of(context).curl_vertical),
+      ReadModel.vertical: Text(L10n.of(context).vertical),
     };
 
     final readModelIconMap = <ReadModel, Widget>{
@@ -315,6 +316,8 @@ class ReadModelButton extends HookConsumerWidget {
       ReadModel.rightToLeft: Transform.rotate(
           angle: math.pi, child: const Icon(Icons.send_to_mobile_outlined)),
       ReadModel.webtoon: const Icon(Icons.system_update_outlined),
+      ReadModel.vertical: Transform.rotate(
+          angle: math.pi / 2, child: const Icon(Icons.send_to_mobile_outlined)),
       ReadModel.curlVertical: const Icon(Icons.system_security_update_outlined),
     };
 
@@ -338,7 +341,7 @@ class ReadModelButton extends HookConsumerWidget {
       },
       // 28 or 80
       offset: context.isTablet
-          ? const Offset(0, kToolbarHeight)
+          ? const Offset(0, kToolbarHeight - 6)
           : Offset(0, -(48.0 * itemMap.length) - 28),
       itemBuilder: (context) => items,
     );
