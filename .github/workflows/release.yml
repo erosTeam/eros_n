@@ -32,7 +32,8 @@ jobs:
         id: get_version
         shell: bash
         run: |
-          echo "app_version=$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)" >> $GITHUB_ENV
+          app_version=$(grep -oP '(?<=version: ).*' pubspec.yaml)
+          echo "app_version=app_version$" >> $GITHUB_ENV
 
       - name: Upload to release
         uses: ncipollo/release-action@v1
