@@ -539,6 +539,36 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Left to Right`
+  String get left_to_right {
+    return Intl.message(
+      'Left to Right',
+      name: 'left_to_right',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Right to Left`
+  String get right_to_left {
+    return Intl.message(
+      'Right to Left',
+      name: 'right_to_left',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Webtoon`
+  String get webtoon {
+    return Intl.message(
+      'Webtoon',
+      name: 'webtoon',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

@@ -69,7 +69,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
 
   @override
   Widget build(BuildContext context) {
-    logger.d('FrontPage build');
+    logger.v('FrontPage build');
 
     super.build(context);
     logger.v('${MediaQuery.of(context).padding.top}');

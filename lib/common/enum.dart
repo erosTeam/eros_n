@@ -16,3 +16,14 @@ enum TagLayoutOnCard {
 
   wrap,
 }
+
+enum ReadModel {
+  leftToRight,
+  rightToLeft,
+  curlLeftToRight,
+  curlRightToLeft,
+  vertical,
+  curlVertical,
+  webtoon,
+  defaultModel,
+}

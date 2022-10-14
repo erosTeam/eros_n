@@ -37,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
         "history": MessageLookupByLibrary.simpleMessage("历史"),
         "home": MessageLookupByLibrary.simpleMessage("主页"),
+        "left_to_right": MessageLookupByLibrary.simpleMessage("从左到右"),
         "login": MessageLookupByLibrary.simpleMessage("登录"),
         "login_by_web": MessageLookupByLibrary.simpleMessage("通过网页登陆"),
         "login_invalid": MessageLookupByLibrary.simpleMessage("无效登录信息"),
@@ -58,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recent": MessageLookupByLibrary.simpleMessage("最新发布"),
         "register": MessageLookupByLibrary.simpleMessage("注册"),
         "resume": MessageLookupByLibrary.simpleMessage("继续"),
+        "right_to_left": MessageLookupByLibrary.simpleMessage("从右到左"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "share": MessageLookupByLibrary.simpleMessage("分享"),
@@ -71,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "thumbs": MessageLookupByLibrary.simpleMessage("缩略图"),
         "today": MessageLookupByLibrary.simpleMessage("今天"),
         "username": MessageLookupByLibrary.simpleMessage("用户名"),
+        "webtoon": MessageLookupByLibrary.simpleMessage("条漫"),
         "yesterday": MessageLookupByLibrary.simpleMessage("昨天")
       };
 }

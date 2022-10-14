@@ -47,6 +47,8 @@
   "popular_week": "本周热门",
   "popular_all": "所有热门",
   "clear_history": "清除历史",
-  "clear_history_tip": "确定要清除所有历史记录吗?"
-
+  "clear_history_tip": "确定要清除所有历史记录吗?",
+  "left_to_right": "从左到右",
+  "right_to_left": "从右到左",
+  "webtoon": "条漫"
 }

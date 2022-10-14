@@ -903,6 +903,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.27.5"
+  scrollable_positioned_list:
+    dependency: "direct main"
+    description:
+      name: scrollable_positioned_list
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.5"
   share:
     dependency: "direct main"
     description:

@@ -37,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "login_by_web": MessageLookupByLibrary.simpleMessage("Login by Web"),
         "login_invalid": MessageLookupByLibrary.simpleMessage("Login invalid"),
@@ -62,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recent": MessageLookupByLibrary.simpleMessage("Recent"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
         "resume": MessageLookupByLibrary.simpleMessage("Resume"),
+        "right_to_left": MessageLookupByLibrary.simpleMessage("Right to Left"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
@@ -77,6 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "webtoon": MessageLookupByLibrary.simpleMessage("Webtoon"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday")
       };
 }

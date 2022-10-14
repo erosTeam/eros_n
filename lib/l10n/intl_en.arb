@@ -47,5 +47,8 @@
   "popular_week": "Popular Week",
   "popular_all": "Popular All",
   "clear_history": "Clear History",
-  "clear_history_tip": "Are you sure to clear all history?"
+  "clear_history_tip": "Are you sure to clear all history?",
+  "left_to_right": "Left to Right",
+  "right_to_left": "Right to Left",
+  "webtoon": "Webtoon"
 }

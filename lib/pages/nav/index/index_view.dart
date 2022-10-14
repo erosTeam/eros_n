@@ -25,7 +25,7 @@ class IndexPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('build IndexPage');
+    logger.v('build IndexPage');
     final state = ref.watch(indexProvider);
     return Scaffold(
       body: PageView(

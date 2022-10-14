@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:fullscreen/fullscreen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../utils/logger.dart';
 
@@ -23,6 +24,10 @@ class ReadNotifier extends StateNotifier<ReadState> {
   final Ref ref;
 
   final PreloadPageController preloadPageController;
+
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
 
   void toPrev() {
     preloadPageController.previousPage(
@@ -47,7 +52,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   Future<void> handOnTapCenter(BuildContext context) async {
-    logger.d('handOnTapCenter');
+    logger.v('handOnTapCenter');
 
     // initBar(context);
     if (state.showAppBar) {
@@ -127,6 +132,46 @@ class ReadNotifier extends StateNotifier<ReadState> {
     // );
     FullScreen.exitFullScreen();
     await 300.milliseconds.delay();
+  }
+
+  bool conditionItemIndex = true;
+  int tempIndex = 0;
+  int minImageIndex = 0;
+  int maxImageIndex = 0;
+
+  /// 竖屏阅读下页码变化的监听
+  void handItemPositionsChange(
+    Iterable<ItemPosition> positions, {
+    ValueChanged<int>? onChanged,
+  }) {
+    int min;
+    int max;
+    if (positions.isNotEmpty) {
+      // Determine the first visible item by finding the item with the
+      // smallest trailing edge that is greater than 0.  i.e. the first
+      // item whose trailing edge in visible in the viewport.
+      min = positions
+          .where((ItemPosition position) => position.itemTrailingEdge > 0)
+          .reduce((ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+          .index;
+      // Determine the last visible item by finding the item with the
+      // greatest leading edge that is less than 1.  i.e. the last
+      // item whose leading edge in visible in the viewport.
+      max = positions
+          .where((ItemPosition position) => position.itemLeadingEdge < 1)
+          .reduce((ItemPosition max, ItemPosition position) =>
+              position.itemLeadingEdge > max.itemLeadingEdge ? position : max)
+          .index;
+
+      tempIndex = (min + max) ~/ 2;
+      // logger.d('max $max  min $min tempIndex ${vState.tempIndex}');
+
+      minImageIndex = min;
+      maxImageIndex = max;
+
+      onChanged?.call(tempIndex);
+    }
   }
 }
 

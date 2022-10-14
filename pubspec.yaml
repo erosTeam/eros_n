@@ -72,6 +72,7 @@ dependencies:
   modal_bottom_sheet: ^2.1.2
   dropdown_button2: ^1.8.5
   fullscreen: ^1.0.3
+  scrollable_positioned_list: ^0.3.5
 
 
 dev_dependencies:

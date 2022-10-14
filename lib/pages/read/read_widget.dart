@@ -2,7 +2,9 @@ import 'dart:math' as math;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
@@ -185,12 +187,6 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
     _value = widget.initValue;
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _value = widget.initValue;
-  // }
-
   @override
   Widget build(BuildContext context) {
     final minText = Text(
@@ -262,10 +258,10 @@ class ControllerButtonBar extends StatelessWidget {
       mainAxisSize: mainAxisSize,
       children: [
         const ReadModelButton(),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.share_outlined),
-        ),
+        // IconButton(
+        //   onPressed: () {},
+        //   icon: const Icon(Icons.share_outlined),
+        // ),
         IconButton(
           onPressed: () {
             // showModalBottomSheet
@@ -308,10 +304,10 @@ class ReadModelButton extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final itemMap = {
-      ReadModel.leftToRight: Text('Left to Right'),
-      ReadModel.rightToLeft: Text('Right to Left'),
-      ReadModel.webtoon: Text('Webtoon'),
-      ReadModel.curlVertical: Text('Curl Vertical'),
+      ReadModel.leftToRight: Text(L10n.of(context).left_to_right),
+      ReadModel.rightToLeft: Text(L10n.of(context).right_to_left),
+      ReadModel.webtoon: Text(L10n.of(context).webtoon),
+      // ReadModel.curlVertical: Text('Curl Vertical'),
     };
 
     final readModelIconMap = <ReadModel, Widget>{
@@ -329,21 +325,6 @@ class ReadModelButton extends HookConsumerWidget {
       );
     }).toList();
 
-    // return IconButton(
-    //     onPressed: () {
-    //       showMenu(
-    //         context: context,
-    //         position: RelativeRect.fromLTRB(100,
-    //             context.height - context.mediaQueryPadding.bottom, 300, 400),
-    //         items: items,
-    //       ).then((value) {
-    //         if (value != null) {
-    //           // ref.read(readModelProvider.notifier).setReadModel(value);
-    //         }
-    //       });
-    //     },
-    //     icon: const Icon(Icons.app_settings_alt_outlined));
-
     return PopupMenuButton<ReadModel>(
       icon: Consumer(builder: (context, ref, child) {
         final readModel =
@@ -355,10 +336,10 @@ class ReadModelButton extends HookConsumerWidget {
       onSelected: (val) {
         ref.read(settingsProvider.notifier).setReadModel(val);
       },
-      // position: PopupMenuPosition.over,
+      // 28 or 80
       offset: context.isTablet
           ? const Offset(0, kToolbarHeight)
-          : const Offset(0, -240),
+          : Offset(0, -(48.0 * itemMap.length) - 28),
       itemBuilder: (context) => items,
     );
   }
