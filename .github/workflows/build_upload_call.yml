@@ -26,12 +26,12 @@ jobs:
 #            flutter_version: '3.3.2'
 #            artifact_name: release-mac
 #            artifact_path: build/macos/*.zip
-          - target: windows
-            os: windows-2022
-            flutter_version: '3.4'
-            flutter_channel: 'beta'
-            artifact_name: release-windows
-            artifact_path: build/windows/*.zip
+#          - target: windows
+#            os: windows-2022
+#            flutter_version: '3.4'
+#            flutter_channel: 'beta'
+#            artifact_name: release-windows
+#            artifact_path: build/windows/*.zip
 
     runs-on: ${{ matrix.os }}
     steps:

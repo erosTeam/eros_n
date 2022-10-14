@@ -38,7 +38,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
 #          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
-          artifacts: /tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa,/tmp/artifacts/release-windows/*.zip
+          artifacts: /tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa
           tag: ${{ github.ref_name }}
           bodyFile: changelog/v${{ steps.get_version.outputs.version }}.md
           prerelease: false

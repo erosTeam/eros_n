@@ -69,9 +69,9 @@ class ItemGridCard extends HookConsumerWidget {
                       width: gallery.images.thumbnail.imgWidth?.toDouble(),
                       fit: isBoxFitCover ? BoxFit.cover : BoxFit.contain,
                       // fit: BoxFit.cover,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      // placeholder: (context, url) => const Center(
+                      //   child: CircularProgressIndicator(),
+                      // ),
                     ),
                   ),
                 ),
