@@ -17,8 +17,8 @@ jobs:
             artifact_path: build/app/outputs/apk/release/*.apk
           - target: ios
             os: macos-latest
-            flutter_version: '3.3.4'
-            flutter_channel: 'stable'
+            flutter_version: '3.4'
+            flutter_channel: 'beta'
             artifact_name: release-ios
             artifact_path: build/**/*.ipa
 #          - target: macos
@@ -129,6 +129,7 @@ jobs:
       - name: Flutter pub get
         run: |
           git config --global core.longpaths true
+          flutter clean
           flutter pub get
 
       # Get app version

@@ -33,7 +33,11 @@ class _MorePageState extends ConsumerState<MorePage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(L10n.of(context).more),
+        title: Row(
+          children: [
+            Text(L10n.of(context).more),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         controller: scrollController,

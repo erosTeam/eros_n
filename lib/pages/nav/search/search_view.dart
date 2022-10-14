@@ -265,23 +265,27 @@ class SearchListView extends HookConsumerWidget {
         ),
       );
     }
-    return MultiSliver(
-      children: [
-        GallerySliverList(
-          gallerys: galleryList,
-          lastComplete: () => ref
-              .read(searchProvider(currentSearchDepth).notifier)
-              .loadNextPage(),
-          keepPosition: true,
-          maxPage: state.maxPage,
-        ),
-        Consumer(builder: (context, ref, _) {
-          final state = ref.watch(searchProvider(currentSearchDepth));
-          return EndIndicator(
-            loadStatus: state.status,
-          );
-        }),
-      ],
+    return SliverSafeArea(
+      top: false,
+      bottom: false,
+      sliver: MultiSliver(
+        children: [
+          GallerySliverList(
+            gallerys: galleryList,
+            lastComplete: () => ref
+                .read(searchProvider(currentSearchDepth).notifier)
+                .loadNextPage(),
+            keepPosition: true,
+            maxPage: state.maxPage,
+          ),
+          Consumer(builder: (context, ref, _) {
+            final state = ref.watch(searchProvider(currentSearchDepth));
+            return EndIndicator(
+              loadStatus: state.status,
+            );
+          }),
+        ],
+      ),
     );
   }
 }

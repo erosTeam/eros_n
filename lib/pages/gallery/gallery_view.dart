@@ -127,14 +127,19 @@ class GalleryPage extends HookConsumerWidget {
           controller: scrollController,
           slivers: [
             SliverToBoxAdapter(
-              child: Container(
-                height: context.isTablet ? 400 : 430,
+              child: SizedBox(
+                height: context.isTablet ? 400 : 460,
                 child: Stack(
                   alignment: Alignment.bottomLeft,
                   children: [
                     backGround(),
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.only(
+                        left: context.mediaQueryPadding.left + 16,
+                        right: context.mediaQueryPadding.right + 16,
+                        top: 16,
+                        bottom: 16,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -356,16 +361,20 @@ class DetailView extends HookConsumerWidget {
         ),
       );
     } else {
-      return MultiSliver(children: [
-        TagsView(gid: gid),
-        const SizedBox(height: 8),
-        ThumbListView(gid: gid),
-        const SizedBox(height: 8),
-        MoreLikeListView(gid: gid),
-        const SizedBox(height: 8),
-        CommentsListView(gid: gid),
-        const SizedBox(height: 150),
-      ]);
+      return SliverSafeArea(
+        top: false,
+        bottom: false,
+        sliver: MultiSliver(children: [
+          TagsView(gid: gid),
+          const SizedBox(height: 8),
+          ThumbListView(gid: gid),
+          const SizedBox(height: 8),
+          MoreLikeListView(gid: gid),
+          const SizedBox(height: 8),
+          CommentsListView(gid: gid),
+          const SizedBox(height: 150),
+        ]),
+      );
     }
   }
 }

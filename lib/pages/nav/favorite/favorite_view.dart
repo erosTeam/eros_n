@@ -74,7 +74,6 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
             : () async {},
         child: SizeCacheWidget(
           child: CustomScrollView(
-            // cacheExtent: 500,
             controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
@@ -100,16 +99,20 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
                 ),
               ),
               if (isUserLoggedIn)
-                MultiSliver(
-                  children: [
-                    const FavoriteListView(),
-                    Consumer(builder: (context, ref, _) {
-                      final state = ref.watch(favoriteProvider);
-                      return EndIndicator(
-                        loadStatus: state.status,
-                      );
-                    }),
-                  ],
+                SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  sliver: MultiSliver(
+                    children: [
+                      const FavoriteListView(),
+                      Consumer(builder: (context, ref, _) {
+                        final state = ref.watch(favoriteProvider);
+                        return EndIndicator(
+                          loadStatus: state.status,
+                        );
+                      }),
+                    ],
+                  ),
                 )
               else
                 SliverFillRemaining(

@@ -93,48 +93,56 @@ class _FrontPageState extends ConsumerState<FrontPage>
                 ),
                 toolbarHeight: 0,
               ),
-              MultiSliver(
-                pushPinnedChildren: true,
-                children: [
-                  SliverPinnedHeader(
-                    child: Container(
-                      height: kToolbarHeight,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        L10n.of(context).popular,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ),
-                  ),
-                  const PopularListView(),
-                ],
-              ),
-              MultiSliver(
-                pushPinnedChildren: true,
-                children: [
-                  SliverPinnedHeader(
-                    child: GestureDetector(
-                      onTap: () {
-                        scrollController.animateTo(0,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease);
-                      },
+              SliverSafeArea(
+                top: false,
+                bottom: false,
+                sliver: MultiSliver(
+                  pushPinnedChildren: true,
+                  children: [
+                    SliverPinnedHeader(
                       child: Container(
                         height: kToolbarHeight,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         color: Theme.of(context).scaffoldBackgroundColor,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          L10n.of(context).newest,
+                          L10n.of(context).popular,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                     ),
-                  ),
-                  const GalleryListView(),
-                ],
+                    const PopularListView(),
+                  ],
+                ),
+              ),
+              SliverSafeArea(
+                top: false,
+                bottom: false,
+                sliver: MultiSliver(
+                  pushPinnedChildren: true,
+                  children: [
+                    SliverPinnedHeader(
+                      child: GestureDetector(
+                        onTap: () {
+                          scrollController.animateTo(0,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.ease);
+                        },
+                        child: Container(
+                          height: kToolbarHeight,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            L10n.of(context).newest,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const GalleryListView(),
+                  ],
+                ),
               ),
               Consumer(builder: (context, ref, _) {
                 final state = ref.watch(frontProvider);

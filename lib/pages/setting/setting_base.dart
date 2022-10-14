@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 
 class SmallTitle extends StatelessWidget {
@@ -8,7 +11,8 @@ class SmallTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 16, top: 16, bottom: 6),
+      padding: EdgeInsets.only(
+          left: max(context.mediaQueryPadding.left, 16), top: 16, bottom: 6),
       child: Text(
         title,
         style: Theme.of(context)

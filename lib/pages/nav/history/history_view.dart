@@ -71,7 +71,11 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverAppBar(
-              title: Text(L10n.of(context).history),
+              title: Row(
+                children: [
+                  Text(L10n.of(context).history),
+                ],
+              ),
               floating: true,
               pinned: true,
               bottom: const PreferredSize(
@@ -120,44 +124,48 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
               builder: (context, ref, child) {
                 final historys = ref.watch(historyGallerysProvider);
                 final historysGroupByDate = groupByDate(historys);
-                return MultiSliver(
-                    children: historysGroupByDate.entries.map(
-                  (e) {
-                    final DateTime date = e.key;
-                    // if date is today
-                    final String dateStr = date.isToday()
-                        ? L10n.of(context).today
-                        : date.isYesterday()
-                            ? L10n.of(context).yesterday
-                            : date.toLocal().toString().split(' ')[0];
-                    final historysInDate = e.value;
-                    return MultiSliver(
-                      pushPinnedChildren: true,
-                      children: [
-                        SliverPinnedHeader(
-                          child: Container(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            child: Text(
-                              dateStr,
-                              style: Theme.of(context).textTheme.subtitle1,
+                return SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  sliver: MultiSliver(
+                      children: historysGroupByDate.entries.map(
+                    (e) {
+                      final DateTime date = e.key;
+                      // if date is today
+                      final String dateStr = date.isToday()
+                          ? L10n.of(context).today
+                          : date.isYesterday()
+                              ? L10n.of(context).yesterday
+                              : date.toLocal().toString().split(' ')[0];
+                      final historysInDate = e.value;
+                      return MultiSliver(
+                        pushPinnedChildren: true,
+                        children: [
+                          SliverPinnedHeader(
+                            child: Container(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Text(
+                                dateStr,
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
                             ),
                           ),
-                        ),
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final history = historysInDate[index];
-                              return HistoryItem(history: history);
-                            },
-                            childCount: historysInDate.length,
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final history = historysInDate[index];
+                                return HistoryItem(history: history);
+                              },
+                              childCount: historysInDate.length,
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ).toList());
+                        ],
+                      );
+                    },
+                  ).toList()),
+                );
               },
             ),
           ],
