@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
@@ -134,23 +135,30 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
         continue;
       }
 
-      for (final nhTag in nhTags) {
-        final tagTranslate = await isarHelper.findTagTranslateAsync(
-            nhTag.name ?? '',
-            namespace: getTagNamespace(nhTag.type ?? ''));
-        nhTag.translateName = tagTranslate?.translateName;
-        await isarHelper.putNhTag(nhTag);
+      // for (final nhTag in nhTags) {
+      //   final tagTranslate = await isarHelper.findTagTranslateAsync(
+      //       nhTag.name ?? '',
+      //       namespace: getTagNamespace(nhTag.type ?? ''));
+      //   nhTag.translateName = tagTranslate?.translateName;
+      //   await isarHelper.putNhTag(nhTag);
+      // }
+
+      final List<Future<NhTag>> tagFutureList = nhTags.map((tag) async {
+        final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
+            tag.name ?? '',
+            namespace: getTagNamespace(tag.type ?? ''));
+        return tag..translateName = translated?.translateName;
+      }).toList();
+
+      // 每500分块
+      final List<List<Future<NhTag>>> chunked =
+          tagFutureList.chunked(500).toList();
+
+      for (final chunk in chunked) {
+        final List<NhTag> tags = await Future.wait(chunk);
+        await isarHelper.putAllNhTag(tags);
       }
 
-      // final List<Future<NhTag>> tagFutureList = nhTags.map((tag) async {
-      //   final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
-      //       tag.name ?? '',
-      //       namespace: getTagNamespace(tag.type ?? ''));
-      //   return tag..translateName = translated?.translateName;
-      // }).toList();
-      //
-      // final List<NhTag> tagList = await Future.wait(tagFutureList);
-      //
       // await isarHelper.putAllNhTag(tagList);
     }
     ref.refresh(allNhTagProvider);

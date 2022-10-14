@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
+import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keframe/keframe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -53,13 +56,13 @@ class _SearchPageState extends ConsumerState<SearchPage>
 
     final keyboardVisibilityController = KeyboardVisibilityController();
     // Query
-    logger.d(
+    logger.v(
         'Keyboard visibility direct query: ${keyboardVisibilityController.isVisible}');
 
     // Subscribe
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
-      logger.d('Keyboard visibility update. Is visible: $visible');
+      logger.v('Keyboard visibility update. Is visible: $visible');
       if (visible) {
         searchProviderNoti.searchFocusNode.requestFocus();
         // searchProviderNoti.setFloatingAppBar(false);
@@ -174,58 +177,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                 leading: SizedBox(),
                 leadingWidth: 0,
                 // titleSpacing: 0,
-                title: StatefulBuilder(
-                  key: const Key('search_app_bar'),
-                  builder: (context, setState) {
-                    return TextField(
-                      controller: searchProviderNoti.searchController,
-                      focusNode: searchProviderNoti.searchFocusNode,
-                      decoration: InputDecoration(
-                        fillColor: Theme.of(context).colorScheme.surfaceVariant,
-                        filled: true,
-                        contentPadding: const EdgeInsets.only(),
-                        // isCollapsed: true,
-                        isDense: false,
-                        hintText: L10n.of(context).search,
-                        // border: InputBorder.none,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(100),
-                          borderSide: BorderSide.none,
-                        ),
-                        // prefixIcon: const Icon(Icons.search),
-                        prefixIcon: getPrefixIcon(context),
-                        suffixIcon: KeyboardVisibilityBuilder(
-                            builder: (context, isKeyboardVisible) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (searchProviderNoti
-                                      .searchController.text.isNotEmpty ||
-                                  isKeyboardVisible)
-                                IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    searchProviderNoti.searchController.clear();
-                                    setState(() {});
-                                  },
-                                ),
-                              buildMenuButton(),
-                            ],
-                          );
-                        }),
-                      ),
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      textInputAction: TextInputAction.search,
-                      onEditingComplete: () {
-                        //focusNode
-                        searchProviderNoti.searchFocusNode.unfocus();
-                        searchProviderNoti.search();
-                      },
-                    );
-                  },
-                ),
+                title: buildSearchBar2(buildMenuButton()),
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 bottom: const PreferredSize(
                   preferredSize: Size.fromHeight(0),
@@ -239,6 +191,149 @@ class _SearchPageState extends ConsumerState<SearchPage>
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildSearchBar2(Widget menuButton) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return TypeAheadField<NhTag>(
+          textFieldConfiguration: TextFieldConfiguration(
+            controller: searchProviderNoti.searchController,
+            focusNode: searchProviderNoti.searchFocusNode,
+            decoration: InputDecoration(
+              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+              filled: true,
+              contentPadding: const EdgeInsets.only(),
+              // isCollapsed: true,
+              isDense: false,
+              hintText: L10n.of(context).search,
+              // border: InputBorder.none,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(100),
+                borderSide: BorderSide.none,
+              ),
+              // prefixIcon: const Icon(Icons.search),
+              prefixIcon: getPrefixIcon(context),
+              suffixIcon: KeyboardVisibilityBuilder(
+                  builder: (context, isKeyboardVisible) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (searchProviderNoti.searchController.text.isNotEmpty ||
+                        isKeyboardVisible)
+                      IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          searchProviderNoti.searchController.clear();
+                          setState(() {});
+                        },
+                      ),
+                    menuButton,
+                  ],
+                );
+              }),
+            ),
+            textInputAction: TextInputAction.search,
+            onChanged: (value) {
+              setState(() {});
+            },
+            onEditingComplete: () {
+              //focusNode
+              searchProviderNoti.searchFocusNode.unfocus();
+              searchProviderNoti.search();
+            },
+            onSubmitted: (value) {
+              searchProviderNoti.searchFocusNode.unfocus();
+              searchProviderNoti.search();
+            },
+          ),
+          suggestionsBoxDecoration: SuggestionsBoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            shadowColor: Theme.of(context).colorScheme.surfaceVariant,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(28),
+            ),
+            clipBehavior: Clip.antiAlias,
+          ),
+          suggestionsCallback: (pattern) async {
+            if (pattern.isEmpty) {
+              return Future.value([]);
+            }
+            logger.d('suggestionsCallback: $pattern');
+            return isarHelper.findNhTagContains(pattern, 200);
+          },
+          itemBuilder: (BuildContext context, itemData) {
+            return ListTile(
+              title: Text('${itemData.type}:${itemData.name}'),
+              subtitle: itemData.translateName != null
+                  ? Text(itemData.translateName ?? '')
+                  : null,
+            );
+          },
+          noItemsFoundBuilder: (context) {
+            return const SizedBox();
+          },
+          onSuggestionSelected: (suggestion) {
+            logger.d('onSuggestionSelected: $suggestion');
+            searchProviderNoti.searchController.text =
+                '${suggestion.type}:${suggestion.name}';
+          },
+        );
+      },
+    );
+  }
+
+  Widget buildSearchBar(Widget menuButton) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return TextField(
+          controller: searchProviderNoti.searchController,
+          focusNode: searchProviderNoti.searchFocusNode,
+          decoration: InputDecoration(
+            fillColor: Theme.of(context).colorScheme.surfaceVariant,
+            filled: true,
+            contentPadding: const EdgeInsets.only(),
+            // isCollapsed: true,
+            isDense: false,
+            hintText: L10n.of(context).search,
+            // border: InputBorder.none,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(100),
+              borderSide: BorderSide.none,
+            ),
+            // prefixIcon: const Icon(Icons.search),
+            prefixIcon: getPrefixIcon(context),
+            suffixIcon: KeyboardVisibilityBuilder(
+                builder: (context, isKeyboardVisible) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (searchProviderNoti.searchController.text.isNotEmpty ||
+                      isKeyboardVisible)
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        searchProviderNoti.searchController.clear();
+                        setState(() {});
+                      },
+                    ),
+                  menuButton,
+                ],
+              );
+            }),
+          ),
+          onChanged: (value) {
+            setState(() {});
+          },
+          textInputAction: TextInputAction.search,
+          onEditingComplete: () {
+            //focusNode
+            searchProviderNoti.searchFocusNode.unfocus();
+            searchProviderNoti.search();
+          },
+        );
+      },
     );
   }
 

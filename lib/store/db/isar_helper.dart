@@ -86,21 +86,15 @@ class IsarHelper {
       name = name.split('|').first.trim();
     }
     if (namespace != null && namespace.isNotEmpty) {
-      final result = await isar.tagTranslates
-          .where()
-          .nameEqualTo(name)
-          .filter()
-          .namespaceEqualTo(namespace)
-          .findAll();
-      return result.lastOrNull;
+      final result =
+          await isar.tagTranslates.getByNameNamespace(name, namespace);
+      return result;
     } else {
       final result = await isar.tagTranslates
           .where()
-          .namespaceNotEqualTo('rows')
-          .filter()
-          .nameEqualTo(name)
-          .findAll();
-      return result.lastOrNull;
+          .nameEqualToNamespaceNotEqualTo(name, 'rows')
+          .findFirst();
+      return result;
     }
   }
 
@@ -110,9 +104,9 @@ class IsarHelper {
         .where()
         .namespaceNotEqualTo('rows')
         .filter()
-        .nameEqualTo(text)
-        .or()
         .nameContains(text)
+        .or()
+        .translateNameContains(text)
         .limit(limit)
         .findAll();
 
@@ -143,5 +137,19 @@ class IsarHelper {
 
   Future<List<NhTag>> getAllNhTag() {
     return isar.nhTags.where().findAll();
+  }
+
+  Future<List<NhTag>> findNhTagContains(String text, int limit) async {
+    final result = await isar.nhTags
+        .filter()
+        .nameContains(text)
+        .or()
+        .translateNameContains(text)
+        .limit(limit)
+        .findAll();
+
+    logger.d('result.len ${result.length}');
+
+    return result;
   }
 }
