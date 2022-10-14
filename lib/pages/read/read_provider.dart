@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:eros_n/common/enum.dart';
@@ -38,13 +39,21 @@ class ReadNotifier extends StateNotifier<ReadState> {
     return ref.read(galleryProvider(currentGalleryGid)).currentPageIndex;
   }
 
+  int get totPageCount {
+    return ref.read(galleryProvider(currentGalleryGid)).images.pages.length;
+  }
+
+  bool get isRightToLeft {
+    return ref.read(settingsProvider).readModel == ReadModel.rightToLeft;
+  }
+
   void toPrev() {
     if (isPageView) {
       preloadPageController.previousPage(
           duration: const Duration(milliseconds: 200), curve: Curves.ease);
     } else {
       itemScrollController.scrollTo(
-          index: currentPageIndex - 1,
+          index: max(0, currentPageIndex - 1),
           duration: const Duration(milliseconds: 200),
           curve: Curves.ease);
     }
@@ -56,18 +65,26 @@ class ReadNotifier extends StateNotifier<ReadState> {
           duration: const Duration(milliseconds: 200), curve: Curves.ease);
     } else {
       itemScrollController.scrollTo(
-          index: currentPageIndex + 1,
+          index: min(totPageCount - 1, currentPageIndex + 1),
           duration: const Duration(milliseconds: 200),
           curve: Curves.ease);
     }
   }
 
   void tapLeft() {
-    toPrev();
+    if (isRightToLeft) {
+      toNext();
+    } else {
+      toPrev();
+    }
   }
 
   void tapRight() {
-    toNext();
+    if (isRightToLeft) {
+      toPrev();
+    } else {
+      toNext();
+    }
   }
 
   void jumpToPage(int index) {
@@ -76,13 +93,11 @@ class ReadNotifier extends StateNotifier<ReadState> {
     } else {
       itemScrollController.jumpTo(index: index);
     }
-    // preloadPageController.jumpToPage(index);
   }
 
   Future<void> handOnTapCenter(BuildContext context) async {
     logger.v('handOnTapCenter');
 
-    // initBar(context);
     if (state.showAppBar) {
       hideAppBar();
     } else {
@@ -129,7 +144,6 @@ class ReadNotifier extends StateNotifier<ReadState> {
       bottomBarOffset: 0,
       topBarOffset: 0,
     );
-    // FullScreen.exitFullScreen();
   }
 
   void hideAppBar() {
@@ -149,17 +163,15 @@ class ReadNotifier extends StateNotifier<ReadState> {
         SystemChrome.setEnabledSystemUIMode(
           SystemUiMode.immersiveSticky,
         );
-        // FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
       });
     }
   }
 
   Future<void> unFullscreen() async {
-    // await SystemChrome.setEnabledSystemUIMode(
-    //   SystemUiMode.edgeToEdge,
-    // );
-    FullScreen.exitFullScreen();
-    await 300.milliseconds.delay();
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
+    );
+    await 100.milliseconds.delay();
   }
 
   bool conditionItemIndex = true;

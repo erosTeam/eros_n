@@ -543,28 +543,36 @@ class ThumbListView extends HookConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
               final GalleryImage image = pages[index];
-              return GestureDetector(
-                onTap: () async {
-                  RouteUtil.goRead(ref, index: index);
-                },
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: image.imgWidth! / image.imgHeight!,
-                    child: Card(
-                      // margin: const EdgeInsets.all(0),
-                      clipBehavior: Clip.antiAlias,
-                      child: Hero(
-                        tag: '${gid}_$index',
-                        child: ErosCachedNetworkImage(
-                          imageUrl:
-                              'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
-                          fit: BoxFit.cover,
+              return Consumer(
+                  child: GestureDetector(
+                    onTap: () async {
+                      RouteUtil.goRead(ref, index: index);
+                    },
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: image.imgWidth! / image.imgHeight!,
+                        child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          child: Hero(
+                            tag: '${gid}_$index',
+                            child: ErosCachedNetworkImage(
+                              imageUrl:
+                                  'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
+                  builder: (context, ref, child) {
+                    final currentIndex = ref.watch(galleryProvider(gid)
+                        .select((gallery) => gallery.currentPageIndex));
+                    return HeroMode(
+                      enabled: true,
+                      child: child!,
+                    );
+                  });
             },
           ),
         ),

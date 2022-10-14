@@ -107,7 +107,9 @@ class ReadPage extends HookConsumerWidget {
     final gid = currentGalleryGid;
     logger.d('ReadPage build $gid');
     useEffect(() {
-      ref.read(readProvider.notifier).setFullscreen();
+      if (!ref.read(readProvider).showAppBar) {
+        ref.read(readProvider.notifier).setFullscreen();
+      }
       return () {
         // 恢复状态栏显示
         SystemChrome.setEnabledSystemUIMode(
@@ -333,54 +335,58 @@ class ReadPageView extends HookConsumerWidget {
       return () {};
     });
 
-    return Consumer(builder: (context, ref, child) {
-      logger.d('ReadPageView Consumer build');
-      void onPageChanged(int index) {
-        ref.read(galleryProvider(gid).notifier).onPageChanged(index);
-      }
+    return Consumer(
+      builder: (context, ref, child) {
+        logger.d('ReadPageView Consumer build');
+        void onPageChanged(int index) {
+          ref.read(galleryProvider(gid).notifier).onPageChanged(index);
+        }
 
-      final pages =
-          ref.watch(galleryProvider(gid).select((g) => g.images.pages));
-      final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
-      // 使用read 避免每次翻页都重新build
-      final currentPageIndex =
-          ref.read(galleryProvider(gid).select((g) => g.currentPageIndex));
+        final pages =
+            ref.watch(galleryProvider(gid).select((g) => g.images.pages));
+        final mediaId =
+            ref.watch(galleryProvider(gid).select((g) => g.mediaId));
 
-      return PreloadPhotoViewGallery.builder(
-        scrollDirection: scrollDirection,
-        // scrollPhysics: const CustomScrollPhysics(),
-        builder: (BuildContext context, int index) {
-          final imageUrl = getGalleryImageUrl(
-              mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');
+        // 用于控制hero动画
+        final currentIndex = ref.watch(
+            galleryProvider(gid).select((gallery) => gallery.currentPageIndex));
 
-          return PhotoViewGalleryPageOptions(
-            imageProvider: getErorsImageProvider(
-              imageUrl,
+        return PreloadPhotoViewGallery.builder(
+          scrollDirection: scrollDirection,
+          builder: (BuildContext context, int index) {
+            final imageUrl = getGalleryImageUrl(
+                mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');
+
+            return PhotoViewGalleryPageOptions(
+              imageProvider: getErorsImageProvider(
+                imageUrl,
+              ),
+              scaleStateCycle: imageScaleStateCycle,
+              filterQuality: FilterQuality.medium,
+              initialScale: PhotoViewComputedScale.contained * 0.99,
+              minScale: PhotoViewComputedScale.contained * 0.8,
+              maxScale: PhotoViewComputedScale.contained * 2,
+              heroAttributes: currentIndex == index
+                  ? PhotoViewHeroAttributes(tag: '${gid}_$index')
+                  : null,
+            );
+          },
+          reverse: reverse,
+          customSize: MediaQuery.of(context).size,
+          preloadPagesCount: 3,
+          itemCount: pages.length,
+          loadingBuilder: (context, event) => Center(
+            child: CircularProgressIndicator(
+              value: event == null
+                  ? null
+                  : event.cumulativeBytesLoaded /
+                      (event.expectedTotalBytes ?? 1),
             ),
-            scaleStateCycle: imageScaleStateCycle,
-            filterQuality: FilterQuality.medium,
-            initialScale: PhotoViewComputedScale.contained * 0.99,
-            minScale: PhotoViewComputedScale.contained * 0.8,
-            maxScale: PhotoViewComputedScale.contained * 2,
-            heroAttributes: currentPageIndex == index
-                ? PhotoViewHeroAttributes(tag: '${gid}_$index')
-                : null,
-          );
-        },
-        reverse: reverse,
-        customSize: MediaQuery.of(context).size,
-        preloadPagesCount: 3,
-        itemCount: pages.length,
-        loadingBuilder: (context, event) => Center(
-          child: CircularProgressIndicator(
-            value: event == null
-                ? null
-                : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
           ),
-        ),
-        pageController: readNotifier.preloadPageController,
-        onPageChanged: onPageChanged,
-      );
-    });
+          pageController: readNotifier.preloadPageController,
+          onPageChanged: onPageChanged,
+        );
+      },
+    );
   }
 }

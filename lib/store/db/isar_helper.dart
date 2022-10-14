@@ -38,8 +38,9 @@ class IsarHelper {
     });
   }
 
-  Future<void> putAllTagTranslate(List<TagTranslate> tagTranslates,
-      {bool replaceOnConflict = true}) async {
+  Future<void> putAllTagTranslate(
+    List<TagTranslate> tagTranslates,
+  ) async {
     await isar.writeTxn(() async {
       await isar.tagTranslates.putAll(tagTranslates);
     });
@@ -67,13 +68,20 @@ class IsarHelper {
           .findAllSync();
       return result.lastOrNull;
     } else {
-      final result = isar.tagTranslates.where().nameEqualTo(name).findAllSync();
+      final result = isar.tagTranslates
+          .where()
+          .namespaceNotEqualTo('rows')
+          .filter()
+          .nameEqualTo(name)
+          .findAllSync();
       return result.lastOrNull;
     }
   }
 
-  Future<TagTranslate?> findTagTranslateAsync(String name,
-      {String? namespace}) async {
+  Future<TagTranslate?> findTagTranslateAsync(
+    String name, {
+    String? namespace,
+  }) async {
     if (name.contains('|')) {
       name = name.split('|').first.trim();
     }
@@ -86,8 +94,12 @@ class IsarHelper {
           .findAll();
       return result.lastOrNull;
     } else {
-      final result =
-          await isar.tagTranslates.where().nameEqualTo(name).findAll();
+      final result = await isar.tagTranslates
+          .where()
+          .namespaceNotEqualTo('rows')
+          .filter()
+          .nameEqualTo(name)
+          .findAll();
       return result.lastOrNull;
     }
   }
@@ -95,6 +107,8 @@ class IsarHelper {
   Future<List<TagTranslate>> findTagTranslateContains(
       String text, int limit) async {
     final result = await isar.tagTranslates
+        .where()
+        .namespaceNotEqualTo('rows')
         .filter()
         .nameEqualTo(text)
         .or()
