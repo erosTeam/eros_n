@@ -19,6 +19,7 @@ class AppearanceSettingPage extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
+          /// Theme
           SmallTitle(title: L10n.of(context).theme),
           // ThemeMode
           Consumer(builder: (context, ref, child) {
@@ -55,41 +56,24 @@ class AppearanceSettingPage extends StatelessWidget {
               ),
             );
           }),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
+
+          /// List Style
           SmallTitle(title: L10n.of(context).list_style),
-          // Switch tag translate
+          // switch list model
           Consumer(builder: (context, ref, child) {
-            final isTagTranslate = ref.watch(
-                settingsProvider.select((settings) => settings.isTagTranslate));
-            final tagTranslateInfo = ref.watch(tagTranslateProvider);
-            return ListTile(
-              title: Text(L10n.of(context).tag_translation),
-              subtitle: Text('Version: ${tagTranslateInfo.version ?? ''}'),
-              trailing: Switch(
-                activeColor: Theme.of(context).colorScheme.primary,
-                value: isTagTranslate,
-                onChanged: (value) {
-                  ref.read(settingsProvider.notifier).setTagTranslate(value);
-                },
-              ),
-              onLongPress: () {
-                ref.read(tagTranslateProvider.notifier).updateDb(force: true);
+            final listModel = ref.watch(
+                settingsProvider.select((settings) => settings.listModel));
+            return RadioDialogListTile<ListModel>(
+              title: Text(L10n.of(context).list_model),
+              groupValue: listModel,
+              radioTitleMap: {
+                ListModel.list: Text(L10n.of(context).list),
+                ListModel.grid: Text(L10n.of(context).grid),
+                ListModel.waterfall: Text(L10n.of(context).waterfall),
               },
-            );
-          }),
-          Consumer(builder: (context, ref, child) {
-            final allNhTag = ref.watch(allNhTagProvider);
-            return ListTile(
-              title: Text(L10n.of(context).tags_data),
-              // subtitle: Text('total: ${ref.watch(tagTranslateProvider).total}, long press to update'),
-              subtitle: allNhTag.when(
-                data: (data) =>
-                    Text('total: ${data.length}, long press to update'),
-                loading: () => Text('loading...'),
-                error: (error, stack) => Text('error: $error'),
-              ),
-              onLongPress: () {
-                ref.read(tagTranslateProvider.notifier).updateNhTags();
+              onChanged: (value) {
+                ref.read(settingsProvider.notifier).setListModel(value);
               },
             );
           }),
@@ -113,18 +97,54 @@ class AppearanceSettingPage extends StatelessWidget {
             );
           }),
           Consumer(builder: (context, ref, child) {
-            final tagLayoutOnCard = ref.watch(settingsProvider
-                .select((settings) => settings.tagLayoutOnCard));
-            return RadioDialogListTile<TagLayoutOnCard>(
-              title: Text(L10n.of(context).tag_layout_on_card),
-              groupValue: tagLayoutOnCard,
+            final tagLayoutOnItem = ref.watch(settingsProvider
+                .select((settings) => settings.tagLayoutOnItem));
+            return RadioDialogListTile<TagLayoutOnItem>(
+              title: Text(L10n.of(context).tag_layout_on_item),
+              groupValue: tagLayoutOnItem,
               radioTitleMap: {
-                TagLayoutOnCard.wrap: Text(L10n.of(context).wrap),
-                TagLayoutOnCard.singleLine: Text(L10n.of(context).single_line),
+                TagLayoutOnItem.wrap: Text(L10n.of(context).wrap),
+                TagLayoutOnItem.singleLine: Text(L10n.of(context).single_line),
                 // TagLayoutOnCard.row: Text('Row'),
               },
               onChanged: (value) {
-                ref.read(settingsProvider.notifier).setTagLayoutOnCard(value);
+                ref.read(settingsProvider.notifier).setTagLayoutOnItem(value);
+              },
+            );
+          }),
+          Consumer(builder: (context, ref, child) {
+            final allNhTag = ref.watch(allNhTagProvider);
+            return ListTile(
+              title: Text(L10n.of(context).tags_data),
+              // subtitle: Text('total: ${ref.watch(tagTranslateProvider).total}, long press to update'),
+              subtitle: allNhTag.when(
+                data: (data) =>
+                    Text('total: ${data.length}, long press to update'),
+                loading: () => Text('loading...'),
+                error: (error, stack) => Text('error: $error'),
+              ),
+              onLongPress: () {
+                ref.read(tagTranslateProvider.notifier).updateNhTags();
+              },
+            );
+          }),
+          // Switch tag translate
+          Consumer(builder: (context, ref, child) {
+            final isTagTranslate = ref.watch(
+                settingsProvider.select((settings) => settings.isTagTranslate));
+            final tagTranslateInfo = ref.watch(tagTranslateProvider);
+            return ListTile(
+              title: Text(L10n.of(context).tag_translation),
+              subtitle: Text('Version: ${tagTranslateInfo.version ?? ''}'),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: isTagTranslate,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setTagTranslate(value);
+                },
+              ),
+              onLongPress: () {
+                ref.read(tagTranslateProvider.notifier).updateDb(force: true);
               },
             );
           }),

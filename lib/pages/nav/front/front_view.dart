@@ -278,7 +278,7 @@ class GalleryListView extends HookConsumerWidget {
         ),
       );
     }
-    return GalleryWaterfallFlowView(
+    return GallerySliverList(
       gallerys: galleryList,
       lastComplete: () => ref.read(frontProvider.notifier).loadNextPage(),
       keepPosition: true,

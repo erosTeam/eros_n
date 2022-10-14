@@ -148,7 +148,7 @@ class FavoriteListView extends HookConsumerWidget {
         ),
       );
     }
-    return GalleryWaterfallFlowView(
+    return GallerySliverList(
       gallerys: galleryList,
       lastComplete: () => ref.read(favoriteProvider.notifier).loadNextPage(),
       keepPosition: true,

@@ -42,8 +42,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
     hiveHelper.setSettings(state);
   }
 
-  void setTagLayoutOnCard(TagLayoutOnCard value) {
-    state = state.copyWith(tagLayoutOnCard: value);
+  void setTagLayoutOnItem(TagLayoutOnItem value) {
+    state = state.copyWith(tagLayoutOnItem: value);
     hiveHelper.setSettings(state);
   }
 
@@ -59,6 +59,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
 
   void setReadModel(ReadModel value) {
     state = state.copyWith(readModel: value);
+    hiveHelper.setSettings(state);
+  }
+
+  void setListModel(ListModel value) {
+    state = state.copyWith(listModel: value);
     hiveHelper.setSettings(state);
   }
 }

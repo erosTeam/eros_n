@@ -14,37 +14,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keframe/keframe.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 
-class SimpleTag extends HookConsumerWidget {
-  const SimpleTag({
-    Key? key,
-    required this.tag,
-  }) : super(key: key);
-  final Tag tag;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isTagTranslate =
-        ref.watch(settingsProvider.select((value) => value.isTagTranslate));
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1.5),
-      decoration: BoxDecoration(
-        // color: Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.grey[600]!),
-      ),
-      child: Text(
-        isTagTranslate ? tag.translatedName ?? '' : tag.name ?? '',
-        style: TextStyle(
-          fontSize: 12,
-          color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
 class ItemWaterfallFlowCard extends HookConsumerWidget {
   const ItemWaterfallFlowCard({
     Key? key,
@@ -96,7 +65,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
           ),
         ),
         buildTitle(),
-        buildTags(),
+        SimpleTagsView(simpleTags: gallery.simpleTags),
       ],
     );
 
@@ -116,75 +85,6 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
       },
       child: item,
     );
-  }
-
-  Widget buildTags() {
-    return Consumer(builder: (context, ref, child) {
-      final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
-      final tagLayoutOnCard =
-          ref.watch(settingsProvider.select((s) => s.tagLayoutOnCard));
-
-      if (!showTags || gallery.simpleTags.isEmpty) {
-        return const SizedBox();
-      }
-
-      final tags = gallery.simpleTags.take(10).toList();
-      // final tags = gallery.simpleTags;
-
-      switch (tagLayoutOnCard) {
-        case TagLayoutOnCard.row:
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Row(
-                children: [
-                  ...tags
-                      .where((tag) => tag.name != null)
-                      .map((e) => SimpleTag(tag: e).paddingOnly(right: 4)),
-                ],
-              ),
-            ),
-          );
-
-        case TagLayoutOnCard.singleLine:
-          return SizedBox(
-            height: 26,
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final tag = tags[index];
-
-                if (tag.name == null) {
-                  return const SizedBox();
-                }
-
-                // 圆角边框
-                return Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(right: 4),
-                  child: SimpleTag(tag: tag),
-                );
-              },
-              itemCount: tags.length,
-            ),
-          );
-        case TagLayoutOnCard.wrap:
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6),
-            child: Wrap(
-              spacing: 4,
-              runSpacing: 4,
-              children: tags
-                  .where((tag) => tag.name != null)
-                  .map((tag) => SimpleTag(tag: tag))
-                  .toList(),
-            ),
-          );
-      }
-    });
   }
 
   Widget buildTitle() {

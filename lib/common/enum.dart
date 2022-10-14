@@ -9,7 +9,7 @@ enum TagCategory {
   final String value;
 }
 
-enum TagLayoutOnCard {
+enum TagLayoutOnItem {
   singleLine,
 
   row,
@@ -26,4 +26,10 @@ enum ReadModel {
   curlVertical,
   webtoon,
   defaultModel,
+}
+
+enum ListModel {
+  list,
+  grid,
+  waterfall,
 }

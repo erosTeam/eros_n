@@ -25,10 +25,11 @@ mixin _$Settings {
   bool get dynamicColor => throw _privateConstructorUsedError;
   SearchSort get searchSort => throw _privateConstructorUsedError;
   bool get showTags => throw _privateConstructorUsedError;
-  TagLayoutOnCard get tagLayoutOnCard => throw _privateConstructorUsedError;
+  TagLayoutOnItem get tagLayoutOnItem => throw _privateConstructorUsedError;
   ThemeMode get themeMode => throw _privateConstructorUsedError;
   bool get fullScreenReader => throw _privateConstructorUsedError;
   ReadModel get readModel => throw _privateConstructorUsedError;
+  ListModel get listModel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,10 +47,11 @@ abstract class $SettingsCopyWith<$Res> {
       bool dynamicColor,
       SearchSort searchSort,
       bool showTags,
-      TagLayoutOnCard tagLayoutOnCard,
+      TagLayoutOnItem tagLayoutOnItem,
       ThemeMode themeMode,
       bool fullScreenReader,
-      ReadModel readModel});
+      ReadModel readModel,
+      ListModel listModel});
 }
 
 /// @nodoc
@@ -67,10 +69,11 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? dynamicColor = freezed,
     Object? searchSort = freezed,
     Object? showTags = freezed,
-    Object? tagLayoutOnCard = freezed,
+    Object? tagLayoutOnItem = freezed,
     Object? themeMode = freezed,
     Object? fullScreenReader = freezed,
     Object? readModel = freezed,
+    Object? listModel = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -93,10 +96,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.showTags
           : showTags // ignore: cast_nullable_to_non_nullable
               as bool,
-      tagLayoutOnCard: tagLayoutOnCard == freezed
-          ? _value.tagLayoutOnCard
-          : tagLayoutOnCard // ignore: cast_nullable_to_non_nullable
-              as TagLayoutOnCard,
+      tagLayoutOnItem: tagLayoutOnItem == freezed
+          ? _value.tagLayoutOnItem
+          : tagLayoutOnItem // ignore: cast_nullable_to_non_nullable
+              as TagLayoutOnItem,
       themeMode: themeMode == freezed
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
@@ -109,6 +112,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.readModel
           : readModel // ignore: cast_nullable_to_non_nullable
               as ReadModel,
+      listModel: listModel == freezed
+          ? _value.listModel
+          : listModel // ignore: cast_nullable_to_non_nullable
+              as ListModel,
     ));
   }
 }
@@ -125,10 +132,11 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       bool dynamicColor,
       SearchSort searchSort,
       bool showTags,
-      TagLayoutOnCard tagLayoutOnCard,
+      TagLayoutOnItem tagLayoutOnItem,
       ThemeMode themeMode,
       bool fullScreenReader,
-      ReadModel readModel});
+      ReadModel readModel,
+      ListModel listModel});
 }
 
 /// @nodoc
@@ -148,10 +156,11 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? dynamicColor = freezed,
     Object? searchSort = freezed,
     Object? showTags = freezed,
-    Object? tagLayoutOnCard = freezed,
+    Object? tagLayoutOnItem = freezed,
     Object? themeMode = freezed,
     Object? fullScreenReader = freezed,
     Object? readModel = freezed,
+    Object? listModel = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -174,10 +183,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.showTags
           : showTags // ignore: cast_nullable_to_non_nullable
               as bool,
-      tagLayoutOnCard: tagLayoutOnCard == freezed
-          ? _value.tagLayoutOnCard
-          : tagLayoutOnCard // ignore: cast_nullable_to_non_nullable
-              as TagLayoutOnCard,
+      tagLayoutOnItem: tagLayoutOnItem == freezed
+          ? _value.tagLayoutOnItem
+          : tagLayoutOnItem // ignore: cast_nullable_to_non_nullable
+              as TagLayoutOnItem,
       themeMode: themeMode == freezed
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
@@ -190,6 +199,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.readModel
           : readModel // ignore: cast_nullable_to_non_nullable
               as ReadModel,
+      listModel: listModel == freezed
+          ? _value.listModel
+          : listModel // ignore: cast_nullable_to_non_nullable
+              as ListModel,
     ));
   }
 }
@@ -203,10 +216,11 @@ class _$_Settings extends _Settings {
       this.dynamicColor = true,
       this.searchSort = SearchSort.recent,
       this.showTags = false,
-      this.tagLayoutOnCard = TagLayoutOnCard.wrap,
+      this.tagLayoutOnItem = TagLayoutOnItem.wrap,
       this.themeMode = ThemeMode.system,
       this.fullScreenReader = false,
-      this.readModel = ReadModel.leftToRight})
+      this.readModel = ReadModel.leftToRight,
+      this.listModel = ListModel.waterfall})
       : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
@@ -229,7 +243,7 @@ class _$_Settings extends _Settings {
   final bool showTags;
   @override
   @JsonKey()
-  final TagLayoutOnCard tagLayoutOnCard;
+  final TagLayoutOnItem tagLayoutOnItem;
   @override
   @JsonKey()
   final ThemeMode themeMode;
@@ -239,10 +253,13 @@ class _$_Settings extends _Settings {
   @override
   @JsonKey()
   final ReadModel readModel;
+  @override
+  @JsonKey()
+  final ListModel listModel;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnCard: $tagLayoutOnCard, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel)';
   }
 
   @override
@@ -260,11 +277,12 @@ class _$_Settings extends _Settings {
                 .equals(other.searchSort, searchSort) &&
             const DeepCollectionEquality().equals(other.showTags, showTags) &&
             const DeepCollectionEquality()
-                .equals(other.tagLayoutOnCard, tagLayoutOnCard) &&
+                .equals(other.tagLayoutOnItem, tagLayoutOnItem) &&
             const DeepCollectionEquality().equals(other.themeMode, themeMode) &&
             const DeepCollectionEquality()
                 .equals(other.fullScreenReader, fullScreenReader) &&
-            const DeepCollectionEquality().equals(other.readModel, readModel));
+            const DeepCollectionEquality().equals(other.readModel, readModel) &&
+            const DeepCollectionEquality().equals(other.listModel, listModel));
   }
 
   @JsonKey(ignore: true)
@@ -276,10 +294,11 @@ class _$_Settings extends _Settings {
       const DeepCollectionEquality().hash(dynamicColor),
       const DeepCollectionEquality().hash(searchSort),
       const DeepCollectionEquality().hash(showTags),
-      const DeepCollectionEquality().hash(tagLayoutOnCard),
+      const DeepCollectionEquality().hash(tagLayoutOnItem),
       const DeepCollectionEquality().hash(themeMode),
       const DeepCollectionEquality().hash(fullScreenReader),
-      const DeepCollectionEquality().hash(readModel));
+      const DeepCollectionEquality().hash(readModel),
+      const DeepCollectionEquality().hash(listModel));
 
   @JsonKey(ignore: true)
   @override
@@ -301,10 +320,11 @@ abstract class _Settings extends Settings {
       final bool dynamicColor,
       final SearchSort searchSort,
       final bool showTags,
-      final TagLayoutOnCard tagLayoutOnCard,
+      final TagLayoutOnItem tagLayoutOnItem,
       final ThemeMode themeMode,
       final bool fullScreenReader,
-      final ReadModel readModel}) = _$_Settings;
+      final ReadModel readModel,
+      final ListModel listModel}) = _$_Settings;
   const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
@@ -320,13 +340,15 @@ abstract class _Settings extends Settings {
   @override
   bool get showTags;
   @override
-  TagLayoutOnCard get tagLayoutOnCard;
+  TagLayoutOnItem get tagLayoutOnItem;
   @override
   ThemeMode get themeMode;
   @override
   bool get fullScreenReader;
   @override
   ReadModel get readModel;
+  @override
+  ListModel get listModel;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

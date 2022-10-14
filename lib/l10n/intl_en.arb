@@ -67,8 +67,12 @@
   "tags_data": "Tags Data",
   "show_tags": "Show Tags",
   "show_tags_tip": "Show tags in list",
-  "tag_layout_on_card": "Tag Layout on Card",
+  "tag_layout_on_item": "Tag Layout on Item",
   "wrap": "Wrap",
   "single_line": "Single Line",
-  "cover_blur": "Cover Blur"
+  "cover_blur": "Cover Blur",
+  "list_model": "List Model",
+  "list": "List",
+  "grid": "Grid",
+  "waterfall": "Waterfall Flow"
 }

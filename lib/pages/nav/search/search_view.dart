@@ -267,7 +267,7 @@ class SearchListView extends HookConsumerWidget {
     }
     return MultiSliver(
       children: [
-        GalleryWaterfallFlowView(
+        GallerySliverList(
           gallerys: galleryList,
           lastComplete: () => ref
               .read(searchProvider(currentSearchDepth).notifier)

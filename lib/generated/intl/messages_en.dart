@@ -43,10 +43,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "full_screen": MessageLookupByLibrary.simpleMessage("Full Screen"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+        "grid": MessageLookupByLibrary.simpleMessage("Grid"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
         "light": MessageLookupByLibrary.simpleMessage("Light"),
+        "list": MessageLookupByLibrary.simpleMessage("List"),
+        "list_model": MessageLookupByLibrary.simpleMessage("List Model"),
         "list_style": MessageLookupByLibrary.simpleMessage("List Style"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "login_by_web": MessageLookupByLibrary.simpleMessage("Login by Web"),
@@ -82,8 +85,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show tags in list"),
         "single_line": MessageLookupByLibrary.simpleMessage("Single Line"),
         "system": MessageLookupByLibrary.simpleMessage("System"),
-        "tag_layout_on_card":
-            MessageLookupByLibrary.simpleMessage("Tag Layout on Card"),
+        "tag_layout_on_item":
+            MessageLookupByLibrary.simpleMessage("Tag Layout on Item"),
         "tag_translation":
             MessageLookupByLibrary.simpleMessage("Tag Translation"),
         "tag_type_artists": MessageLookupByLibrary.simpleMessage("Artists"),
@@ -102,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
         "vertical": MessageLookupByLibrary.simpleMessage("Vertical"),
+        "waterfall": MessageLookupByLibrary.simpleMessage("Waterfall Flow"),
         "webtoon": MessageLookupByLibrary.simpleMessage("Webtoon"),
         "wrap": MessageLookupByLibrary.simpleMessage("Wrap"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday")

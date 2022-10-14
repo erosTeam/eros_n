@@ -14,10 +14,11 @@ class Settings with _$Settings {
     @Default(true) bool dynamicColor,
     @Default(SearchSort.recent) SearchSort searchSort,
     @Default(false) bool showTags,
-    @Default(TagLayoutOnCard.wrap) TagLayoutOnCard tagLayoutOnCard,
+    @Default(TagLayoutOnItem.wrap) TagLayoutOnItem tagLayoutOnItem,
     @Default(ThemeMode.system) ThemeMode themeMode,
     @Default(false) bool fullScreenReader,
     @Default(ReadModel.leftToRight) ReadModel readModel,
+    @Default(ListModel.waterfall) ListModel listModel,
   }) = _Settings;
 
   const Settings._();

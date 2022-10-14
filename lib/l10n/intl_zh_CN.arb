@@ -67,8 +67,12 @@
   "tags_data": "标签数据",
   "show_tags": "显示标签",
   "show_tags_tip": "在列表中显示标签",
-  "tag_layout_on_card": "卡片上的标签布局",
+  "tag_layout_on_item": "列表项标签布局",
   "wrap": "换行",
   "single_line": "单行",
-  "cover_blur": "封面模糊"
+  "cover_blur": "封面模糊",
+  "list_model": "列表模式",
+  "list": "列表",
+  "grid": "网格",
+  "waterfall": "瀑布流"
 }

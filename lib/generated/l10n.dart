@@ -730,11 +730,11 @@ class L10n {
     );
   }
 
-  /// `Tag Layout on Card`
-  String get tag_layout_on_card {
+  /// `Tag Layout on Item`
+  String get tag_layout_on_item {
     return Intl.message(
-      'Tag Layout on Card',
-      name: 'tag_layout_on_card',
+      'Tag Layout on Item',
+      name: 'tag_layout_on_item',
       desc: '',
       args: [],
     );
@@ -765,6 +765,46 @@ class L10n {
     return Intl.message(
       'Cover Blur',
       name: 'cover_blur',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List Model`
+  String get list_model {
+    return Intl.message(
+      'List Model',
+      name: 'list_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List`
+  String get list {
+    return Intl.message(
+      'List',
+      name: 'list',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grid`
+  String get grid {
+    return Intl.message(
+      'Grid',
+      name: 'grid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waterfall Flow`
+  String get waterfall {
+    return Intl.message(
+      'Waterfall Flow',
+      name: 'waterfall',
       desc: '',
       args: [],
     );
