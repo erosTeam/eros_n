@@ -33,7 +33,8 @@ jobs:
         shell: bash
         run: |
           app_version=$(grep -oP '(?<=version: ).*' pubspec.yaml)
-          echo "app_version=app_version$" >> $GITHUB_ENV
+          echo "app_version=$app_version" >> $GITHUB_ENV
+          echo "${{ env.app_version }}"
 
       - name: Upload to release
         uses: ncipollo/release-action@v1
