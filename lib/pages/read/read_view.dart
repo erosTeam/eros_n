@@ -15,12 +15,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fullscreen/fullscreen.dart';
+import 'package:gesture_zoom_box/gesture_zoom_box.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:path/path.dart' as path;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
+import 'package:zoom_widget/zoom_widget.dart';
 
 import 'read_widget.dart';
 
@@ -177,7 +180,7 @@ class ReadListView extends StatefulHookConsumerWidget {
   ConsumerState<ReadListView> createState() => _ReadListViewState();
 }
 
-const _kMaxScale = 2.0;
+const _kMaxScale = 1.0;
 const _kMinCircularProgressIndicatorSize = 36.0;
 
 class _ReadListViewState extends ConsumerState<ReadListView> {
@@ -209,6 +212,25 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
     });
   }
 
+  Widget buildImage(String imageUrl) {
+    return ErosCachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.contain,
+      progressIndicatorBuilder: (context, url, downloadProgress) {
+        return Center(
+          child: SizedBox(
+            width: _kMinCircularProgressIndicatorSize * _kMaxScale,
+            height: _kMinCircularProgressIndicatorSize * _kMaxScale,
+            child: CircularProgressIndicator(
+              value: downloadProgress.progress,
+              strokeWidth: 4 * _kMaxScale,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     logger.d('ReadListView build');
@@ -230,40 +252,44 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
         final GalleryImage page = pages[index];
         final imageUrl = getGalleryImageUrl(
             mediaId ?? '', index, NHConst.extMap[page.type] ?? '');
+
+        Widget image = buildImage(imageUrl);
+
+        image = GestureZoomBox(
+          child: image,
+        );
+
         return AspectRatio(
           aspectRatio: (page.imgWidth ?? 300) / (page.imgHeight ?? 400),
-          child: ErosCachedNetworkImage(
-            imageUrl: imageUrl,
-            fit: BoxFit.contain,
-            progressIndicatorBuilder: (context, url, downloadProgress) {
-              return Center(
-                child: SizedBox(
-                  width: 36 * _kMaxScale,
-                  height: 36 * _kMaxScale,
-                  child: CircularProgressIndicator(
-                    value: downloadProgress.progress,
-                    strokeWidth: 4 * _kMaxScale,
-                  ),
-                ),
-              );
-            },
-          ),
+          child: image,
         );
       },
     );
 
-    return PhotoViewGallery.builder(
-      itemCount: 1,
-      builder: (BuildContext context, int index) {
-        return PhotoViewGalleryPageOptions.customChild(
-          child: listView,
-          initialScale: PhotoViewComputedScale.contained,
-          minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.covered * _kMaxScale,
-          childSize: context.mediaQuerySize * _kMaxScale,
-        );
-      },
-    );
+    // return Container(
+    //   child: Zoom(
+    //     initScale: 1.0,
+    //     maxZoomHeight: 1.0,
+    //     maxZoomWidth: 1.0,
+    //     child: listView,
+    //   ),
+    // );
+
+    // listView =  PhotoViewGallery.builder(
+    //   itemCount: 1,
+    //   customSize: context.mediaQuerySize,
+    //   builder: (BuildContext context, int index) {
+    //     return PhotoViewGalleryPageOptions.customChild(
+    //       child: listView,
+    //       initialScale: PhotoViewComputedScale.contained,
+    //       minScale: PhotoViewComputedScale.contained,
+    //       maxScale: PhotoViewComputedScale.covered * 4,
+    //       childSize: context.mediaQuerySize * _kMaxScale,
+    //     );
+    //   },
+    // );
+
+    return listView;
   }
 }
 

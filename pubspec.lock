@@ -469,6 +469,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.3"
+  gesture_zoom_box:
+    dependency: "direct main"
+    description:
+      name: gesture_zoom_box
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.4"
   glob:
     dependency: transitive
     description:
@@ -1288,6 +1295,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.1"
+  zoom_pinch_overlay:
+    dependency: "direct main"
+    description:
+      name: zoom_pinch_overlay
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.3.2"
+  zoom_widget:
+    dependency: "direct main"
+    description:
+      name: zoom_widget
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.0"
 sdks:
   dart: ">=2.18.0 <3.0.0"
   flutter: ">=3.3.0"
