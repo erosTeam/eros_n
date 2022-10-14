@@ -147,7 +147,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
             ),
           );
 
-        case TagLayoutOnCard.horizontal:
+        case TagLayoutOnCard.singleLine:
           return SizedBox(
             height: 26,
             child: ListView.builder(

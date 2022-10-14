@@ -19,13 +19,13 @@ class ReadSettingPage extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          SmallTitle(title: 'Display'),
+          SmallTitle(title: L10n.of(context).display),
           // Switch full screen reader
           Consumer(builder: (context, ref, child) {
             final fullScreenReader = ref.watch(settingsProvider
                 .select((settings) => settings.fullScreenReader));
             return ListTile(
-              title: Text('Full screen'),
+              title: Text(L10n.of(context).full_screen),
               trailing: Switch(
                 activeColor: Theme.of(context).colorScheme.primary,
                 value: fullScreenReader,

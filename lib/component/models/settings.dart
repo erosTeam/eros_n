@@ -20,6 +20,12 @@ class Settings with _$Settings {
     @Default(ReadModel.leftToRight) ReadModel readModel,
   }) = _Settings;
 
+  const Settings._();
+
   factory Settings.fromJson(Map<String, Object?> json) =>
       _$SettingsFromJson(json);
+
+  @JsonKey(ignore: true)
+  bool get readModelPageView =>
+      readModel == ReadModel.leftToRight || readModel == ReadModel.rightToLeft;
 }

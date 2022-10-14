@@ -177,6 +177,9 @@ class ReadListView extends StatefulHookConsumerWidget {
   ConsumerState<ReadListView> createState() => _ReadListViewState();
 }
 
+const _kMaxScale = 2.0;
+const _kMinCircularProgressIndicatorSize = 36.0;
+
 class _ReadListViewState extends ConsumerState<ReadListView> {
   @override
   void initState() {
@@ -231,33 +234,24 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
           aspectRatio: (page.imgWidth ?? 300) / (page.imgHeight ?? 400),
           child: ErosCachedNetworkImage(
             imageUrl: imageUrl,
+            fit: BoxFit.contain,
             progressIndicatorBuilder: (context, url, downloadProgress) {
               return Center(
-                child: CircularProgressIndicator(
-                  value: downloadProgress.progress,
+                child: SizedBox(
+                  width: 36 * _kMaxScale,
+                  height: 36 * _kMaxScale,
+                  child: CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                    strokeWidth: 4 * _kMaxScale,
+                  ),
                 ),
               );
             },
           ),
-          // child: PhotoViewGallery.builder(
-          //   itemCount: 1,
-          //   builder: (BuildContext context, int index) {
-          //     return PhotoViewGalleryPageOptions(
-          //       imageProvider: getErorsImageProvider(imageUrl),
-          //       initialScale: PhotoViewComputedScale.contained,
-          //       minScale: PhotoViewComputedScale.contained,
-          //       maxScale: PhotoViewComputedScale.covered * 2,
-          //       heroAttributes: PhotoViewHeroAttributes(tag: imageUrl),
-          //     );
-          //   },
-          // ),
         );
       },
     );
 
-    // return Container(
-    //   child: listView,
-    // );
     return PhotoViewGallery.builder(
       itemCount: 1,
       builder: (BuildContext context, int index) {
@@ -265,8 +259,8 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
           child: listView,
           initialScale: PhotoViewComputedScale.contained,
           minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.covered * 2,
-          childSize: context.mediaQuerySize * 2,
+          maxScale: PhotoViewComputedScale.covered * _kMaxScale,
+          childSize: context.mediaQuerySize * _kMaxScale,
         );
       },
     );

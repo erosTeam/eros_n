@@ -45,7 +45,7 @@ const _$SearchSortEnumMap = {
 };
 
 const _$TagLayoutOnCardEnumMap = {
-  TagLayoutOnCard.horizontal: 'horizontal',
+  TagLayoutOnCard.singleLine: 'singleLine',
   TagLayoutOnCard.row: 'row',
   TagLayoutOnCard.wrap: 'wrap',
 };

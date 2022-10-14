@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
@@ -29,14 +30,36 @@ class ReadNotifier extends StateNotifier<ReadState> {
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
 
+  bool get isPageView {
+    return ref.watch(settingsProvider.select((s) => s.readModelPageView));
+  }
+
+  int get currentPageIndex {
+    return ref.read(galleryProvider(currentGalleryGid)).currentPageIndex;
+  }
+
   void toPrev() {
-    preloadPageController.previousPage(
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    if (isPageView) {
+      preloadPageController.previousPage(
+          duration: const Duration(milliseconds: 200), curve: Curves.ease);
+    } else {
+      itemScrollController.scrollTo(
+          index: currentPageIndex - 1,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.ease);
+    }
   }
 
   void toNext() {
-    preloadPageController.nextPage(
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    if (isPageView) {
+      preloadPageController.nextPage(
+          duration: const Duration(milliseconds: 200), curve: Curves.ease);
+    } else {
+      itemScrollController.scrollTo(
+          index: currentPageIndex + 1,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.ease);
+    }
   }
 
   void tapLeft() {
@@ -48,7 +71,12 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void jumpToPage(int index) {
-    preloadPageController.jumpToPage(index);
+    if (isPageView) {
+      preloadPageController.jumpToPage(index);
+    } else {
+      itemScrollController.jumpTo(index: index);
+    }
+    // preloadPageController.jumpToPage(index);
   }
 
   Future<void> handOnTapCenter(BuildContext context) async {

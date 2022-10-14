@@ -569,6 +569,186 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Full Screen`
+  String get full_screen {
+    return Intl.message(
+      'Full Screen',
+      name: 'full_screen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display`
+  String get display {
+    return Intl.message(
+      'Display',
+      name: 'display',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme Mode`
+  String get theme_mode {
+    return Intl.message(
+      'Theme Mode',
+      name: 'theme_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get light {
+    return Intl.message(
+      'Light',
+      name: 'light',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark`
+  String get dark {
+    return Intl.message(
+      'Dark',
+      name: 'dark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System`
+  String get system {
+    return Intl.message(
+      'System',
+      name: 'system',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dynamic Color`
+  String get dynamic_color {
+    return Intl.message(
+      'Dynamic Color',
+      name: 'dynamic_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color will change according to the wallpaper`
+  String get dynamic_color_tip {
+    return Intl.message(
+      'Color will change according to the wallpaper',
+      name: 'dynamic_color_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme`
+  String get theme {
+    return Intl.message(
+      'Theme',
+      name: 'theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List Style`
+  String get list_style {
+    return Intl.message(
+      'List Style',
+      name: 'list_style',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag Translation`
+  String get tag_translation {
+    return Intl.message(
+      'Tag Translation',
+      name: 'tag_translation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tags Data`
+  String get tags_data {
+    return Intl.message(
+      'Tags Data',
+      name: 'tags_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Tags`
+  String get show_tags {
+    return Intl.message(
+      'Show Tags',
+      name: 'show_tags',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show tags in list`
+  String get show_tags_tip {
+    return Intl.message(
+      'Show tags in list',
+      name: 'show_tags_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag Layout on Card`
+  String get tag_layout_on_card {
+    return Intl.message(
+      'Tag Layout on Card',
+      name: 'tag_layout_on_card',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wrap`
+  String get wrap {
+    return Intl.message(
+      'Wrap',
+      name: 'wrap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Single Line`
+  String get single_line {
+    return Intl.message(
+      'Single Line',
+      name: 'single_line',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cover Blur`
+  String get cover_blur {
+    return Intl.message(
+      'Cover Blur',
+      name: 'cover_blur',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

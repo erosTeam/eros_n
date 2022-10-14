@@ -32,12 +32,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_history_tip": MessageLookupByLibrary.simpleMessage(
             "Are you sure to clear all history?"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
+        "cover_blur": MessageLookupByLibrary.simpleMessage("Cover Blur"),
+        "dark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "display": MessageLookupByLibrary.simpleMessage("Display"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
+        "dynamic_color": MessageLookupByLibrary.simpleMessage("Dynamic Color"),
+        "dynamic_color_tip": MessageLookupByLibrary.simpleMessage(
+            "Color will change according to the wallpaper"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+        "full_screen": MessageLookupByLibrary.simpleMessage("Full Screen"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
+        "light": MessageLookupByLibrary.simpleMessage("Light"),
+        "list_style": MessageLookupByLibrary.simpleMessage("List Style"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "login_by_web": MessageLookupByLibrary.simpleMessage("Login by Web"),
         "login_invalid": MessageLookupByLibrary.simpleMessage("Login invalid"),
@@ -67,6 +76,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "show_tags": MessageLookupByLibrary.simpleMessage("Show Tags"),
+        "show_tags_tip":
+            MessageLookupByLibrary.simpleMessage("Show tags in list"),
+        "single_line": MessageLookupByLibrary.simpleMessage("Single Line"),
+        "system": MessageLookupByLibrary.simpleMessage("System"),
+        "tag_layout_on_card":
+            MessageLookupByLibrary.simpleMessage("Tag Layout on Card"),
+        "tag_translation":
+            MessageLookupByLibrary.simpleMessage("Tag Translation"),
         "tag_type_artists": MessageLookupByLibrary.simpleMessage("Artists"),
         "tag_type_categories":
             MessageLookupByLibrary.simpleMessage("Categories"),
@@ -76,10 +94,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "tag_type_languages": MessageLookupByLibrary.simpleMessage("Languages"),
         "tag_type_parodies": MessageLookupByLibrary.simpleMessage("Parodies"),
         "tag_type_tags": MessageLookupByLibrary.simpleMessage("Tags"),
+        "tags_data": MessageLookupByLibrary.simpleMessage("Tags Data"),
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+        "theme_mode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
         "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
         "webtoon": MessageLookupByLibrary.simpleMessage("Webtoon"),
+        "wrap": MessageLookupByLibrary.simpleMessage("Wrap"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday")
       };
 }

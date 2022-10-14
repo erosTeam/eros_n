@@ -19,18 +19,18 @@ class AppearanceSettingPage extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          SmallTitle(title: 'Theme'),
+          SmallTitle(title: L10n.of(context).theme),
           // ThemeMode
           Consumer(builder: (context, ref, child) {
             final themeMode = ref.watch(
                 settingsProvider.select((settings) => settings.themeMode));
             return RadioDialogListTile<ThemeMode>(
-              title: Text('Theme mode'),
+              title: Text(L10n.of(context).theme_mode),
               groupValue: themeMode,
               radioTitleMap: {
-                ThemeMode.system: Text('System'),
-                ThemeMode.light: Text('Light'),
-                ThemeMode.dark: Text('Dark'),
+                ThemeMode.system: Text(L10n.of(context).system),
+                ThemeMode.light: Text(L10n.of(context).light),
+                ThemeMode.dark: Text(L10n.of(context).dark),
                 // TagLayoutOnCard.row: Text('Row'),
               },
               onChanged: (value) {
@@ -44,8 +44,8 @@ class AppearanceSettingPage extends StatelessWidget {
             final dynamicColor = ref.watch(
                 settingsProvider.select((settings) => settings.dynamicColor));
             return ListTile(
-              title: Text('Dynamic color'),
-              subtitle: Text('Color from wallpaper'),
+              title: Text(L10n.of(context).dynamic_color),
+              subtitle: Text(L10n.of(context).dynamic_color_tip),
               trailing: Switch(
                 activeColor: Theme.of(context).colorScheme.primary,
                 value: dynamicColor,
@@ -56,14 +56,14 @@ class AppearanceSettingPage extends StatelessWidget {
             );
           }),
           Divider(height: 1.0),
-          SmallTitle(title: 'List style'),
+          SmallTitle(title: L10n.of(context).list_style),
           // Switch tag translate
           Consumer(builder: (context, ref, child) {
             final isTagTranslate = ref.watch(
                 settingsProvider.select((settings) => settings.isTagTranslate));
             final tagTranslateInfo = ref.watch(tagTranslateProvider);
             return ListTile(
-              title: Text('Tag translate'),
+              title: Text(L10n.of(context).tag_translation),
               subtitle: Text('Version: ${tagTranslateInfo.version ?? ''}'),
               trailing: Switch(
                 activeColor: Theme.of(context).colorScheme.primary,
@@ -80,7 +80,7 @@ class AppearanceSettingPage extends StatelessWidget {
           Consumer(builder: (context, ref, child) {
             final allNhTag = ref.watch(allNhTagProvider);
             return ListTile(
-              title: Text('Tags data'),
+              title: Text(L10n.of(context).tags_data),
               // subtitle: Text('total: ${ref.watch(tagTranslateProvider).total}, long press to update'),
               subtitle: allNhTag.when(
                 data: (data) =>
@@ -98,8 +98,8 @@ class AppearanceSettingPage extends StatelessWidget {
             final showTags = ref.watch(
                 settingsProvider.select((settings) => settings.showTags));
             return ListTile(
-              title: Text('Show tags'),
-              subtitle: Text('Show tags in list'),
+              title: Text(L10n.of(context).show_tags),
+              subtitle: Text(L10n.of(context).show_tags_tip),
               trailing: Switch(
                 activeColor: Theme.of(context).colorScheme.primary,
                 value: showTags,
@@ -116,11 +116,11 @@ class AppearanceSettingPage extends StatelessWidget {
             final tagLayoutOnCard = ref.watch(settingsProvider
                 .select((settings) => settings.tagLayoutOnCard));
             return RadioDialogListTile<TagLayoutOnCard>(
-              title: Text('Tag layout on card'),
+              title: Text(L10n.of(context).tag_layout_on_card),
               groupValue: tagLayoutOnCard,
               radioTitleMap: {
-                TagLayoutOnCard.wrap: Text('Wrap'),
-                TagLayoutOnCard.horizontal: Text('Horizontal'),
+                TagLayoutOnCard.wrap: Text(L10n.of(context).wrap),
+                TagLayoutOnCard.singleLine: Text(L10n.of(context).single_line),
                 // TagLayoutOnCard.row: Text('Row'),
               },
               onChanged: (value) {
@@ -133,7 +133,7 @@ class AppearanceSettingPage extends StatelessWidget {
             final isCoverBlur = ref.watch(
                 settingsProvider.select((settings) => settings.isCoverBlur));
             return ListTile(
-              title: Text('Cover blur'),
+              title: Text(L10n.of(context).cover_blur),
               subtitle: Text('Blur cover image in list'),
               trailing: Switch(
                 activeColor: Theme.of(context).colorScheme.primary,

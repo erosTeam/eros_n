@@ -273,7 +273,7 @@ class ControllerButtonBar extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Read Setting'),
+                // title: const Text('Read Setting'),
                 contentPadding: const EdgeInsets.symmetric(vertical: 16),
                 content: ReadSettings(),
               ),
@@ -377,7 +377,7 @@ class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
             final fullScreenReader = ref.watch(settingsProvider
                 .select((settings) => settings.fullScreenReader));
             return ListTile(
-              title: Text('Full screen'),
+              title: Text(L10n.of(context).full_screen),
               trailing: Switch(
                 activeColor: Theme.of(context).colorScheme.primary,
                 value: fullScreenReader,

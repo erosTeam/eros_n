@@ -171,7 +171,7 @@ class __$$_ReadStateCopyWithImpl<$Res> extends _$ReadStateCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_ReadState implements _ReadState {
+class _$_ReadState extends _ReadState {
   const _$_ReadState(
       {this.showAppBar = false,
       this.topBarOffset = 0.0,
@@ -179,7 +179,8 @@ class _$_ReadState implements _ReadState {
       this.bottomBarHeight = 0.0,
       this.showThumbList = false,
       this.paddingTop = 0.0,
-      this.paddingBottom = 0.0});
+      this.paddingBottom = 0.0})
+      : super._();
 
   factory _$_ReadState.fromJson(Map<String, dynamic> json) =>
       _$$_ReadStateFromJson(json);
@@ -257,7 +258,7 @@ class _$_ReadState implements _ReadState {
   }
 }
 
-abstract class _ReadState implements ReadState {
+abstract class _ReadState extends ReadState {
   const factory _ReadState(
       {final bool showAppBar,
       final double topBarOffset,
@@ -266,6 +267,7 @@ abstract class _ReadState implements ReadState {
       final bool showThumbList,
       final double paddingTop,
       final double paddingBottom}) = _$_ReadState;
+  const _ReadState._() : super._();
 
   factory _ReadState.fromJson(Map<String, dynamic> json) =
       _$_ReadState.fromJson;

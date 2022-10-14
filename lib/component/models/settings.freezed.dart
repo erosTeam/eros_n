@@ -196,7 +196,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Settings implements _Settings {
+class _$_Settings extends _Settings {
   const _$_Settings(
       {this.isCoverBlur = false,
       this.isTagTranslate = false,
@@ -206,7 +206,8 @@ class _$_Settings implements _Settings {
       this.tagLayoutOnCard = TagLayoutOnCard.wrap,
       this.themeMode = ThemeMode.system,
       this.fullScreenReader = false,
-      this.readModel = ReadModel.leftToRight});
+      this.readModel = ReadModel.leftToRight})
+      : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsFromJson(json);
@@ -293,7 +294,7 @@ class _$_Settings implements _Settings {
   }
 }
 
-abstract class _Settings implements Settings {
+abstract class _Settings extends Settings {
   const factory _Settings(
       {final bool isCoverBlur,
       final bool isTagTranslate,
@@ -304,6 +305,7 @@ abstract class _Settings implements Settings {
       final ThemeMode themeMode,
       final bool fullScreenReader,
       final ReadModel readModel}) = _$_Settings;
+  const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
 

@@ -18,6 +18,8 @@ class ReadState with _$ReadState {
     @Default(0.0) double paddingBottom,
   }) = _ReadState;
 
+  const ReadState._();
+
   factory ReadState.fromJson(Map<String, dynamic> json) =>
       _$ReadStateFromJson(json);
 }

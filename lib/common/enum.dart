@@ -10,7 +10,7 @@ enum TagCategory {
 }
 
 enum TagLayoutOnCard {
-  horizontal,
+  singleLine,
 
   row,
 
