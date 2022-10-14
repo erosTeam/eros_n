@@ -7,27 +7,31 @@ class FrontState {
     this.status = LoadStatus.none,
     this.curPage = 1,
     this.maxPage = 1,
+    this.floatingAppBar = true,
   });
 
   final LoadStatus status;
   final int curPage;
   final int maxPage;
+  final bool floatingAppBar;
 
   FrontState copyWith({
     LoadStatus? status,
     int? curPage,
     int? maxPage,
+    bool? floatingAppBar,
   }) {
     return FrontState(
       status: status ?? this.status,
       curPage: curPage ?? this.curPage,
       maxPage: maxPage ?? this.maxPage,
+      floatingAppBar: floatingAppBar ?? this.floatingAppBar,
     );
   }
 
   @override
   String toString() {
-    return 'FrontState{status: $status, curPage: $curPage, maxPage: $maxPage}';
+    return 'FrontState{status: $status, curPage: $curPage, maxPage: $maxPage, floatingAppBar: $floatingAppBar}';
   }
 
   bool get isNone => status == LoadStatus.none;

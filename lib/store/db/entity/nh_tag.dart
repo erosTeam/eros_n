@@ -16,6 +16,9 @@ class NhTag {
   @Index()
   @JsonKey(ignore: true)
   String? type;
+  @Index()
   String? name;
+  @Index()
+  String? translateName;
   int? count;
 }

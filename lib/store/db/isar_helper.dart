@@ -127,6 +127,12 @@ class IsarHelper {
     });
   }
 
+  Future<void> putNhTag(NhTag tag) async {
+    await isar.writeTxn(() async {
+      await isar.nhTags.put(tag);
+    });
+  }
+
   NhTag? findNhTag(int? id) {
     return isar.nhTags.where().idEqualTo(id ?? 0).findFirstSync();
   }

@@ -4,6 +4,8 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/front/front_state.dart';
+import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
+import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,6 +20,14 @@ class SearchNotifier extends StateNotifier<FrontState> {
 
   SearchGalleryNotifier get searchGalleryNotifier =>
       ref.read(searchGallerysProvider(currentSearchDepth).notifier);
+
+  Future<void> setFloatingAppBar(bool floatingAppBar) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      state = state.copyWith(floatingAppBar: floatingAppBar);
+    });
+    // await 3.seconds.delay();
+    // state = state.copyWith(floatingAppBar: floatingAppBar);
+  }
 
   Future<void> search() async {
     query = searchController.text;

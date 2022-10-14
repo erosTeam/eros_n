@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -6,6 +8,7 @@ import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keframe/keframe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -28,6 +31,8 @@ class _SearchPageState extends ConsumerState<SearchPage>
   double lastScrollOffset = 0;
   String query = '';
 
+  late StreamSubscription<bool> keyboardSubscription;
+
   IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
 
   SearchNotifier get searchProviderNoti =>
@@ -45,6 +50,31 @@ class _SearchPageState extends ConsumerState<SearchPage>
       logger.d('search query: $query');
       searchProviderNoti.search();
     }
+
+    final keyboardVisibilityController = KeyboardVisibilityController();
+    // Query
+    logger.d(
+        'Keyboard visibility direct query: ${keyboardVisibilityController.isVisible}');
+
+    // Subscribe
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      logger.d('Keyboard visibility update. Is visible: $visible');
+      if (visible) {
+        searchProviderNoti.searchFocusNode.requestFocus();
+        // searchProviderNoti.setFloatingAppBar(false);
+      } else {
+        searchProviderNoti.searchFocusNode.unfocus();
+        // searchProviderNoti.setFloatingAppBar(true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.removeListener(_scrollListener);
+    keyboardSubscription.cancel();
   }
 
   @override
@@ -135,61 +165,64 @@ class _SearchPageState extends ConsumerState<SearchPage>
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
         child: SizeCacheWidget(
           child: CustomScrollView(
-            cacheExtent: 500,
+            // cacheExtent: 500,
             controller: scrollController,
             slivers: [
               SliverAppBar(
                 // leadingWidth: 36,
-                leading: getLeading(context),
-                titleSpacing: 0,
+                // leading: getLeading(context),
+                leading: SizedBox(),
+                leadingWidth: 0,
+                // titleSpacing: 0,
                 title: StatefulBuilder(
+                  key: const Key('search_app_bar'),
                   builder: (context, setState) {
-                    return Container(
-                      margin: Navigator.of(context).canPop()
-                          ? const EdgeInsets.only(right: 16)
-                          : const EdgeInsets.symmetric(horizontal: 16),
-                      child: TextField(
-                        controller: searchProviderNoti.searchController,
-                        focusNode: searchProviderNoti.searchFocusNode,
-                        decoration: InputDecoration(
-                          fillColor:
-                              Theme.of(context).colorScheme.surfaceVariant,
-                          filled: true,
-                          contentPadding: const EdgeInsets.only(),
-                          // isCollapsed: true,
-                          isDense: false,
-                          hintText: L10n.of(context).search,
-                          // border: InputBorder.none,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100),
-                            borderSide: BorderSide.none,
-                          ),
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: Row(
+                    return TextField(
+                      controller: searchProviderNoti.searchController,
+                      focusNode: searchProviderNoti.searchFocusNode,
+                      decoration: InputDecoration(
+                        fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                        filled: true,
+                        contentPadding: const EdgeInsets.only(),
+                        // isCollapsed: true,
+                        isDense: false,
+                        hintText: L10n.of(context).search,
+                        // border: InputBorder.none,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide.none,
+                        ),
+                        // prefixIcon: const Icon(Icons.search),
+                        prefixIcon: getPrefixIcon(context),
+                        suffixIcon: KeyboardVisibilityBuilder(
+                            builder: (context, isKeyboardVisible) {
+                          return Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               if (searchProviderNoti
-                                  .searchController.text.isNotEmpty)
+                                      .searchController.text.isNotEmpty ||
+                                  isKeyboardVisible)
                                 IconButton(
                                   icon: const Icon(Icons.clear),
                                   onPressed: () {
                                     searchProviderNoti.searchController.clear();
+                                    setState(() {});
                                   },
                                 ),
                               buildMenuButton(),
                             ],
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {});
-                        },
-                        textInputAction: TextInputAction.search,
-                        onEditingComplete: () {
-                          //focusNode
-                          searchProviderNoti.searchFocusNode.unfocus();
-                          searchProviderNoti.search();
-                        },
+                          );
+                        }),
                       ),
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      textInputAction: TextInputAction.search,
+                      onEditingComplete: () {
+                        //focusNode
+                        searchProviderNoti.searchFocusNode.unfocus();
+                        searchProviderNoti.search();
+                      },
                     );
                   },
                 ),
@@ -222,6 +255,19 @@ class _SearchPageState extends ConsumerState<SearchPage>
       );
     }
     return null;
+  }
+
+  Widget? getPrefixIcon(BuildContext context) {
+    if (Navigator.of(context).canPop()) {
+      return IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+    } else {
+      return const Icon(Icons.search);
+    }
   }
 
   void _scrollListener() {

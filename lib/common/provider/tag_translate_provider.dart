@@ -8,6 +8,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as path;
@@ -132,7 +133,25 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
       if (nhTags.isEmpty) {
         continue;
       }
-      await isarHelper.putAllNhTag(nhTags);
+
+      for (final nhTag in nhTags) {
+        final tagTranslate = await isarHelper.findTagTranslateAsync(
+            nhTag.name ?? '',
+            namespace: getTagNamespace(nhTag.type ?? ''));
+        nhTag.translateName = tagTranslate?.translateName;
+        await isarHelper.putNhTag(nhTag);
+      }
+
+      // final List<Future<NhTag>> tagFutureList = nhTags.map((tag) async {
+      //   final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
+      //       tag.name ?? '',
+      //       namespace: getTagNamespace(tag.type ?? ''));
+      //   return tag..translateName = translated?.translateName;
+      // }).toList();
+      //
+      // final List<NhTag> tagList = await Future.wait(tagFutureList);
+      //
+      // await isarHelper.putAllNhTag(tagList);
     }
     ref.refresh(allNhTagProvider);
   }
