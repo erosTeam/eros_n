@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';

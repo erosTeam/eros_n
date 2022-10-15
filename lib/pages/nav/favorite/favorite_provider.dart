@@ -1,19 +1,17 @@
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
-import 'package:eros_n/pages/nav/front/front_state.dart';
+import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../front/front_provider.dart';
 
-class FavoriteNotifier extends StateNotifier<FrontState> {
-  FavoriteNotifier(this.ref) : super(const FrontState());
+class FavoriteNotifier extends StateNotifier<ListViewState> {
+  FavoriteNotifier(this.ref) : super(const ListViewState());
   final Ref ref;
 
   FavoriteGalleryNotifier get favoriteGalleryNotifier =>
@@ -81,7 +79,10 @@ class FavoriteNotifier extends StateNotifier<FrontState> {
       return gallerySet.fromCache ?? false;
     } on Exception catch (e) {
       logger.d('state.status ${state.status}');
-      state = state.copyWith(status: LoadStatus.error);
+      state = state.copyWith(
+        status: LoadStatus.error,
+        errorMessage: e.toString(),
+      );
       rethrow;
     }
   }
@@ -121,6 +122,6 @@ final favoriteGallerysProvider =
 });
 
 final favoriteProvider =
-    StateNotifierProvider<FavoriteNotifier, FrontState>((ref) {
+    StateNotifierProvider<FavoriteNotifier, ListViewState>((ref) {
   return FavoriteNotifier(ref);
 });

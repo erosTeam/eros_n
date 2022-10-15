@@ -1,17 +1,10 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
-import 'package:eros_n/common/global.dart';
-import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/routes/routes.dart';
-import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:keframe/keframe.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 
 class ItemWaterfallFlowCard extends HookConsumerWidget {

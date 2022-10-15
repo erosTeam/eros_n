@@ -3,15 +3,12 @@ import 'dart:ui';
 
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
-import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_state.dart';
 import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:fullscreen/fullscreen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';

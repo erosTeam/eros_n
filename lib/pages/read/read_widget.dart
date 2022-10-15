@@ -1,18 +1,15 @@
 import 'dart:math' as math;
 
 import 'package:auto_route/auto_route.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'read_view.dart';
 

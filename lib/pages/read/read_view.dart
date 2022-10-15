@@ -1,12 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/preload_photo_view_gallery.dart';
-import 'package:eros_n/component/widget/scroll.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
@@ -14,16 +11,11 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fullscreen/fullscreen.dart';
 import 'package:gesture_zoom_box/gesture_zoom_box.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:preload_page_view/preload_page_view.dart';
-import 'package:path/path.dart' as path;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
-import 'package:zoom_widget/zoom_widget.dart';
 
 import 'read_widget.dart';
 

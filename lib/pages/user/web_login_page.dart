@@ -3,7 +3,6 @@ import 'dart:io' as io;
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/pages/webview/webview.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';

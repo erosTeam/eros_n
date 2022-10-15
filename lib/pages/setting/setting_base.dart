@@ -15,10 +15,10 @@ class SmallTitle extends StatelessWidget {
           left: max(context.mediaQueryPadding.left, 16), top: 16, bottom: 6),
       child: Text(
         title,
-        style: Theme.of(context)
-            .textTheme
-            .bodyMedium
-            ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.w500,
+            ),
       ),
     );
   }

@@ -1,11 +1,11 @@
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/pages/nav/front/front_state.dart';
+import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class HistoryNotifier extends StateNotifier<FrontState> {
-  HistoryNotifier(this.ref) : super(const FrontState());
+class HistoryNotifier extends StateNotifier<ListViewState> {
+  HistoryNotifier(this.ref) : super(const ListViewState());
   final Ref ref;
 
   HistoryGalleryNotifier get historyGalleryNotifier =>
@@ -68,6 +68,6 @@ final historyGallerysProvider =
 });
 
 final historyProvider =
-    StateNotifierProvider<HistoryNotifier, FrontState>((ref) {
+    StateNotifierProvider<HistoryNotifier, ListViewState>((ref) {
   return HistoryNotifier(ref);
 });

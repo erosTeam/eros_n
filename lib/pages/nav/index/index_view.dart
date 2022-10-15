@@ -1,4 +1,3 @@
-import 'package:eros_n/component/widget/scroll.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
@@ -29,9 +28,9 @@ class IndexPage extends HookConsumerWidget {
     final state = ref.watch(indexProvider);
     return Scaffold(
       body: PageView(
-        physics: const CustomScrollPhysics(),
+        // physics: const CustomScrollPhysics(),
         controller: state.pageController,
-        // physics: const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: pages,
         onPageChanged: (index) {
           ref.read(indexProvider.notifier).setIndex(index, context: context);

@@ -39,7 +39,7 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('build MyApp');
+    logger.v('build MyApp');
 
     final dynamicColor =
         ref.watch(settingsProvider.select((settings) => settings.dynamicColor));

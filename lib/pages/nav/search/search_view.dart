@@ -45,7 +45,10 @@ class _SearchPageState extends ConsumerState<SearchPage>
   void initState() {
     super.initState();
     query = widget.query;
-    searchProviderNoti.searchController.value = TextEditingValue(text: query);
+    searchProviderNoti.searchController.value = TextEditingValue(
+      text: query,
+      selection: TextSelection.collapsed(offset: query.length),
+    );
     indexProviderNoti.addScrollController(scrollController);
     scrollController.addListener(_scrollListener);
 
@@ -63,10 +66,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
       logger.v('Keyboard visibility update. Is visible: $visible');
-      if (visible) {
-        searchProviderNoti.searchFocusNode.requestFocus();
-        // searchProviderNoti.setFloatingAppBar(false);
-      } else {
+      if (!visible) {
         searchProviderNoti.searchFocusNode.unfocus();
         // searchProviderNoti.setFloatingAppBar(true);
       }
@@ -163,6 +163,13 @@ class _SearchPageState extends ConsumerState<SearchPage>
     }
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          searchProviderNoti.searchFocusNode.unfocus();
+          searchProviderNoti.search();
+        },
+        child: const Icon(Icons.search),
+      ),
       body: RefreshIndicator(
         onRefresh: () => searchProviderNoti.reloadData(),
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
@@ -174,7 +181,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
               SliverAppBar(
                 // leadingWidth: 36,
                 // leading: getLeading(context),
-                leading: SizedBox(),
+                leading: const SizedBox(),
                 leadingWidth: 0,
                 // titleSpacing: 0,
                 title: buildSearchBar2(buildMenuButton()),
@@ -257,11 +264,13 @@ class _SearchPageState extends ConsumerState<SearchPage>
             clipBehavior: Clip.antiAlias,
           ),
           suggestionsCallback: (pattern) async {
-            if (pattern.isEmpty) {
+            final currQryText = pattern.split(RegExp(r'[ ;"]')).last;
+
+            if (currQryText.isEmpty) {
               return Future.value([]);
             }
-            logger.d('suggestionsCallback: $pattern');
-            return isarHelper.findNhTagContains(pattern, 200);
+            logger.d('suggestionsCallback: $currQryText');
+            return isarHelper.findNhTagContains(currQryText, 200);
           },
           itemBuilder: (BuildContext context, itemData) {
             return ListTile(
@@ -269,16 +278,23 @@ class _SearchPageState extends ConsumerState<SearchPage>
               subtitle: itemData.translateName != null
                   ? Text(itemData.translateName ?? '')
                   : null,
+              trailing: IconButton(
+                icon: const Icon(Icons.north_west),
+                onPressed: () {
+                  searchProviderNoti.appendNhTagQuery(itemData);
+                },
+              ),
             );
           },
-          noItemsFoundBuilder: (context) {
-            return const SizedBox();
-          },
+          // noItemsFoundBuilder: (context) {
+          //   return const SizedBox();
+          // },
           onSuggestionSelected: (suggestion) {
-            logger.d('onSuggestionSelected: $suggestion');
-            searchProviderNoti.searchController.text =
-                '${suggestion.type}:${suggestion.name}';
+            searchProviderNoti.appendNhTagQuery(suggestion, search: true);
           },
+          keepSuggestionsOnSuggestionSelected: true,
+          keepSuggestionsOnLoading: false,
+          hideOnEmpty: true,
         );
       },
     );
@@ -406,6 +422,28 @@ class SearchListView extends HookConsumerWidget {
         ),
       );
     }
+
+    if (state.isLoadError) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.refresh, size: 48),
+                onPressed: () {
+                  ref
+                      .read(searchProvider(currentSearchDepth).notifier)
+                      .reloadData();
+                },
+              ),
+              Text(state.errorMessage ?? ''),
+            ],
+          ),
+        ),
+      );
+    }
+
     return SliverSafeArea(
       top: false,
       bottom: false,

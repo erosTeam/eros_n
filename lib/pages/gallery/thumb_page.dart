@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/component/models/image.dart';
@@ -6,7 +5,6 @@ import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
-import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
