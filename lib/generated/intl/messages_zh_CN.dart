@@ -20,9 +20,12 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_CN';
 
+  static String m0(version) => "需要下载翻译数据,当前版本: ${version}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("关于"),
+        "advanced": MessageLookupByLibrary.simpleMessage("高级"),
         "always": MessageLookupByLibrary.simpleMessage("始终"),
         "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
         "appearance": MessageLookupByLibrary.simpleMessage("外观"),
@@ -43,9 +46,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
         "full_screen": MessageLookupByLibrary.simpleMessage("全屏"),
         "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
+        "general": MessageLookupByLibrary.simpleMessage("通用"),
         "grid": MessageLookupByLibrary.simpleMessage("网格"),
         "history": MessageLookupByLibrary.simpleMessage("历史"),
         "home": MessageLookupByLibrary.simpleMessage("主页"),
+        "language": MessageLookupByLibrary.simpleMessage("语言"),
+        "language_name": MessageLookupByLibrary.simpleMessage("简体中文"),
         "left_to_right": MessageLookupByLibrary.simpleMessage("从左到右"),
         "light": MessageLookupByLibrary.simpleMessage("浅色"),
         "list": MessageLookupByLibrary.simpleMessage("列表"),
@@ -69,6 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "popular_today": MessageLookupByLibrary.simpleMessage("本日热门"),
         "popular_week": MessageLookupByLibrary.simpleMessage("本周热门"),
         "read": MessageLookupByLibrary.simpleMessage("阅读"),
+        "read_model": MessageLookupByLibrary.simpleMessage("阅读模式"),
         "recent": MessageLookupByLibrary.simpleMessage("最新发布"),
         "register": MessageLookupByLibrary.simpleMessage("注册"),
         "resume": MessageLookupByLibrary.simpleMessage("继续"),
@@ -77,11 +84,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "share": MessageLookupByLibrary.simpleMessage("分享"),
         "show_tags": MessageLookupByLibrary.simpleMessage("显示标签"),
-        "show_tags_tip": MessageLookupByLibrary.simpleMessage("在列表中显示标签"),
+        "show_tags_tip":
+            MessageLookupByLibrary.simpleMessage("在列表中显示标签, 需要下载额外标签数据"),
         "single_line": MessageLookupByLibrary.simpleMessage("单行"),
         "system": MessageLookupByLibrary.simpleMessage("系统"),
+        "tag": MessageLookupByLibrary.simpleMessage("标签"),
         "tag_layout_on_item": MessageLookupByLibrary.simpleMessage("列表项标签布局"),
         "tag_translation": MessageLookupByLibrary.simpleMessage("标签翻译"),
+        "tag_translation_tip": m0,
         "tag_type_artists": MessageLookupByLibrary.simpleMessage("作者"),
         "tag_type_categories": MessageLookupByLibrary.simpleMessage("类别"),
         "tag_type_characters": MessageLookupByLibrary.simpleMessage("角色"),

@@ -24,6 +24,7 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
           ReadModel.leftToRight,
       listModel: $enumDecodeNullable(_$ListModelEnumMap, json['listModel']) ??
           ListModel.waterfall,
+      localeCode: json['localeCode'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -38,6 +39,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'fullScreenReader': instance.fullScreenReader,
       'readModel': _$ReadModelEnumMap[instance.readModel]!,
       'listModel': _$ListModelEnumMap[instance.listModel]!,
+      'localeCode': instance.localeCode,
     };
 
 const _$SearchSortEnumMap = {

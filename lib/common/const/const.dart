@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class NHConst {
   static const String userAgent = 'ErosN';
 
@@ -36,5 +38,10 @@ class NHConst {
     'j': 'jpg',
     'p': 'png',
     'g': 'gif',
+  };
+
+  static const Map<String, String> localeMap = {
+    'en_': 'English',
+    'zh_CN': '简体中文'
   };
 }

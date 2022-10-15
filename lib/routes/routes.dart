@@ -11,14 +11,15 @@ import 'package:eros_n/pages/nav/search/search_provider.dart';
 import 'package:eros_n/pages/nav/search/search_view.dart';
 import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/pages/setting/about_page.dart';
+import 'package:eros_n/pages/setting/advanced_setting_page.dart';
 import 'package:eros_n/pages/setting/appearance_setting_page.dart';
+import 'package:eros_n/pages/setting/general_setting_page.dart';
 import 'package:eros_n/pages/setting/read_setting_page.dart';
 import 'package:eros_n/pages/setting/settings_page.dart';
 import 'package:eros_n/pages/splash/splash_view.dart';
 import 'package:eros_n/pages/user/login_page.dart';
 import 'package:eros_n/pages/user/web_login_page.dart';
 import 'package:eros_n/pages/webview/webview.dart';
-import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -34,9 +35,11 @@ class NHRoutes {
   static const String settings = '/settings';
   static const String appearanceSetting = '/appearanceSetting';
   static const String readSetting = '/readSetting';
+  static const String advancedSetting = '/advancedSetting';
+  static const String generalSetting = '/generalSetting';
   static const String login = '/login';
   static const String webLogin = '/webLogin';
-  static const String webview = '/webview';
+  static const String webView = '/webView';
   static const String about = '/about';
   static const String license = '/license';
   static const String thumb = '/thumb';
@@ -58,10 +61,12 @@ class AppRouteObserver extends AutoRouterObserver {
     AutoRoute(path: NHRoutes.read, page: ReadPage),
     AutoRoute(path: NHRoutes.settings, page: SettingsPage),
     AutoRoute(path: NHRoutes.appearanceSetting, page: AppearanceSettingPage),
+    AutoRoute(path: NHRoutes.generalSetting, page: GeneralSettingPage),
     AutoRoute(path: NHRoutes.readSetting, page: ReadSettingPage),
+    AutoRoute(path: NHRoutes.advancedSetting, page: AdvancedSettingPage),
     AutoRoute(path: NHRoutes.login, page: LoginPage),
     AutoRoute<List<Cookie>>(path: NHRoutes.webLogin, page: WebLoginPage),
-    AutoRoute(path: NHRoutes.webview, page: NhWebViewPage),
+    AutoRoute(path: NHRoutes.webView, page: NhWebViewPage),
     AutoRoute(path: NHRoutes.about, page: AboutPage),
     AutoRoute(path: NHRoutes.license, page: LicensePage),
     AutoRoute(path: NHRoutes.thumb, page: ThumbPage),

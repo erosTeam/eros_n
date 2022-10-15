@@ -64,10 +64,22 @@ class _$AppRouter extends RootStackRouter {
         child: const AppearanceSettingPage(),
       );
     },
+    GeneralSettingRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const GeneralSettingPage(),
+      );
+    },
     ReadSettingRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: const ReadSettingPage(),
+      );
+    },
+    AdvancedSettingRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const AdvancedSettingPage(),
       );
     },
     LoginRoute.name: (routeData) {
@@ -172,8 +184,16 @@ class _$AppRouter extends RootStackRouter {
           path: '/appearanceSetting',
         ),
         RouteConfig(
+          GeneralSettingRoute.name,
+          path: '/generalSetting',
+        ),
+        RouteConfig(
           ReadSettingRoute.name,
           path: '/readSetting',
+        ),
+        RouteConfig(
+          AdvancedSettingRoute.name,
+          path: '/advancedSetting',
         ),
         RouteConfig(
           LoginRoute.name,
@@ -185,7 +205,7 @@ class _$AppRouter extends RootStackRouter {
         ),
         RouteConfig(
           NhWebViewRoute.name,
-          path: '/webview',
+          path: '/webView',
         ),
         RouteConfig(
           AboutRoute.name,
@@ -339,6 +359,18 @@ class AppearanceSettingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [GeneralSettingPage]
+class GeneralSettingRoute extends PageRouteInfo<void> {
+  const GeneralSettingRoute()
+      : super(
+          GeneralSettingRoute.name,
+          path: '/generalSetting',
+        );
+
+  static const String name = 'GeneralSettingRoute';
+}
+
+/// generated route for
 /// [ReadSettingPage]
 class ReadSettingRoute extends PageRouteInfo<void> {
   const ReadSettingRoute()
@@ -348,6 +380,18 @@ class ReadSettingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ReadSettingRoute';
+}
+
+/// generated route for
+/// [AdvancedSettingPage]
+class AdvancedSettingRoute extends PageRouteInfo<void> {
+  const AdvancedSettingRoute()
+      : super(
+          AdvancedSettingRoute.name,
+          path: '/advancedSetting',
+        );
+
+  static const String name = 'AdvancedSettingRoute';
 }
 
 /// generated route for
@@ -383,7 +427,7 @@ class NhWebViewRoute extends PageRouteInfo<NhWebViewRouteArgs> {
     String? title,
   }) : super(
           NhWebViewRoute.name,
-          path: '/webview',
+          path: '/webView',
           args: NhWebViewRouteArgs(
             key: key,
             initialUrl: initialUrl,

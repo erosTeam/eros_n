@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -64,6 +67,17 @@ class SettingsNotifier extends StateNotifier<Settings> {
 
   void setListModel(ListModel value) {
     state = state.copyWith(listModel: value);
+    hiveHelper.setSettings(state);
+  }
+
+  void setLocaleCode(String value) {
+    // if (value.isEmpty) {
+    //   L10n.load(window.locale);
+    // } else {
+    //   final parts = value.split('_');
+    //   L10n.load(Locale(parts[0], parts[1]));
+    // }
+    state = state.copyWith(localeCode: value);
     hiveHelper.setSettings(state);
   }
 }

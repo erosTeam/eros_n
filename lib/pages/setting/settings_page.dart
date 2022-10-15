@@ -16,6 +16,14 @@ class SettingsPage extends StatelessWidget {
           children: <Widget>[
             ListTile(
               iconColor: Theme.of(context).colorScheme.primary,
+              leading: const Icon(Icons.tune_outlined),
+              title: Text(L10n.of(context).general),
+              onTap: () {
+                erosRouter.pushNamed(NHRoutes.generalSetting);
+              },
+            ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.primary,
               leading: const Icon(Icons.color_lens_outlined),
               title: Text(L10n.of(context).appearance),
               onTap: () {
@@ -29,6 +37,15 @@ class SettingsPage extends StatelessWidget {
               title: Text(L10n.of(context).read),
               onTap: () {
                 erosRouter.pushNamed(NHRoutes.readSetting);
+              },
+            ),
+            // advance setting
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.primary,
+              leading: const Icon(Icons.data_object_outlined),
+              title: Text(L10n.of(context).advanced),
+              onTap: () {
+                erosRouter.pushNamed(NHRoutes.advancedSetting);
               },
             ),
           ],

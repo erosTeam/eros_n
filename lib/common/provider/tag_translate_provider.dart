@@ -10,6 +10,8 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/utils/eros_utils.dart';
+import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
+import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as path;
@@ -193,7 +195,8 @@ final tagTranslateProvider =
   return TagTranslateNotifier(ref);
 });
 
-final allNhTagProvider = FutureProvider.autoDispose<List<NhTag>>((ref) async {
+final allNhTagProvider = FutureProvider<List<NhTag>>((ref) async {
+  await 500.milliseconds.delay();
   final nhTags = await isarHelper.getAllNhTag();
   return nhTags;
 });

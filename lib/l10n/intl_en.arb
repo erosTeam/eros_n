@@ -1,4 +1,5 @@
 {
+  "language_name": "English",
   "app_title": "Eros-N",
   "popular": "Popular",
   "gallery": "Gallery",
@@ -64,9 +65,10 @@
   "theme": "Theme",
   "list_style": "List Style",
   "tag_translation": "Tag Translation",
+  "tag_translation_tip": "need download tag translation data, version: {version}",
   "tags_data": "Tags Data",
   "show_tags": "Show Tags",
-  "show_tags_tip": "Show tags in list",
+  "show_tags_tip": "Show tags in list, need download tags data",
   "tag_layout_on_item": "Tag Layout on Item",
   "wrap": "Wrap",
   "single_line": "Single Line",
@@ -74,5 +76,10 @@
   "list_model": "List Model",
   "list": "List",
   "grid": "Grid",
-  "waterfall": "Waterfall Flow"
+  "waterfall": "Waterfall Flow",
+  "advanced": "Advanced",
+  "tag": "Tag",
+  "read_model": "Read Model",
+  "general": "General",
+  "language": "Language"
 }

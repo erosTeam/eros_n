@@ -45,6 +45,10 @@ class MyApp extends HookConsumerWidget {
         ref.watch(settingsProvider.select((settings) => settings.dynamicColor));
     final themeMode =
         ref.watch(settingsProvider.select((settings) => settings.themeMode));
+
+    final localeCode =
+        ref.watch(settingsProvider.select((settings) => settings.localeCode));
+
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         ColorScheme lightColorScheme;
@@ -113,6 +117,7 @@ class MyApp extends HookConsumerWidget {
             return BrokenShield(
                 child: FlutterSmartDialog.init()(context, child));
           },
+          locale: locale(localeCode),
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,
           theme: ThemeConfig.lightTheme,
@@ -146,4 +151,12 @@ class LoggerObserver extends ProviderObserver {
   "newValue": "$newValue"
 }''');
   }
+}
+
+Locale? locale(String localeCode) {
+  if (localeCode.isEmpty) {
+    return null;
+  }
+  final parts = localeCode.split('_');
+  return Locale(parts[0], parts[1]);
 }

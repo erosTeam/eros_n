@@ -111,22 +111,7 @@ class AppearanceSettingPage extends StatelessWidget {
               },
             );
           }),
-          Consumer(builder: (context, ref, child) {
-            final allNhTag = ref.watch(allNhTagProvider);
-            return ListTile(
-              title: Text(L10n.of(context).tags_data),
-              // subtitle: Text('total: ${ref.watch(tagTranslateProvider).total}, long press to update'),
-              subtitle: allNhTag.when(
-                data: (data) =>
-                    Text('total: ${data.length}, long press to update'),
-                loading: () => Text('loading...'),
-                error: (error, stack) => Text('error: $error'),
-              ),
-              onLongPress: () {
-                ref.read(tagTranslateProvider.notifier).updateNhTags();
-              },
-            );
-          }),
+
           // Switch tag translate
           Consumer(builder: (context, ref, child) {
             final isTagTranslate = ref.watch(
@@ -134,7 +119,8 @@ class AppearanceSettingPage extends StatelessWidget {
             final tagTranslateInfo = ref.watch(tagTranslateProvider);
             return ListTile(
               title: Text(L10n.of(context).tag_translation),
-              subtitle: Text('Version: ${tagTranslateInfo.version ?? ''}'),
+              subtitle: Text(L10n.of(context)
+                  .tag_translation_tip(tagTranslateInfo.version ?? '')),
               trailing: Switch(
                 activeColor: Theme.of(context).colorScheme.primary,
                 value: isTagTranslate,

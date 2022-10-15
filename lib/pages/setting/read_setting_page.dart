@@ -1,3 +1,4 @@
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,25 @@ class ReadSettingPage extends StatelessWidget {
                       .setFullScreenReader(value);
                 },
               ),
+            );
+          }),
+          // switch read model
+          Consumer(builder: (context, ref, child) {
+            final readModel = ref.watch(
+                settingsProvider.select((settings) => settings.readModel));
+            return RadioDialogListTile<ReadModel>(
+              title: Text(L10n.of(context).read_model),
+              groupValue: readModel,
+              radioTitleMap: {
+                ReadModel.leftToRight: Text(L10n.of(context).left_to_right),
+                ReadModel.rightToLeft: Text(L10n.of(context).right_to_left),
+                ReadModel.webtoon: Text(L10n.of(context).webtoon),
+                ReadModel.curlVertical: Text(L10n.of(context).curl_vertical),
+                ReadModel.vertical: Text(L10n.of(context).vertical),
+              },
+              onChanged: (value) {
+                ref.read(settingsProvider.notifier).setReadModel(value);
+              },
             );
           }),
           const Divider(height: 1.0),

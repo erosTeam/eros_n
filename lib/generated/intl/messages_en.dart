@@ -20,9 +20,13 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(version) =>
+      "need download tag translation data, version: ${version}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
+        "advanced": MessageLookupByLibrary.simpleMessage("Advanced"),
         "always": MessageLookupByLibrary.simpleMessage("Always"),
         "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
@@ -43,9 +47,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "full_screen": MessageLookupByLibrary.simpleMessage("Full Screen"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+        "general": MessageLookupByLibrary.simpleMessage("General"),
         "grid": MessageLookupByLibrary.simpleMessage("Grid"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "language_name": MessageLookupByLibrary.simpleMessage("English"),
         "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
         "light": MessageLookupByLibrary.simpleMessage("Light"),
         "list": MessageLookupByLibrary.simpleMessage("List"),
@@ -73,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "popular_today": MessageLookupByLibrary.simpleMessage("Popular Today"),
         "popular_week": MessageLookupByLibrary.simpleMessage("Popular Week"),
         "read": MessageLookupByLibrary.simpleMessage("Read"),
+        "read_model": MessageLookupByLibrary.simpleMessage("Read Model"),
         "recent": MessageLookupByLibrary.simpleMessage("Recent"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
         "resume": MessageLookupByLibrary.simpleMessage("Resume"),
@@ -81,14 +89,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "show_tags": MessageLookupByLibrary.simpleMessage("Show Tags"),
-        "show_tags_tip":
-            MessageLookupByLibrary.simpleMessage("Show tags in list"),
+        "show_tags_tip": MessageLookupByLibrary.simpleMessage(
+            "Show tags in list, need download tags data"),
         "single_line": MessageLookupByLibrary.simpleMessage("Single Line"),
         "system": MessageLookupByLibrary.simpleMessage("System"),
+        "tag": MessageLookupByLibrary.simpleMessage("Tag"),
         "tag_layout_on_item":
             MessageLookupByLibrary.simpleMessage("Tag Layout on Item"),
         "tag_translation":
             MessageLookupByLibrary.simpleMessage("Tag Translation"),
+        "tag_translation_tip": m0,
         "tag_type_artists": MessageLookupByLibrary.simpleMessage("Artists"),
         "tag_type_categories":
             MessageLookupByLibrary.simpleMessage("Categories"),

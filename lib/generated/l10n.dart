@@ -50,6 +50,16 @@ class L10n {
     return Localizations.of<L10n>(context, L10n);
   }
 
+  /// `English`
+  String get language_name {
+    return Intl.message(
+      'English',
+      name: 'language_name',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Eros-N`
   String get app_title {
     return Intl.message(
@@ -700,6 +710,16 @@ class L10n {
     );
   }
 
+  /// `need download tag translation data, version: {version}`
+  String tag_translation_tip(Object version) {
+    return Intl.message(
+      'need download tag translation data, version: $version',
+      name: 'tag_translation_tip',
+      desc: '',
+      args: [version],
+    );
+  }
+
   /// `Tags Data`
   String get tags_data {
     return Intl.message(
@@ -720,10 +740,10 @@ class L10n {
     );
   }
 
-  /// `Show tags in list`
+  /// `Show tags in list, need download tags data`
   String get show_tags_tip {
     return Intl.message(
-      'Show tags in list',
+      'Show tags in list, need download tags data',
       name: 'show_tags_tip',
       desc: '',
       args: [],
@@ -805,6 +825,56 @@ class L10n {
     return Intl.message(
       'Waterfall Flow',
       name: 'waterfall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advanced`
+  String get advanced {
+    return Intl.message(
+      'Advanced',
+      name: 'advanced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag`
+  String get tag {
+    return Intl.message(
+      'Tag',
+      name: 'tag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read Model`
+  String get read_model {
+    return Intl.message(
+      'Read Model',
+      name: 'read_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `General`
+  String get general {
+    return Intl.message(
+      'General',
+      name: 'general',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get language {
+    return Intl.message(
+      'Language',
+      name: 'language',
       desc: '',
       args: [],
     );

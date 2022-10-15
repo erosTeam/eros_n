@@ -30,6 +30,7 @@ mixin _$Settings {
   bool get fullScreenReader => throw _privateConstructorUsedError;
   ReadModel get readModel => throw _privateConstructorUsedError;
   ListModel get listModel => throw _privateConstructorUsedError;
+  String get localeCode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +52,8 @@ abstract class $SettingsCopyWith<$Res> {
       ThemeMode themeMode,
       bool fullScreenReader,
       ReadModel readModel,
-      ListModel listModel});
+      ListModel listModel,
+      String localeCode});
 }
 
 /// @nodoc
@@ -74,6 +76,7 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? fullScreenReader = freezed,
     Object? readModel = freezed,
     Object? listModel = freezed,
+    Object? localeCode = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -116,6 +119,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.listModel
           : listModel // ignore: cast_nullable_to_non_nullable
               as ListModel,
+      localeCode: localeCode == freezed
+          ? _value.localeCode
+          : localeCode // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -136,7 +143,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       ThemeMode themeMode,
       bool fullScreenReader,
       ReadModel readModel,
-      ListModel listModel});
+      ListModel listModel,
+      String localeCode});
 }
 
 /// @nodoc
@@ -161,6 +169,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? fullScreenReader = freezed,
     Object? readModel = freezed,
     Object? listModel = freezed,
+    Object? localeCode = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -203,6 +212,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.listModel
           : listModel // ignore: cast_nullable_to_non_nullable
               as ListModel,
+      localeCode: localeCode == freezed
+          ? _value.localeCode
+          : localeCode // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -220,7 +233,8 @@ class _$_Settings extends _Settings {
       this.themeMode = ThemeMode.system,
       this.fullScreenReader = false,
       this.readModel = ReadModel.leftToRight,
-      this.listModel = ListModel.waterfall})
+      this.listModel = ListModel.waterfall,
+      this.localeCode = ''})
       : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
@@ -256,10 +270,13 @@ class _$_Settings extends _Settings {
   @override
   @JsonKey()
   final ListModel listModel;
+  @override
+  @JsonKey()
+  final String localeCode;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode)';
   }
 
   @override
@@ -282,7 +299,9 @@ class _$_Settings extends _Settings {
             const DeepCollectionEquality()
                 .equals(other.fullScreenReader, fullScreenReader) &&
             const DeepCollectionEquality().equals(other.readModel, readModel) &&
-            const DeepCollectionEquality().equals(other.listModel, listModel));
+            const DeepCollectionEquality().equals(other.listModel, listModel) &&
+            const DeepCollectionEquality()
+                .equals(other.localeCode, localeCode));
   }
 
   @JsonKey(ignore: true)
@@ -298,7 +317,8 @@ class _$_Settings extends _Settings {
       const DeepCollectionEquality().hash(themeMode),
       const DeepCollectionEquality().hash(fullScreenReader),
       const DeepCollectionEquality().hash(readModel),
-      const DeepCollectionEquality().hash(listModel));
+      const DeepCollectionEquality().hash(listModel),
+      const DeepCollectionEquality().hash(localeCode));
 
   @JsonKey(ignore: true)
   @override
@@ -324,7 +344,8 @@ abstract class _Settings extends Settings {
       final ThemeMode themeMode,
       final bool fullScreenReader,
       final ReadModel readModel,
-      final ListModel listModel}) = _$_Settings;
+      final ListModel listModel,
+      final String localeCode}) = _$_Settings;
   const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
@@ -349,6 +370,8 @@ abstract class _Settings extends Settings {
   ReadModel get readModel;
   @override
   ListModel get listModel;
+  @override
+  String get localeCode;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>
