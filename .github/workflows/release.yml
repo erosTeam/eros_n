@@ -151,7 +151,7 @@ jobs:
       # 打包 apk
       - name: Collect Apks
         if: matrix.target == 'android'
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
