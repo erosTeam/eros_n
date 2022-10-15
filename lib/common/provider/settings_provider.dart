@@ -71,13 +71,12 @@ class SettingsNotifier extends StateNotifier<Settings> {
   }
 
   void setLocaleCode(String value) {
-    // if (value.isEmpty) {
-    //   L10n.load(window.locale);
-    // } else {
-    //   final parts = value.split('_');
-    //   L10n.load(Locale(parts[0], parts[1]));
-    // }
     state = state.copyWith(localeCode: value);
+    hiveHelper.setSettings(state);
+  }
+
+  void setThemeColorLabel(String value) {
+    state = state.copyWith(themeColorLabel: value);
     hiveHelper.setSettings(state);
   }
 }

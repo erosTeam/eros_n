@@ -3,14 +3,11 @@ import 'package:eros_n/network/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../converter/locale_converter.dart';
-
 part 'settings.freezed.dart';
 part 'settings.g.dart';
 
 @freezed
 class Settings with _$Settings {
-  // @CustomLocaleConverter()
   const factory Settings({
     @Default(false) bool isCoverBlur,
     @Default(false) bool isTagTranslate,
@@ -23,6 +20,7 @@ class Settings with _$Settings {
     @Default(ReadModel.leftToRight) ReadModel readModel,
     @Default(ListModel.waterfall) ListModel listModel,
     @Default('') String localeCode,
+    @Default('dynamic') String themeColorLabel,
   }) = _Settings;
 
   const Settings._();

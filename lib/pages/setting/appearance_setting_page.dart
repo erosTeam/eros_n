@@ -1,6 +1,8 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
+import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -40,21 +42,58 @@ class AppearanceSettingPage extends StatelessWidget {
           }),
 
           // Switch dynamic color
+          // Consumer(builder: (context, ref, child) {
+          //   final dynamicColor = ref.watch(
+          //       settingsProvider.select((settings) => settings.dynamicColor));
+          //   return ListTile(
+          //     title: Text(L10n.of(context).dynamic_color),
+          //     subtitle: Text(L10n.of(context).dynamic_color_tip),
+          //     trailing: Switch(
+          //       activeColor: Theme.of(context).colorScheme.primary,
+          //       value: dynamicColor,
+          //       onChanged: (value) {
+          //         ref.read(settingsProvider.notifier).setDynamicColor(value);
+          //       },
+          //     ),
+          //   );
+          // }),
+
           Consumer(builder: (context, ref, child) {
-            final dynamicColor = ref.watch(
-                settingsProvider.select((settings) => settings.dynamicColor));
             return ListTile(
-              title: Text(L10n.of(context).dynamic_color),
-              subtitle: Text(L10n.of(context).dynamic_color_tip),
-              trailing: Switch(
-                activeColor: Theme.of(context).colorScheme.primary,
-                value: dynamicColor,
-                onChanged: (value) {
-                  ref.read(settingsProvider.notifier).setDynamicColor(value);
-                },
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(L10n.of(context).theme),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+              subtitle: SizedBox(
+                height: 200,
+                child: ListView.separated(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final color = ThemeConfig.colorMap.entries.toList()[index];
+                    return ThemeSelector(
+                      seedColor: color.value,
+                      selected: color.key ==
+                          ref.watch(settingsProvider
+                              .select((settings) => settings.themeColorLabel)),
+                      name: color.key,
+                      onTap: () {
+                        ref
+                            .read(settingsProvider.notifier)
+                            .setThemeColorLabel(color.key);
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 10),
+                  itemCount: ThemeConfig.colorMap.length,
+                ),
               ),
             );
           }),
+
           const Divider(height: 1.0),
 
           /// List Style
@@ -152,5 +191,235 @@ class AppearanceSettingPage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class ThemeSelector extends StatelessWidget {
+  const ThemeSelector({
+    Key? key,
+    required this.seedColor,
+    required this.selected,
+    required this.name,
+    this.onTap,
+  }) : super(key: key);
+  final Color? seedColor;
+  final bool selected;
+  final String name;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    late ColorScheme lightColorScheme;
+    late ColorScheme darkColorScheme;
+
+    // 使用 Builder 隔离开 context
+    return DynamicColorBuilder(
+        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      if (seedColor != null) {
+        lightColorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor!,
+        );
+
+        darkColorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor!,
+          brightness: Brightness.dark,
+        );
+      } else if (lightDynamic != null && darkDynamic != null) {
+        lightColorScheme = lightDynamic.harmonized();
+        darkColorScheme = darkDynamic.harmonized();
+      } else {
+        return const SizedBox();
+      }
+
+      final lightTheme =
+          ThemeData.from(colorScheme: lightColorScheme, useMaterial3: true);
+
+      final darkTheme =
+          ThemeData.from(colorScheme: darkColorScheme, useMaterial3: true);
+
+      final theme = Theme.of(context).brightness == Brightness.light
+          ? lightTheme
+          : darkTheme;
+
+      return Theme(
+        data: theme,
+        child: Builder(builder: (context) {
+          return SizedBox(
+            width: 100,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: selected
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.12),
+                        width: 4,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        onTap: onTap,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                height: 36,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 22,
+                                      height: 22,
+                                      padding: const EdgeInsets.all(2),
+                                      margin: const EdgeInsets.all(4),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withOpacity(selected ? 1 : 0),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 18,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary
+                                            .withOpacity(selected ? 1 : 0),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  height: 50,
+                                  width: 46,
+                                  margin: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      height: 20,
+                                      width: 24,
+                                      margin: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                borderRadius: const BorderRadius
+                                                        .horizontal(
+                                                    left: Radius.circular(6)),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary,
+                                              borderRadius:
+                                                  const BorderRadius.horizontal(
+                                                      right:
+                                                          Radius.circular(6)),
+                                            )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                              height: 36,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 21,
+                                    height: 21,
+                                    margin: const EdgeInsets.all(4),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(name),
+              ],
+            ),
+          );
+        }),
+      );
+    });
   }
 }

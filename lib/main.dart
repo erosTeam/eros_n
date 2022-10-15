@@ -32,7 +32,7 @@ Future<void> main() async {
 
 bool _isDemoUsingDynamicColors = false;
 
-const _brandBlue = Colors.blue;
+// const _brandBlue = Colors.blue;
 
 class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
@@ -41,13 +41,20 @@ class MyApp extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     logger.v('build MyApp');
 
-    final dynamicColor =
-        ref.watch(settingsProvider.select((settings) => settings.dynamicColor));
+    // final dynamicColor =
+    //     ref.watch(settingsProvider.select((settings) => settings.dynamicColor));
     final themeMode =
         ref.watch(settingsProvider.select((settings) => settings.themeMode));
 
     final localeCode =
         ref.watch(settingsProvider.select((settings) => settings.localeCode));
+
+    final themeColorLabel = ref
+        .watch(settingsProvider.select((settings) => settings.themeColorLabel));
+
+    final dynamicColor = themeColorLabel == 'dynamic';
+    final themeSeedColor =
+        ThemeConfig.colorMap[themeColorLabel] ?? ThemeConfig.colorMap['blue']!;
 
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
@@ -55,21 +62,16 @@ class MyApp extends HookConsumerWidget {
         ColorScheme darkColorScheme;
 
         if (lightDynamic != null && darkDynamic != null && dynamicColor) {
-          // On Android S+ devices, use the provided dynamic color scheme.
-          // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
           lightColorScheme = lightDynamic.harmonized();
-
-          // Repeat for the dark color scheme.
           darkColorScheme = darkDynamic.harmonized();
 
-          _isDemoUsingDynamicColors = true; // ignore, only for demo purposes
+          _isDemoUsingDynamicColors = true;
         } else {
-          // Otherwise, use fallback schemes.
           lightColorScheme = ColorScheme.fromSeed(
-            seedColor: _brandBlue,
+            seedColor: themeSeedColor,
           );
           darkColorScheme = ColorScheme.fromSeed(
-            seedColor: _brandBlue,
+            seedColor: themeSeedColor,
             brightness: Brightness.dark,
           );
         }

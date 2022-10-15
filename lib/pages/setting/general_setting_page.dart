@@ -29,7 +29,6 @@ class GeneralSettingPage extends StatelessWidget {
               final radioTitleMapFromSupported =
                   L10n.delegate.supportedLocales.asMap().map((key, value) {
                 final code = '${value.languageCode}_${value.countryCode ?? ''}';
-                logger.d(code);
                 return MapEntry(code, Text(NHConst.localeMap[code]!));
               });
 
