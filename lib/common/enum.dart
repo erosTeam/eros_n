@@ -3,7 +3,8 @@ enum TagCategory {
   artists('artists'),
   groups('groups'),
   parodies('parodies'),
-  characters('characters');
+  characters('characters'),
+  languages('languages');
 
   const TagCategory(this.value);
   final String value;

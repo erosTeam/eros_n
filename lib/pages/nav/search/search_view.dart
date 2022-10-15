@@ -68,7 +68,6 @@ class _SearchPageState extends ConsumerState<SearchPage>
       logger.v('Keyboard visibility update. Is visible: $visible');
       if (!visible) {
         searchProviderNoti.searchFocusNode.unfocus();
-        // searchProviderNoti.setFloatingAppBar(true);
       }
     });
   }
@@ -286,15 +285,15 @@ class _SearchPageState extends ConsumerState<SearchPage>
               ),
             );
           },
-          // noItemsFoundBuilder: (context) {
-          //   return const SizedBox();
-          // },
+          noItemsFoundBuilder: (context) {
+            return const SizedBox();
+          },
           onSuggestionSelected: (suggestion) {
             searchProviderNoti.appendNhTagQuery(suggestion, search: true);
           },
-          keepSuggestionsOnSuggestionSelected: true,
-          keepSuggestionsOnLoading: false,
-          hideOnEmpty: true,
+          // keepSuggestionsOnSuggestionSelected: true,
+          // keepSuggestionsOnLoading: false,
+          // hideOnEmpty: true,
         );
       },
     );
