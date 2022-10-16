@@ -21,18 +21,14 @@ Future<void> main() async {
   await Global.init();
 
   initLogger();
-  runApp(ProviderScope(
-    child: MyApp(),
+  runApp(const ProviderScope(
     observers: [
       // LoggerObserver(),
     ],
+    child: MyApp(),
   ));
   // runApp(ProviderScope(child: MyApp()));
 }
-
-bool _isDemoUsingDynamicColors = false;
-
-// const _brandBlue = Colors.blue;
 
 class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
@@ -40,9 +36,6 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.v('build MyApp');
-
-    // final dynamicColor =
-    //     ref.watch(settingsProvider.select((settings) => settings.dynamicColor));
     final themeMode =
         ref.watch(settingsProvider.select((settings) => settings.themeMode));
 
@@ -52,20 +45,28 @@ class MyApp extends HookConsumerWidget {
     final themeColorLabel = ref
         .watch(settingsProvider.select((settings) => settings.themeColorLabel));
 
-    final dynamicColor = themeColorLabel == 'dynamic';
-    final themeSeedColor =
-        ThemeConfig.colorMap[themeColorLabel] ?? ThemeConfig.colorMap['blue']!;
+    final dynamicColor = themeColorLabel == ThemeConfig.dynamicThemeColorLabel;
+    final themeSeedColor = ThemeConfig.colorMap[themeColorLabel] ??
+        ThemeConfig.colorMap[ThemeConfig.defaultThemeColorLabel]!;
 
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         ColorScheme lightColorScheme;
         ColorScheme darkColorScheme;
 
-        if (lightDynamic != null && darkDynamic != null && dynamicColor) {
+        final supportDynamicColors =
+            lightDynamic != null && darkDynamic != null;
+
+        logger.d('supportDynamicColors: $supportDynamicColors');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref
+              .read(settingsProvider.notifier)
+              .setSupportDynamicColors(supportDynamicColors);
+        });
+
+        if (supportDynamicColors && dynamicColor) {
           lightColorScheme = lightDynamic.harmonized();
           darkColorScheme = darkDynamic.harmonized();
-
-          _isDemoUsingDynamicColors = true;
         } else {
           lightColorScheme = ColorScheme.fromSeed(
             seedColor: themeSeedColor,
@@ -115,10 +116,10 @@ class MyApp extends HookConsumerWidget {
               FlutterSmartDialog.observer,
             ],
           ),
-          builder: (BuildContext context, Widget? child) {
-            return BrokenShield(
-                child: FlutterSmartDialog.init()(context, child));
-          },
+          builder: FlutterSmartDialog.init(
+            styleBuilder: (child) => child,
+            builder: BrokenShield.init(),
+          ),
           locale: locale(localeCode),
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,

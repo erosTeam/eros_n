@@ -1,4 +1,5 @@
 import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/network/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -20,7 +21,8 @@ class Settings with _$Settings {
     @Default(ReadModel.leftToRight) ReadModel readModel,
     @Default(ListModel.waterfall) ListModel listModel,
     @Default('') String localeCode,
-    @Default('dynamic') String themeColorLabel,
+    @Default(ThemeConfig.dynamicThemeColorLabel) String themeColorLabel,
+    @Default(false) bool supportDynamicColors,
   }) = _Settings;
 
   const Settings._();

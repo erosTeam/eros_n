@@ -79,6 +79,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(themeColorLabel: value);
     hiveHelper.setSettings(state);
   }
+
+  void setSupportDynamicColors(bool value) {
+    state = state.copyWith(supportDynamicColors: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

@@ -32,6 +32,7 @@ mixin _$Settings {
   ListModel get listModel => throw _privateConstructorUsedError;
   String get localeCode => throw _privateConstructorUsedError;
   String get themeColorLabel => throw _privateConstructorUsedError;
+  bool get supportDynamicColors => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,7 +56,8 @@ abstract class $SettingsCopyWith<$Res> {
       ReadModel readModel,
       ListModel listModel,
       String localeCode,
-      String themeColorLabel});
+      String themeColorLabel,
+      bool supportDynamicColors});
 }
 
 /// @nodoc
@@ -80,6 +82,7 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? listModel = freezed,
     Object? localeCode = freezed,
     Object? themeColorLabel = freezed,
+    Object? supportDynamicColors = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -130,6 +133,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.themeColorLabel
           : themeColorLabel // ignore: cast_nullable_to_non_nullable
               as String,
+      supportDynamicColors: supportDynamicColors == freezed
+          ? _value.supportDynamicColors
+          : supportDynamicColors // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -152,7 +159,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       ReadModel readModel,
       ListModel listModel,
       String localeCode,
-      String themeColorLabel});
+      String themeColorLabel,
+      bool supportDynamicColors});
 }
 
 /// @nodoc
@@ -179,6 +187,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? listModel = freezed,
     Object? localeCode = freezed,
     Object? themeColorLabel = freezed,
+    Object? supportDynamicColors = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -229,6 +238,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.themeColorLabel
           : themeColorLabel // ignore: cast_nullable_to_non_nullable
               as String,
+      supportDynamicColors: supportDynamicColors == freezed
+          ? _value.supportDynamicColors
+          : supportDynamicColors // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -248,7 +261,8 @@ class _$_Settings extends _Settings {
       this.readModel = ReadModel.leftToRight,
       this.listModel = ListModel.waterfall,
       this.localeCode = '',
-      this.themeColorLabel = 'dynamic'})
+      this.themeColorLabel = ThemeConfig.dynamicThemeColorLabel,
+      this.supportDynamicColors = false})
       : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
@@ -290,10 +304,13 @@ class _$_Settings extends _Settings {
   @override
   @JsonKey()
   final String themeColorLabel;
+  @override
+  @JsonKey()
+  final bool supportDynamicColors;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors)';
   }
 
   @override
@@ -320,7 +337,9 @@ class _$_Settings extends _Settings {
             const DeepCollectionEquality()
                 .equals(other.localeCode, localeCode) &&
             const DeepCollectionEquality()
-                .equals(other.themeColorLabel, themeColorLabel));
+                .equals(other.themeColorLabel, themeColorLabel) &&
+            const DeepCollectionEquality()
+                .equals(other.supportDynamicColors, supportDynamicColors));
   }
 
   @JsonKey(ignore: true)
@@ -338,7 +357,8 @@ class _$_Settings extends _Settings {
       const DeepCollectionEquality().hash(readModel),
       const DeepCollectionEquality().hash(listModel),
       const DeepCollectionEquality().hash(localeCode),
-      const DeepCollectionEquality().hash(themeColorLabel));
+      const DeepCollectionEquality().hash(themeColorLabel),
+      const DeepCollectionEquality().hash(supportDynamicColors));
 
   @JsonKey(ignore: true)
   @override
@@ -366,7 +386,8 @@ abstract class _Settings extends Settings {
       final ReadModel readModel,
       final ListModel listModel,
       final String localeCode,
-      final String themeColorLabel}) = _$_Settings;
+      final String themeColorLabel,
+      final bool supportDynamicColors}) = _$_Settings;
   const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
@@ -395,6 +416,8 @@ abstract class _Settings extends Settings {
   String get localeCode;
   @override
   String get themeColorLabel;
+  @override
+  bool get supportDynamicColors;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

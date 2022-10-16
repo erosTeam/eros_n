@@ -59,6 +59,26 @@ class AppearanceSettingPage extends StatelessWidget {
           // }),
 
           Consumer(builder: (context, ref, child) {
+            final supportDynamicColors = ref.watch(settingsProvider
+                .select((settings) => settings.supportDynamicColors));
+            final themeColorLabel = ref.watch(settingsProvider
+                .select((settings) => settings.themeColorLabel));
+
+            final colorMap = <String, Color?>{};
+            if (supportDynamicColors) {
+              colorMap.addAll({ThemeConfig.dynamicThemeColorLabel: null});
+            }
+            colorMap.addAll(ThemeConfig.colorMap);
+
+            if (!supportDynamicColors &&
+                themeColorLabel == ThemeConfig.dynamicThemeColorLabel) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ref
+                    .read(settingsProvider.notifier)
+                    .setThemeColorLabel(ThemeConfig.defaultThemeColorLabel);
+              });
+            }
+
             return ListTile(
               title: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -72,7 +92,8 @@ class AppearanceSettingPage extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    final color = ThemeConfig.colorMap.entries.toList()[index];
+                    final color = colorMap.entries.toList()[index];
+
                     return ThemeSelector(
                       seedColor: color.value,
                       selected: color.key ==
@@ -336,22 +357,14 @@ class ThemeSelector extends StatelessWidget {
                                       width: 24,
                                       margin: const EdgeInsets.all(4),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                borderRadius: const BorderRadius
-                                                        .horizontal(
-                                                    left: Radius.circular(6)),
-                                              ),
-                                            ),
-                                          ),
+                                          const Spacer(),
                                           Expanded(
                                             child: Container(
                                                 decoration: BoxDecoration(

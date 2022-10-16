@@ -17,10 +17,22 @@ import '../../utils/logger.dart';
 class BrokenShield extends StatefulWidget {
   const BrokenShield({super.key, required this.child});
 
-  final Widget child;
+  final Widget? child;
 
   @override
   State<BrokenShield> createState() => _BrokenShieldState();
+
+  static TransitionBuilder init({
+    TransitionBuilder? builder,
+  }) {
+    return (BuildContext context, Widget? child) {
+      if (builder == null) {
+        return BrokenShield(child: child);
+      } else {
+        return builder(context, BrokenShield(child: child));
+      }
+    };
+  }
 }
 
 class _BrokenShieldState extends State<BrokenShield> {
@@ -132,7 +144,7 @@ class _BrokenShieldState extends State<BrokenShield> {
           key: overlay,
           initialEntries: [
             OverlayEntry(
-              builder: (BuildContext context) => widget.child,
+              builder: (BuildContext context) => widget.child ?? Container(),
             ),
             // OverlayEntry(
             //   opaque: true,

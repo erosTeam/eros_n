@@ -25,7 +25,9 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
       listModel: $enumDecodeNullable(_$ListModelEnumMap, json['listModel']) ??
           ListModel.waterfall,
       localeCode: json['localeCode'] as String? ?? '',
-      themeColorLabel: json['themeColorLabel'] as String? ?? 'dynamic',
+      themeColorLabel: json['themeColorLabel'] as String? ??
+          ThemeConfig.dynamicThemeColorLabel,
+      supportDynamicColors: json['supportDynamicColors'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -42,6 +44,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'listModel': _$ListModelEnumMap[instance.listModel]!,
       'localeCode': instance.localeCode,
       'themeColorLabel': instance.themeColorLabel,
+      'supportDynamicColors': instance.supportDynamicColors,
     };
 
 const _$SearchSortEnumMap = {
