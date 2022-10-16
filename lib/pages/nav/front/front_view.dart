@@ -184,7 +184,7 @@ class PopularListView extends ConsumerWidget {
               final card = SizedBox(
                 width: 160,
                 child: Hero(
-                  tag: gallery.thumbUrl,
+                  tag: '${NHRoutes.front}_popular_${gallery.thumbUrl}',
                   child: Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: Container(
@@ -254,7 +254,11 @@ class PopularListView extends ConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   // popular
-                  RouteUtil.goGallery(ref, gallery);
+                  RouteUtil.goGallery(
+                    ref,
+                    gallery,
+                    heroTag: '${NHRoutes.front}_popular',
+                  );
                 },
                 child: card,
               );
@@ -288,6 +292,7 @@ class GalleryListView extends HookConsumerWidget {
       lastComplete: () => ref.read(frontProvider.notifier).loadNextPage(),
       keepPosition: true,
       maxPage: state.maxPage,
+      tabTag: NHRoutes.front,
     );
   }
 }

@@ -84,6 +84,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(supportDynamicColors: value);
     hiveHelper.setSettings(state);
   }
+
+  void setHideBottomNavigationOnScroll(bool value) {
+    state = state.copyWith(hideBottomNavigationOnScroll: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

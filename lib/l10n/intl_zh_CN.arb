@@ -81,5 +81,6 @@
   "tag": "标签",
   "read_model": "阅读模式",
   "general": "通用",
-  "language": "语言"
+  "language": "语言",
+  "hide_bottom_navigation_on_scroll": "滚动时隐藏底部导航栏"
 }

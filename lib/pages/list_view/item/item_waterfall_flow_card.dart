@@ -13,11 +13,13 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
     required this.gallery,
     this.index,
     this.page,
+    this.tabTag,
   }) : super(key: key);
 
   final Gallery gallery;
   final int? index;
   final int? page;
+  final String? tabTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +28,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Hero(
-          tag: gallery.thumbUrl,
+          tag: '${tabTag ?? ''}_${gallery.thumbUrl}',
           child: AspectRatio(
             aspectRatio: (gallery.images.thumbnail.imgWidth ?? 300) /
                 (gallery.images.thumbnail.imgHeight ?? 400),
@@ -74,7 +76,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
     return GestureDetector(
       onTap: () async {
         // items
-        await RouteUtil.goGallery(ref, gallery);
+        await RouteUtil.goGallery(ref, gallery, heroTag: tabTag);
       },
       child: item,
     );

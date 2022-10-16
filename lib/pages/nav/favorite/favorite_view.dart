@@ -2,6 +2,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -156,6 +157,7 @@ class FavoriteListView extends HookConsumerWidget {
       lastComplete: () => ref.read(favoriteProvider.notifier).loadNextPage(),
       keepPosition: true,
       maxPage: state.maxPage,
+      tabTag: NHRoutes.favorite,
     );
   }
 }

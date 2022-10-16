@@ -23,6 +23,7 @@ class Settings with _$Settings {
     @Default('') String localeCode,
     @Default(ThemeConfig.dynamicThemeColorLabel) String themeColorLabel,
     @Default(false) bool supportDynamicColors,
+    @Default(true) bool hideBottomNavigationOnScroll,
   }) = _Settings;
 
   const Settings._();

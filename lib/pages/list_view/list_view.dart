@@ -5,6 +5,7 @@ import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/list_view/item/item_list_card.dart';
 import 'package:eros_n/pages/list_view/item/item_waterfall_flow_card.dart';
+import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -27,7 +28,7 @@ class GallerySliverList extends HookConsumerWidget {
   }) : super(key: key);
 
   final List<Gallery> gallerys;
-  final dynamic tabTag;
+  final String? tabTag;
   final VoidCallback? lastComplete;
   final bool keepPosition;
   final int maxPage;
@@ -81,7 +82,7 @@ class GalleryCardSliverGridView extends StatelessWidget {
   }) : super(key: key);
 
   final List<Gallery> gallerys;
-  final dynamic tabTag;
+  final String? tabTag;
   final VoidCallback? lastComplete;
   final bool keepPosition;
   final int maxPage;
@@ -103,6 +104,7 @@ class GalleryCardSliverGridView extends StatelessWidget {
     return ItemGridCard(
       gallery: gallery,
       index: index,
+      tabTag: tabTag,
     );
   }
 
@@ -138,7 +140,7 @@ class GalleryCardSliverListView extends StatelessWidget {
   }) : super(key: key);
 
   final List<Gallery> gallerys;
-  final dynamic tabTag;
+  final String? tabTag;
   final VoidCallback? lastComplete;
   final bool keepPosition;
   final int maxPage;
@@ -160,6 +162,7 @@ class GalleryCardSliverListView extends StatelessWidget {
     return ItemListCard(
       gallery: gallery,
       index: index,
+      tabTag: tabTag,
     );
   }
 
@@ -190,7 +193,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
   }) : super(key: key);
 
   final List<Gallery> gallerys;
-  final dynamic tabTag;
+  final String? tabTag;
   final VoidCallback? lastComplete;
   final bool keepPosition;
   final int maxPage;
@@ -212,6 +215,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     Widget item = ItemWaterfallFlowCard(
       gallery: gallery,
       index: index,
+      tabTag: tabTag,
     );
 
     if (!GetPlatform.isDesktop) {

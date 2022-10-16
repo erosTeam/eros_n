@@ -879,6 +879,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Hide Bottom Navigation on Scroll`
+  String get hide_bottom_navigation_on_scroll {
+    return Intl.message(
+      'Hide Bottom Navigation on Scroll',
+      name: 'hide_bottom_navigation_on_scroll',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

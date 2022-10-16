@@ -1,3 +1,4 @@
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'index_state.dart';
 
 class IndexNotifier extends StateNotifier<IndexState> {
-  IndexNotifier() : super(IndexState());
+  IndexNotifier(this.ref) : super(IndexState());
 
   final Map<int, ScrollController> scrollControllerMap = {};
   bool tapAwait = false;
+
+  final Ref ref;
 
   Future<void> setIndex(int index,
       {required BuildContext context, bool jumpToPage = false}) async {
@@ -32,7 +35,9 @@ class IndexNotifier extends StateNotifier<IndexState> {
   }
 
   void hideNavigationBar() {
-    if (!state.hideNavigationBar) {
+    final hideBottomNavigationOnScroll = ref.read(settingsProvider
+        .select((settings) => settings.hideBottomNavigationOnScroll));
+    if (!state.hideNavigationBar && hideBottomNavigationOnScroll) {
       state = state.copyWith(hideNavigationBar: true);
     }
   }
@@ -78,5 +83,5 @@ class IndexNotifier extends StateNotifier<IndexState> {
 }
 
 final indexProvider = StateNotifierProvider<IndexNotifier, IndexState>((ref) {
-  return IndexNotifier();
+  return IndexNotifier(ref);
 });

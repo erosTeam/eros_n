@@ -38,6 +38,7 @@ class _$AppRouter extends RootStackRouter {
         child: GalleryPage(
           key: args.key,
           gid: args.gid,
+          heroTag: args.heroTag,
         ),
       );
     },
@@ -272,12 +273,14 @@ class GalleryRoute extends PageRouteInfo<GalleryRouteArgs> {
   GalleryRoute({
     Key? key,
     required int gid,
+    String? heroTag,
   }) : super(
           GalleryRoute.name,
           path: '/gallery',
           args: GalleryRouteArgs(
             key: key,
             gid: gid,
+            heroTag: heroTag,
           ),
         );
 
@@ -288,15 +291,18 @@ class GalleryRouteArgs {
   const GalleryRouteArgs({
     this.key,
     required this.gid,
+    this.heroTag,
   });
 
   final Key? key;
 
   final int gid;
 
+  final String? heroTag;
+
   @override
   String toString() {
-    return 'GalleryRouteArgs{key: $key, gid: $gid}';
+    return 'GalleryRouteArgs{key: $key, gid: $gid, heroTag: $heroTag}';
   }
 }
 

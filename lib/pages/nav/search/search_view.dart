@@ -7,6 +7,7 @@ import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -455,6 +456,7 @@ class SearchListView extends HookConsumerWidget {
                 .loadNextPage(),
             keepPosition: true,
             maxPage: state.maxPage,
+            tabTag: '${NHRoutes.search}_$currentSearchDepth',
           ),
           Consumer(builder: (context, ref, _) {
             final state = ref.watch(searchProvider(currentSearchDepth));

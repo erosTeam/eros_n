@@ -14,16 +14,22 @@ const double gridMaxCrossAxisExtent = 150.0;
 const double gridChildAspectRatio = 1 / 1.68;
 
 class ItemGridCard extends HookConsumerWidget {
-  const ItemGridCard({Key? key, required this.gallery, this.index, this.page})
-      : super(key: key);
+  const ItemGridCard({
+    Key? key,
+    required this.gallery,
+    this.index,
+    this.page,
+    this.tabTag,
+  }) : super(key: key);
 
   final Gallery gallery;
   final int? index;
   final int? page;
+  final String? tabTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
+    // final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
 
     final aspectRatio = (gallery.images.thumbnail.imgWidth ?? 300) /
         (gallery.images.thumbnail.imgHeight ?? 400);
@@ -32,7 +38,7 @@ class ItemGridCard extends HookConsumerWidget {
 
     return GestureDetector(
       onTap: () async {
-        await RouteUtil.goGallery(ref, gallery);
+        await RouteUtil.goGallery(ref, gallery, heroTag: tabTag);
       },
       child: Card(
         clipBehavior: Clip.antiAlias,
@@ -60,7 +66,7 @@ class ItemGridCard extends HookConsumerWidget {
                 child: AspectRatio(
                   aspectRatio: 3 / 4,
                   child: Hero(
-                    tag: gallery.thumbUrl,
+                    tag: '${tabTag ?? ''}_${gallery.thumbUrl}',
                     child: ErosCachedNetworkImage(
                       imageUrl: gallery.thumbUrl,
                       height: gallery.images.thumbnail.imgHeight?.toDouble(),

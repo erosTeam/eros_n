@@ -49,6 +49,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "general": MessageLookupByLibrary.simpleMessage("General"),
         "grid": MessageLookupByLibrary.simpleMessage("Grid"),
+        "hide_bottom_navigation_on_scroll":
+            MessageLookupByLibrary.simpleMessage(
+                "Hide Bottom Navigation on Scroll"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),

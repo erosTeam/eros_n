@@ -33,6 +33,7 @@ mixin _$Settings {
   String get localeCode => throw _privateConstructorUsedError;
   String get themeColorLabel => throw _privateConstructorUsedError;
   bool get supportDynamicColors => throw _privateConstructorUsedError;
+  bool get hideBottomNavigationOnScroll => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -57,7 +58,8 @@ abstract class $SettingsCopyWith<$Res> {
       ListModel listModel,
       String localeCode,
       String themeColorLabel,
-      bool supportDynamicColors});
+      bool supportDynamicColors,
+      bool hideBottomNavigationOnScroll});
 }
 
 /// @nodoc
@@ -83,6 +85,7 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? localeCode = freezed,
     Object? themeColorLabel = freezed,
     Object? supportDynamicColors = freezed,
+    Object? hideBottomNavigationOnScroll = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -137,6 +140,10 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.supportDynamicColors
           : supportDynamicColors // ignore: cast_nullable_to_non_nullable
               as bool,
+      hideBottomNavigationOnScroll: hideBottomNavigationOnScroll == freezed
+          ? _value.hideBottomNavigationOnScroll
+          : hideBottomNavigationOnScroll // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -160,7 +167,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       ListModel listModel,
       String localeCode,
       String themeColorLabel,
-      bool supportDynamicColors});
+      bool supportDynamicColors,
+      bool hideBottomNavigationOnScroll});
 }
 
 /// @nodoc
@@ -188,6 +196,7 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? localeCode = freezed,
     Object? themeColorLabel = freezed,
     Object? supportDynamicColors = freezed,
+    Object? hideBottomNavigationOnScroll = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -242,6 +251,10 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.supportDynamicColors
           : supportDynamicColors // ignore: cast_nullable_to_non_nullable
               as bool,
+      hideBottomNavigationOnScroll: hideBottomNavigationOnScroll == freezed
+          ? _value.hideBottomNavigationOnScroll
+          : hideBottomNavigationOnScroll // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -262,7 +275,8 @@ class _$_Settings extends _Settings {
       this.listModel = ListModel.waterfall,
       this.localeCode = '',
       this.themeColorLabel = ThemeConfig.dynamicThemeColorLabel,
-      this.supportDynamicColors = false})
+      this.supportDynamicColors = false,
+      this.hideBottomNavigationOnScroll = true})
       : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
@@ -307,10 +321,13 @@ class _$_Settings extends _Settings {
   @override
   @JsonKey()
   final bool supportDynamicColors;
+  @override
+  @JsonKey()
+  final bool hideBottomNavigationOnScroll;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll)';
   }
 
   @override
@@ -339,7 +356,10 @@ class _$_Settings extends _Settings {
             const DeepCollectionEquality()
                 .equals(other.themeColorLabel, themeColorLabel) &&
             const DeepCollectionEquality()
-                .equals(other.supportDynamicColors, supportDynamicColors));
+                .equals(other.supportDynamicColors, supportDynamicColors) &&
+            const DeepCollectionEquality().equals(
+                other.hideBottomNavigationOnScroll,
+                hideBottomNavigationOnScroll));
   }
 
   @JsonKey(ignore: true)
@@ -358,7 +378,8 @@ class _$_Settings extends _Settings {
       const DeepCollectionEquality().hash(listModel),
       const DeepCollectionEquality().hash(localeCode),
       const DeepCollectionEquality().hash(themeColorLabel),
-      const DeepCollectionEquality().hash(supportDynamicColors));
+      const DeepCollectionEquality().hash(supportDynamicColors),
+      const DeepCollectionEquality().hash(hideBottomNavigationOnScroll));
 
   @JsonKey(ignore: true)
   @override
@@ -387,7 +408,8 @@ abstract class _Settings extends Settings {
       final ListModel listModel,
       final String localeCode,
       final String themeColorLabel,
-      final bool supportDynamicColors}) = _$_Settings;
+      final bool supportDynamicColors,
+      final bool hideBottomNavigationOnScroll}) = _$_Settings;
   const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
@@ -418,6 +440,8 @@ abstract class _Settings extends Settings {
   String get themeColorLabel;
   @override
   bool get supportDynamicColors;
+  @override
+  bool get hideBottomNavigationOnScroll;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

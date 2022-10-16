@@ -81,5 +81,6 @@
   "tag": "Tag",
   "read_model": "Read Model",
   "general": "General",
-  "language": "Language"
+  "language": "Language",
+  "hide_bottom_navigation_on_scroll": "Hide Bottom Navigation on Scroll"
 }

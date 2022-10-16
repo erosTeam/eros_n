@@ -29,9 +29,11 @@ class GalleryPage extends HookConsumerWidget {
   const GalleryPage({
     super.key,
     required this.gid,
+    this.heroTag,
   });
 
   final int gid;
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -162,7 +164,7 @@ class GalleryPage extends HookConsumerWidget {
                                   margin: const EdgeInsets.only(right: 12),
                                   alignment: Alignment.center,
                                   child: Hero(
-                                    tag: gallery.thumbUrl,
+                                    tag: '${heroTag ?? ''}_${gallery.thumbUrl}',
                                     child: Card(
                                       margin: const EdgeInsets.all(0),
                                       clipBehavior: Clip.antiAlias,
@@ -592,6 +594,7 @@ class MoreLikeListView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final moreLikeGallerys = ref.watch(galleryProvider(gid)).moreLikeGallerys;
+    final heroTag = useMemoized(() => 'more_like_$gid');
     return MultiSliver(
       children: [
         Padding(
@@ -619,7 +622,7 @@ class MoreLikeListView extends HookConsumerWidget {
                   likeGallery.images.thumbnail.imgHeight!;
               return GestureDetector(
                 onTap: () {
-                  RouteUtil.goGallery(ref, likeGallery);
+                  RouteUtil.goGallery(ref, likeGallery, heroTag: heroTag);
                 },
                 child: Column(
                   children: [
@@ -627,32 +630,35 @@ class MoreLikeListView extends HookConsumerWidget {
                       child: Center(
                         child: AspectRatio(
                           aspectRatio: aspectRatio,
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            child: Container(
-                              foregroundDecoration:
-                                  (likeGallery.languageCode == 'ja' ||
-                                          likeGallery.languageCode == null)
-                                      ? null
-                                      : RotatedCornerDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.8),
-                                          geometry: const BadgeGeometry(
-                                              width: 38, height: 28),
-                                          textSpan: TextSpan(
-                                            text: likeGallery.languageCode
-                                                    ?.toUpperCase() ??
-                                                '',
-                                            style: const TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
+                          child: Hero(
+                            tag: '${heroTag}_${likeGallery.thumbUrl}',
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              child: Container(
+                                foregroundDecoration:
+                                    (likeGallery.languageCode == 'ja' ||
+                                            likeGallery.languageCode == null)
+                                        ? null
+                                        : RotatedCornerDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.8),
+                                            geometry: const BadgeGeometry(
+                                                width: 38, height: 28),
+                                            textSpan: TextSpan(
+                                              text: likeGallery.languageCode
+                                                      ?.toUpperCase() ??
+                                                  '',
+                                              style: const TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
-                                        ),
-                              child: ErosCachedNetworkImage(
-                                imageUrl: likeGallery.thumbUrl,
-                                fit: BoxFit.cover,
+                                child: ErosCachedNetworkImage(
+                                  imageUrl: likeGallery.thumbUrl,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),

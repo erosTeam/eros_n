@@ -30,6 +30,9 @@ part 'routes.gr.dart';
 class NHRoutes {
   static const String root = '/';
   static const String home = '/home';
+  static const String front = '/front';
+  static const String favorite = '/favorite';
+  static const String history = '/history';
   static const String gallery = '/gallery';
   static const String read = '/read';
   static const String settings = '/settings';
@@ -88,11 +91,15 @@ class RouteUtil {
     await erosRouter.push(ReadRoute(index: index));
   }
 
-  static Future<void> goGallery(WidgetRef ref, Gallery gallery) async {
+  static Future<void> goGallery(
+    WidgetRef ref,
+    Gallery gallery, {
+    String? heroTag,
+  }) async {
     ref.watch(galleryProvider(gallery.gid).notifier).initFromGallery(gallery);
     pushGalleryPage(gallery.gid);
     try {
-      await erosRouter.push(GalleryRoute(gid: gallery.gid));
+      await erosRouter.push(GalleryRoute(gid: gallery.gid, heroTag: heroTag));
     } finally {
       popGalleryPage();
     }

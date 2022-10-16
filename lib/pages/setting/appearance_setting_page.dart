@@ -6,6 +6,7 @@ import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:keframe/keframe.dart';
 
 import 'setting_base.dart';
 
@@ -94,7 +95,7 @@ class AppearanceSettingPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final color = colorMap.entries.toList()[index];
 
-                    return ThemeSelector(
+                    Widget selector = ThemeSelector(
                       seedColor: color.value,
                       selected: color.key ==
                           ref.watch(settingsProvider
@@ -105,6 +106,18 @@ class AppearanceSettingPage extends StatelessWidget {
                             .read(settingsProvider.notifier)
                             .setThemeColorLabel(color.key);
                       },
+                    );
+
+                    return selector;
+
+                    return FrameSeparateWidget(
+                      index: index,
+                      placeHolder: const ThemeSelector(
+                        seedColor: Colors.black,
+                        selected: false,
+                        name: '',
+                      ),
+                      child: selector,
                     );
                   },
                   separatorBuilder: (context, index) =>
@@ -221,10 +234,12 @@ class ThemeSelector extends StatelessWidget {
     required this.seedColor,
     required this.selected,
     required this.name,
+    this.dynamic = false,
     this.onTap,
   }) : super(key: key);
   final Color? seedColor;
   final bool selected;
+  final bool dynamic;
   final String name;
   final VoidCallback? onTap;
 
@@ -233,165 +248,131 @@ class ThemeSelector extends StatelessWidget {
     late ColorScheme lightColorScheme;
     late ColorScheme darkColorScheme;
 
-    // 使用 Builder 隔离开 context
-    return DynamicColorBuilder(
-        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-      if (seedColor != null) {
-        lightColorScheme = ColorScheme.fromSeed(
-          seedColor: seedColor!,
-        );
+    if (dynamic || seedColor == null) {
+      return DynamicColorBuilder(
+        builder: (lightDynamic, darkDynamic) {
+          if (lightDynamic != null && darkDynamic != null) {
+            lightColorScheme = lightDynamic.harmonized();
+            darkColorScheme = darkDynamic.harmonized();
+          } else {
+            return const SizedBox();
+          }
 
-        darkColorScheme = ColorScheme.fromSeed(
-          seedColor: seedColor!,
-          brightness: Brightness.dark,
-        );
-      } else if (lightDynamic != null && darkDynamic != null) {
-        lightColorScheme = lightDynamic.harmonized();
-        darkColorScheme = darkDynamic.harmonized();
-      } else {
-        return const SizedBox();
-      }
+          return ColorSelector(
+            lightColorScheme: lightColorScheme,
+            darkColorScheme: darkColorScheme,
+            selected: selected,
+            name: name,
+            onTap: onTap,
+          );
+        },
+      );
+    } else {
+      lightColorScheme = ColorScheme.fromSeed(
+        seedColor: seedColor!,
+      );
 
-      final lightTheme =
-          ThemeData.from(colorScheme: lightColorScheme, useMaterial3: true);
+      darkColorScheme = ColorScheme.fromSeed(
+        seedColor: seedColor!,
+        brightness: Brightness.dark,
+      );
 
-      final darkTheme =
-          ThemeData.from(colorScheme: darkColorScheme, useMaterial3: true);
+      return ColorSelector(
+        lightColorScheme: lightColorScheme,
+        darkColorScheme: darkColorScheme,
+        selected: selected,
+        name: name,
+        onTap: onTap,
+      );
+    }
+  }
+}
 
-      final theme = Theme.of(context).brightness == Brightness.light
-          ? lightTheme
-          : darkTheme;
+class ColorSelector extends StatelessWidget {
+  const ColorSelector({
+    super.key,
+    required this.lightColorScheme,
+    required this.darkColorScheme,
+    required this.selected,
+    required this.onTap,
+    required this.name,
+  });
 
-      return Theme(
-        data: theme,
-        child: Builder(builder: (context) {
-          return SizedBox(
-            width: 100,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: selected
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.12),
-                        width: 4,
-                      ),
+  final ColorScheme lightColorScheme;
+  final ColorScheme darkColorScheme;
+  final bool selected;
+  final VoidCallback? onTap;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    final lightTheme =
+        ThemeData.from(colorScheme: lightColorScheme, useMaterial3: true);
+
+    final darkTheme =
+        ThemeData.from(colorScheme: darkColorScheme, useMaterial3: true);
+
+    final theme = Theme.of(context).brightness == Brightness.light
+        ? lightTheme
+        : darkTheme;
+
+    return Theme(
+      data: theme,
+      child: Builder(builder: (context) {
+        return SizedBox(
+          width: 100,
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: selected
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.12),
+                      width: 4,
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: InkWell(
-                        onTap: onTap,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                                height: 36,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 22,
-                                      height: 22,
-                                      padding: const EdgeInsets.all(2),
-                                      margin: const EdgeInsets.all(4),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary
-                                            .withOpacity(selected ? 1 : 0),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Icon(
-                                        Icons.check,
-                                        size: 18,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
-                                            .withOpacity(selected ? 1 : 0),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(
-                                          vertical: 8,
-                                          horizontal: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(6),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  height: 50,
-                                  width: 46,
-                                  margin: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment.topRight,
-                                    child: Container(
-                                      height: 20,
-                                      width: 24,
-                                      margin: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(6),
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          const Spacer(),
-                                          Expanded(
-                                            child: Container(
-                                                decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiary,
-                                              borderRadius:
-                                                  const BorderRadius.horizontal(
-                                                      right:
-                                                          Radius.circular(6)),
-                                            )),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: InkWell(
+                      onTap: onTap,
+                      child: Column(
+                        children: [
+                          SizedBox(
                               height: 36,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Container(
+                                    width: 22,
+                                    height: 22,
+                                    padding: const EdgeInsets.all(2),
+                                    margin: const EdgeInsets.all(4),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withOpacity(selected ? 1 : 0),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Icon(
+                                      Icons.check,
+                                      size: 18,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary
+                                          .withOpacity(selected ? 1 : 0),
+                                    ),
+                                  ),
                                   Expanded(
                                     child: Container(
                                       margin: const EdgeInsets.symmetric(
@@ -401,38 +382,106 @@ class ThemeSelector extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .secondary,
+                                            .onBackground,
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    width: 21,
-                                    height: 21,
-                                    margin: const EdgeInsets.all(4),
-                                    alignment: Alignment.center,
+                                ],
+                              )),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Container(
+                                height: 50,
+                                width: 46,
+                                margin: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Container(
+                                    height: 20,
+                                    width: 24,
+                                    margin: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
                                       color:
                                           Theme.of(context).colorScheme.primary,
-                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Spacer(),
+                                        Expanded(
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
+                                            borderRadius:
+                                                const BorderRadius.horizontal(
+                                                    right: Radius.circular(6)),
+                                          )),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Container(
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            height: 36,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 21,
+                                  height: 21,
+                                  margin: const EdgeInsets.all(4),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(name),
-              ],
-            ),
-          );
-        }),
-      );
-    });
+              ),
+              const SizedBox(height: 8),
+              Text(name),
+            ],
+          ),
+        );
+      }),
+    );
   }
 }

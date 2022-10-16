@@ -13,12 +13,18 @@ const kItemHeight = 200.0;
 const kCoverWidth = 120.0;
 
 class ItemListCard extends HookConsumerWidget {
-  const ItemListCard({Key? key, required this.gallery, this.index, this.page})
-      : super(key: key);
+  const ItemListCard({
+    Key? key,
+    required this.gallery,
+    this.index,
+    this.page,
+    this.tabTag,
+  }) : super(key: key);
 
   final Gallery gallery;
   final int? index;
   final int? page;
+  final String? tabTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +38,7 @@ class ItemListCard extends HookConsumerWidget {
 
     return GestureDetector(
       onTap: () async {
-        await RouteUtil.goGallery(ref, gallery);
+        await RouteUtil.goGallery(ref, gallery, heroTag: tabTag);
       },
       child: SizedBox(
         height: kItemHeight,
@@ -62,7 +68,7 @@ class ItemListCard extends HookConsumerWidget {
                 SizedBox(
                   width: kCoverWidth,
                   child: Hero(
-                    tag: gallery.thumbUrl,
+                    tag: '${tabTag ?? ''}_${gallery.thumbUrl}',
                     child: ErosCachedNetworkImage(
                       imageUrl: gallery.thumbUrl,
                       height: gallery.images.thumbnail.imgHeight?.toDouble(),

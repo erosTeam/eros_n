@@ -43,6 +43,21 @@ class GeneralSettingPage extends StatelessWidget {
                 },
               );
             }),
+            // siwtch hideBottomNavigationOnScroll
+            Consumer(builder: (context, ref, child) {
+              final hideBottomNavigationOnScroll = ref.watch(settingsProvider
+                  .select((settings) => settings.hideBottomNavigationOnScroll));
+
+              return SwitchListTile(
+                title: Text(L10n.of(context).hide_bottom_navigation_on_scroll),
+                value: hideBottomNavigationOnScroll,
+                onChanged: (value) {
+                  ref
+                      .read(settingsProvider.notifier)
+                      .setHideBottomNavigationOnScroll(value);
+                },
+              );
+            }),
           ],
         ));
   }

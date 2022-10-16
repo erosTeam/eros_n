@@ -48,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
         "general": MessageLookupByLibrary.simpleMessage("通用"),
         "grid": MessageLookupByLibrary.simpleMessage("网格"),
+        "hide_bottom_navigation_on_scroll":
+            MessageLookupByLibrary.simpleMessage("滚动时隐藏底部导航栏"),
         "history": MessageLookupByLibrary.simpleMessage("历史"),
         "home": MessageLookupByLibrary.simpleMessage("主页"),
         "language": MessageLookupByLibrary.simpleMessage("语言"),
