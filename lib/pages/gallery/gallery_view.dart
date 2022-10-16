@@ -516,25 +516,15 @@ class ThumbListView extends HookConsumerWidget {
         ref.watch(galleryProvider(gid).select((gallery) => gallery.mediaId));
     return MultiSliver(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                L10n.of(context).thumbs,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              TextButton(
-                  onPressed: () {
-                    erosRouter.push(ThumbRoute(gid: gid));
-                  },
-                  child: Text(
-                    '${L10n.of(context).more} ${pages.length}',
-                    style: Theme.of(context).textTheme.caption,
-                  )),
-            ],
+        ListTile(
+          title: Text(L10n.of(context).thumbs),
+          trailing: Text(
+            '${L10n.of(context).more} ${pages.length}',
+            style: Theme.of(context).textTheme.bodySmall,
           ),
+          onTap: () {
+            erosRouter.push(ThumbRoute(gid: gid));
+          },
         ),
         SizedBox(
           height: 200,
@@ -597,18 +587,7 @@ class MoreLikeListView extends HookConsumerWidget {
     final heroTag = useMemoized(() => 'more_like_$gid');
     return MultiSliver(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                L10n.of(context).more_like_this,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-        ),
+        ListTile(title: Text(L10n.of(context).more_like_this)),
         SizedBox(
           height: 280,
           child: ListView.separated(
@@ -701,25 +680,15 @@ class CommentsListView extends HookConsumerWidget {
 
     return MultiSliver(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                L10n.of(context).comments,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              TextButton(
-                  onPressed: () {
-                    erosRouter.push(CommentsRoute(gid: gid));
-                  },
-                  child: Text(
-                    '${L10n.of(context).more} ${comments.length}',
-                    style: Theme.of(context).textTheme.caption,
-                  )),
-            ],
+        ListTile(
+          title: Text(L10n.of(context).comments),
+          trailing: Text(
+            '${L10n.of(context).more} ${comments.length}',
+            style: Theme.of(context).textTheme.bodySmall,
           ),
+          onTap: () {
+            erosRouter.push(CommentsRoute(gid: gid));
+          },
         ),
         if (comments.isEmpty)
           const SizedBox(height: 8)

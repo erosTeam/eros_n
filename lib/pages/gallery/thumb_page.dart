@@ -2,12 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/component/models/image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThumbPage extends HookConsumerWidget {
@@ -19,13 +21,31 @@ class ThumbPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ScrollController scrollController = useScrollController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(L10n.of(context).thumbs),
       ),
+      floatingActionButton: ScrollingFab(
+        onPressed: () {
+          RouteUtil.goRead(ref);
+        },
+        scrollController: scrollController,
+        label: Consumer(builder: (context, ref, child) {
+          final currentPageIndex =
+              ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+          final label = currentPageIndex == 0
+              ? L10n.of(context).read
+              : '${L10n.of(context).resume} ${currentPageIndex + 1}';
+          return Text(label);
+        }),
+        icon: const Icon(Icons.play_arrow),
+      ),
       body: Scrollbar(
-        controller: ScrollController(),
+        controller: scrollController,
         child: CustomScrollView(
+          controller: scrollController,
           slivers: [
             ThumbsView(
               gid: gid,
