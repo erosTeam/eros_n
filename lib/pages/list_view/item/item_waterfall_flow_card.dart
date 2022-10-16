@@ -14,12 +14,14 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
     this.index,
     this.page,
     this.tabTag,
+    this.compact = false,
   }) : super(key: key);
 
   final Gallery gallery;
   final int? index;
   final int? page;
   final String? tabTag;
+  final bool compact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,51 +29,22 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Hero(
-          tag: '${tabTag ?? ''}_${gallery.thumbUrl}',
-          child: AspectRatio(
-            aspectRatio: (gallery.images.thumbnail.imgWidth ?? 300) /
-                (gallery.images.thumbnail.imgHeight ?? 400),
-            child: Card(
-              margin: const EdgeInsets.all(0),
-              clipBehavior: Clip.antiAlias,
-              child: Container(
-                foregroundDecoration: (gallery.languageCode == 'ja' ||
-                        gallery.languageCode == null)
-                    ? null
-                    : RotatedCornerDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.8),
-                        geometry: const BadgeGeometry(width: 38, height: 28),
-                        textSpan: TextSpan(
-                          text: gallery.languageCode?.toUpperCase() ?? '',
-                          style: const TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                child: CoverImg(
-                  imgUrl: gallery.thumbUrl,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
-        ),
-        buildTitle(),
-        SimpleTagsView(simpleTags: gallery.simpleTags),
+        buildCoverImage(context, compact),
+        if (!compact) buildTitle(),
+        if (!compact) SimpleTagsView(simpleTags: gallery.simpleTags),
       ],
     );
 
-    item = Card(
-      // clipBehavior: Clip.antiAlias,
-      margin: const EdgeInsets.all(0),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: item,
-      ),
-    );
+    if (!compact) {
+      item = Card(
+        // clipBehavior: Clip.antiAlias,
+        margin: const EdgeInsets.all(0),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          child: item,
+        ),
+      );
+    }
 
     return GestureDetector(
       onTap: () async {
@@ -79,6 +52,75 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
         await RouteUtil.goGallery(ref, gallery, heroTag: tabTag);
       },
       child: item,
+    );
+  }
+
+  Widget buildCoverImage(BuildContext context, bool compact) {
+    Widget coverImage = Container(
+      foregroundDecoration: (gallery.languageCode == 'ja' ||
+              gallery.languageCode == null)
+          ? null
+          : RotatedCornerDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+              geometry: const BadgeGeometry(width: 38, height: 28),
+              textSpan: TextSpan(
+                text: gallery.languageCode?.toUpperCase() ?? '',
+                style:
+                    const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+              ),
+            ),
+      child: CoverImg(
+        imgUrl: gallery.thumbUrl,
+        fit: BoxFit.contain,
+      ),
+    );
+
+    if (compact) {
+      coverImage = Stack(
+        children: [
+          ShaderMask(
+            shaderCallback: (rect) {
+              return LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.0),
+                  Colors.black.withOpacity(0.0),
+                  Colors.black.withOpacity(0.0),
+                  Colors.black.withOpacity(0.5),
+                ],
+              ).createShader(rect);
+            },
+            blendMode: BlendMode.darken,
+            child: coverImage,
+          ),
+          Container(
+            padding: const EdgeInsets.all(4),
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              (gallery.title.englishTitle ?? '').prettyTitle,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white,
+                  ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Hero(
+      tag: '${tabTag ?? ''}_${gallery.thumbUrl}',
+      child: AspectRatio(
+        aspectRatio: (gallery.images.thumbnail.imgWidth ?? 300) /
+            (gallery.images.thumbnail.imgHeight ?? 400),
+        child: Card(
+          margin: const EdgeInsets.all(0),
+          clipBehavior: Clip.antiAlias,
+          child: coverImage,
+        ),
+      ),
     );
   }
 

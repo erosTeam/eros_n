@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
@@ -823,12 +824,16 @@ class ToolBarView extends HookConsumerWidget {
           IconButton(
             icon: const Icon(Icons.download_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
+            // color: Colors.blue
+            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
             onPressed: () {},
           ),
           IconButton(
             icon:
                 const Icon(Icons.energy_savings_leaf_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
+            // color: Colors.green
+            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
             onPressed: isUserLogin
                 ? () async {
                     // launch torrent
@@ -870,6 +875,8 @@ class ToolBarView extends HookConsumerWidget {
                 ? const Icon(Icons.favorite, size: iconSize)
                 : const Icon(Icons.favorite_border_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
+            // color: Colors.redAccent
+            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
             onPressed: isUserLogin
                 ? () {
                     ref.read(galleryProvider(gid).notifier).toggleFavorite();

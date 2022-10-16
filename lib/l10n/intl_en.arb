@@ -77,6 +77,7 @@
   "list": "List",
   "grid": "Grid",
   "waterfall": "Waterfall Flow",
+  "waterfall_compact": "Waterfall Flow (Compact)",
   "advanced": "Advanced",
   "tag": "Tag",
   "read_model": "Read Model",

@@ -830,6 +830,16 @@ class L10n {
     );
   }
 
+  /// `Waterfall Flow (Compact)`
+  String get waterfall_compact {
+    return Intl.message(
+      'Waterfall Flow (Compact)',
+      name: 'waterfall_compact',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Advanced`
   String get advanced {
     return Intl.message(

@@ -84,4 +84,5 @@ const _$ListModelEnumMap = {
   ListModel.list: 'list',
   ListModel.grid: 'grid',
   ListModel.waterfall: 'waterfall',
+  ListModel.waterfallCompact: 'waterfallCompact',
 };

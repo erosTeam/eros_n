@@ -217,7 +217,7 @@ class PopularListView extends ConsumerWidget {
                                     Colors.transparent,
                                     Colors.transparent,
                                     Colors.transparent,
-                                    Colors.black87,
+                                    Colors.black54,
                                   ]).createShader(
                                 Rect.fromLTRB(
                                     0, 0, bounds.width, bounds.height),

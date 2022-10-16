@@ -33,4 +33,5 @@ enum ListModel {
   list,
   grid,
   waterfall,
+  waterfallCompact,
 }

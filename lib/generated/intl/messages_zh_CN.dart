@@ -109,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "username": MessageLookupByLibrary.simpleMessage("用户名"),
         "vertical": MessageLookupByLibrary.simpleMessage("垂直"),
         "waterfall": MessageLookupByLibrary.simpleMessage("瀑布流"),
+        "waterfall_compact": MessageLookupByLibrary.simpleMessage("瀑布流 (紧凑)"),
         "webtoon": MessageLookupByLibrary.simpleMessage("条漫"),
         "wrap": MessageLookupByLibrary.simpleMessage("换行"),
         "yesterday": MessageLookupByLibrary.simpleMessage("昨天")

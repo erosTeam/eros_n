@@ -143,6 +143,8 @@ class AppearanceSettingPage extends StatelessWidget {
                 ListModel.list: Text(L10n.of(context).list),
                 ListModel.grid: Text(L10n.of(context).grid),
                 ListModel.waterfall: Text(L10n.of(context).waterfall),
+                ListModel.waterfallCompact:
+                    Text(L10n.of(context).waterfall_compact),
               },
               onChanged: (value) {
                 ref.read(settingsProvider.notifier).setListModel(value);

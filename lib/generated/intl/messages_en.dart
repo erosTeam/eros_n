@@ -119,6 +119,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "username": MessageLookupByLibrary.simpleMessage("Username"),
         "vertical": MessageLookupByLibrary.simpleMessage("Vertical"),
         "waterfall": MessageLookupByLibrary.simpleMessage("Waterfall Flow"),
+        "waterfall_compact":
+            MessageLookupByLibrary.simpleMessage("Waterfall Flow (Compact)"),
         "webtoon": MessageLookupByLibrary.simpleMessage("Webtoon"),
         "wrap": MessageLookupByLibrary.simpleMessage("Wrap"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday")

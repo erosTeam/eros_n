@@ -47,6 +47,16 @@ class GallerySliverList extends HookConsumerWidget {
           maxPage: maxPage,
           currentPage: currentPage,
         );
+      case ListModel.waterfallCompact:
+        return GalleryWaterfallFlowView(
+          gallerys: gallerys,
+          tabTag: tabTag,
+          lastComplete: lastComplete,
+          keepPosition: keepPosition,
+          maxPage: maxPage,
+          currentPage: currentPage,
+          compact: true,
+        );
       case ListModel.grid:
         return GalleryCardSliverGridView(
           gallerys: gallerys,
@@ -190,6 +200,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     this.keepPosition = false,
     this.maxPage = 1,
     this.currentPage = 1,
+    this.compact = false,
   }) : super(key: key);
 
   final List<Gallery> gallerys;
@@ -198,6 +209,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
   final bool keepPosition;
   final int maxPage;
   final int currentPage;
+  final bool compact;
 
   Widget itemCardBuilder(BuildContext context, int index) {
     if (gallerys.length - 1 < index) {
@@ -216,6 +228,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
       gallery: gallery,
       index: index,
       tabTag: tabTag,
+      compact: compact,
     );
 
     if (!GetPlatform.isDesktop) {
