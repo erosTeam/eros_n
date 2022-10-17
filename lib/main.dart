@@ -35,7 +35,7 @@ Future<void> main() async {
     ],
     child: MyApp(),
   ));
-  if(Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     doWhenWindowReady(() {
       setWindowVisibility(visible: true);
       setWindowTitle('Eros-N');
@@ -129,10 +129,23 @@ class MyApp extends HookConsumerWidget {
               FlutterSmartDialog.observer,
             ],
           ),
-          builder: FlutterSmartDialog.init(
-            styleBuilder: (child) => child,
-            builder: BrokenShield.init(),
-          ),
+          // builder: FlutterSmartDialog.init(
+          //   styleBuilder: (child) {
+          //     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          //       return Desktop(child: child);
+          //     }
+          //     return child;
+          //   },
+          //   builder: BrokenShield.init(),
+          // ),
+          builder: (BuildContext context, Widget? child) {
+            final widget =
+                BrokenShield(child: FlutterSmartDialog.init()(context, child));
+            if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+              return Desktop(child: widget);
+            }
+            return widget;
+          },
           locale: locale(localeCode),
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,

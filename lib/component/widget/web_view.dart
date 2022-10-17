@@ -135,7 +135,7 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   String url = '';
 
   Future<void> initPlatformState() async {
-    url = NHConst.baseUrl;
+    url = widget.url;
     await _controller.initialize();
     _subscriptions.add(_controller.url.listen((url) {
       this.url = url;
