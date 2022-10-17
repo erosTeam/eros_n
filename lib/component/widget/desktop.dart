@@ -1,6 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:eros_n/component/widget/sys_title.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:window_size/window_size.dart';
 
 class Desktop extends StatelessWidget {
   const Desktop({super.key, required this.child});
@@ -22,14 +24,42 @@ class Desktop extends StatelessWidget {
               top: 0,
               right: 0,
               height: appWindow.titleBarHeight,
-              child: WindowTitleBarBox(
-                child: Row(
-                  children: [
-                    Expanded(child: MoveWindow()),
-                    const WindowButtons()
-                  ],
-                ),
-              )),
+              child: StreamBuilder<DesktopTitle>(
+                  stream: SysTitle.currentStream,
+                  builder: (context, snapshot) {
+                    final data = snapshot.data ?? SysTitle.current;
+                    final titleVisible = data?.titleVisible ?? true;
+                    final buttonVisible = data?.buttonVisible ?? true;
+                    final title = data?.title ?? '';
+                    print("SysTitle.title: $title");
+
+                    final titleWidget = titleVisible
+                        ? Text(
+                            title,
+                            style: TextStyle(fontSize: 12),
+                          )
+                        : null;
+                    if (title != '') {
+                      setWindowTitle('$title · Eros-N');
+                    }
+
+                    return WindowTitleBarBox(
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: MoveWindow(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 13),
+                              child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: titleWidget),
+                            ),
+                          )),
+                          if (buttonVisible) const WindowButtons()
+                        ],
+                      ),
+                    );
+                  })),
         ],
       ),
     );
@@ -50,7 +80,6 @@ final closeButtonColors = WindowButtonColors(
     iconMouseDown: const Color(0xFFEDBEBB),
     iconMouseOver: Colors.white);
 
-
 final darkButtonColors = WindowButtonColors(
     iconNormal: const Color(0xFFF2F2F2),
     mouseOver: const Color(0x2DFFFFFF),
@@ -70,10 +99,7 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme
-        .of(context)
-        .brightness == Brightness.dark;
-
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Row(
       children: [
@@ -81,24 +107,26 @@ class WindowButtons extends StatelessWidget {
             colors: isDark ? darkButtonColors : buttonColors,
             padding: EdgeInsets.zero,
             iconBuilder: (buttonContext) {
-              return Icon(FluentIcons.line_horizontal_1_20_regular, size: 16, color: buttonContext.iconColor);
+              return Icon(FluentIcons.line_horizontal_1_20_regular,
+                  size: 16, color: buttonContext.iconColor);
             },
             onPressed: () => appWindow.minimize()),
         WindowButton(
             colors: isDark ? darkButtonColors : buttonColors,
             padding: EdgeInsets.zero,
             iconBuilder: (buttonContext) {
-              final maximizeIcon = appWindow.isMaximized ? FluentIcons
-                  .square_multiple_16_regular : FluentIcons.maximize_16_regular;
-              return Icon(maximizeIcon, size: 16, color: buttonContext.iconColor);
+              final maximizeIcon = appWindow.isMaximized
+                  ? FluentIcons.square_multiple_16_regular
+                  : FluentIcons.maximize_16_regular;
+              return Icon(maximizeIcon,
+                  size: 16, color: buttonContext.iconColor);
             },
             onPressed: () => appWindow.maximizeOrRestore()),
         WindowButton(
             colors: isDark ? darkCloseButtonColors : closeButtonColors,
             padding: EdgeInsets.zero,
-            iconBuilder: (buttonContext) =>
-                Icon(FluentIcons.dismiss_16_regular, size: 16,
-                    color: buttonContext.iconColor),
+            iconBuilder: (buttonContext) => Icon(FluentIcons.dismiss_16_regular,
+                size: 16, color: buttonContext.iconColor),
             onPressed: () => appWindow.close()),
       ],
     );

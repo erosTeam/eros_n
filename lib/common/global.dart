@@ -42,7 +42,6 @@ class Global {
   static late PersistCookieJar cookieJar;
 
   static String? userAgent;
-  static String? imageCookie;
 
   static Future<void> setUserAgent(String ua) {
     userAgent = ua;
@@ -53,11 +52,6 @@ class Global {
   static Future<void> setCookies(String url, List<Cookie> cookies) async {
     await Global.cookieJar
         .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
-    final savedCookies =
-        await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    imageCookie = savedCookies
-        .map((cookie) => '${cookie.name}=${cookie.value}')
-        .join('; ');
   }
 
   static late PackageInfo packageInfo;
@@ -99,11 +93,5 @@ class Global {
     userAgent = hiveHelper.getUserAgent();
     userAgent ??= NHConst.userAgent;
     globalDioConfig = nhDioConfig.copyWith(userAgent: userAgent);
-
-    final savedCookies =
-        await cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    imageCookie = savedCookies
-        .map((cookie) => '${cookie.name}=${cookie.value}')
-        .join('; ');
   }
 }
