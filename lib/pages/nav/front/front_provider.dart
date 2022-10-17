@@ -1,15 +1,12 @@
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../../network/app_dio/pdio.dart';
-import 'front_state.dart';
 
 class GallerysNotifier extends StateNotifier<List<Gallery>> {
   GallerysNotifier(super.create);
@@ -41,8 +38,8 @@ final popularProvider =
   return PopularNotifier();
 });
 
-class FrontNotifier extends StateNotifier<FrontState> {
-  FrontNotifier(this.ref) : super(const FrontState());
+class FrontNotifier extends StateNotifier<ListViewState> {
+  FrontNotifier(this.ref) : super(const ListViewState());
 
   final Ref ref;
 
@@ -66,7 +63,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
       return false;
     }
 
-    logger.d('page: $page, next: $next, prev: $prev, first: $first');
+    logger.v('page: $page, next: $next, prev: $prev, first: $first');
 
     final rCookies =
         await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
@@ -87,7 +84,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
 
     final toPage =
         page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
-    logger.d('toPage: $toPage');
+    logger.v('toPage: $toPage');
 
     try {
       final gallerySet = await getGalleryList(
@@ -117,7 +114,10 @@ class FrontNotifier extends StateNotifier<FrontState> {
 
       return gallerySet.fromCache ?? false;
     } on Exception catch (e) {
-      state = state.copyWith(status: LoadStatus.error);
+      state = state.copyWith(
+        status: LoadStatus.error,
+        errorMessage: e.toString(),
+      );
       rethrow;
     }
   }
@@ -125,7 +125,6 @@ class FrontNotifier extends StateNotifier<FrontState> {
   Future<void> loadData() async {
     final fromCache = await getGalleryData(first: true);
     if (fromCache) {
-      logger.d('fromCache');
       await 1.seconds.delay();
       await reloadData();
     }
@@ -149,6 +148,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
   }
 }
 
-final frontProvider = StateNotifierProvider<FrontNotifier, FrontState>((ref) {
+final frontProvider =
+    StateNotifierProvider<FrontNotifier, ListViewState>((ref) {
   return FrontNotifier(ref);
 });

@@ -38,8 +38,9 @@ class IsarHelper {
     });
   }
 
-  Future<void> putAllTagTranslate(List<TagTranslate> tagTranslates,
-      {bool replaceOnConflict = true}) async {
+  Future<void> putAllTagTranslate(
+    List<TagTranslate> tagTranslates,
+  ) async {
     await isar.writeTxn(() async {
       await isar.tagTranslates.putAll(tagTranslates);
     });
@@ -67,38 +68,45 @@ class IsarHelper {
           .findAllSync();
       return result.lastOrNull;
     } else {
-      final result = isar.tagTranslates.where().nameEqualTo(name).findAllSync();
+      final result = isar.tagTranslates
+          .where()
+          .namespaceNotEqualTo('rows')
+          .filter()
+          .nameEqualTo(name)
+          .findAllSync();
       return result.lastOrNull;
     }
   }
 
-  Future<TagTranslate?> findTagTranslateAsync(String name,
-      {String? namespace}) async {
+  Future<TagTranslate?> findTagTranslateAsync(
+    String name, {
+    String? namespace,
+  }) async {
     if (name.contains('|')) {
       name = name.split('|').first.trim();
     }
     if (namespace != null && namespace.isNotEmpty) {
+      final result =
+          await isar.tagTranslates.getByNameNamespace(name, namespace);
+      return result;
+    } else {
       final result = await isar.tagTranslates
           .where()
-          .nameEqualTo(name)
-          .filter()
-          .namespaceEqualTo(namespace)
-          .findAll();
-      return result.lastOrNull;
-    } else {
-      final result =
-          await isar.tagTranslates.where().nameEqualTo(name).findAll();
-      return result.lastOrNull;
+          .nameEqualToNamespaceNotEqualTo(name, 'rows')
+          .findFirst();
+      return result;
     }
   }
 
   Future<List<TagTranslate>> findTagTranslateContains(
       String text, int limit) async {
     final result = await isar.tagTranslates
+        .where()
+        .namespaceNotEqualTo('rows')
         .filter()
-        .nameEqualTo(text)
-        .or()
         .nameContains(text)
+        .or()
+        .translateNameContains(text)
         .limit(limit)
         .findAll();
 
@@ -113,11 +121,35 @@ class IsarHelper {
     });
   }
 
+  Future<void> putNhTag(NhTag tag) async {
+    await isar.writeTxn(() async {
+      await isar.nhTags.put(tag);
+    });
+  }
+
   NhTag? findNhTag(int? id) {
     return isar.nhTags.where().idEqualTo(id ?? 0).findFirstSync();
   }
 
   Future<NhTag?> findNhTagAsync(int? id) async {
     return await isar.nhTags.where().idEqualTo(id ?? 0).findFirst();
+  }
+
+  Future<List<NhTag>> getAllNhTag() {
+    return isar.nhTags.where().findAll();
+  }
+
+  Future<List<NhTag>> findNhTagContains(String text, int limit) async {
+    final result = await isar.nhTags
+        .filter()
+        .nameContains(text)
+        .or()
+        .translateNameContains(text)
+        .limit(limit)
+        .findAll();
+
+    logger.d('result.len ${result.length}');
+
+    return result;
   }
 }

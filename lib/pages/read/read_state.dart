@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'read_state.freezed.dart';
@@ -12,11 +10,13 @@ class ReadState with _$ReadState {
     @Default(false) bool showAppBar,
     @Default(0.0) double topBarOffset,
     @Default(0.0) double bottomBarOffset,
-    double? bottomBarHeight,
+    @Default(0.0) double bottomBarHeight,
     @Default(false) bool showThumbList,
-    int? gid,
-    @JsonKey(ignore: true) BuildContext? context,
+    @Default(0.0) double paddingTop,
+    @Default(0.0) double paddingBottom,
   }) = _ReadState;
+
+  const ReadState._();
 
   factory ReadState.fromJson(Map<String, dynamic> json) =>
       _$ReadStateFromJson(json);

@@ -21,7 +21,7 @@ Gallery _$GalleryFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Gallery {
   @JsonKey(name: 'id')
-  int? get gid => throw _privateConstructorUsedError;
+  int get gid => throw _privateConstructorUsedError;
   @JsonKey(name: 'media_id')
   String? get mediaId => throw _privateConstructorUsedError;
   GalleryTitle get title => throw _privateConstructorUsedError;
@@ -63,7 +63,7 @@ abstract class $GalleryCopyWith<$Res> {
   factory $GalleryCopyWith(Gallery value, $Res Function(Gallery) then) =
       _$GalleryCopyWithImpl<$Res>;
   $Res call(
-      {@JsonKey(name: 'id') int? gid,
+      {@JsonKey(name: 'id') int gid,
       @JsonKey(name: 'media_id') String? mediaId,
       GalleryTitle title,
       GalleryImages images,
@@ -119,7 +119,7 @@ class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
       gid: gid == freezed
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       mediaId: mediaId == freezed
           ? _value.mediaId
           : mediaId // ignore: cast_nullable_to_non_nullable
@@ -213,7 +213,7 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
       __$$_GalleryCopyWithImpl<$Res>;
   @override
   $Res call(
-      {@JsonKey(name: 'id') int? gid,
+      {@JsonKey(name: 'id') int gid,
       @JsonKey(name: 'media_id') String? mediaId,
       GalleryTitle title,
       GalleryImages images,
@@ -272,7 +272,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
       gid: gid == freezed
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       mediaId: mediaId == freezed
           ? _value.mediaId
           : mediaId // ignore: cast_nullable_to_non_nullable
@@ -350,7 +350,7 @@ class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
 class _$_Gallery extends _Gallery {
   const _$_Gallery(
       {@JsonKey(name: 'id')
-          this.gid,
+          this.gid = 0,
       @JsonKey(name: 'media_id')
           this.mediaId,
       this.title = const GalleryTitle(),
@@ -392,7 +392,7 @@ class _$_Gallery extends _Gallery {
 
   @override
   @JsonKey(name: 'id')
-  final int? gid;
+  final int gid;
   @override
   @JsonKey(name: 'media_id')
   final String? mediaId;
@@ -540,7 +540,7 @@ class _$_Gallery extends _Gallery {
 
 abstract class _Gallery extends Gallery {
   const factory _Gallery(
-      {@JsonKey(name: 'id') final int? gid,
+      {@JsonKey(name: 'id') final int gid,
       @JsonKey(name: 'media_id') final String? mediaId,
       final GalleryTitle title,
       final GalleryImages images,
@@ -564,7 +564,7 @@ abstract class _Gallery extends Gallery {
 
   @override
   @JsonKey(name: 'id')
-  int? get gid;
+  int get gid;
   @override
   @JsonKey(name: 'media_id')
   String? get mediaId;

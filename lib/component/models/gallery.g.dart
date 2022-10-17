@@ -7,7 +7,7 @@ part of 'gallery.dart';
 // **************************************************************************
 
 _$_Gallery _$$_GalleryFromJson(Map<String, dynamic> json) => _$_Gallery(
-      gid: json['id'] as int?,
+      gid: json['id'] as int? ?? 0,
       mediaId: json['media_id'] as String?,
       title: json['title'] == null
           ? const GalleryTitle()

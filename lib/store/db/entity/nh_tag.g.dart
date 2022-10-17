@@ -27,8 +27,13 @@ const NhTagSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'type': PropertySchema(
+    r'translateName': PropertySchema(
       id: 2,
+      name: r'translateName',
+      type: IsarType.string,
+    ),
+    r'type': PropertySchema(
+      id: 3,
       name: r'type',
       type: IsarType.string,
     )
@@ -47,6 +52,32 @@ const NhTagSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'type',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'translateName': IndexSchema(
+      id: -5259999136743835192,
+      name: r'translateName',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'translateName',
           type: IndexType.hash,
           caseSensitive: true,
         )
@@ -74,6 +105,12 @@ int _nhTagEstimateSize(
     }
   }
   {
+    final value = object.translateName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.type;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -90,7 +127,8 @@ void _nhTagSerialize(
 ) {
   writer.writeLong(offsets[0], object.count);
   writer.writeString(offsets[1], object.name);
-  writer.writeString(offsets[2], object.type);
+  writer.writeString(offsets[2], object.translateName);
+  writer.writeString(offsets[3], object.type);
 }
 
 NhTag _nhTagDeserialize(
@@ -103,8 +141,9 @@ NhTag _nhTagDeserialize(
     count: reader.readLongOrNull(offsets[0]),
     id: id,
     name: reader.readStringOrNull(offsets[1]),
-    type: reader.readStringOrNull(offsets[2]),
+    type: reader.readStringOrNull(offsets[3]),
   );
+  object.translateName = reader.readStringOrNull(offsets[2]);
   return object;
 }
 
@@ -120,6 +159,8 @@ P _nhTagDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    case 3:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -269,6 +310,134 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
               indexName: r'type',
               lower: [],
               upper: [type],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'name',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameEqualTo(String? name) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [name],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameNotEqualTo(String? name) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'translateName',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'translateName',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameEqualTo(
+      String? translateName) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'translateName',
+        value: [translateName],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameNotEqualTo(
+      String? translateName) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'translateName',
+              lower: [],
+              upper: [translateName],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'translateName',
+              lower: [translateName],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'translateName',
+              lower: [translateName],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'translateName',
+              lower: [],
+              upper: [translateName],
               includeUpper: false,
             ));
       }
@@ -557,6 +726,152 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'translateName',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'translateName',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'translateName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'translateName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'translateName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'translateName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'translateName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'translateName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'translateName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'translateName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'translateName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'translateName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -731,6 +1046,18 @@ extension NhTagQuerySortBy on QueryBuilder<NhTag, NhTag, QSortBy> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> sortByTranslateName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'translateName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> sortByTranslateNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'translateName', Sort.desc);
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -781,6 +1108,18 @@ extension NhTagQuerySortThenBy on QueryBuilder<NhTag, NhTag, QSortThenBy> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> thenByTranslateName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'translateName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> thenByTranslateNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'translateName', Sort.desc);
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -805,6 +1144,14 @@ extension NhTagQueryWhereDistinct on QueryBuilder<NhTag, NhTag, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QDistinct> distinctByTranslateName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'translateName',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -835,6 +1182,12 @@ extension NhTagQueryProperty on QueryBuilder<NhTag, NhTag, QQueryProperty> {
     });
   }
 
+  QueryBuilder<NhTag, String?, QQueryOperations> translateNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'translateName');
+    });
+  }
+
   QueryBuilder<NhTag, String?, QQueryOperations> typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
@@ -850,10 +1203,11 @@ NhTag _$NhTagFromJson(Map<String, dynamic> json) => NhTag(
       id: json['id'] as int?,
       name: json['name'] as String?,
       count: json['count'] as int?,
-    );
+    )..translateName = json['translateName'] as String?;
 
 Map<String, dynamic> _$NhTagToJson(NhTag instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'translateName': instance.translateName,
       'count': instance.count,
     };

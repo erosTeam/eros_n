@@ -1,10 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
-import 'package:eros_n/component/models/comment.dart';
-import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
@@ -12,11 +10,8 @@ import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
-import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
-import 'package:eros_n/store/db/entity/tag_translate.dart';
-import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -34,21 +29,22 @@ import 'gallery_provider.dart';
 class GalleryPage extends HookConsumerWidget {
   const GalleryPage({
     super.key,
-    this.gid,
+    required this.gid,
+    this.heroTag,
   });
 
-  final int? gid;
+  final int gid;
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.read(galleryProvider(gid));
-    logger.d('build gallery $gid ${gallery.title}');
+    // 避免 currentPageIndex 变化时，重新构建 GalleryPage
+    // final Gallery gallery = ref.watch(galleryProvider(gid)
+    //     .select((gallery) => gallery.copyWith(currentPageIndex: 0)));
+    logger.v('build gallery $gid ${gallery.title}');
 
-    late ScrollController scrollController;
-    useEffect(() {
-      scrollController = ScrollController();
-      return scrollController.dispose;
-    });
+    final ScrollController scrollController = useScrollController();
 
     Widget backGround() {
       return ShaderMask(
@@ -113,28 +109,40 @@ class GalleryPage extends HookConsumerWidget {
       ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
-          context.router.push(ReadRoute(gid: gid));
+          RouteUtil.goRead(ref);
         },
         scrollController: scrollController,
-        label: Text(L10n.of(context).read),
+        label: Consumer(builder: (context, ref, child) {
+          final currentPageIndex =
+              ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+          final label = currentPageIndex == 0
+              ? L10n.of(context).read
+              : '${L10n.of(context).resume} ${currentPageIndex + 1}';
+          return Text(label);
+        }),
         icon: const Icon(Icons.play_arrow),
       ),
       body: RefreshIndicator(
         onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
-        edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
+        edgeOffset: MediaQuery.of(context).padding.top,
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           controller: scrollController,
           slivers: [
             SliverToBoxAdapter(
-              child: Container(
-                height: context.isTablet ? 400 : 430,
+              child: SizedBox(
+                height: context.isTablet ? 400 : 460,
                 child: Stack(
                   alignment: Alignment.bottomLeft,
                   children: [
                     backGround(),
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.only(
+                        left: context.mediaQueryPadding.left + 16,
+                        right: context.mediaQueryPadding.right + 16,
+                        top: 16,
+                        bottom: 16,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -157,7 +165,7 @@ class GalleryPage extends HookConsumerWidget {
                                   margin: const EdgeInsets.only(right: 12),
                                   alignment: Alignment.center,
                                   child: Hero(
-                                    tag: gallery.thumbUrl,
+                                    tag: '${heroTag ?? ''}_${gallery.thumbUrl}',
                                     child: Card(
                                       margin: const EdgeInsets.all(0),
                                       clipBehavior: Clip.antiAlias,
@@ -267,6 +275,7 @@ class GalleryPage extends HookConsumerWidget {
             ],
           ),
           const SizedBox(height: 8),
+          // 作者
           Expanded(
             child: SingleChildScrollView(
               child: Consumer(builder: (context, ref, child) {
@@ -281,7 +290,7 @@ class GalleryPage extends HookConsumerWidget {
 
                 final textStyle = Theme.of(context)
                     .textTheme
-                    .caption
+                    .bodySmall
                     ?.copyWith(color: Theme.of(context).colorScheme.primary);
 
                 final artistTagsWidgets = artistTags
@@ -294,7 +303,9 @@ class GalleryPage extends HookConsumerWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          RouteUtil.goSearch(tag: tag);
+                        },
                         child: isTagTranslate
                             ? Text(
                                 tag.translatedName ?? tag.name ?? '',
@@ -336,16 +347,16 @@ class GalleryPage extends HookConsumerWidget {
 class DetailView extends HookConsumerWidget {
   const DetailView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('DetailView build');
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
+    logger.v('DetailView build $pageStatus');
     if (pageStatus == PageStatus.loading) {
       return const SliverFillRemaining(
         child: Center(
@@ -353,16 +364,20 @@ class DetailView extends HookConsumerWidget {
         ),
       );
     } else {
-      return MultiSliver(children: [
-        TagsView(gid: gid),
-        const SizedBox(height: 8),
-        ThumbListView(gid: gid),
-        const SizedBox(height: 8),
-        MoreLikeListView(gid: gid),
-        const SizedBox(height: 8),
-        CommentsListView(gid: gid),
-        const SizedBox(height: 150),
-      ]);
+      return SliverSafeArea(
+        top: false,
+        bottom: false,
+        sliver: MultiSliver(children: [
+          TagsView(gid: gid),
+          const SizedBox(height: 8),
+          ThumbListView(gid: gid),
+          const SizedBox(height: 8),
+          MoreLikeListView(gid: gid),
+          const SizedBox(height: 8),
+          CommentsListView(gid: gid),
+          const SizedBox(height: 150),
+        ]),
+      );
     }
   }
 }
@@ -370,10 +385,10 @@ class DetailView extends HookConsumerWidget {
 class TagsView extends HookConsumerWidget {
   const TagsView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -450,7 +465,7 @@ class TagsView extends HookConsumerWidget {
                         );
                       }),
                       onPressed: () {
-                        // ref.read(searchProvider).searchByTag(tag);
+                        RouteUtil.goSearch(tag: tag);
                       },
                     );
                   }).toList(),
@@ -488,37 +503,29 @@ String _getTagTypeTranslate(BuildContext context, String tagType) {
 class ThumbListView extends HookConsumerWidget {
   const ThumbListView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d('ThumbListView build');
-    final pages = ref.read(galleryProvider(gid)).images.pages;
-    final mediaId = ref.read(galleryProvider(gid)).mediaId;
+    logger.v('ThumbListView build');
+    final pages = ref
+        .watch(galleryProvider(gid).select((gallery) => gallery.images.pages));
+    final mediaId =
+        ref.watch(galleryProvider(gid).select((gallery) => gallery.mediaId));
     return MultiSliver(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                L10n.of(context).thumbs,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              TextButton(
-                  onPressed: () {
-                    erosRouter.push(ThumbRoute(gid: gid));
-                  },
-                  child: Text(
-                    '${L10n.of(context).more} ${pages.length}',
-                    style: Theme.of(context).textTheme.caption,
-                  )),
-            ],
+        ListTile(
+          title: Text(L10n.of(context).thumbs),
+          trailing: Text(
+            '${L10n.of(context).more} ${pages.length}',
+            style: Theme.of(context).textTheme.bodySmall,
           ),
+          onTap: () {
+            erosRouter.push(ThumbRoute(gid: gid));
+          },
         ),
         SizedBox(
           height: 200,
@@ -529,30 +536,36 @@ class ThumbListView extends HookConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
               final GalleryImage image = pages[index];
-              return GestureDetector(
-                onTap: () {
-                  ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-                  ref.read(readProvider.notifier).init(context);
-                  context.router.push(ReadRoute(gid: gid));
-                },
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: image.imgWidth! / image.imgHeight!,
-                    child: Card(
-                      // margin: const EdgeInsets.all(0),
-                      clipBehavior: Clip.antiAlias,
-                      child: Hero(
-                        tag: '${gid}_$index',
-                        child: ErosCachedNetworkImage(
-                          imageUrl:
-                              'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
-                          fit: BoxFit.cover,
+              return Consumer(
+                  child: GestureDetector(
+                    onTap: () async {
+                      RouteUtil.goRead(ref, index: index);
+                    },
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: image.imgWidth! / image.imgHeight!,
+                        child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          child: Hero(
+                            tag: '${gid}_$index',
+                            child: ErosCachedNetworkImage(
+                              imageUrl:
+                                  'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
+                  builder: (context, ref, child) {
+                    final currentIndex = ref.watch(galleryProvider(gid)
+                        .select((gallery) => gallery.currentPageIndex));
+                    return HeroMode(
+                      enabled: true,
+                      child: child!,
+                    );
+                  });
             },
           ),
         ),
@@ -564,28 +577,18 @@ class ThumbListView extends HookConsumerWidget {
 class MoreLikeListView extends HookConsumerWidget {
   const MoreLikeListView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final moreLikeGallerys = ref.watch(galleryProvider(gid)).moreLikeGallerys;
+    final heroTag = useMemoized(() => 'more_like_$gid');
     return MultiSliver(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                L10n.of(context).more_like_this,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-        ),
+        ListTile(title: Text(L10n.of(context).more_like_this)),
         SizedBox(
           height: 280,
           child: ListView.separated(
@@ -599,10 +602,7 @@ class MoreLikeListView extends HookConsumerWidget {
                   likeGallery.images.thumbnail.imgHeight!;
               return GestureDetector(
                 onTap: () {
-                  ref
-                      .read(galleryProvider(likeGallery.gid).notifier)
-                      .initFromGallery(likeGallery);
-                  context.router.push(GalleryRoute(gid: likeGallery.gid));
+                  RouteUtil.goGallery(ref, likeGallery, heroTag: heroTag);
                 },
                 child: Column(
                   children: [
@@ -610,32 +610,35 @@ class MoreLikeListView extends HookConsumerWidget {
                       child: Center(
                         child: AspectRatio(
                           aspectRatio: aspectRatio,
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            child: Container(
-                              foregroundDecoration:
-                                  (likeGallery.languageCode == 'ja' ||
-                                          likeGallery.languageCode == null)
-                                      ? null
-                                      : RotatedCornerDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.8),
-                                          geometry: const BadgeGeometry(
-                                              width: 38, height: 28),
-                                          textSpan: TextSpan(
-                                            text: likeGallery.languageCode
-                                                    ?.toUpperCase() ??
-                                                '',
-                                            style: const TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
+                          child: Hero(
+                            tag: '${heroTag}_${likeGallery.thumbUrl}',
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              child: Container(
+                                foregroundDecoration:
+                                    (likeGallery.languageCode == 'ja' ||
+                                            likeGallery.languageCode == null)
+                                        ? null
+                                        : RotatedCornerDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.8),
+                                            geometry: const BadgeGeometry(
+                                                width: 38, height: 28),
+                                            textSpan: TextSpan(
+                                              text: likeGallery.languageCode
+                                                      ?.toUpperCase() ??
+                                                  '',
+                                              style: const TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
-                                        ),
-                              child: ErosCachedNetworkImage(
-                                imageUrl: likeGallery.thumbUrl,
-                                fit: BoxFit.cover,
+                                child: ErosCachedNetworkImage(
+                                  imageUrl: likeGallery.thumbUrl,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -667,10 +670,10 @@ class MoreLikeListView extends HookConsumerWidget {
 class CommentsListView extends HookConsumerWidget {
   const CommentsListView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -678,30 +681,20 @@ class CommentsListView extends HookConsumerWidget {
 
     return MultiSliver(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                L10n.of(context).comments,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              TextButton(
-                  onPressed: () {
-                    erosRouter.push(CommentsRoute(gid: gid));
-                  },
-                  child: Text(
-                    '${L10n.of(context).more} ${comments.length}',
-                    style: Theme.of(context).textTheme.caption,
-                  )),
-            ],
+        ListTile(
+          title: Text(L10n.of(context).comments),
+          trailing: Text(
+            '${L10n.of(context).more} ${comments.length}',
+            style: Theme.of(context).textTheme.bodySmall,
           ),
+          onTap: () {
+            erosRouter.push(CommentsRoute(gid: gid));
+          },
         ),
         if (comments.isEmpty)
           const SizedBox(height: 8)
         else
-          Container(
+          SizedBox(
             height: 190,
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -714,14 +707,14 @@ class CommentsListView extends HookConsumerWidget {
                     (comment.postDate ?? 0) * 1000);
                 final dateFormatted =
                     DateFormat('yyyy-MM-dd HH:mm').format(date.toLocal());
-                return InkWell(
-                  onTap: () {
-                    erosRouter.push(CommentsRoute(gid: gid));
-                  },
-                  child: Container(
-                    width: 280,
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
+                return SizedBox(
+                  width: 280,
+                  child: Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                      onTap: () {
+                        erosRouter.push(CommentsRoute(gid: gid));
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
@@ -811,7 +804,7 @@ class CommentsListView extends HookConsumerWidget {
 class ToolBarView extends HookConsumerWidget {
   const ToolBarView({Key? key, required this.gid}) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -831,12 +824,16 @@ class ToolBarView extends HookConsumerWidget {
           IconButton(
             icon: const Icon(Icons.download_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
+            // color: Colors.blue
+            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
             onPressed: () {},
           ),
           IconButton(
             icon:
                 const Icon(Icons.energy_savings_leaf_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
+            // color: Colors.green
+            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
             onPressed: isUserLogin
                 ? () async {
                     // launch torrent
@@ -878,6 +875,8 @@ class ToolBarView extends HookConsumerWidget {
                 ? const Icon(Icons.favorite, size: iconSize)
                 : const Icon(Icons.favorite_border_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
+            // color: Colors.redAccent
+            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
             onPressed: isUserLogin
                 ? () {
                     ref.read(galleryProvider(gid).notifier).toggleFavorite();

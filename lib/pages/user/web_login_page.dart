@@ -4,7 +4,6 @@ import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/widget/web_view.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/pages/webview/webview.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -54,20 +53,18 @@ class WebLoginPage extends HookConsumerWidget {
     late final CookieManager cookieManager;
     late Future<void> Function() setCookies;
 
-    useEffect(() {
-      setCookies = () async {
+    setCookies = useMemoized(() {
+      return () async {
         final cookies = await getCookie();
-        // for (final cookie in cookies) {
-        //   await cookieManager.setCookie(
-        //     name: cookie.name,
-        //     value: cookie.value,
-        //     url: Uri.parse(NHConst.baseUrl),
-        //   );
-        // }
       };
+    });
 
+    useEffect(() {
       cookieManager = CookieManager.instance();
+      // 不要清除 cookies
       // cookieManager.deleteAllCookies();
+      cookieManager.deleteCookie(
+          url: Uri.parse(NHConst.loginUrl), name: 'sessionid');
       return;
     }, const []);
 
@@ -88,30 +85,50 @@ class WebLoginPage extends HookConsumerWidget {
                 url: Uri.parse(NHConst.loginUrl),
               ),
               initialOptions: inAppWebViewOptions,
-              onLoadStop: (InAppWebViewController controller, Uri? uri) async {
-                logger.d('Page Finished loading: $uri');
+              onTitleChanged: (controller, title) async {
+                final cookies = await cookieManager.getCookies(
+                    url: Uri.parse(NHConst.baseUrl));
+                logger.d('onTitleChanged title: $title\ncookies: $cookies');
 
-                if (uri == null) {
-                  return;
-                }
+                if (cookies.length >= 3 &&
+                    cookies.any((element) => element.name == 'sessionid') &&
+                    cookies.any((element) => element.name == 'cf_clearance')) {
+                  final ioCookies = cookies
+                      .map((e) => io.Cookie(e.name, '${e.value}'))
+                      .toList();
 
-                if (uri.path == '/' && uri.queryParameters.isEmpty) {
-                  final cookies = await cookieManager.getCookies(url: uri);
-                  if (cookies.length >= 3 &&
-                      cookies.any((element) => element.name == 'sessionid') &&
-                      cookies
-                          .any((element) => element.name == 'cf_clearance')) {
-                    final ioCookies = cookies
-                        .map((e) => io.Cookie(e.name, '${e.value}'))
-                        .toList();
+                  logger.d(
+                      'cookies:\n${ioCookies.map((e) => e.toString()).join('\n')}');
 
-                    logger.d(
-                        'cookies:\n${ioCookies.map((e) => e.toString()).join('\n')}');
-
-                    erosRouter.pop<List<io.Cookie>>(ioCookies);
-                  }
+                  erosRouter.pop<List<io.Cookie>>(ioCookies);
+                  // erosRouter.pop();
                 }
               },
+              // onLoadStop: (InAppWebViewController controller, Uri? uri) async {
+              //   logger.d('Page Finished loading: $uri');
+              //
+              //   if (uri == null) {
+              //     return;
+              //   }
+              //
+              //   if (uri.path == '/' && uri.queryParameters.isEmpty) {
+              //     final cookies = await cookieManager.getCookies(url: uri);
+              //     if (cookies.length >= 3 &&
+              //         cookies.any((element) => element.name == 'sessionid') &&
+              //         cookies
+              //             .any((element) => element.name == 'cf_clearance')) {
+              //       final ioCookies = cookies
+              //           .map((e) => io.Cookie(e.name, '${e.value}'))
+              //           .toList();
+              //
+              //       logger.d(
+              //           'cookies:\n${ioCookies.map((e) => e.toString()).join('\n')}');
+              //
+              //       erosRouter.pop<List<io.Cookie>>(ioCookies);
+              //       // erosRouter.pop();
+              //     }
+              //   }
+              // },
             );
           }),
     );

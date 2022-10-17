@@ -35,9 +35,9 @@ class AboutPage extends StatelessWidget {
             ),
             ListTile(
               title: Text('Github'),
-              subtitle: Text('https://github.com/honjow/eros_n'),
+              subtitle: Text('https://github.com/erosTeam/eros_n'),
               onTap: () => launchUrlString(
-                'https://github.com/honjow/eros_n',
+                'https://github.com/erosTeam/eros_n',
                 mode: LaunchMode.externalApplication,
               ),
             ),

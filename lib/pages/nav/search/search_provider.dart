@@ -1,17 +1,18 @@
 import 'package:eros_n/common/provider/settings_provider.dart';
-import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
-import 'package:eros_n/pages/nav/front/front_state.dart';
+import 'package:eros_n/pages/nav/front/list_view_state.dart';
+import 'package:eros_n/store/db/entity/nh_tag.dart';
+import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SearchNotifier extends StateNotifier<FrontState> {
-  SearchNotifier(this.ref) : super(const FrontState());
+class SearchNotifier extends StateNotifier<ListViewState> {
+  SearchNotifier(this.ref) : super(const ListViewState());
   final Ref ref;
   String query = '';
 
@@ -19,7 +20,36 @@ class SearchNotifier extends StateNotifier<FrontState> {
   final FocusNode searchFocusNode = FocusNode();
 
   SearchGalleryNotifier get searchGalleryNotifier =>
-      ref.read(searchGallerysProvider.notifier);
+      ref.read(searchGallerysProvider(currentSearchDepth).notifier);
+
+  void appendNhTagQuery(NhTag tag, {bool search = false}) {
+    late String newQuery;
+    if ((tag.name ?? '').contains(' ')) {
+      newQuery = '${tag.type}:"${tag.name}"';
+    } else {
+      newQuery = '${tag.type}:${tag.name}';
+    }
+
+    final currQryText = searchController.text.split(RegExp(r'[ ;"]')).last;
+
+    newQuery =
+        searchController.text.replaceFirst(RegExp('$currQryText\$'), newQuery);
+
+    searchController.value = TextEditingValue(
+      text: '$newQuery ',
+      selection: TextSelection.collapsed(offset: '$newQuery '.length),
+    );
+
+    // searchController.text = '$newQuery ';
+    // searchController.selection =
+    //     TextSelection.collapsed(offset: '$newQuery '.length);
+    if (search) {
+      searchFocusNode.unfocus();
+      this.search();
+    } else {
+      searchFocusNode.requestFocus();
+    }
+  }
 
   Future<void> search() async {
     query = searchController.text;
@@ -57,8 +87,10 @@ class SearchNotifier extends StateNotifier<FrontState> {
     } else if (prev) {
       state = state.copyWith(status: LoadStatus.loadingMore);
     } else {
-      if (searchGalleryNotifier.state.isEmpty) {
-        state = state.copyWith(status: LoadStatus.loading);
+      if (searchGalleryNotifier.state.isEmpty || first) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          state = state.copyWith(status: LoadStatus.loading);
+        });
       }
     }
 
@@ -88,8 +120,11 @@ class SearchNotifier extends StateNotifier<FrontState> {
         curPage: toPage,
       );
     } on Exception catch (e) {
+      state = state.copyWith(
+        status: LoadStatus.error,
+        errorMessage: e.toString(),
+      );
       logger.d('state.status ${state.status}');
-      state = state.copyWith(status: LoadStatus.error);
       rethrow;
     }
   }
@@ -119,11 +154,31 @@ class SearchGalleryNotifier extends GallerysNotifier {
   SearchGalleryNotifier() : super([]);
 }
 
-final searchGallerysProvider =
-    StateNotifierProvider<SearchGalleryNotifier, List<Gallery>>((ref) {
+final searchGallerysProvider = StateNotifierProvider.autoDispose
+    .family<SearchGalleryNotifier, List<Gallery>, int>((ref, depth) {
+  ref.onDispose(() {
+    logger.d('searchGallerysProvider $depth dispose');
+  });
   return SearchGalleryNotifier();
 });
 
-final searchProvider = StateNotifierProvider<SearchNotifier, FrontState>((ref) {
+final searchProvider =
+    StateNotifierProvider.family<SearchNotifier, ListViewState, int>(
+        (ref, depth) {
   return SearchNotifier(ref);
 });
+
+final _searchDepthList = <int>[0];
+int get currentSearchDepth {
+  return _searchDepthList.last;
+}
+
+void pushSearchDepth() {
+  _searchDepthList.add(_searchDepthList.last + 1);
+  logger.d('pushSearchDepth $_searchDepthList');
+}
+
+void popSearchDepth() {
+  _searchDepthList.removeLast();
+  logger.d('popSearchDepth $_searchDepthList');
+}

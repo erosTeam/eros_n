@@ -25,9 +25,16 @@ import 'generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Global.init();
+
   initLogger();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(
+    observers: [
+      // LoggerObserver(),
+    ],
+    child: MyApp(),
+  ));
   if(Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     doWhenWindowReady(() {
       setWindowVisibility(visible: true);
@@ -36,38 +43,49 @@ Future<void> main() async {
   }
 }
 
-bool _isDemoUsingDynamicColors = false;
-
-const _brandBlue = Colors.blue;
-
 class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dynamicColor =
-    ref.watch(settingsProvider.select((settings) => settings.dynamicColor));
+    logger.v('build MyApp');
+    final themeMode =
+        ref.watch(settingsProvider.select((settings) => settings.themeMode));
+
+    final localeCode =
+        ref.watch(settingsProvider.select((settings) => settings.localeCode));
+
+    final themeColorLabel = ref
+        .watch(settingsProvider.select((settings) => settings.themeColorLabel));
+
+    final dynamicColor = themeColorLabel == ThemeConfig.dynamicThemeColorLabel;
+    final themeSeedColor = ThemeConfig.colorMap[themeColorLabel] ??
+        ThemeConfig.colorMap[ThemeConfig.defaultThemeColorLabel]!;
+
     return DynamicColorBuilder(
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         ColorScheme lightColorScheme;
         ColorScheme darkColorScheme;
 
-        if (lightDynamic != null && darkDynamic != null && dynamicColor) {
-          // On Android S+ devices, use the provided dynamic color scheme.
-          // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
+        final supportDynamicColors =
+            lightDynamic != null && darkDynamic != null;
+
+        logger.d('supportDynamicColors: $supportDynamicColors');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref
+              .read(settingsProvider.notifier)
+              .setSupportDynamicColors(supportDynamicColors);
+        });
+
+        if (supportDynamicColors && dynamicColor) {
           lightColorScheme = lightDynamic.harmonized();
-
-          // Repeat for the dark color scheme.
           darkColorScheme = darkDynamic.harmonized();
-
-          _isDemoUsingDynamicColors = true; // ignore, only for demo purposes
         } else {
-          // Otherwise, use fallback schemes.
           lightColorScheme = ColorScheme.fromSeed(
-            seedColor: _brandBlue,
+            seedColor: themeSeedColor,
           );
           darkColorScheme = ColorScheme.fromSeed(
-            seedColor: _brandBlue,
+            seedColor: themeSeedColor,
             brightness: Brightness.dark,
           );
         }
@@ -75,15 +93,29 @@ class MyApp extends HookConsumerWidget {
         ThemeConfig.lightColorScheme = lightColorScheme;
         ThemeConfig.lightTheme = ThemeData(
           colorScheme: lightColorScheme,
-          // extensions: [lightCustomColors],
           useMaterial3: true,
+          dividerTheme: const DividerThemeData(
+            color: Colors.black12,
+            thickness: 1,
+            space: 0,
+          ),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: lightColorScheme.surfaceVariant,
+          ),
         );
 
         ThemeConfig.darkColorScheme = darkColorScheme;
         ThemeConfig.darkTheme = ThemeData(
           colorScheme: darkColorScheme,
-          // extensions: [darkCustomColors],
           useMaterial3: true,
+          dividerTheme: const DividerThemeData(
+            color: Colors.white24,
+            thickness: 1,
+            space: 0,
+          ),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: darkColorScheme.surfaceVariant,
+          ),
         );
 
         return MaterialApp.router(
@@ -92,26 +124,21 @@ class MyApp extends HookConsumerWidget {
           routeInformationProvider: erosRouter.routeInfoProvider(),
           routerDelegate: AutoRouterDelegate(
             erosRouter,
-            navigatorObservers: () =>
-            [
+            navigatorObservers: () => [
               AppRouteObserver(),
-              FlutterSmartDialog.observer
+              FlutterSmartDialog.observer,
             ],
           ),
-          builder: (BuildContext context, Widget? child) {
-            final widget = BrokenShield(child: FlutterSmartDialog.init()(context, child));
-            if(Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-              return Desktop(child: widget);
-            }
-            return widget;
-          },
-          onGenerateTitle: (BuildContext context) =>
-          L10n
-              .of(context)
-              .app_title,
+          builder: FlutterSmartDialog.init(
+            styleBuilder: (child) => child,
+            builder: BrokenShield.init(),
+          ),
+          locale: locale(localeCode),
+          onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,
           theme: ThemeConfig.lightTheme,
           darkTheme: ThemeConfig.darkTheme,
+          themeMode: themeMode,
           supportedLocales: [...L10n.delegate.supportedLocales],
           localizationsDelegates: const [
             L10n.delegate,
@@ -123,4 +150,29 @@ class MyApp extends HookConsumerWidget {
       },
     );
   }
+}
+
+class LoggerObserver extends ProviderObserver {
+  @override
+  void didUpdateProvider(
+    ProviderBase provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
+    logger.d('''
+{
+  "provider": "${provider.name ?? provider.runtimeType}",
+  "previousValue": "$previousValue",
+  "newValue": "$newValue"
+}''');
+  }
+}
+
+Locale? locale(String localeCode) {
+  if (localeCode.isEmpty) {
+    return null;
+  }
+  final parts = localeCode.split('_');
+  return Locale(parts[0], parts[1]);
 }

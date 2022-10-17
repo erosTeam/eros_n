@@ -13,7 +13,7 @@ part 'gallery.g.dart';
 @freezed
 class Gallery with _$Gallery {
   const factory Gallery({
-    @JsonKey(name: 'id') int? gid,
+    @JsonKey(name: 'id') @Default(0) int gid,
     @JsonKey(name: 'media_id') String? mediaId,
     @Default(GalleryTitle()) GalleryTitle title,
     @Default(GalleryImages()) GalleryImages images,

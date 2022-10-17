@@ -25,7 +25,15 @@ mixin _$Settings {
   bool get dynamicColor => throw _privateConstructorUsedError;
   SearchSort get searchSort => throw _privateConstructorUsedError;
   bool get showTags => throw _privateConstructorUsedError;
-  TagLayoutOnCard get tagLayoutOnCard => throw _privateConstructorUsedError;
+  TagLayoutOnItem get tagLayoutOnItem => throw _privateConstructorUsedError;
+  ThemeMode get themeMode => throw _privateConstructorUsedError;
+  bool get fullScreenReader => throw _privateConstructorUsedError;
+  ReadModel get readModel => throw _privateConstructorUsedError;
+  ListModel get listModel => throw _privateConstructorUsedError;
+  String get localeCode => throw _privateConstructorUsedError;
+  String get themeColorLabel => throw _privateConstructorUsedError;
+  bool get supportDynamicColors => throw _privateConstructorUsedError;
+  bool get hideBottomNavigationOnScroll => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +51,15 @@ abstract class $SettingsCopyWith<$Res> {
       bool dynamicColor,
       SearchSort searchSort,
       bool showTags,
-      TagLayoutOnCard tagLayoutOnCard});
+      TagLayoutOnItem tagLayoutOnItem,
+      ThemeMode themeMode,
+      bool fullScreenReader,
+      ReadModel readModel,
+      ListModel listModel,
+      String localeCode,
+      String themeColorLabel,
+      bool supportDynamicColors,
+      bool hideBottomNavigationOnScroll});
 }
 
 /// @nodoc
@@ -61,7 +77,15 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
     Object? dynamicColor = freezed,
     Object? searchSort = freezed,
     Object? showTags = freezed,
-    Object? tagLayoutOnCard = freezed,
+    Object? tagLayoutOnItem = freezed,
+    Object? themeMode = freezed,
+    Object? fullScreenReader = freezed,
+    Object? readModel = freezed,
+    Object? listModel = freezed,
+    Object? localeCode = freezed,
+    Object? themeColorLabel = freezed,
+    Object? supportDynamicColors = freezed,
+    Object? hideBottomNavigationOnScroll = freezed,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: isCoverBlur == freezed
@@ -84,10 +108,42 @@ class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
           ? _value.showTags
           : showTags // ignore: cast_nullable_to_non_nullable
               as bool,
-      tagLayoutOnCard: tagLayoutOnCard == freezed
-          ? _value.tagLayoutOnCard
-          : tagLayoutOnCard // ignore: cast_nullable_to_non_nullable
-              as TagLayoutOnCard,
+      tagLayoutOnItem: tagLayoutOnItem == freezed
+          ? _value.tagLayoutOnItem
+          : tagLayoutOnItem // ignore: cast_nullable_to_non_nullable
+              as TagLayoutOnItem,
+      themeMode: themeMode == freezed
+          ? _value.themeMode
+          : themeMode // ignore: cast_nullable_to_non_nullable
+              as ThemeMode,
+      fullScreenReader: fullScreenReader == freezed
+          ? _value.fullScreenReader
+          : fullScreenReader // ignore: cast_nullable_to_non_nullable
+              as bool,
+      readModel: readModel == freezed
+          ? _value.readModel
+          : readModel // ignore: cast_nullable_to_non_nullable
+              as ReadModel,
+      listModel: listModel == freezed
+          ? _value.listModel
+          : listModel // ignore: cast_nullable_to_non_nullable
+              as ListModel,
+      localeCode: localeCode == freezed
+          ? _value.localeCode
+          : localeCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      themeColorLabel: themeColorLabel == freezed
+          ? _value.themeColorLabel
+          : themeColorLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      supportDynamicColors: supportDynamicColors == freezed
+          ? _value.supportDynamicColors
+          : supportDynamicColors // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hideBottomNavigationOnScroll: hideBottomNavigationOnScroll == freezed
+          ? _value.hideBottomNavigationOnScroll
+          : hideBottomNavigationOnScroll // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -104,7 +160,15 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       bool dynamicColor,
       SearchSort searchSort,
       bool showTags,
-      TagLayoutOnCard tagLayoutOnCard});
+      TagLayoutOnItem tagLayoutOnItem,
+      ThemeMode themeMode,
+      bool fullScreenReader,
+      ReadModel readModel,
+      ListModel listModel,
+      String localeCode,
+      String themeColorLabel,
+      bool supportDynamicColors,
+      bool hideBottomNavigationOnScroll});
 }
 
 /// @nodoc
@@ -124,7 +188,15 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
     Object? dynamicColor = freezed,
     Object? searchSort = freezed,
     Object? showTags = freezed,
-    Object? tagLayoutOnCard = freezed,
+    Object? tagLayoutOnItem = freezed,
+    Object? themeMode = freezed,
+    Object? fullScreenReader = freezed,
+    Object? readModel = freezed,
+    Object? listModel = freezed,
+    Object? localeCode = freezed,
+    Object? themeColorLabel = freezed,
+    Object? supportDynamicColors = freezed,
+    Object? hideBottomNavigationOnScroll = freezed,
   }) {
     return _then(_$_Settings(
       isCoverBlur: isCoverBlur == freezed
@@ -147,24 +219,65 @@ class __$$_SettingsCopyWithImpl<$Res> extends _$SettingsCopyWithImpl<$Res>
           ? _value.showTags
           : showTags // ignore: cast_nullable_to_non_nullable
               as bool,
-      tagLayoutOnCard: tagLayoutOnCard == freezed
-          ? _value.tagLayoutOnCard
-          : tagLayoutOnCard // ignore: cast_nullable_to_non_nullable
-              as TagLayoutOnCard,
+      tagLayoutOnItem: tagLayoutOnItem == freezed
+          ? _value.tagLayoutOnItem
+          : tagLayoutOnItem // ignore: cast_nullable_to_non_nullable
+              as TagLayoutOnItem,
+      themeMode: themeMode == freezed
+          ? _value.themeMode
+          : themeMode // ignore: cast_nullable_to_non_nullable
+              as ThemeMode,
+      fullScreenReader: fullScreenReader == freezed
+          ? _value.fullScreenReader
+          : fullScreenReader // ignore: cast_nullable_to_non_nullable
+              as bool,
+      readModel: readModel == freezed
+          ? _value.readModel
+          : readModel // ignore: cast_nullable_to_non_nullable
+              as ReadModel,
+      listModel: listModel == freezed
+          ? _value.listModel
+          : listModel // ignore: cast_nullable_to_non_nullable
+              as ListModel,
+      localeCode: localeCode == freezed
+          ? _value.localeCode
+          : localeCode // ignore: cast_nullable_to_non_nullable
+              as String,
+      themeColorLabel: themeColorLabel == freezed
+          ? _value.themeColorLabel
+          : themeColorLabel // ignore: cast_nullable_to_non_nullable
+              as String,
+      supportDynamicColors: supportDynamicColors == freezed
+          ? _value.supportDynamicColors
+          : supportDynamicColors // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hideBottomNavigationOnScroll: hideBottomNavigationOnScroll == freezed
+          ? _value.hideBottomNavigationOnScroll
+          : hideBottomNavigationOnScroll // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_Settings implements _Settings {
+class _$_Settings extends _Settings {
   const _$_Settings(
       {this.isCoverBlur = false,
       this.isTagTranslate = false,
       this.dynamicColor = true,
       this.searchSort = SearchSort.recent,
       this.showTags = false,
-      this.tagLayoutOnCard = TagLayoutOnCard.wrap});
+      this.tagLayoutOnItem = TagLayoutOnItem.wrap,
+      this.themeMode = ThemeMode.system,
+      this.fullScreenReader = false,
+      this.readModel = ReadModel.leftToRight,
+      this.listModel = ListModel.waterfall,
+      this.localeCode = '',
+      this.themeColorLabel = ThemeConfig.dynamicThemeColorLabel,
+      this.supportDynamicColors = false,
+      this.hideBottomNavigationOnScroll = true})
+      : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsFromJson(json);
@@ -186,11 +299,35 @@ class _$_Settings implements _Settings {
   final bool showTags;
   @override
   @JsonKey()
-  final TagLayoutOnCard tagLayoutOnCard;
+  final TagLayoutOnItem tagLayoutOnItem;
+  @override
+  @JsonKey()
+  final ThemeMode themeMode;
+  @override
+  @JsonKey()
+  final bool fullScreenReader;
+  @override
+  @JsonKey()
+  final ReadModel readModel;
+  @override
+  @JsonKey()
+  final ListModel listModel;
+  @override
+  @JsonKey()
+  final String localeCode;
+  @override
+  @JsonKey()
+  final String themeColorLabel;
+  @override
+  @JsonKey()
+  final bool supportDynamicColors;
+  @override
+  @JsonKey()
+  final bool hideBottomNavigationOnScroll;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnCard: $tagLayoutOnCard)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll)';
   }
 
   @override
@@ -208,7 +345,21 @@ class _$_Settings implements _Settings {
                 .equals(other.searchSort, searchSort) &&
             const DeepCollectionEquality().equals(other.showTags, showTags) &&
             const DeepCollectionEquality()
-                .equals(other.tagLayoutOnCard, tagLayoutOnCard));
+                .equals(other.tagLayoutOnItem, tagLayoutOnItem) &&
+            const DeepCollectionEquality().equals(other.themeMode, themeMode) &&
+            const DeepCollectionEquality()
+                .equals(other.fullScreenReader, fullScreenReader) &&
+            const DeepCollectionEquality().equals(other.readModel, readModel) &&
+            const DeepCollectionEquality().equals(other.listModel, listModel) &&
+            const DeepCollectionEquality()
+                .equals(other.localeCode, localeCode) &&
+            const DeepCollectionEquality()
+                .equals(other.themeColorLabel, themeColorLabel) &&
+            const DeepCollectionEquality()
+                .equals(other.supportDynamicColors, supportDynamicColors) &&
+            const DeepCollectionEquality().equals(
+                other.hideBottomNavigationOnScroll,
+                hideBottomNavigationOnScroll));
   }
 
   @JsonKey(ignore: true)
@@ -220,7 +371,15 @@ class _$_Settings implements _Settings {
       const DeepCollectionEquality().hash(dynamicColor),
       const DeepCollectionEquality().hash(searchSort),
       const DeepCollectionEquality().hash(showTags),
-      const DeepCollectionEquality().hash(tagLayoutOnCard));
+      const DeepCollectionEquality().hash(tagLayoutOnItem),
+      const DeepCollectionEquality().hash(themeMode),
+      const DeepCollectionEquality().hash(fullScreenReader),
+      const DeepCollectionEquality().hash(readModel),
+      const DeepCollectionEquality().hash(listModel),
+      const DeepCollectionEquality().hash(localeCode),
+      const DeepCollectionEquality().hash(themeColorLabel),
+      const DeepCollectionEquality().hash(supportDynamicColors),
+      const DeepCollectionEquality().hash(hideBottomNavigationOnScroll));
 
   @JsonKey(ignore: true)
   @override
@@ -235,14 +394,23 @@ class _$_Settings implements _Settings {
   }
 }
 
-abstract class _Settings implements Settings {
+abstract class _Settings extends Settings {
   const factory _Settings(
       {final bool isCoverBlur,
       final bool isTagTranslate,
       final bool dynamicColor,
       final SearchSort searchSort,
       final bool showTags,
-      final TagLayoutOnCard tagLayoutOnCard}) = _$_Settings;
+      final TagLayoutOnItem tagLayoutOnItem,
+      final ThemeMode themeMode,
+      final bool fullScreenReader,
+      final ReadModel readModel,
+      final ListModel listModel,
+      final String localeCode,
+      final String themeColorLabel,
+      final bool supportDynamicColors,
+      final bool hideBottomNavigationOnScroll}) = _$_Settings;
+  const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
 
@@ -257,7 +425,23 @@ abstract class _Settings implements Settings {
   @override
   bool get showTags;
   @override
-  TagLayoutOnCard get tagLayoutOnCard;
+  TagLayoutOnItem get tagLayoutOnItem;
+  @override
+  ThemeMode get themeMode;
+  @override
+  bool get fullScreenReader;
+  @override
+  ReadModel get readModel;
+  @override
+  ListModel get listModel;
+  @override
+  String get localeCode;
+  @override
+  String get themeColorLabel;
+  @override
+  bool get supportDynamicColors;
+  @override
+  bool get hideBottomNavigationOnScroll;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

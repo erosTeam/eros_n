@@ -153,7 +153,7 @@ Future<GallerySet> getGalleryList({
   if (httpResponse.ok && httpResponse.data is GallerySet) {
     GallerySet data = httpResponse.data as GallerySet;
     if (statusCode == 304) {
-      logger.d('fromCache');
+      logger.v('fromCache');
       data = data.copyWith(fromCache: true);
     }
     return data;
@@ -217,7 +217,7 @@ Future<Gallery> getGalleryDetail({
     url,
     httpTransformer: HttpTransformerBuilder(
       (response) async {
-        logger.d('statusCode ${response.statusCode}');
+        logger.v('statusCode ${response.statusCode}');
         final gallery = await parseGalleryDetail(response.data as String);
         return DioHttpResponse<Gallery>.success(gallery);
       },

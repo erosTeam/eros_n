@@ -2,6 +2,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -74,9 +75,8 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
             : () async {},
         child: SizeCacheWidget(
           child: CustomScrollView(
-            // cacheExtent: 500,
             controller: scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             slivers: [
               SliverAppBar(
                 title: GestureDetector(
@@ -100,16 +100,20 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
                 ),
               ),
               if (isUserLoggedIn)
-                MultiSliver(
-                  children: [
-                    const FavoriteListView(),
-                    Consumer(builder: (context, ref, _) {
-                      final state = ref.watch(favoriteProvider);
-                      return EndIndicator(
-                        loadStatus: state.status,
-                      );
-                    }),
-                  ],
+                SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  sliver: MultiSliver(
+                    children: [
+                      const FavoriteListView(),
+                      Consumer(builder: (context, ref, _) {
+                        final state = ref.watch(favoriteProvider);
+                        return EndIndicator(
+                          loadStatus: state.status,
+                        );
+                      }),
+                    ],
+                  ),
                 )
               else
                 SliverFillRemaining(
@@ -148,11 +152,12 @@ class FavoriteListView extends HookConsumerWidget {
         ),
       );
     }
-    return GalleryWaterfallFlowView(
+    return GallerySliverList(
       gallerys: galleryList,
       lastComplete: () => ref.read(favoriteProvider.notifier).loadNextPage(),
       keepPosition: true,
       maxPage: state.maxPage,
+      tabTag: NHRoutes.favorite,
     );
   }
 }

@@ -50,6 +50,16 @@ class L10n {
     return Localizations.of<L10n>(context, L10n);
   }
 
+  /// `English`
+  String get language_name {
+    return Intl.message(
+      'English',
+      name: 'language_name',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Eros-N`
   String get app_title {
     return Intl.message(
@@ -290,6 +300,16 @@ class L10n {
     );
   }
 
+  /// `Resume`
+  String get resume {
+    return Intl.message(
+      'Resume',
+      name: 'resume',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Share`
   String get share {
     return Intl.message(
@@ -525,6 +545,356 @@ class L10n {
     return Intl.message(
       'Are you sure to clear all history?',
       name: 'clear_history_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Left to Right`
+  String get left_to_right {
+    return Intl.message(
+      'Left to Right',
+      name: 'left_to_right',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Right to Left`
+  String get right_to_left {
+    return Intl.message(
+      'Right to Left',
+      name: 'right_to_left',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Webtoon`
+  String get webtoon {
+    return Intl.message(
+      'Webtoon',
+      name: 'webtoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vertical`
+  String get vertical {
+    return Intl.message(
+      'Vertical',
+      name: 'vertical',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Curl Vertical`
+  String get curl_vertical {
+    return Intl.message(
+      'Curl Vertical',
+      name: 'curl_vertical',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Screen`
+  String get full_screen {
+    return Intl.message(
+      'Full Screen',
+      name: 'full_screen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display`
+  String get display {
+    return Intl.message(
+      'Display',
+      name: 'display',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme Mode`
+  String get theme_mode {
+    return Intl.message(
+      'Theme Mode',
+      name: 'theme_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get light {
+    return Intl.message(
+      'Light',
+      name: 'light',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark`
+  String get dark {
+    return Intl.message(
+      'Dark',
+      name: 'dark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System`
+  String get system {
+    return Intl.message(
+      'System',
+      name: 'system',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dynamic Color`
+  String get dynamic_color {
+    return Intl.message(
+      'Dynamic Color',
+      name: 'dynamic_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color will change according to the wallpaper`
+  String get dynamic_color_tip {
+    return Intl.message(
+      'Color will change according to the wallpaper',
+      name: 'dynamic_color_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme`
+  String get theme {
+    return Intl.message(
+      'Theme',
+      name: 'theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List Style`
+  String get list_style {
+    return Intl.message(
+      'List Style',
+      name: 'list_style',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag Translation`
+  String get tag_translation {
+    return Intl.message(
+      'Tag Translation',
+      name: 'tag_translation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `need download tag translation data, version: {version}`
+  String tag_translation_tip(Object version) {
+    return Intl.message(
+      'need download tag translation data, version: $version',
+      name: 'tag_translation_tip',
+      desc: '',
+      args: [version],
+    );
+  }
+
+  /// `Tags Data`
+  String get tags_data {
+    return Intl.message(
+      'Tags Data',
+      name: 'tags_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Tags`
+  String get show_tags {
+    return Intl.message(
+      'Show Tags',
+      name: 'show_tags',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show tags in list, need download tags data`
+  String get show_tags_tip {
+    return Intl.message(
+      'Show tags in list, need download tags data',
+      name: 'show_tags_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag Layout on Item`
+  String get tag_layout_on_item {
+    return Intl.message(
+      'Tag Layout on Item',
+      name: 'tag_layout_on_item',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wrap`
+  String get wrap {
+    return Intl.message(
+      'Wrap',
+      name: 'wrap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Single Line`
+  String get single_line {
+    return Intl.message(
+      'Single Line',
+      name: 'single_line',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cover Blur`
+  String get cover_blur {
+    return Intl.message(
+      'Cover Blur',
+      name: 'cover_blur',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List Model`
+  String get list_model {
+    return Intl.message(
+      'List Model',
+      name: 'list_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `List`
+  String get list {
+    return Intl.message(
+      'List',
+      name: 'list',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grid`
+  String get grid {
+    return Intl.message(
+      'Grid',
+      name: 'grid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waterfall Flow`
+  String get waterfall {
+    return Intl.message(
+      'Waterfall Flow',
+      name: 'waterfall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waterfall Flow (Compact)`
+  String get waterfall_compact {
+    return Intl.message(
+      'Waterfall Flow (Compact)',
+      name: 'waterfall_compact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advanced`
+  String get advanced {
+    return Intl.message(
+      'Advanced',
+      name: 'advanced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag`
+  String get tag {
+    return Intl.message(
+      'Tag',
+      name: 'tag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read Model`
+  String get read_model {
+    return Intl.message(
+      'Read Model',
+      name: 'read_model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `General`
+  String get general {
+    return Intl.message(
+      'General',
+      name: 'general',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get language {
+    return Intl.message(
+      'Language',
+      name: 'language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide Bottom Navigation on Scroll`
+  String get hide_bottom_navigation_on_scroll {
+    return Intl.message(
+      'Hide Bottom Navigation on Scroll',
+      name: 'hide_bottom_navigation_on_scroll',
       desc: '',
       args: [],
     );

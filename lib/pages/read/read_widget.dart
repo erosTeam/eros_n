@@ -1,6 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:auto_route/auto_route.dart';
+import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
@@ -40,23 +43,14 @@ class ViewTopBar extends HookConsumerWidget {
                         Icons.arrow_back,
                       ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (context.isTablet) SizedBox(),
-                        // 菜单页面入口
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.more_vert,
-                          ),
-                        ),
-                      ],
-                    ),
+                    if (context.isTablet)
+                      const ControllerButtonBar(
+                        mainAxisSize: MainAxisSize.min,
+                      ),
                   ],
                 ),
                 Consumer(builder: (context, ref, child) {
-                  final gid = ref.read(readProvider).gid;
+                  final gid = currentGalleryGid;
                   final currentItemIndex = ref.watch(galleryProvider(gid)
                       .select((val) => val.currentPageIndex));
                   final totalItem = ref.watch(galleryProvider(gid)
@@ -119,11 +113,12 @@ class BottomBarControlWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gid = ref.read(readProvider).gid;
+    final gid = currentGalleryGid;
     final currentItemIndex =
         ref.watch(galleryProvider(gid).select((val) => val.currentPageIndex));
     final totNum = ref
         .watch(galleryProvider(gid).select((val) => val.images.pages.length));
+    final readNotifier = ref.watch(readProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -136,19 +131,22 @@ class BottomBarControlWidget extends HookConsumerWidget {
             height: kSliderBarHeight,
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: ViewPageSlider(
-              max: totNum - 1.0,
-              sliderValue:
-                  math.min(currentItemIndex.roundToDouble(), totNum - 1.0),
-              onChangedEnd: (_) {},
+              key: ValueKey('ViewPageSlider_$currentItemIndex'),
+              max: math.max(0, totNum - 1.0),
+              initValue: math.max(
+                  0, math.min(currentItemIndex.roundToDouble(), totNum - 1.0)),
+              onChangedEnd: (val) {
+                logger.d('onChangedEnd ${val + 1}');
+                readNotifier.jumpToPage(val.round());
+              },
               onChanged: (_) {},
             ),
           ),
           // 按钮栏
           if (!context.isTablet)
-            ControllerButtonBar(
+            const ControllerButtonBar(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
-              // showLable: false,
             ),
         ],
       ),
@@ -161,14 +159,14 @@ class ViewPageSlider extends StatefulWidget {
   const ViewPageSlider({
     Key? key,
     required this.max,
-    required this.sliderValue,
+    required this.initValue,
     required this.onChangedEnd,
     required this.onChanged,
     this.reverse = false,
   }) : super(key: key);
 
   final double max;
-  final double sliderValue;
+  final double initValue;
   final ValueChanged<double> onChangedEnd;
   final ValueChanged<double> onChanged;
   final bool reverse;
@@ -183,19 +181,13 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
   @override
   void initState() {
     super.initState();
-    _value = widget.sliderValue;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _value = widget.sliderValue;
+    _value = widget.initValue;
   }
 
   @override
   Widget build(BuildContext context) {
     final minText = Text(
-      '${widget.sliderValue.round() + 1}',
+      '${widget.initValue.round() + 1}',
       style: Theme.of(context).textTheme.titleMedium,
     );
 
@@ -217,7 +209,9 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
             child: Slider(
               min: 0,
               max: widget.max,
-              value: widget.sliderValue,
+              value: _value,
+              label: '${_value.round() + 1}',
+              divisions: widget.max > 0 ? widget.max.round() : null,
               onChanged: (double newValue) {
                 setState(() {
                   _value = newValue;
@@ -245,12 +239,12 @@ class ControllerButtonBar extends StatelessWidget {
     Key? key,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.mainAxisSize = MainAxisSize.max,
-    this.showLable = true,
+    this.showLabel = true,
   }) : super(key: key);
 
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
-  final bool showLable;
+  final bool showLabel;
 
   static const buttonWidth = 44.0;
 
@@ -260,17 +254,158 @@ class ControllerButtonBar extends StatelessWidget {
       mainAxisAlignment: mainAxisAlignment,
       mainAxisSize: mainAxisSize,
       children: [
+        const ReadModelButton(),
+        // IconButton(
+        //   onPressed: () {},
+        //   icon: const Icon(Icons.share_outlined),
+        // ),
         IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.share_outlined),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.settings_outlined),
+          onPressed: () {
+            // showModalBottomSheet
+            // showMaterialModalBottomSheet(
+            //   context: context,
+            //   enableDrag: true,
+            //   builder: (context) => ReadSettings(),
+            // );
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                // title: const Text('Read Setting'),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                content: ReadSettings(),
+              ),
+            );
+            // showBottomSheet(
+            //   context: context,
+            //   builder: (context) => BottomSheet(
+            //     onClosing: () {},
+            //     enableDrag: false,
+            //     builder: (BuildContext context) {
+            //       return const ReadSettings();
+            //     },
+            //   ),
+            // );
+          },
+          icon: const Icon(Icons.settings_outlined),
         ),
       ],
     );
   }
+}
+
+class ReadModelButton extends HookConsumerWidget {
+  const ReadModelButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final itemMap = {
+      ReadModel.leftToRight: Text(L10n.of(context).left_to_right),
+      ReadModel.rightToLeft: Text(L10n.of(context).right_to_left),
+      ReadModel.webtoon: Text(L10n.of(context).webtoon),
+      ReadModel.curlVertical: Text(L10n.of(context).curl_vertical),
+      ReadModel.vertical: Text(L10n.of(context).vertical),
+    };
+
+    final readModelIconMap = <ReadModel, Widget>{
+      ReadModel.leftToRight: const Icon(Icons.send_to_mobile_outlined),
+      ReadModel.rightToLeft: Transform.rotate(
+          angle: math.pi, child: const Icon(Icons.send_to_mobile_outlined)),
+      ReadModel.webtoon: const Icon(Icons.system_update_outlined),
+      ReadModel.vertical: Transform.rotate(
+          angle: math.pi / 2, child: const Icon(Icons.send_to_mobile_outlined)),
+      ReadModel.curlVertical: const Icon(Icons.system_security_update_outlined),
+    };
+
+    final items = itemMap.entries.map((e) {
+      return PopupMenuItem<ReadModel>(
+        value: e.key,
+        child: e.value,
+      );
+    }).toList();
+
+    return PopupMenuButton<ReadModel>(
+      icon: Consumer(builder: (context, ref, child) {
+        final readModel =
+            ref.watch(settingsProvider.select((setting) => setting.readModel));
+        return readModelIconMap[readModel]!;
+      }),
+      color: Theme.of(context).colorScheme.surfaceVariant,
+      elevation: 2,
+      onSelected: (val) {
+        ref.read(settingsProvider.notifier).setReadModel(val);
+      },
+      // 28 or 80
+      offset: context.isTablet
+          ? const Offset(0, kToolbarHeight - 6)
+          : Offset(0, -(48.0 * itemMap.length) - 28),
+      itemBuilder: (context) => items,
+    );
+  }
+}
+
+class ReadSettings extends StatefulHookConsumerWidget {
+  const ReadSettings({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState<ReadSettings> createState() => _BottomSheetWidgetState();
+}
+
+class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+  late final TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Container(
+      height: 400,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Consumer(builder: (context, ref, child) {
+            final fullScreenReader = ref.watch(settingsProvider
+                .select((settings) => settings.fullScreenReader));
+            return ListTile(
+              title: Text(L10n.of(context).full_screen),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: fullScreenReader,
+                onChanged: (value) {
+                  ref
+                      .read(settingsProvider.notifier)
+                      .setFullScreenReader(value);
+                  if (value) {
+                    ref.read(readProvider.notifier).setFullscreen();
+                  } else {
+                    ref.read(readProvider.notifier).unFullscreen();
+                  }
+                },
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class ThumbnailListView extends HookConsumerWidget {
@@ -303,6 +438,9 @@ class ReadScaffold extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ref.read(readProvider.notifier).init(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(readProvider.notifier).resetBottomBarHeight(context);
+    });
     return Stack(
       children: [
         child,
@@ -363,7 +501,7 @@ class ImageGestureDetector extends HookConsumerWidget {
           } else if (globalPosition.dy > context.height * (1 - tbRatio)) {
             readNoti.toNext();
           } else {
-            readNoti.handOnTapCenter();
+            readNoti.handOnTapCenter(context);
           }
         }
 

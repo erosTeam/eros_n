@@ -16,6 +16,14 @@ class NhTag {
   @Index()
   @JsonKey(ignore: true)
   String? type;
+  @Index()
   String? name;
+  @Index()
+  String? translateName;
   int? count;
+
+  @override
+  String toString() {
+    return 'NhTag{id: $id, type: $type, name: $name, translateName: $translateName, count: $count}';
+  }
 }

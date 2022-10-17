@@ -20,9 +20,13 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(version) =>
+      "need download tag translation data, version: ${version}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
+        "advanced": MessageLookupByLibrary.simpleMessage("Advanced"),
         "always": MessageLookupByLibrary.simpleMessage("Always"),
         "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
@@ -32,11 +36,31 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_history_tip": MessageLookupByLibrary.simpleMessage(
             "Are you sure to clear all history?"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
+        "cover_blur": MessageLookupByLibrary.simpleMessage("Cover Blur"),
+        "curl_vertical": MessageLookupByLibrary.simpleMessage("Curl Vertical"),
+        "dark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "display": MessageLookupByLibrary.simpleMessage("Display"),
         "download": MessageLookupByLibrary.simpleMessage("Download"),
+        "dynamic_color": MessageLookupByLibrary.simpleMessage("Dynamic Color"),
+        "dynamic_color_tip": MessageLookupByLibrary.simpleMessage(
+            "Color will change according to the wallpaper"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+        "full_screen": MessageLookupByLibrary.simpleMessage("Full Screen"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+        "general": MessageLookupByLibrary.simpleMessage("General"),
+        "grid": MessageLookupByLibrary.simpleMessage("Grid"),
+        "hide_bottom_navigation_on_scroll":
+            MessageLookupByLibrary.simpleMessage(
+                "Hide Bottom Navigation on Scroll"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "language_name": MessageLookupByLibrary.simpleMessage("English"),
+        "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
+        "light": MessageLookupByLibrary.simpleMessage("Light"),
+        "list": MessageLookupByLibrary.simpleMessage("List"),
+        "list_model": MessageLookupByLibrary.simpleMessage("List Model"),
+        "list_style": MessageLookupByLibrary.simpleMessage("List Style"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "login_by_web": MessageLookupByLibrary.simpleMessage("Login by Web"),
         "login_invalid": MessageLookupByLibrary.simpleMessage("Login invalid"),
@@ -59,11 +83,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "popular_today": MessageLookupByLibrary.simpleMessage("Popular Today"),
         "popular_week": MessageLookupByLibrary.simpleMessage("Popular Week"),
         "read": MessageLookupByLibrary.simpleMessage("Read"),
+        "read_model": MessageLookupByLibrary.simpleMessage("Read Model"),
         "recent": MessageLookupByLibrary.simpleMessage("Recent"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
+        "resume": MessageLookupByLibrary.simpleMessage("Resume"),
+        "right_to_left": MessageLookupByLibrary.simpleMessage("Right to Left"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "show_tags": MessageLookupByLibrary.simpleMessage("Show Tags"),
+        "show_tags_tip": MessageLookupByLibrary.simpleMessage(
+            "Show tags in list, need download tags data"),
+        "single_line": MessageLookupByLibrary.simpleMessage("Single Line"),
+        "system": MessageLookupByLibrary.simpleMessage("System"),
+        "tag": MessageLookupByLibrary.simpleMessage("Tag"),
+        "tag_layout_on_item":
+            MessageLookupByLibrary.simpleMessage("Tag Layout on Item"),
+        "tag_translation":
+            MessageLookupByLibrary.simpleMessage("Tag Translation"),
+        "tag_translation_tip": m0,
         "tag_type_artists": MessageLookupByLibrary.simpleMessage("Artists"),
         "tag_type_categories":
             MessageLookupByLibrary.simpleMessage("Categories"),
@@ -73,9 +111,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "tag_type_languages": MessageLookupByLibrary.simpleMessage("Languages"),
         "tag_type_parodies": MessageLookupByLibrary.simpleMessage("Parodies"),
         "tag_type_tags": MessageLookupByLibrary.simpleMessage("Tags"),
+        "tags_data": MessageLookupByLibrary.simpleMessage("Tags Data"),
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+        "theme_mode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
         "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "vertical": MessageLookupByLibrary.simpleMessage("Vertical"),
+        "waterfall": MessageLookupByLibrary.simpleMessage("Waterfall Flow"),
+        "waterfall_compact":
+            MessageLookupByLibrary.simpleMessage("Waterfall Flow (Compact)"),
+        "webtoon": MessageLookupByLibrary.simpleMessage("Webtoon"),
+        "wrap": MessageLookupByLibrary.simpleMessage("Wrap"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday")
       };
 }

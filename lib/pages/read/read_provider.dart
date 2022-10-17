@@ -1,66 +1,142 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/network/request.dart';
+import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_state.dart';
 import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:preload_page_view/preload_page_view.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../utils/logger.dart';
 
 class ReadNotifier extends StateNotifier<ReadState> {
-  ReadNotifier(this.ref) : super(const ReadState());
+  ReadNotifier(super.state, this.ref)
+      : preloadPageController = PreloadPageController(
+            initialPage:
+                ref.read(galleryProvider(currentGalleryGid)).currentPageIndex);
   final Ref ref;
 
-  GalleryNotifier get galleryNotifier =>
-      ref.read(galleryProvider(state.gid).notifier);
+  final PreloadPageController preloadPageController;
 
-  void setGid(int? gid) {
-    state = state.copyWith(gid: gid);
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
+
+  bool get isPageView {
+    return ref.watch(settingsProvider.select((s) => s.readModelPageView));
   }
 
-  void toPrev() {}
+  int get currentPageIndex {
+    return ref.read(galleryProvider(currentGalleryGid)).currentPageIndex;
+  }
 
-  void toNext() {}
+  int get totPageCount {
+    return ref.read(galleryProvider(currentGalleryGid)).images.pages.length;
+  }
 
-  void tapLeft() {}
+  bool get isRightToLeft {
+    return ref.read(settingsProvider).readModel == ReadModel.rightToLeft;
+  }
 
-  void tapRight() {}
-
-  void handOnTapCenter() {
-    logger.d('handOnTapCenter');
-    if (state.showAppBar) {
-      hideAppBar();
+  void toPrev() {
+    if (isPageView) {
+      preloadPageController.previousPage(
+          duration: const Duration(milliseconds: 200), curve: Curves.ease);
     } else {
-      showAppBar();
+      itemScrollController.scrollTo(
+          index: max(0, currentPageIndex - 1),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.ease);
     }
   }
 
-  void init(BuildContext context) {
-    final bottomBarHeight = context.mediaQueryPadding.bottom +
-        (!context.isTablet ? kBottomBarHeight : 0) +
+  void toNext() {
+    if (isPageView) {
+      preloadPageController.nextPage(
+          duration: const Duration(milliseconds: 200), curve: Curves.ease);
+    } else {
+      itemScrollController.scrollTo(
+          index: min(totPageCount - 1, currentPageIndex + 1),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.ease);
+    }
+  }
+
+  void tapLeft() {
+    if (isRightToLeft) {
+      toNext();
+    } else {
+      toPrev();
+    }
+  }
+
+  void tapRight() {
+    if (isRightToLeft) {
+      toPrev();
+    } else {
+      toNext();
+    }
+  }
+
+  void jumpToPage(int index) {
+    if (isPageView) {
+      preloadPageController.jumpToPage(index);
+    } else {
+      itemScrollController.jumpTo(index: index);
+    }
+  }
+
+  Future<void> handOnTapCenter(BuildContext context) async {
+    logger.v('handOnTapCenter');
+
+    if (state.showAppBar) {
+      hideAppBar();
+    } else {
+      await showAppBar();
+      if (mounted) {
+        calculateBar(context);
+      }
+    }
+  }
+
+  //
+  void calculateBar(BuildContext context) {
+    final bottomBarHeight = (!context.isTablet ? kBottomBarHeight : 0) +
         kSliderBarHeight +
-        (state.showThumbList ? kThumbListViewHeight : 0);
+        (state.showThumbList ? kThumbListViewHeight : 0) +
+        context.mediaQueryPadding.bottom;
 
     final paddingTop = max(MediaQueryData.fromWindow(window).padding.top, context.mediaQueryPadding.top);
     _offsetTopHide = -kTopBarHeight - paddingTop;
     logger.d('init _offsetTopHide $_offsetTopHide');
 
     state = state.copyWith(
+      paddingBottom: context.mediaQueryPadding.bottom,
+      paddingTop: context.mediaQueryPadding.top,
       bottomBarHeight: bottomBarHeight,
-      context: context,
-      topBarOffset: _offsetTopHide,
-      bottomBarOffset: -bottomBarHeight,
     );
   }
 
-  late double _offsetTopHide;
+  void resetBottomBarHeight(BuildContext context) {
+    final bottomBarHeight = (!context.isTablet ? kBottomBarHeight : 0) +
+        kSliderBarHeight +
+        (state.showThumbList ? kThumbListViewHeight : 0) +
+        context.mediaQueryPadding.bottom;
+    if (state.bottomBarHeight != bottomBarHeight) {
+      state = state.copyWith(bottomBarHeight: bottomBarHeight);
+    }
+  }
 
-  void showAppBar() {
+  late double offsetTopHide;
+
+  Future<void> showAppBar() async {
+    await unFullscreen();
     state = state.copyWith(
       showAppBar: true,
       bottomBarOffset: 0,
@@ -71,12 +147,87 @@ class ReadNotifier extends StateNotifier<ReadState> {
   void hideAppBar() {
     state = state.copyWith(
       showAppBar: false,
-      bottomBarOffset: -(state.bottomBarHeight ?? 0),
-      topBarOffset: _offsetTopHide,
+      bottomBarOffset: -state.bottomBarHeight,
+      topBarOffset: offsetTopHide,
     );
+    setFullscreen();
+  }
+
+  void setFullscreen() {
+    final fullScreenReader =
+        ref.watch(settingsProvider.select((s) => s.fullScreenReader));
+    if (fullScreenReader) {
+      400.milliseconds.delay(() {
+        SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.immersiveSticky,
+        );
+      });
+    }
+  }
+
+  Future<void> unFullscreen() async {
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
+    );
+    await 100.milliseconds.delay();
+  }
+
+  bool conditionItemIndex = true;
+  int tempIndex = 0;
+  int minImageIndex = 0;
+  int maxImageIndex = 0;
+
+  /// 竖屏阅读下页码变化的监听
+  void handItemPositionsChange(
+    Iterable<ItemPosition> positions, {
+    ValueChanged<int>? onChanged,
+  }) {
+    int min;
+    int max;
+    if (positions.isNotEmpty) {
+      // Determine the first visible item by finding the item with the
+      // smallest trailing edge that is greater than 0.  i.e. the first
+      // item whose trailing edge in visible in the viewport.
+      min = positions
+          .where((ItemPosition position) => position.itemTrailingEdge > 0)
+          .reduce((ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+          .index;
+      // Determine the last visible item by finding the item with the
+      // greatest leading edge that is less than 1.  i.e. the last
+      // item whose leading edge in visible in the viewport.
+      max = positions
+          .where((ItemPosition position) => position.itemLeadingEdge < 1)
+          .reduce((ItemPosition max, ItemPosition position) =>
+              position.itemLeadingEdge > max.itemLeadingEdge ? position : max)
+          .index;
+
+      tempIndex = (min + max) ~/ 2;
+      // logger.d('max $max  min $min tempIndex ${vState.tempIndex}');
+
+      minImageIndex = min;
+      maxImageIndex = max;
+
+      onChanged?.call(tempIndex);
+    }
   }
 }
 
-final readProvider = StateNotifierProvider<ReadNotifier, ReadState>((ref) {
-  return ReadNotifier(ref);
+final readProvider =
+    StateNotifierProvider.autoDispose<ReadNotifier, ReadState>((ref) {
+  ref.onDispose(() {
+    logger.d('readProvider dispose');
+  });
+
+  const bottomBarHeight =
+      kBottomBarHeight + kSliderBarHeight + kThumbListViewHeight;
+
+  return ReadNotifier(
+      const ReadState(
+        showAppBar: false,
+        bottomBarOffset: -bottomBarHeight,
+        topBarOffset: -300,
+        bottomBarHeight: bottomBarHeight,
+      ),
+      ref);
 });

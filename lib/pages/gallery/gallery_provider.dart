@@ -1,10 +1,9 @@
-import 'package:eros_n/component/dialog/cf_dialog.dart';
+import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
-import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
 import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
@@ -19,10 +18,11 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   final Ref ref;
 
-  ReadNotifier get readNotifier => ref.read(readProvider.notifier);
+  // ReadNotifier get readNotifier => reader(readProvider.notifier);
 
   void initFromGallery(Gallery gallery) {
-    logger.d('${gallery.toString()} ');
+    logger.d('init ${gallery.toString()} ');
+
     state = state.copyWith(
       images: gallery.images,
       gid: gallery.gid,
@@ -31,12 +31,9 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     );
 
     loadData();
-    // add history
     500.milliseconds.delay(() {
       ref.read(historyProvider.notifier).addHistory(gallery);
     });
-
-    readNotifier.setGid(gallery.gid);
   }
 
   void setInitialPage(int page) {
@@ -45,7 +42,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
-    logger.d('loadData refresh $refresh  url: ${state.url}');
+    logger.v('loadData refresh $refresh  url: ${state.url}');
     if (state.images.pages.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)
@@ -67,21 +64,10 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         currentPageIndex: state.currentPageIndex,
       );
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-        if (!mounted) {
-          return;
-        }
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async => await loadData(refresh: refresh),
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     } finally {
       ref
-          .read(pageStateProvider(state.gid).notifier)
+          .watch(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.none));
     }
 
@@ -93,18 +79,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       );
       state = state.copyWith(comments: comments);
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-        if (!mounted) {
-          return;
-        }
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async => await loadData(refresh: refresh),
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     } finally {
       ref
           .read(pageStateProvider(state.gid).notifier)
@@ -153,16 +128,36 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 }
 
 final galleryProvider =
-    StateNotifierProvider.family<GalleryNotifier, Gallery, int?>(
+    StateNotifierProvider.autoDispose.family<GalleryNotifier, Gallery, int>(
   (ref, gid) {
+    logger.d('galleryProvider gid $gid');
+
+    ref.onDispose(() {
+      logger.d('galleryProvider $gid onDispose');
+    });
     return GalleryNotifier(Gallery(gid: gid), ref);
   },
 );
 
 final pageStateProvider =
-    StateProvider.family<GalleryViewState, int?>((ref, gid) {
+    StateProvider.family<GalleryViewState, int>((ref, gid) {
   return const GalleryViewState(pageStatus: PageStatus.none);
 });
+
+final _gidList = <int>[];
+void pushGalleryPage(int gid) {
+  _gidList.add(gid);
+  logger.d('pushGalleryPage $_gidList');
+}
+
+void popGalleryPage() {
+  _gidList.removeLast();
+  logger.d('popGalleryPage $_gidList');
+}
+
+int get currentGalleryGid {
+  return _gidList.lastOrNull ?? 0;
+}
 
 String getGalleryImageUrl(String imageKey, int index, String ext) {
   final subDomain = radomList(['', '3', '5', '7']);

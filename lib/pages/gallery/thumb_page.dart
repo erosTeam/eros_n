@@ -1,33 +1,51 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/component/models/image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
-import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ThumbPage extends HookConsumerWidget {
   const ThumbPage({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ScrollController scrollController = useScrollController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(L10n.of(context).thumbs),
       ),
+      floatingActionButton: ScrollingFab(
+        onPressed: () {
+          RouteUtil.goRead(ref);
+        },
+        scrollController: scrollController,
+        label: Consumer(builder: (context, ref, child) {
+          final currentPageIndex =
+              ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+          final label = currentPageIndex == 0
+              ? L10n.of(context).read
+              : '${L10n.of(context).resume} ${currentPageIndex + 1}';
+          return Text(label);
+        }),
+        icon: const Icon(Icons.play_arrow),
+      ),
       body: Scrollbar(
-        controller: ScrollController(),
+        controller: scrollController,
         child: CustomScrollView(
+          controller: scrollController,
           slivers: [
             ThumbsView(
               gid: gid,
@@ -42,10 +60,10 @@ class ThumbPage extends HookConsumerWidget {
 class ThumbsView extends HookConsumerWidget {
   const ThumbsView({
     Key? key,
-    this.gid,
+    required this.gid,
   }) : super(key: key);
 
-  final int? gid;
+  final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,8 +71,8 @@ class ThumbsView extends HookConsumerWidget {
     // final pages = ref.watch(galleryProvider(gid).select((g) => g.pages));
 
     final List<GalleryImage> pages =
-        ref.read(galleryProvider(gid)).images.pages;
-    final mediaId = ref.read(galleryProvider(gid)).mediaId;
+        ref.watch(galleryProvider(gid).select((g) => g.images.pages));
+    final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
     final pageStatus =
         ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
 
@@ -78,11 +96,7 @@ class ThumbsView extends HookConsumerWidget {
               final thumb = pages[index];
               return GestureDetector(
                 onTap: () {
-                  ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-                  ref.read(readProvider.notifier).init(context);
-
-                  ///
-                  context.router.push(ReadRoute(gid: gid));
+                  RouteUtil.goRead(ref, index: index);
                 },
                 child: Column(
                   children: [

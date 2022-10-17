@@ -1,7 +1,5 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
@@ -33,7 +31,11 @@ class _MorePageState extends ConsumerState<MorePage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(L10n.of(context).more),
+        title: Row(
+          children: [
+            Text(L10n.of(context).more),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         controller: scrollController,
@@ -97,22 +99,34 @@ class _MorePageState extends ConsumerState<MorePage>
                 }
               }),
             ),
-            const Divider(
-              thickness: 1.0,
-              height: 1.0,
-            ),
+            const Divider(height: 1.0),
             ListTile(
               leading: const Icon(Icons.download_outlined),
               iconColor: Theme.of(context).colorScheme.primary,
               title: Text(L10n.of(context).download),
               onTap: () {
-                Navigator.pushNamed(context, '/download');
+                // Navigator.pushNamed(context, '/download');
+                // showDialog
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text(L10n.of(context).download),
+                        content: Text(
+                            'Feature in development, currently unavailable'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text(L10n.of(context).ok),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    });
               },
             ),
-            const Divider(
-              thickness: 1.0,
-              height: 1.0,
-            ),
+            const Divider(height: 1.0),
             ListTile(
               leading: const Icon(Icons.settings_outlined),
               iconColor: Theme.of(context).colorScheme.primary,

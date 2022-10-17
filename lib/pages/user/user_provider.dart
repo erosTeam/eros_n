@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/component/dialog/cf_dialog.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class UserNotifier extends StateNotifier<User> {
@@ -22,20 +20,7 @@ class UserNotifier extends StateNotifier<User> {
     try {
       csrfToken = await getLoginToken() ?? '';
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-        if (!mounted) {
-          return false;
-        }
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async {
-            csrfToken = await getLoginToken() ?? '';
-          },
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     }
 
     logger.d('csrfToken $csrfToken');
@@ -60,18 +45,7 @@ class UserNotifier extends StateNotifier<User> {
     try {
       userFromIndex = await getInfoFromIndex(refresh: true);
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async {
-            userFromIndex = await getInfoFromIndex(refresh: true);
-          },
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     }
     // log userFromIndex
     logger.d('userFromIndex $userFromIndex');
@@ -91,19 +65,7 @@ class UserNotifier extends StateNotifier<User> {
       userFromProfile = await getInfoFromUserPage(
           url: userFromIndex.userUrl ?? '', refresh: true);
     } on HttpException catch (e) {
-      if (e.code == 403 || e.code == 503) {
-        logger.e('code ${e.code}');
-
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async {
-            userFromProfile = await getInfoFromUserPage(
-                url: userFromIndex.userUrl ?? '', refresh: true);
-          },
-        );
-      } else {
-        rethrow;
-      }
+      rethrow;
     }
 
     state = state.copyWith(
@@ -114,6 +76,7 @@ class UserNotifier extends StateNotifier<User> {
 
   void logout() {
     Global.cookieJar.deleteAll();
+    CookieManager.instance().deleteAllCookies();
     state = const User();
     hiveHelper.setUser(state);
   }

@@ -27,3 +27,19 @@ extension ExtString on String {
       .replaceAllMapped(RegExp(r'"count":\s*"(\d+)",'),
           (match) => '"count":${match.group(1)},');
 }
+
+extension IterableExtensions<E> on Iterable<E> {
+  Iterable<List<E>> chunked(int chunkSize) sync* {
+    if (length <= 0) {
+      yield [];
+      return;
+    }
+    int skip = 0;
+    while (skip < length) {
+      final chunk = this.skip(skip).take(chunkSize);
+      yield chunk.toList(growable: false);
+      skip += chunkSize;
+      if (chunk.length < chunkSize) return;
+    }
+  }
+}

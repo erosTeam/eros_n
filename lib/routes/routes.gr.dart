@@ -24,19 +24,21 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     IndexRoute.name: (routeData) {
+      final args = routeData.argsAs<IndexRouteArgs>(
+          orElse: () => const IndexRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const IndexPage(),
+        child: IndexPage(key: args.key),
       );
     },
     GalleryRoute.name: (routeData) {
-      final args = routeData.argsAs<GalleryRouteArgs>(
-          orElse: () => const GalleryRouteArgs());
+      final args = routeData.argsAs<GalleryRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: GalleryPage(
           key: args.key,
           gid: args.gid,
+          heroTag: args.heroTag,
         ),
       );
     },
@@ -47,7 +49,7 @@ class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ReadPage(
           key: args.key,
-          gid: args.gid,
+          index: args.index,
         ),
       );
     },
@@ -61,6 +63,24 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: const AppearanceSettingPage(),
+      );
+    },
+    GeneralSettingRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const GeneralSettingPage(),
+      );
+    },
+    ReadSettingRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const ReadSettingPage(),
+      );
+    },
+    AdvancedSettingRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const AdvancedSettingPage(),
       );
     },
     LoginRoute.name: (routeData) {
@@ -107,8 +127,7 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     ThumbRoute.name: (routeData) {
-      final args = routeData.argsAs<ThumbRouteArgs>(
-          orElse: () => const ThumbRouteArgs());
+      final args = routeData.argsAs<ThumbRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: ThumbPage(
@@ -124,6 +143,16 @@ class _$AppRouter extends RootStackRouter {
         child: CommentsPage(
           key: args.key,
           gid: args.gid,
+        ),
+      );
+    },
+    SearchRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SearchPage(
+          key: args.key,
+          query: args.query,
         ),
       );
     },
@@ -156,6 +185,18 @@ class _$AppRouter extends RootStackRouter {
           path: '/appearanceSetting',
         ),
         RouteConfig(
+          GeneralSettingRoute.name,
+          path: '/generalSetting',
+        ),
+        RouteConfig(
+          ReadSettingRoute.name,
+          path: '/readSetting',
+        ),
+        RouteConfig(
+          AdvancedSettingRoute.name,
+          path: '/advancedSetting',
+        ),
+        RouteConfig(
           LoginRoute.name,
           path: '/login',
         ),
@@ -165,7 +206,7 @@ class _$AppRouter extends RootStackRouter {
         ),
         RouteConfig(
           NhWebViewRoute.name,
-          path: '/webview',
+          path: '/webView',
         ),
         RouteConfig(
           AboutRoute.name,
@@ -182,6 +223,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           CommentsRoute.name,
           path: '/comments',
+        ),
+        RouteConfig(
+          SearchRoute.name,
+          path: '/search',
         ),
       ];
 }
@@ -200,14 +245,26 @@ class SplashRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [IndexPage]
-class IndexRoute extends PageRouteInfo<void> {
-  const IndexRoute()
+class IndexRoute extends PageRouteInfo<IndexRouteArgs> {
+  IndexRoute({Key? key})
       : super(
           IndexRoute.name,
           path: '/home',
+          args: IndexRouteArgs(key: key),
         );
 
   static const String name = 'IndexRoute';
+}
+
+class IndexRouteArgs {
+  const IndexRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'IndexRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -215,13 +272,15 @@ class IndexRoute extends PageRouteInfo<void> {
 class GalleryRoute extends PageRouteInfo<GalleryRouteArgs> {
   GalleryRoute({
     Key? key,
-    int? gid,
+    required int gid,
+    String? heroTag,
   }) : super(
           GalleryRoute.name,
           path: '/gallery',
           args: GalleryRouteArgs(
             key: key,
             gid: gid,
+            heroTag: heroTag,
           ),
         );
 
@@ -231,16 +290,19 @@ class GalleryRoute extends PageRouteInfo<GalleryRouteArgs> {
 class GalleryRouteArgs {
   const GalleryRouteArgs({
     this.key,
-    this.gid,
+    required this.gid,
+    this.heroTag,
   });
 
   final Key? key;
 
-  final int? gid;
+  final int gid;
+
+  final String? heroTag;
 
   @override
   String toString() {
-    return 'GalleryRouteArgs{key: $key, gid: $gid}';
+    return 'GalleryRouteArgs{key: $key, gid: $gid, heroTag: $heroTag}';
   }
 }
 
@@ -249,13 +311,13 @@ class GalleryRouteArgs {
 class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
   ReadRoute({
     Key? key,
-    int? gid,
+    int? index,
   }) : super(
           ReadRoute.name,
           path: '/read',
           args: ReadRouteArgs(
             key: key,
-            gid: gid,
+            index: index,
           ),
         );
 
@@ -265,16 +327,16 @@ class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
 class ReadRouteArgs {
   const ReadRouteArgs({
     this.key,
-    this.gid,
+    this.index,
   });
 
   final Key? key;
 
-  final int? gid;
+  final int? index;
 
   @override
   String toString() {
-    return 'ReadRouteArgs{key: $key, gid: $gid}';
+    return 'ReadRouteArgs{key: $key, index: $index}';
   }
 }
 
@@ -300,6 +362,42 @@ class AppearanceSettingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AppearanceSettingRoute';
+}
+
+/// generated route for
+/// [GeneralSettingPage]
+class GeneralSettingRoute extends PageRouteInfo<void> {
+  const GeneralSettingRoute()
+      : super(
+          GeneralSettingRoute.name,
+          path: '/generalSetting',
+        );
+
+  static const String name = 'GeneralSettingRoute';
+}
+
+/// generated route for
+/// [ReadSettingPage]
+class ReadSettingRoute extends PageRouteInfo<void> {
+  const ReadSettingRoute()
+      : super(
+          ReadSettingRoute.name,
+          path: '/readSetting',
+        );
+
+  static const String name = 'ReadSettingRoute';
+}
+
+/// generated route for
+/// [AdvancedSettingPage]
+class AdvancedSettingRoute extends PageRouteInfo<void> {
+  const AdvancedSettingRoute()
+      : super(
+          AdvancedSettingRoute.name,
+          path: '/advancedSetting',
+        );
+
+  static const String name = 'AdvancedSettingRoute';
 }
 
 /// generated route for
@@ -335,7 +433,7 @@ class NhWebViewRoute extends PageRouteInfo<NhWebViewRouteArgs> {
     String? title,
   }) : super(
           NhWebViewRoute.name,
-          path: '/webview',
+          path: '/webView',
           args: NhWebViewRouteArgs(
             key: key,
             initialUrl: initialUrl,
@@ -431,7 +529,7 @@ class LicenseRouteArgs {
 class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
   ThumbRoute({
     Key? key,
-    int? gid,
+    required int gid,
   }) : super(
           ThumbRoute.name,
           path: '/thumb',
@@ -447,12 +545,12 @@ class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
 class ThumbRouteArgs {
   const ThumbRouteArgs({
     this.key,
-    this.gid,
+    required this.gid,
   });
 
   final Key? key;
 
-  final int? gid;
+  final int gid;
 
   @override
   String toString() {
@@ -465,7 +563,7 @@ class ThumbRouteArgs {
 class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
   CommentsRoute({
     Key? key,
-    required int? gid,
+    required int gid,
   }) : super(
           CommentsRoute.name,
           path: '/comments',
@@ -486,10 +584,44 @@ class CommentsRouteArgs {
 
   final Key? key;
 
-  final int? gid;
+  final int gid;
 
   @override
   String toString() {
     return 'CommentsRouteArgs{key: $key, gid: $gid}';
+  }
+}
+
+/// generated route for
+/// [SearchPage]
+class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
+  SearchRoute({
+    Key? key,
+    required String query,
+  }) : super(
+          SearchRoute.name,
+          path: '/search',
+          args: SearchRouteArgs(
+            key: key,
+            query: query,
+          ),
+        );
+
+  static const String name = 'SearchRoute';
+}
+
+class SearchRouteArgs {
+  const SearchRouteArgs({
+    this.key,
+    required this.query,
+  });
+
+  final Key? key;
+
+  final String query;
+
+  @override
+  String toString() {
+    return 'SearchRouteArgs{key: $key, query: $query}';
   }
 }

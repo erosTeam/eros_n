@@ -1,9 +1,7 @@
 import 'package:eros_n/common/extension.dart';
-import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/routes/routes.dart';
@@ -61,6 +59,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
 
   @override
   Widget build(BuildContext context) {
+    logger.d('build HistoryPage');
     super.build(context);
     return Scaffold(
       body: Scrollbar(
@@ -70,7 +69,11 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverAppBar(
-              title: Text(L10n.of(context).history),
+              title: Row(
+                children: [
+                  Text(L10n.of(context).history),
+                ],
+              ),
               floating: true,
               pinned: true,
               bottom: const PreferredSize(
@@ -119,44 +122,48 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
               builder: (context, ref, child) {
                 final historys = ref.watch(historyGallerysProvider);
                 final historysGroupByDate = groupByDate(historys);
-                return MultiSliver(
-                    children: historysGroupByDate.entries.map(
-                  (e) {
-                    final DateTime date = e.key;
-                    // if date is today
-                    final String dateStr = date.isToday()
-                        ? L10n.of(context).today
-                        : date.isYesterday()
-                            ? L10n.of(context).yesterday
-                            : date.toLocal().toString().split(' ')[0];
-                    final historysInDate = e.value;
-                    return MultiSliver(
-                      pushPinnedChildren: true,
-                      children: [
-                        SliverPinnedHeader(
-                          child: Container(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            child: Text(
-                              dateStr,
-                              style: Theme.of(context).textTheme.subtitle1,
+                return SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  sliver: MultiSliver(
+                      children: historysGroupByDate.entries.map(
+                    (e) {
+                      final DateTime date = e.key;
+                      // if date is today
+                      final String dateStr = date.isToday()
+                          ? L10n.of(context).today
+                          : date.isYesterday()
+                              ? L10n.of(context).yesterday
+                              : date.toLocal().toString().split(' ')[0];
+                      final historysInDate = e.value;
+                      return MultiSliver(
+                        pushPinnedChildren: true,
+                        children: [
+                          SliverPinnedHeader(
+                            child: Container(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Text(
+                                dateStr,
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
                             ),
                           ),
-                        ),
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final history = historysInDate[index];
-                              return HistoryItem(history: history);
-                            },
-                            childCount: historysInDate.length,
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final history = historysInDate[index];
+                                return HistoryItem(history: history);
+                              },
+                              childCount: historysInDate.length,
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ).toList());
+                        ],
+                      );
+                    },
+                  ).toList()),
+                );
               },
             ),
           ],
@@ -201,10 +208,8 @@ class HistoryItem extends HookConsumerWidget {
             ),
           ),
         );
-        ref
-            .read(galleryProvider(history.gid).notifier)
-            .initFromGallery(gallery);
-        erosRouter.push(GalleryRoute(gid: gallery.gid));
+
+        RouteUtil.goGallery(ref, gallery);
       },
       child: Container(
         height: 84,

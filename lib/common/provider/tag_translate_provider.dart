@@ -2,12 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
+import 'package:eros_n/utils/eros_utils.dart';
+import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
+import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as path;
@@ -37,7 +42,9 @@ const nhTagUrlCategoryMap = {
 };
 
 class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
-  TagTranslateNotifier() : super(hiveHelper.getTagTranslateInfo());
+  TagTranslateNotifier(this.ref) : super(hiveHelper.getTagTranslateInfo());
+
+  final Ref ref;
 
   /// 检查更新
   Future<void> getUpdateInfo({bool force = false}) async {
@@ -125,12 +132,34 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
   }
 
   Future<void> updateNhTags() async {
+    await transAndPutNhTag(NHConst.internalNhTags);
     for (final category in nhTagUrlCategoryMap.keys) {
       final nhTags = await _fetchNhTags(category);
       if (nhTags.isEmpty) {
         continue;
       }
-      await isarHelper.putAllNhTag(nhTags);
+
+      await transAndPutNhTag(nhTags);
+    }
+
+    ref.refresh(allNhTagProvider);
+  }
+
+  Future<void> transAndPutNhTag(List<NhTag> tags) async {
+    final List<Future<NhTag>> tagFutureList = tags.map((tag) async {
+      final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
+          tag.name ?? '',
+          namespace: getTagNamespace(tag.type ?? ''));
+      return tag..translateName = translated?.translateName;
+    }).toList();
+
+    // 每500分块
+    final List<List<Future<NhTag>>> chunked =
+        tagFutureList.chunked(500).toList();
+
+    for (final chunk in chunked) {
+      final List<NhTag> tags = await Future.wait(chunk);
+      await isarHelper.putAllNhTag(tags);
     }
   }
 
@@ -160,5 +189,11 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
 
 final tagTranslateProvider =
     StateNotifierProvider<TagTranslateNotifier, TagTranslateInfo>((ref) {
-  return TagTranslateNotifier();
+  return TagTranslateNotifier(ref);
+});
+
+final allNhTagProvider = FutureProvider<List<NhTag>>((ref) async {
+  await 500.milliseconds.delay();
+  final nhTags = await isarHelper.getAllNhTag();
+  return nhTags;
 });

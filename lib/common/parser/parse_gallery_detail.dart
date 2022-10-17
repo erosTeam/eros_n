@@ -23,7 +23,7 @@ Future<Gallery> parseGalleryDetail(String html) async {
   final titleElms = document.querySelectorAll('#info > .title');
   final title = titleElms.firstOrNull?.text ?? '';
   final jpnTitle = titleElms.lastOrNull?.text ?? '';
-  logger.d('title: $title, jpnTitle: $jpnTitle');
+  logger.v('title: $title, jpnTitle: $jpnTitle');
 
   const selectorButtons = '#info > div.buttons';
   final buttonsElms = document.querySelector(selectorButtons);
