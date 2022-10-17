@@ -58,9 +58,15 @@ class FrontNotifier extends StateNotifier<FrontState> {
     bool prev = false,
     bool first = false,
   }) async {
-    if (state.isLoading || state.isLoadMore || state.isGetToken) {
+    if (state.isLoading) {
       return false;
     }
+
+    if (next && state.isLoadMore) {
+      return false;
+    }
+
+    logger.d('page: $page, next: $next, prev: $prev, first: $first');
 
     final rCookies =
         await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
@@ -81,6 +87,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
 
     final toPage =
         page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
+    logger.d('toPage: $toPage');
 
     try {
       final gallerySet = await getGalleryList(
@@ -109,39 +116,18 @@ class FrontNotifier extends StateNotifier<FrontState> {
       );
 
       return gallerySet.fromCache ?? false;
-    } on HttpException catch (e) {
-      logger.d('state.status ${state.status}');
-      if (showWebViewDialogOnFail &&
-          (e.code == 403 || e.code == 503) &&
-          state.status != LoadStatus.getToken) {
-        logger.e('code ${e.code}');
-        // if (!mounted) {
-        //   return false;
-        // }
-        state = state.copyWith(status: LoadStatus.getToken);
-        await showInAppWebViewDialog(
-          statusCode: e.code,
-          onComplete: () async => await getGalleryData(
-            refresh: refresh,
-            showWebViewDialogOnFail: false,
-            next: next,
-            prev: prev,
-          ),
-        );
-        state = state.copyWith(status: LoadStatus.none);
-      } else {
-        state = state.copyWith(status: LoadStatus.error);
-        rethrow;
-      }
+    } on Exception catch (e) {
+      state = state.copyWith(status: LoadStatus.error);
+      rethrow;
     }
-    return false;
   }
 
   Future<void> loadData() async {
     final fromCache = await getGalleryData(first: true);
     if (fromCache) {
+      logger.d('fromCache');
       await 1.seconds.delay();
-      await getGalleryData(refresh: true);
+      await reloadData();
     }
   }
 
@@ -150,6 +136,7 @@ class FrontNotifier extends StateNotifier<FrontState> {
   }
 
   Future<void> loadNextPage() async {
+    // await 100.milliseconds.delay();
     await getGalleryData(next: true);
   }
 
