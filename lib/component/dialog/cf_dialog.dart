@@ -15,6 +15,7 @@ const kDialogTag = 'InAppWebViewDialog';
 bool _canShowDialog = true;
 
 // 使用请求nh主页，获取cookie更新到cookieJar
+@Deprecated('已弃用')
 Future<void> showInAppWebViewDialog({
   int? statusCode,
   FutureOr Function()? onComplete,

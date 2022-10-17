@@ -1,6 +1,7 @@
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {

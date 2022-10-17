@@ -79,6 +79,12 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.0
   flutter_typeahead: ^4.1.1
 
+  bitsdojo_window: ^0.1.5
+  fluentui_system_icons: ^1.1.183
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
 
 dev_dependencies:
   # flutter pub run apn_json2model
