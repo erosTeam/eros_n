@@ -5,6 +5,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class UserNotifier extends StateNotifier<User> {
@@ -75,6 +76,7 @@ class UserNotifier extends StateNotifier<User> {
 
   void logout() {
     Global.cookieJar.deleteAll();
+    CookieManager.instance().deleteAllCookies();
     state = const User();
     hiveHelper.setUser(state);
   }

@@ -84,9 +84,9 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.0),
-                  Colors.black.withOpacity(0.0),
-                  Colors.black.withOpacity(0.0),
+                  Colors.transparent,
+                  Colors.transparent,
+                  Colors.transparent,
                   Colors.black.withOpacity(0.5),
                 ],
               ).createShader(rect);

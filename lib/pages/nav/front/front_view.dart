@@ -78,7 +78,8 @@ class _FrontPageState extends ConsumerState<FrontPage>
         child: SizeCacheWidget(
           child: CustomScrollView(
             controller: scrollController,
-            cacheExtent: 500,
+            // cacheExtent: 500,
+            physics: const ClampingScrollPhysics(),
             slivers: [
               const SliverAppBar(
                 floating: true,

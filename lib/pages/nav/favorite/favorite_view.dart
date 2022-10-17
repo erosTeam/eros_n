@@ -76,7 +76,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
         child: SizeCacheWidget(
           child: CustomScrollView(
             controller: scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             slivers: [
               SliverAppBar(
                 title: GestureDetector(

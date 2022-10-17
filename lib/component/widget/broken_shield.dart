@@ -120,8 +120,10 @@ class _BrokenShieldState extends State<BrokenShield> {
     logger.d('cookies: \n${cookies.join('\n')}\nuserAgent: \n$userAgent');
     await Global.setUserAgent(userAgent);
     await Global.setCookies(NHConst.baseUrl, cookies);
-    completer?.complete(true);
-    entry?.remove();
+    if (completer != null && !completer!.isCompleted) {
+      completer!.complete(true);
+      entry?.remove();
+    }
   }
 
   Widget webView() {
@@ -176,10 +178,12 @@ class _BrokenShieldMobileWebViewState extends State<BrokenShieldMobileWebView> {
     super.initState();
   }
 
-  void initWebView() async {
+  Future<void> initWebView() async {
     cookieManager = CookieManager.instance();
     await cookieManager.deleteAllCookies();
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     setState(() {
       initOk = true;
     });
@@ -196,11 +200,11 @@ class _BrokenShieldMobileWebViewState extends State<BrokenShieldMobileWebView> {
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           return NavigationActionPolicy.ALLOW;
         },
-        onLoadStop: (InAppWebViewController controller, Uri? uri) async {
-          if (uri == null) {
-            return;
-          }
-          final cookies = await cookieManager.getCookies(url: uri);
+        onTitleChanged: (controller, title) async {
+          final cookies =
+              await cookieManager.getCookies(url: Uri.parse(NHConst.baseUrl));
+          logger.d('onTitleChanged title: $title cookies: $cookies');
+
           if (cookies.length >= 2 &&
               cookies.any((element) => element.name == 'csrftoken')) {
             final ioCookies =
@@ -209,6 +213,36 @@ class _BrokenShieldMobileWebViewState extends State<BrokenShieldMobileWebView> {
                 source: 'navigator.userAgent');
             widget.callback(ioCookies, ua as String);
           }
+        },
+        // onLoadStart: (controller, uri) async {
+        //   if (uri == null) {
+        //     return;
+        //   }
+        //   final cookies = await cookieManager.getCookies(url: uri);
+        //   logger.d('onLoadStart cookies: $cookies');
+        //   if (cookies.length >= 2 &&
+        //       cookies.any((element) => element.name == 'csrftoken')) {
+        //     final ioCookies =
+        //         cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
+        //     final ua = await controller.evaluateJavascript(
+        //         source: 'navigator.userAgent');
+        //     widget.callback(ioCookies, ua as String);
+        //   }
+        // },
+        onLoadStop: (InAppWebViewController controller, Uri? uri) async {
+          if (uri == null) {
+            return;
+          }
+          // final cookies = await cookieManager.getCookies(url: uri);
+          // logger.d('onLoadStop cookies: $cookies');
+          // if (cookies.length >= 2 &&
+          //     cookies.any((element) => element.name == 'csrftoken')) {
+          //   final ioCookies =
+          //       cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
+          //   final ua = await controller.evaluateJavascript(
+          //       source: 'navigator.userAgent');
+          //   widget.callback(ioCookies, ua as String);
+          // }
         },
       );
     }

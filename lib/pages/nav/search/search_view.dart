@@ -177,6 +177,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
           child: CustomScrollView(
             // cacheExtent: 500,
             controller: scrollController,
+            physics: const ClampingScrollPhysics(),
             slivers: [
               SliverAppBar(
                 // leadingWidth: 36,

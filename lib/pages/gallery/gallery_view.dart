@@ -126,7 +126,7 @@ class GalleryPage extends HookConsumerWidget {
         onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
         edgeOffset: MediaQuery.of(context).padding.top,
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           controller: scrollController,
           slivers: [
             SliverToBoxAdapter(
