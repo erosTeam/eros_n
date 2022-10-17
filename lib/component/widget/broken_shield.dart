@@ -14,10 +14,22 @@ import '../../network/app_dio/dio_http_cli.dart';
 class BrokenShield extends StatefulWidget {
   const BrokenShield({super.key, required this.child});
 
-  final Widget child;
+  final Widget? child;
 
   @override
   State<BrokenShield> createState() => _BrokenShieldState();
+
+  static TransitionBuilder init({
+    TransitionBuilder? builder,
+  }) {
+    return (BuildContext context, Widget? child) {
+      if (builder == null) {
+        return BrokenShield(child: child);
+      } else {
+        return builder(context, BrokenShield(child: child));
+      }
+    };
+  }
 }
 
 class _BrokenShieldState extends State<BrokenShield> {
@@ -97,8 +109,11 @@ class _BrokenShieldState extends State<BrokenShield> {
                                 future: Global.cookieJar.loadForRequest(
                                     Uri.parse(NHConst.baseHost)),
                                 builder: (context, snapshot) {
-                                  final Cookie? csefTokenCookie = snapshot.data?.firstWhereOrNull((e) => e.name == 'csrftoken');
-                                  return Text( 'cseftoken: ${csefTokenCookie?.value ?? '-'}',
+                                  final Cookie? csrfTokenCookie = snapshot.data
+                                      ?.firstWhereOrNull(
+                                          (e) => e.name == 'csrftoken');
+                                  return Text(
+                                    'csrftoken: ${csrfTokenCookie?.value ?? '-'}',
                                     style: const TextStyle(fontSize: 9),
                                   );
                                 }),
@@ -160,7 +175,7 @@ class _BrokenShieldState extends State<BrokenShield> {
   Widget webView() {
     return GetCookieWebView(
       callback: injectionCookieAndUA,
-      url: NHConst.baseHost,
+      url: NHConst.baseUrl,
     );
   }
 
@@ -172,7 +187,7 @@ class _BrokenShieldState extends State<BrokenShield> {
           key: overlay,
           initialEntries: [
             OverlayEntry(
-              builder: (BuildContext context) => widget.child,
+              builder: (BuildContext context) => widget.child ?? Container(),
             ),
           ],
         ));

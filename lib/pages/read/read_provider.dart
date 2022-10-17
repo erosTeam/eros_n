@@ -112,9 +112,9 @@ class ReadNotifier extends StateNotifier<ReadState> {
         (state.showThumbList ? kThumbListViewHeight : 0) +
         context.mediaQueryPadding.bottom;
 
-    final paddingTop = max(MediaQueryData.fromWindow(window).padding.top, context.mediaQueryPadding.top);
-    _offsetTopHide = -kTopBarHeight - paddingTop;
-    logger.d('init _offsetTopHide $_offsetTopHide');
+    offsetTopHide = -kTopBarHeight -
+        max(MediaQueryData.fromWindow(window).padding.top,
+            context.mediaQueryPadding.top);
 
     state = state.copyWith(
       paddingBottom: context.mediaQueryPadding.bottom,

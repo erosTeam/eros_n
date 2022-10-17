@@ -58,29 +58,45 @@ class _MobileWebViewState extends State<MobileWebView> {
     if (initOk) {
       return InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(NHConst.baseUrl),
+          url: Uri.parse(widget.url),
         ),
         initialOptions: inAppWebViewOptions,
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           return NavigationActionPolicy.ALLOW;
         },
-        onLoadStop: (InAppWebViewController controller, Uri? uri) async {
-          if (uri == null) {
-            return;
-          }
-          final cookies = await cookieManager.getCookies(url: uri);
+        onTitleChanged: (controller, title) async {
+          final cookies =
+              await cookieManager.getCookies(url: Uri.parse(NHConst.baseUrl));
+
           final ioCookies =
               cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
           final ua = await controller.evaluateJavascript(
               source: 'navigator.userAgent');
-          if (widget.callback != null) {
-            widget.callback!(WebViewCookieInfo(
-                url: uri.toString(),
-                cookies: ioCookies,
-                userAgent: ua as String,
-                completed: true));
-          }
+
+          widget.callback?.call(WebViewCookieInfo(
+              // url: uri.toString(),
+              url: NHConst.baseUrl,
+              cookies: ioCookies,
+              userAgent: ua as String,
+              completed: true));
         },
+        // onLoadStop: (InAppWebViewController controller, Uri? uri) async {
+        //   if (uri == null) {
+        //     return;
+        //   }
+        //   final cookies = await cookieManager.getCookies(url: uri);
+        //   final ioCookies =
+        //       cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
+        //   final ua = await controller.evaluateJavascript(
+        //       source: 'navigator.userAgent');
+        //   if (widget.callback != null) {
+        //     widget.callback!(WebViewCookieInfo(
+        //         url: uri.toString(),
+        //         cookies: ioCookies,
+        //         userAgent: ua as String,
+        //         completed: true));
+        //   }
+        // },
       );
     }
     return Container();
@@ -193,7 +209,7 @@ class _WindowsWebViewState extends State<WindowsWebView> {
 }
 
 class GetCookieWebView extends StatelessWidget {
-  const GetCookieWebView({ required this.url, this.callback, super.key});
+  const GetCookieWebView({required this.url, this.callback, super.key});
 
   final String url;
   final WebViewCallback? callback;
