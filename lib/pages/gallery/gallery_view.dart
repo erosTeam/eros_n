@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/common/provider/palette_generator.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
@@ -14,11 +15,13 @@ import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:nil/nil.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share/share.dart';
@@ -26,8 +29,87 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 import 'gallery_provider.dart';
 
-class GalleryPage extends HookConsumerWidget {
+class GalleryPage extends StatefulHookConsumerWidget {
   const GalleryPage({
+    Key? key,
+    required this.gid,
+    this.heroTag,
+  }) : super(key: key);
+
+  final int gid;
+  final String? heroTag;
+
+  @override
+  ConsumerState<GalleryPage> createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends ConsumerState<GalleryPage> {
+  late ColorScheme colorScheme;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    colorScheme = Theme.of(context).colorScheme;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final useGalleryTint =
+        ref.watch(settingsProvider.select((s) => s.useGalleryTint));
+    final thumbUrl =
+        ref.watch(galleryProvider(widget.gid).select((g) => g.thumbUrl));
+    if (useGalleryTint) {
+      final paletteGenerator = ref.watch(paletteGeneratorProvider(thumbUrl));
+      paletteGenerator.whenData((palette) {
+        // logger.d(palette);
+        final seedColor = palette.vibrantColor?.color ??
+            palette.lightVibrantColor?.color ??
+            palette.dominantColor?.color;
+        if (seedColor == null) {
+          return;
+        }
+        final hslColor = HSLColor.fromColor(seedColor);
+        final hsvColor = HSVColor.fromColor(seedColor);
+        logger.d('$seedColor, $hslColor, $hsvColor');
+        if (hsvColor.hue < 0.1) {
+          return;
+        }
+        final lightColorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor.harmonizeWith(Theme.of(context).primaryColor),
+        );
+
+        final darkColorScheme = ColorScheme.fromSeed(
+          seedColor: seedColor.harmonizeWith(Theme.of(context).primaryColor),
+          brightness: Brightness.dark,
+        );
+
+        colorScheme = Theme.of(context).brightness == Brightness.light
+            ? lightColorScheme
+            : darkColorScheme;
+
+        setState(() {});
+      });
+    }
+
+    return AnimatedTheme(
+      data: ThemeData.from(
+        colorScheme: colorScheme,
+        useMaterial3: true,
+      ),
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOut,
+      child: GalleryPageBody(gid: widget.gid, heroTag: widget.heroTag),
+    );
+  }
+}
+
+class GalleryPageBody extends HookConsumerWidget {
+  const GalleryPageBody({
     super.key,
     required this.gid,
     this.heroTag,
@@ -39,9 +121,6 @@ class GalleryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gallery = ref.read(galleryProvider(gid));
-    // 避免 currentPageIndex 变化时，重新构建 GalleryPage
-    // final Gallery gallery = ref.watch(galleryProvider(gid)
-    //     .select((gallery) => gallery.copyWith(currentPageIndex: 0)));
     logger.v('build gallery $gid ${gallery.title}');
 
     final ScrollController scrollController = useScrollController();
@@ -109,7 +188,7 @@ class GalleryPage extends HookConsumerWidget {
       ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
-          RouteUtil.goRead(ref);
+          RouteUtil.goRead(context, ref);
         },
         scrollController: scrollController,
         label: Consumer(builder: (context, ref, child) {
@@ -220,7 +299,7 @@ class GalleryPage extends HookConsumerWidget {
                   ref.watch(galleryProvider(gid)).title.japaneseTitle;
               return SelectableText(
                 japaneseTitle ?? '',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
                 minLines: 1,
                 maxLines: 2,
@@ -237,7 +316,7 @@ class GalleryPage extends HookConsumerWidget {
             children: [
               Text(
                 '#${gallery.gid}',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),
               Row(
@@ -254,7 +333,7 @@ class GalleryPage extends HookConsumerWidget {
                         ref.watch(galleryProvider(gid)).numFavorites;
                     return Text(
                       '${numFavorites ?? '··'}',
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.bodySmall,
                       textAlign: TextAlign.start,
                     );
                   }),
@@ -268,7 +347,7 @@ class GalleryPage extends HookConsumerWidget {
                     : '··';
                 return Text(
                   uploadedDateStr,
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                   textAlign: TextAlign.start,
                 );
               }),
@@ -369,6 +448,7 @@ class DetailView extends HookConsumerWidget {
         bottom: false,
         sliver: MultiSliver(children: [
           TagsView(gid: gid),
+          if (kDebugMode) PaletteGenerator(gid: gid),
           const SizedBox(height: 8),
           ThumbListView(gid: gid),
           const SizedBox(height: 8),
@@ -379,6 +459,174 @@ class DetailView extends HookConsumerWidget {
         ]),
       );
     }
+  }
+}
+
+class PaletteGenerator extends HookConsumerWidget {
+  const PaletteGenerator({
+    Key? key,
+    required this.gid,
+  }) : super(key: key);
+  final int gid;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final thumbUrl = ref.watch(galleryProvider(gid).select((g) => g.thumbUrl));
+    final paletteGenerator = ref.watch(paletteGeneratorProvider(thumbUrl));
+    return MultiSliver(children: [
+      ListTile(
+        title: const Text('PaletteGenerator (debug)'),
+        subtitle: SizedBox(
+          height: 100,
+          child: paletteGenerator.when(
+              data: (pg) => Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: pg.dominantColor?.color,
+                              ),
+                            ),
+                            Text(
+                              'dominant',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              '${pg.dominantColor?.population}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // vibrantColor
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: pg.vibrantColor?.color,
+                              ),
+                            ),
+                            Text(
+                              'vibrant',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              '${pg.vibrantColor?.population}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // lightVibrantColor
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: pg.lightVibrantColor?.color,
+                              ),
+                            ),
+                            Text(
+                              'lightV',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              '${pg.lightVibrantColor?.population}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // darkVibrantColor
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: pg.darkVibrantColor?.color,
+                              ),
+                            ),
+                            Text(
+                              'darkV',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              '${pg.darkVibrantColor?.population}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // mutedColor
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: pg.mutedColor?.color,
+                              ),
+                            ),
+                            Text(
+                              'muted',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              '${pg.mutedColor?.population}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // lightMutedColor
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: pg.lightMutedColor?.color,
+                              ),
+                            ),
+                            Text(
+                              'lightM',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              '${pg.lightMutedColor?.population}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // darkMutedColor
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: pg.darkMutedColor?.color,
+                              ),
+                            ),
+                            Text(
+                              'darkM',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              '${pg.darkMutedColor?.population}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+              error: (_, __) => nil,
+              loading: () => nil),
+        ),
+      ),
+    ]);
   }
 }
 
@@ -521,10 +769,21 @@ class ThumbListView extends HookConsumerWidget {
           title: Text(L10n.of(context).thumbs),
           trailing: Text(
             '${L10n.of(context).more} ${pages.length}',
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           onTap: () {
-            erosRouter.push(ThumbRoute(gid: gid));
+            erosRouter.push(ThumbRoute(
+              gid: gid,
+              colorScheme: Theme.of(context).colorScheme,
+            ));
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => ThumbPage(gid: gid),
+            //   ),
+            // );
           },
         ),
         SizedBox(
@@ -539,7 +798,7 @@ class ThumbListView extends HookConsumerWidget {
               return Consumer(
                   child: GestureDetector(
                     onTap: () async {
-                      RouteUtil.goRead(ref, index: index);
+                      RouteUtil.goRead(context, ref, index: index);
                     },
                     child: Center(
                       child: AspectRatio(
@@ -685,10 +944,16 @@ class CommentsListView extends HookConsumerWidget {
           title: Text(L10n.of(context).comments),
           trailing: Text(
             '${L10n.of(context).more} ${comments.length}',
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           onTap: () {
-            erosRouter.push(CommentsRoute(gid: gid));
+            erosRouter.push(CommentsRoute(
+              gid: gid,
+              colorScheme: Theme.of(context).colorScheme,
+            ));
           },
         ),
         if (comments.isEmpty)

@@ -777,6 +777,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.0-dev.10"
+  nil:
+    dependency: "direct main"
+    description:
+      name: nil
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.1"
   octo_image:
     dependency: "direct main"
     description:
@@ -833,6 +840,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.0"
+  palette_generator:
+    dependency: "direct main"
+    description:
+      name: palette_generator
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.3+2"
   path:
     dependency: "direct main"
     description:

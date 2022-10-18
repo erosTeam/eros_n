@@ -31,6 +31,40 @@ class _$AppRouter extends RootStackRouter {
         child: IndexPage(key: args.key),
       );
     },
+    FrontRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const FrontPage(),
+      );
+    },
+    FavoriteRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const FavoritePage(),
+      );
+    },
+    HistoryRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const HistoryPage(),
+      );
+    },
+    SearchRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SearchPage(
+          key: args.key,
+          query: args.query,
+        ),
+      );
+    },
+    MoreRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const MorePage(),
+      );
+    },
     GalleryRoute.name: (routeData) {
       final args = routeData.argsAs<GalleryRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -50,6 +84,29 @@ class _$AppRouter extends RootStackRouter {
         child: ReadPage(
           key: args.key,
           index: args.index,
+          colorScheme: args.colorScheme,
+        ),
+      );
+    },
+    ThumbRoute.name: (routeData) {
+      final args = routeData.argsAs<ThumbRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ThumbPage(
+          key: args.key,
+          gid: args.gid,
+          colorScheme: args.colorScheme,
+        ),
+      );
+    },
+    CommentsRoute.name: (routeData) {
+      final args = routeData.argsAs<CommentsRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: CommentsPage(
+          key: args.key,
+          gid: args.gid,
+          colorScheme: args.colorScheme,
         ),
       );
     },
@@ -126,36 +183,6 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ThumbRoute.name: (routeData) {
-      final args = routeData.argsAs<ThumbRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ThumbPage(
-          key: args.key,
-          gid: args.gid,
-        ),
-      );
-    },
-    CommentsRoute.name: (routeData) {
-      final args = routeData.argsAs<CommentsRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: CommentsPage(
-          key: args.key,
-          gid: args.gid,
-        ),
-      );
-    },
-    SearchRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: SearchPage(
-          key: args.key,
-          query: args.query,
-        ),
-      );
-    },
   };
 
   @override
@@ -166,67 +193,83 @@ class _$AppRouter extends RootStackRouter {
         ),
         RouteConfig(
           IndexRoute.name,
-          path: '/home',
+          path: 'home',
         ),
         RouteConfig(
-          GalleryRoute.name,
-          path: '/gallery',
+          FrontRoute.name,
+          path: 'front',
         ),
         RouteConfig(
-          ReadRoute.name,
-          path: '/read',
+          FavoriteRoute.name,
+          path: 'favorite',
         ),
         RouteConfig(
-          SettingsRoute.name,
-          path: '/settings',
-        ),
-        RouteConfig(
-          AppearanceSettingRoute.name,
-          path: '/appearanceSetting',
-        ),
-        RouteConfig(
-          GeneralSettingRoute.name,
-          path: '/generalSetting',
-        ),
-        RouteConfig(
-          ReadSettingRoute.name,
-          path: '/readSetting',
-        ),
-        RouteConfig(
-          AdvancedSettingRoute.name,
-          path: '/advancedSetting',
-        ),
-        RouteConfig(
-          LoginRoute.name,
-          path: '/login',
-        ),
-        RouteConfig(
-          WebLoginRoute.name,
-          path: '/webLogin',
-        ),
-        RouteConfig(
-          NhWebViewRoute.name,
-          path: '/webView',
-        ),
-        RouteConfig(
-          AboutRoute.name,
-          path: '/about',
-        ),
-        RouteConfig(
-          LicenseRoute.name,
-          path: '/license',
-        ),
-        RouteConfig(
-          ThumbRoute.name,
-          path: '/thumb',
-        ),
-        RouteConfig(
-          CommentsRoute.name,
-          path: '/comments',
+          HistoryRoute.name,
+          path: 'history',
         ),
         RouteConfig(
           SearchRoute.name,
-          path: '/search',
+          path: 'search',
+        ),
+        RouteConfig(
+          MoreRoute.name,
+          path: 'more',
+        ),
+        RouteConfig(
+          GalleryRoute.name,
+          path: 'gallery',
+        ),
+        RouteConfig(
+          ReadRoute.name,
+          path: 'read',
+        ),
+        RouteConfig(
+          ThumbRoute.name,
+          path: 'thumb',
+        ),
+        RouteConfig(
+          CommentsRoute.name,
+          path: 'comments',
+        ),
+        RouteConfig(
+          SettingsRoute.name,
+          path: 'settings',
+        ),
+        RouteConfig(
+          AppearanceSettingRoute.name,
+          path: 'appearanceSetting',
+        ),
+        RouteConfig(
+          GeneralSettingRoute.name,
+          path: 'generalSetting',
+        ),
+        RouteConfig(
+          ReadSettingRoute.name,
+          path: 'readSetting',
+        ),
+        RouteConfig(
+          AdvancedSettingRoute.name,
+          path: 'advancedSetting',
+        ),
+        RouteConfig(
+          LoginRoute.name,
+          path: 'login',
+        ),
+        RouteConfig(
+          WebLoginRoute.name,
+          path: 'webLogin',
+        ),
+        RouteConfig(
+          NhWebViewRoute.name,
+          path: 'webView',
+        ),
+        RouteConfig(
+          AboutRoute.name,
+          path: 'about',
+        ),
+        RouteConfig(
+          LicenseRoute.name,
+          path: 'license',
         ),
       ];
 }
@@ -249,7 +292,7 @@ class IndexRoute extends PageRouteInfo<IndexRouteArgs> {
   IndexRoute({Key? key})
       : super(
           IndexRoute.name,
-          path: '/home',
+          path: 'home',
           args: IndexRouteArgs(key: key),
         );
 
@@ -268,6 +311,88 @@ class IndexRouteArgs {
 }
 
 /// generated route for
+/// [FrontPage]
+class FrontRoute extends PageRouteInfo<void> {
+  const FrontRoute()
+      : super(
+          FrontRoute.name,
+          path: 'front',
+        );
+
+  static const String name = 'FrontRoute';
+}
+
+/// generated route for
+/// [FavoritePage]
+class FavoriteRoute extends PageRouteInfo<void> {
+  const FavoriteRoute()
+      : super(
+          FavoriteRoute.name,
+          path: 'favorite',
+        );
+
+  static const String name = 'FavoriteRoute';
+}
+
+/// generated route for
+/// [HistoryPage]
+class HistoryRoute extends PageRouteInfo<void> {
+  const HistoryRoute()
+      : super(
+          HistoryRoute.name,
+          path: 'history',
+        );
+
+  static const String name = 'HistoryRoute';
+}
+
+/// generated route for
+/// [SearchPage]
+class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
+  SearchRoute({
+    Key? key,
+    required String query,
+  }) : super(
+          SearchRoute.name,
+          path: 'search',
+          args: SearchRouteArgs(
+            key: key,
+            query: query,
+          ),
+        );
+
+  static const String name = 'SearchRoute';
+}
+
+class SearchRouteArgs {
+  const SearchRouteArgs({
+    this.key,
+    required this.query,
+  });
+
+  final Key? key;
+
+  final String query;
+
+  @override
+  String toString() {
+    return 'SearchRouteArgs{key: $key, query: $query}';
+  }
+}
+
+/// generated route for
+/// [MorePage]
+class MoreRoute extends PageRouteInfo<void> {
+  const MoreRoute()
+      : super(
+          MoreRoute.name,
+          path: 'more',
+        );
+
+  static const String name = 'MoreRoute';
+}
+
+/// generated route for
 /// [GalleryPage]
 class GalleryRoute extends PageRouteInfo<GalleryRouteArgs> {
   GalleryRoute({
@@ -276,7 +401,7 @@ class GalleryRoute extends PageRouteInfo<GalleryRouteArgs> {
     String? heroTag,
   }) : super(
           GalleryRoute.name,
-          path: '/gallery',
+          path: 'gallery',
           args: GalleryRouteArgs(
             key: key,
             gid: gid,
@@ -312,12 +437,14 @@ class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
   ReadRoute({
     Key? key,
     int? index,
+    ColorScheme? colorScheme,
   }) : super(
           ReadRoute.name,
-          path: '/read',
+          path: 'read',
           args: ReadRouteArgs(
             key: key,
             index: index,
+            colorScheme: colorScheme,
           ),
         );
 
@@ -328,15 +455,96 @@ class ReadRouteArgs {
   const ReadRouteArgs({
     this.key,
     this.index,
+    this.colorScheme,
   });
 
   final Key? key;
 
   final int? index;
 
+  final ColorScheme? colorScheme;
+
   @override
   String toString() {
-    return 'ReadRouteArgs{key: $key, index: $index}';
+    return 'ReadRouteArgs{key: $key, index: $index, colorScheme: $colorScheme}';
+  }
+}
+
+/// generated route for
+/// [ThumbPage]
+class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
+  ThumbRoute({
+    Key? key,
+    required int gid,
+    ColorScheme? colorScheme,
+  }) : super(
+          ThumbRoute.name,
+          path: 'thumb',
+          args: ThumbRouteArgs(
+            key: key,
+            gid: gid,
+            colorScheme: colorScheme,
+          ),
+        );
+
+  static const String name = 'ThumbRoute';
+}
+
+class ThumbRouteArgs {
+  const ThumbRouteArgs({
+    this.key,
+    required this.gid,
+    this.colorScheme,
+  });
+
+  final Key? key;
+
+  final int gid;
+
+  final ColorScheme? colorScheme;
+
+  @override
+  String toString() {
+    return 'ThumbRouteArgs{key: $key, gid: $gid, colorScheme: $colorScheme}';
+  }
+}
+
+/// generated route for
+/// [CommentsPage]
+class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
+  CommentsRoute({
+    Key? key,
+    required int gid,
+    ColorScheme? colorScheme,
+  }) : super(
+          CommentsRoute.name,
+          path: 'comments',
+          args: CommentsRouteArgs(
+            key: key,
+            gid: gid,
+            colorScheme: colorScheme,
+          ),
+        );
+
+  static const String name = 'CommentsRoute';
+}
+
+class CommentsRouteArgs {
+  const CommentsRouteArgs({
+    this.key,
+    required this.gid,
+    this.colorScheme,
+  });
+
+  final Key? key;
+
+  final int gid;
+
+  final ColorScheme? colorScheme;
+
+  @override
+  String toString() {
+    return 'CommentsRouteArgs{key: $key, gid: $gid, colorScheme: $colorScheme}';
   }
 }
 
@@ -346,7 +554,7 @@ class SettingsRoute extends PageRouteInfo<void> {
   const SettingsRoute()
       : super(
           SettingsRoute.name,
-          path: '/settings',
+          path: 'settings',
         );
 
   static const String name = 'SettingsRoute';
@@ -358,7 +566,7 @@ class AppearanceSettingRoute extends PageRouteInfo<void> {
   const AppearanceSettingRoute()
       : super(
           AppearanceSettingRoute.name,
-          path: '/appearanceSetting',
+          path: 'appearanceSetting',
         );
 
   static const String name = 'AppearanceSettingRoute';
@@ -370,7 +578,7 @@ class GeneralSettingRoute extends PageRouteInfo<void> {
   const GeneralSettingRoute()
       : super(
           GeneralSettingRoute.name,
-          path: '/generalSetting',
+          path: 'generalSetting',
         );
 
   static const String name = 'GeneralSettingRoute';
@@ -382,7 +590,7 @@ class ReadSettingRoute extends PageRouteInfo<void> {
   const ReadSettingRoute()
       : super(
           ReadSettingRoute.name,
-          path: '/readSetting',
+          path: 'readSetting',
         );
 
   static const String name = 'ReadSettingRoute';
@@ -394,7 +602,7 @@ class AdvancedSettingRoute extends PageRouteInfo<void> {
   const AdvancedSettingRoute()
       : super(
           AdvancedSettingRoute.name,
-          path: '/advancedSetting',
+          path: 'advancedSetting',
         );
 
   static const String name = 'AdvancedSettingRoute';
@@ -406,7 +614,7 @@ class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute()
       : super(
           LoginRoute.name,
-          path: '/login',
+          path: 'login',
         );
 
   static const String name = 'LoginRoute';
@@ -418,7 +626,7 @@ class WebLoginRoute extends PageRouteInfo<void> {
   const WebLoginRoute()
       : super(
           WebLoginRoute.name,
-          path: '/webLogin',
+          path: 'webLogin',
         );
 
   static const String name = 'WebLoginRoute';
@@ -433,7 +641,7 @@ class NhWebViewRoute extends PageRouteInfo<NhWebViewRouteArgs> {
     String? title,
   }) : super(
           NhWebViewRoute.name,
-          path: '/webView',
+          path: 'webView',
           args: NhWebViewRouteArgs(
             key: key,
             initialUrl: initialUrl,
@@ -469,7 +677,7 @@ class AboutRoute extends PageRouteInfo<void> {
   const AboutRoute()
       : super(
           AboutRoute.name,
-          path: '/about',
+          path: 'about',
         );
 
   static const String name = 'AboutRoute';
@@ -486,7 +694,7 @@ class LicenseRoute extends PageRouteInfo<LicenseRouteArgs> {
     String? applicationLegalese,
   }) : super(
           LicenseRoute.name,
-          path: '/license',
+          path: 'license',
           args: LicenseRouteArgs(
             key: key,
             applicationName: applicationName,
@@ -521,107 +729,5 @@ class LicenseRouteArgs {
   @override
   String toString() {
     return 'LicenseRouteArgs{key: $key, applicationName: $applicationName, applicationVersion: $applicationVersion, applicationIcon: $applicationIcon, applicationLegalese: $applicationLegalese}';
-  }
-}
-
-/// generated route for
-/// [ThumbPage]
-class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
-  ThumbRoute({
-    Key? key,
-    required int gid,
-  }) : super(
-          ThumbRoute.name,
-          path: '/thumb',
-          args: ThumbRouteArgs(
-            key: key,
-            gid: gid,
-          ),
-        );
-
-  static const String name = 'ThumbRoute';
-}
-
-class ThumbRouteArgs {
-  const ThumbRouteArgs({
-    this.key,
-    required this.gid,
-  });
-
-  final Key? key;
-
-  final int gid;
-
-  @override
-  String toString() {
-    return 'ThumbRouteArgs{key: $key, gid: $gid}';
-  }
-}
-
-/// generated route for
-/// [CommentsPage]
-class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
-  CommentsRoute({
-    Key? key,
-    required int gid,
-  }) : super(
-          CommentsRoute.name,
-          path: '/comments',
-          args: CommentsRouteArgs(
-            key: key,
-            gid: gid,
-          ),
-        );
-
-  static const String name = 'CommentsRoute';
-}
-
-class CommentsRouteArgs {
-  const CommentsRouteArgs({
-    this.key,
-    required this.gid,
-  });
-
-  final Key? key;
-
-  final int gid;
-
-  @override
-  String toString() {
-    return 'CommentsRouteArgs{key: $key, gid: $gid}';
-  }
-}
-
-/// generated route for
-/// [SearchPage]
-class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
-  SearchRoute({
-    Key? key,
-    required String query,
-  }) : super(
-          SearchRoute.name,
-          path: '/search',
-          args: SearchRouteArgs(
-            key: key,
-            query: query,
-          ),
-        );
-
-  static const String name = 'SearchRoute';
-}
-
-class SearchRouteArgs {
-  const SearchRouteArgs({
-    this.key,
-    required this.query,
-  });
-
-  final Key? key;
-
-  final String query;
-
-  @override
-  String toString() {
-    return 'SearchRouteArgs{key: $key, query: $query}';
   }
 }

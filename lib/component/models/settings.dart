@@ -24,6 +24,7 @@ class Settings with _$Settings {
     @Default(ThemeConfig.dynamicThemeColorLabel) String themeColorLabel,
     @Default(false) bool supportDynamicColors,
     @Default(true) bool hideBottomNavigationOnScroll,
+    @Default(true) bool useGalleryTint,
   }) = _Settings;
 
   const Settings._();

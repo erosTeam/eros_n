@@ -36,7 +36,8 @@ mixin _$ListViewState {
 abstract class $ListViewStateCopyWith<$Res> {
   factory $ListViewStateCopyWith(
           ListViewState value, $Res Function(ListViewState) then) =
-      _$ListViewStateCopyWithImpl<$Res>;
+      _$ListViewStateCopyWithImpl<$Res, ListViewState>;
+  @useResult
   $Res call(
       {LoadStatus status,
       int curPage,
@@ -46,44 +47,46 @@ abstract class $ListViewStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ListViewStateCopyWithImpl<$Res>
+class _$ListViewStateCopyWithImpl<$Res, $Val extends ListViewState>
     implements $ListViewStateCopyWith<$Res> {
   _$ListViewStateCopyWithImpl(this._value, this._then);
 
-  final ListViewState _value;
   // ignore: unused_field
-  final $Res Function(ListViewState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = freezed,
-    Object? curPage = freezed,
-    Object? maxPage = freezed,
-    Object? floatingAppBar = freezed,
+    Object? status = null,
+    Object? curPage = null,
+    Object? maxPage = null,
+    Object? floatingAppBar = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
-      status: status == freezed
+      status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as LoadStatus,
-      curPage: curPage == freezed
+      curPage: null == curPage
           ? _value.curPage
           : curPage // ignore: cast_nullable_to_non_nullable
               as int,
-      maxPage: maxPage == freezed
+      maxPage: null == maxPage
           ? _value.maxPage
           : maxPage // ignore: cast_nullable_to_non_nullable
               as int,
-      floatingAppBar: floatingAppBar == freezed
+      floatingAppBar: null == floatingAppBar
           ? _value.floatingAppBar
           : floatingAppBar // ignore: cast_nullable_to_non_nullable
               as bool,
-      errorMessage: errorMessage == freezed
+      errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -94,6 +97,7 @@ abstract class _$$_ListViewStateCopyWith<$Res>
           _$_ListViewState value, $Res Function(_$_ListViewState) then) =
       __$$_ListViewStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {LoadStatus status,
       int curPage,
@@ -104,41 +108,39 @@ abstract class _$$_ListViewStateCopyWith<$Res>
 
 /// @nodoc
 class __$$_ListViewStateCopyWithImpl<$Res>
-    extends _$ListViewStateCopyWithImpl<$Res>
+    extends _$ListViewStateCopyWithImpl<$Res, _$_ListViewState>
     implements _$$_ListViewStateCopyWith<$Res> {
   __$$_ListViewStateCopyWithImpl(
       _$_ListViewState _value, $Res Function(_$_ListViewState) _then)
-      : super(_value, (v) => _then(v as _$_ListViewState));
+      : super(_value, _then);
 
-  @override
-  _$_ListViewState get _value => super._value as _$_ListViewState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = freezed,
-    Object? curPage = freezed,
-    Object? maxPage = freezed,
-    Object? floatingAppBar = freezed,
+    Object? status = null,
+    Object? curPage = null,
+    Object? maxPage = null,
+    Object? floatingAppBar = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$_ListViewState(
-      status: status == freezed
+      status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as LoadStatus,
-      curPage: curPage == freezed
+      curPage: null == curPage
           ? _value.curPage
           : curPage // ignore: cast_nullable_to_non_nullable
               as int,
-      maxPage: maxPage == freezed
+      maxPage: null == maxPage
           ? _value.maxPage
           : maxPage // ignore: cast_nullable_to_non_nullable
               as int,
-      floatingAppBar: floatingAppBar == freezed
+      floatingAppBar: null == floatingAppBar
           ? _value.floatingAppBar
           : floatingAppBar // ignore: cast_nullable_to_non_nullable
               as bool,
-      errorMessage: errorMessage == freezed
+      errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -186,27 +188,23 @@ class _$_ListViewState extends _ListViewState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ListViewState &&
-            const DeepCollectionEquality().equals(other.status, status) &&
-            const DeepCollectionEquality().equals(other.curPage, curPage) &&
-            const DeepCollectionEquality().equals(other.maxPage, maxPage) &&
-            const DeepCollectionEquality()
-                .equals(other.floatingAppBar, floatingAppBar) &&
-            const DeepCollectionEquality()
-                .equals(other.errorMessage, errorMessage));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.curPage, curPage) || other.curPage == curPage) &&
+            (identical(other.maxPage, maxPage) || other.maxPage == maxPage) &&
+            (identical(other.floatingAppBar, floatingAppBar) ||
+                other.floatingAppBar == floatingAppBar) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(status),
-      const DeepCollectionEquality().hash(curPage),
-      const DeepCollectionEquality().hash(maxPage),
-      const DeepCollectionEquality().hash(floatingAppBar),
-      const DeepCollectionEquality().hash(errorMessage));
+      runtimeType, status, curPage, maxPage, floatingAppBar, errorMessage);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_ListViewStateCopyWith<_$_ListViewState> get copyWith =>
       __$$_ListViewStateCopyWithImpl<_$_ListViewState>(this, _$identity);
 

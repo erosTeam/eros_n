@@ -1,9 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
 import 'package:eros_n/pages/nav/history/history_view.dart';
+import 'package:eros_n/pages/nav/index/index_state.dart';
 import 'package:eros_n/pages/nav/more/more_view.dart';
 import 'package:eros_n/pages/nav/search/search_view.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,9 +29,67 @@ class IndexPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     logger.v('build IndexPage');
     final state = ref.watch(indexProvider);
+
+    // return AutoTabsRouter.pageView(
+    //   routes: [
+    //     FrontRoute(),
+    //     FavoriteRoute(),
+    //     SearchRoute(query: ''),
+    //     HistoryRoute(),
+    //     MoreRoute(),
+    //   ],
+    //   builder: (context, child, _) {
+    //     final IndexState state = ref.watch(indexProvider);
+    //
+    //     return Scaffold(
+    //       body: child,
+    //       bottomNavigationBar: AnimatedContainer(
+    //         height: state.hideNavigationBar
+    //             ? 0
+    //             : 80 + context.mediaQueryPadding.bottom,
+    //         duration: 300.milliseconds,
+    //         curve: Curves.ease,
+    //         child: NavigationBar(
+    //           selectedIndex: state.selectedIndex,
+    //           // labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+    //           // height: 48,
+    //           destinations: [
+    //             NavigationDestination(
+    //               icon: const Icon(Icons.home_outlined),
+    //               selectedIcon: const Icon(Icons.home),
+    //               label: L10n.of(context).home,
+    //             ),
+    //             NavigationDestination(
+    //               icon: const Icon(Icons.favorite_outline),
+    //               selectedIcon: const Icon(Icons.favorite),
+    //               label: L10n.of(context).favorites,
+    //             ),
+    //             NavigationDestination(
+    //               icon: const Icon(Icons.search),
+    //               label: L10n.of(context).search,
+    //             ),
+    //             NavigationDestination(
+    //               icon: const Icon(Icons.history),
+    //               label: L10n.of(context).history,
+    //             ),
+    //             NavigationDestination(
+    //               icon: const Icon(Icons.more_horiz),
+    //               label: L10n.of(context).more,
+    //             ),
+    //           ],
+    //           onDestinationSelected: (index) {
+    //             ref
+    //                 .read(indexProvider.notifier)
+    //                 .setIndex(index, context: context, jumpToPage: true);
+    //           },
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
+
     return Scaffold(
       body: PageView(
-        // physics: const CustomScrollPhysics(),
         controller: state.pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: pages,

@@ -147,12 +147,12 @@ final pageStateProvider =
 final _gidList = <int>[];
 void pushGalleryPage(int gid) {
   _gidList.add(gid);
-  logger.d('pushGalleryPage $_gidList');
+  logger.v('pushGalleryPage $_gidList');
 }
 
 void popGalleryPage() {
   _gidList.removeLast();
-  logger.d('popGalleryPage $_gidList');
+  logger.v('popGalleryPage $_gidList');
 }
 
 int get currentGalleryGid {

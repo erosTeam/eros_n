@@ -91,8 +91,10 @@ class ReadPage extends HookConsumerWidget {
   const ReadPage({
     Key? key,
     this.index,
+    this.colorScheme,
   }) : super(key: key);
   final int? index;
+  final ColorScheme? colorScheme;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -165,8 +167,11 @@ class ReadPage extends HookConsumerWidget {
     //   child: readView,
     // );
 
-    readView = Scaffold(
-      body: readView,
+    readView = Theme(
+      data: Theme.of(context).copyWith(colorScheme: colorScheme),
+      child: Scaffold(
+        body: readView,
+      ),
     );
 
     return readView;
@@ -242,6 +247,7 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
 
     Widget listView = ScrollablePositionedList.separated(
       minCacheExtent: 0.0,
+      // addAutomaticKeepAlives: false,
       padding: EdgeInsets.only(
         top: context.mediaQueryPadding.top,
         bottom: context.mediaQueryPadding.bottom,

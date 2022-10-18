@@ -61,7 +61,8 @@ mixin _$Gallery {
 /// @nodoc
 abstract class $GalleryCopyWith<$Res> {
   factory $GalleryCopyWith(Gallery value, $Res Function(Gallery) then) =
-      _$GalleryCopyWithImpl<$Res>;
+      _$GalleryCopyWithImpl<$Res, Gallery>;
+  @useResult
   $Res call(
       {@JsonKey(name: 'id') int gid,
       @JsonKey(name: 'media_id') String? mediaId,
@@ -87,121 +88,126 @@ abstract class $GalleryCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GalleryCopyWithImpl<$Res> implements $GalleryCopyWith<$Res> {
+class _$GalleryCopyWithImpl<$Res, $Val extends Gallery>
+    implements $GalleryCopyWith<$Res> {
   _$GalleryCopyWithImpl(this._value, this._then);
 
-  final Gallery _value;
   // ignore: unused_field
-  final $Res Function(Gallery) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? gid = freezed,
+    Object? gid = null,
     Object? mediaId = freezed,
-    Object? title = freezed,
-    Object? images = freezed,
+    Object? title = null,
+    Object? images = null,
     Object? scanlator = freezed,
     Object? uploadDate = freezed,
     Object? numPages = freezed,
     Object? numFavorites = freezed,
-    Object? tags = freezed,
-    Object? simpleTags = freezed,
+    Object? tags = null,
+    Object? simpleTags = null,
     Object? languageCode = freezed,
     Object? viewTime = freezed,
-    Object? comments = freezed,
-    Object? moreLikeGallerys = freezed,
-    Object? currentPageIndex = freezed,
+    Object? comments = null,
+    Object? moreLikeGallerys = null,
+    Object? currentPageIndex = null,
     Object? isFavorited = freezed,
     Object? uploadedDateTime = freezed,
     Object? csrfToken = freezed,
   }) {
     return _then(_value.copyWith(
-      gid: gid == freezed
+      gid: null == gid
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
               as int,
-      mediaId: mediaId == freezed
+      mediaId: freezed == mediaId
           ? _value.mediaId
           : mediaId // ignore: cast_nullable_to_non_nullable
               as String?,
-      title: title == freezed
+      title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as GalleryTitle,
-      images: images == freezed
+      images: null == images
           ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
               as GalleryImages,
-      scanlator: scanlator == freezed
+      scanlator: freezed == scanlator
           ? _value.scanlator
           : scanlator // ignore: cast_nullable_to_non_nullable
               as String?,
-      uploadDate: uploadDate == freezed
+      uploadDate: freezed == uploadDate
           ? _value.uploadDate
           : uploadDate // ignore: cast_nullable_to_non_nullable
               as int?,
-      numPages: numPages == freezed
+      numPages: freezed == numPages
           ? _value.numPages
           : numPages // ignore: cast_nullable_to_non_nullable
               as int?,
-      numFavorites: numFavorites == freezed
+      numFavorites: freezed == numFavorites
           ? _value.numFavorites
           : numFavorites // ignore: cast_nullable_to_non_nullable
               as int?,
-      tags: tags == freezed
+      tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
-      simpleTags: simpleTags == freezed
+      simpleTags: null == simpleTags
           ? _value.simpleTags
           : simpleTags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
-      languageCode: languageCode == freezed
+      languageCode: freezed == languageCode
           ? _value.languageCode
           : languageCode // ignore: cast_nullable_to_non_nullable
               as String?,
-      viewTime: viewTime == freezed
+      viewTime: freezed == viewTime
           ? _value.viewTime
           : viewTime // ignore: cast_nullable_to_non_nullable
               as int?,
-      comments: comments == freezed
+      comments: null == comments
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
               as List<Comment>,
-      moreLikeGallerys: moreLikeGallerys == freezed
+      moreLikeGallerys: null == moreLikeGallerys
           ? _value.moreLikeGallerys
           : moreLikeGallerys // ignore: cast_nullable_to_non_nullable
               as List<Gallery>,
-      currentPageIndex: currentPageIndex == freezed
+      currentPageIndex: null == currentPageIndex
           ? _value.currentPageIndex
           : currentPageIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      isFavorited: isFavorited == freezed
+      isFavorited: freezed == isFavorited
           ? _value.isFavorited
           : isFavorited // ignore: cast_nullable_to_non_nullable
               as bool?,
-      uploadedDateTime: uploadedDateTime == freezed
+      uploadedDateTime: freezed == uploadedDateTime
           ? _value.uploadedDateTime
           : uploadedDateTime // ignore: cast_nullable_to_non_nullable
               as String?,
-      csrfToken: csrfToken == freezed
+      csrfToken: freezed == csrfToken
           ? _value.csrfToken
           : csrfToken // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $GalleryTitleCopyWith<$Res> get title {
     return $GalleryTitleCopyWith<$Res>(_value.title, (value) {
-      return _then(_value.copyWith(title: value));
+      return _then(_value.copyWith(title: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $GalleryImagesCopyWith<$Res> get images {
     return $GalleryImagesCopyWith<$Res>(_value.images, (value) {
-      return _then(_value.copyWith(images: value));
+      return _then(_value.copyWith(images: value) as $Val);
     });
   }
 }
@@ -212,6 +218,7 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
           _$_Gallery value, $Res Function(_$_Gallery) then) =
       __$$_GalleryCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: 'id') int gid,
       @JsonKey(name: 'media_id') String? mediaId,
@@ -239,105 +246,104 @@ abstract class _$$_GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_GalleryCopyWithImpl<$Res> extends _$GalleryCopyWithImpl<$Res>
+class __$$_GalleryCopyWithImpl<$Res>
+    extends _$GalleryCopyWithImpl<$Res, _$_Gallery>
     implements _$$_GalleryCopyWith<$Res> {
   __$$_GalleryCopyWithImpl(_$_Gallery _value, $Res Function(_$_Gallery) _then)
-      : super(_value, (v) => _then(v as _$_Gallery));
+      : super(_value, _then);
 
-  @override
-  _$_Gallery get _value => super._value as _$_Gallery;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? gid = freezed,
+    Object? gid = null,
     Object? mediaId = freezed,
-    Object? title = freezed,
-    Object? images = freezed,
+    Object? title = null,
+    Object? images = null,
     Object? scanlator = freezed,
     Object? uploadDate = freezed,
     Object? numPages = freezed,
     Object? numFavorites = freezed,
-    Object? tags = freezed,
-    Object? simpleTags = freezed,
+    Object? tags = null,
+    Object? simpleTags = null,
     Object? languageCode = freezed,
     Object? viewTime = freezed,
-    Object? comments = freezed,
-    Object? moreLikeGallerys = freezed,
-    Object? currentPageIndex = freezed,
+    Object? comments = null,
+    Object? moreLikeGallerys = null,
+    Object? currentPageIndex = null,
     Object? isFavorited = freezed,
     Object? uploadedDateTime = freezed,
     Object? csrfToken = freezed,
   }) {
     return _then(_$_Gallery(
-      gid: gid == freezed
+      gid: null == gid
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
               as int,
-      mediaId: mediaId == freezed
+      mediaId: freezed == mediaId
           ? _value.mediaId
           : mediaId // ignore: cast_nullable_to_non_nullable
               as String?,
-      title: title == freezed
+      title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as GalleryTitle,
-      images: images == freezed
+      images: null == images
           ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
               as GalleryImages,
-      scanlator: scanlator == freezed
+      scanlator: freezed == scanlator
           ? _value.scanlator
           : scanlator // ignore: cast_nullable_to_non_nullable
               as String?,
-      uploadDate: uploadDate == freezed
+      uploadDate: freezed == uploadDate
           ? _value.uploadDate
           : uploadDate // ignore: cast_nullable_to_non_nullable
               as int?,
-      numPages: numPages == freezed
+      numPages: freezed == numPages
           ? _value.numPages
           : numPages // ignore: cast_nullable_to_non_nullable
               as int?,
-      numFavorites: numFavorites == freezed
+      numFavorites: freezed == numFavorites
           ? _value.numFavorites
           : numFavorites // ignore: cast_nullable_to_non_nullable
               as int?,
-      tags: tags == freezed
+      tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
-      simpleTags: simpleTags == freezed
+      simpleTags: null == simpleTags
           ? _value._simpleTags
           : simpleTags // ignore: cast_nullable_to_non_nullable
               as List<Tag>,
-      languageCode: languageCode == freezed
+      languageCode: freezed == languageCode
           ? _value.languageCode
           : languageCode // ignore: cast_nullable_to_non_nullable
               as String?,
-      viewTime: viewTime == freezed
+      viewTime: freezed == viewTime
           ? _value.viewTime
           : viewTime // ignore: cast_nullable_to_non_nullable
               as int?,
-      comments: comments == freezed
+      comments: null == comments
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
               as List<Comment>,
-      moreLikeGallerys: moreLikeGallerys == freezed
+      moreLikeGallerys: null == moreLikeGallerys
           ? _value._moreLikeGallerys
           : moreLikeGallerys // ignore: cast_nullable_to_non_nullable
               as List<Gallery>,
-      currentPageIndex: currentPageIndex == freezed
+      currentPageIndex: null == currentPageIndex
           ? _value.currentPageIndex
           : currentPageIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      isFavorited: isFavorited == freezed
+      isFavorited: freezed == isFavorited
           ? _value.isFavorited
           : isFavorited // ignore: cast_nullable_to_non_nullable
               as bool?,
-      uploadedDateTime: uploadedDateTime == freezed
+      uploadedDateTime: freezed == uploadedDateTime
           ? _value.uploadedDateTime
           : uploadedDateTime // ignore: cast_nullable_to_non_nullable
               as String?,
-      csrfToken: csrfToken == freezed
+      csrfToken: freezed == csrfToken
           ? _value.csrfToken
           : csrfToken // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -474,59 +480,64 @@ class _$_Gallery extends _Gallery {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Gallery &&
-            const DeepCollectionEquality().equals(other.gid, gid) &&
-            const DeepCollectionEquality().equals(other.mediaId, mediaId) &&
-            const DeepCollectionEquality().equals(other.title, title) &&
-            const DeepCollectionEquality().equals(other.images, images) &&
-            const DeepCollectionEquality().equals(other.scanlator, scanlator) &&
-            const DeepCollectionEquality()
-                .equals(other.uploadDate, uploadDate) &&
-            const DeepCollectionEquality().equals(other.numPages, numPages) &&
-            const DeepCollectionEquality()
-                .equals(other.numFavorites, numFavorites) &&
+            (identical(other.gid, gid) || other.gid == gid) &&
+            (identical(other.mediaId, mediaId) || other.mediaId == mediaId) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.images, images) || other.images == images) &&
+            (identical(other.scanlator, scanlator) ||
+                other.scanlator == scanlator) &&
+            (identical(other.uploadDate, uploadDate) ||
+                other.uploadDate == uploadDate) &&
+            (identical(other.numPages, numPages) ||
+                other.numPages == numPages) &&
+            (identical(other.numFavorites, numFavorites) ||
+                other.numFavorites == numFavorites) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             const DeepCollectionEquality()
                 .equals(other._simpleTags, _simpleTags) &&
-            const DeepCollectionEquality()
-                .equals(other.languageCode, languageCode) &&
-            const DeepCollectionEquality().equals(other.viewTime, viewTime) &&
+            (identical(other.languageCode, languageCode) ||
+                other.languageCode == languageCode) &&
+            (identical(other.viewTime, viewTime) ||
+                other.viewTime == viewTime) &&
             const DeepCollectionEquality().equals(other._comments, _comments) &&
             const DeepCollectionEquality()
                 .equals(other._moreLikeGallerys, _moreLikeGallerys) &&
-            const DeepCollectionEquality()
-                .equals(other.currentPageIndex, currentPageIndex) &&
-            const DeepCollectionEquality()
-                .equals(other.isFavorited, isFavorited) &&
-            const DeepCollectionEquality()
-                .equals(other.uploadedDateTime, uploadedDateTime) &&
-            const DeepCollectionEquality().equals(other.csrfToken, csrfToken));
+            (identical(other.currentPageIndex, currentPageIndex) ||
+                other.currentPageIndex == currentPageIndex) &&
+            (identical(other.isFavorited, isFavorited) ||
+                other.isFavorited == isFavorited) &&
+            (identical(other.uploadedDateTime, uploadedDateTime) ||
+                other.uploadedDateTime == uploadedDateTime) &&
+            (identical(other.csrfToken, csrfToken) ||
+                other.csrfToken == csrfToken));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(gid),
-      const DeepCollectionEquality().hash(mediaId),
-      const DeepCollectionEquality().hash(title),
-      const DeepCollectionEquality().hash(images),
-      const DeepCollectionEquality().hash(scanlator),
-      const DeepCollectionEquality().hash(uploadDate),
-      const DeepCollectionEquality().hash(numPages),
-      const DeepCollectionEquality().hash(numFavorites),
+      gid,
+      mediaId,
+      title,
+      images,
+      scanlator,
+      uploadDate,
+      numPages,
+      numFavorites,
       const DeepCollectionEquality().hash(_tags),
       const DeepCollectionEquality().hash(_simpleTags),
-      const DeepCollectionEquality().hash(languageCode),
-      const DeepCollectionEquality().hash(viewTime),
+      languageCode,
+      viewTime,
       const DeepCollectionEquality().hash(_comments),
       const DeepCollectionEquality().hash(_moreLikeGallerys),
-      const DeepCollectionEquality().hash(currentPageIndex),
-      const DeepCollectionEquality().hash(isFavorited),
-      const DeepCollectionEquality().hash(uploadedDateTime),
-      const DeepCollectionEquality().hash(csrfToken));
+      currentPageIndex,
+      isFavorited,
+      uploadedDateTime,
+      csrfToken);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GalleryCopyWith<_$_Gallery> get copyWith =>
       __$$_GalleryCopyWithImpl<_$_Gallery>(this, _$identity);
 

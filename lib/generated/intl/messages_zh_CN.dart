@@ -106,6 +106,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "theme_mode": MessageLookupByLibrary.simpleMessage("主题模式"),
         "thumbs": MessageLookupByLibrary.simpleMessage("缩略图"),
         "today": MessageLookupByLibrary.simpleMessage("今天"),
+        "use_gallery_tint": MessageLookupByLibrary.simpleMessage("使用画廊色调"),
+        "use_gallery_tint_tip":
+            MessageLookupByLibrary.simpleMessage("根据封面的颜色给画廊页面着色"),
         "username": MessageLookupByLibrary.simpleMessage("用户名"),
         "vertical": MessageLookupByLibrary.simpleMessage("垂直"),
         "waterfall": MessageLookupByLibrary.simpleMessage("瀑布流"),

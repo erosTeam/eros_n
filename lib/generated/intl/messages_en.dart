@@ -116,6 +116,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "theme_mode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
         "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
+        "use_gallery_tint":
+            MessageLookupByLibrary.simpleMessage("Use Gallery Tint"),
+        "use_gallery_tint_tip": MessageLookupByLibrary.simpleMessage(
+            "Tint gallery pages base on the color of the cover"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
         "vertical": MessageLookupByLibrary.simpleMessage("Vertical"),
         "waterfall": MessageLookupByLibrary.simpleMessage("Waterfall Flow"),

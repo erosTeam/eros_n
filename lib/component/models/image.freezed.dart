@@ -41,7 +41,8 @@ mixin _$GalleryImage {
 abstract class $GalleryImageCopyWith<$Res> {
   factory $GalleryImageCopyWith(
           GalleryImage value, $Res Function(GalleryImage) then) =
-      _$GalleryImageCopyWithImpl<$Res>;
+      _$GalleryImageCopyWithImpl<$Res, GalleryImage>;
+  @useResult
   $Res call(
       {@JsonKey(name: 't') String type,
       @JsonKey(name: 'h') int? imgHeight,
@@ -51,43 +52,46 @@ abstract class $GalleryImageCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GalleryImageCopyWithImpl<$Res> implements $GalleryImageCopyWith<$Res> {
+class _$GalleryImageCopyWithImpl<$Res, $Val extends GalleryImage>
+    implements $GalleryImageCopyWith<$Res> {
   _$GalleryImageCopyWithImpl(this._value, this._then);
 
-  final GalleryImage _value;
   // ignore: unused_field
-  final $Res Function(GalleryImage) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = freezed,
+    Object? type = null,
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
     Object? imageUrl = freezed,
     Object? href = freezed,
   }) {
     return _then(_value.copyWith(
-      type: type == freezed
+      type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      imgHeight: imgHeight == freezed
+      imgHeight: freezed == imgHeight
           ? _value.imgHeight
           : imgHeight // ignore: cast_nullable_to_non_nullable
               as int?,
-      imgWidth: imgWidth == freezed
+      imgWidth: freezed == imgWidth
           ? _value.imgWidth
           : imgWidth // ignore: cast_nullable_to_non_nullable
               as int?,
-      imageUrl: imageUrl == freezed
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      href: href == freezed
+      href: freezed == href
           ? _value.href
           : href // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -98,6 +102,7 @@ abstract class _$$_GalleryImageCopyWith<$Res>
           _$_GalleryImage value, $Res Function(_$_GalleryImage) then) =
       __$$_GalleryImageCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: 't') String type,
       @JsonKey(name: 'h') int? imgHeight,
@@ -108,41 +113,39 @@ abstract class _$$_GalleryImageCopyWith<$Res>
 
 /// @nodoc
 class __$$_GalleryImageCopyWithImpl<$Res>
-    extends _$GalleryImageCopyWithImpl<$Res>
+    extends _$GalleryImageCopyWithImpl<$Res, _$_GalleryImage>
     implements _$$_GalleryImageCopyWith<$Res> {
   __$$_GalleryImageCopyWithImpl(
       _$_GalleryImage _value, $Res Function(_$_GalleryImage) _then)
-      : super(_value, (v) => _then(v as _$_GalleryImage));
+      : super(_value, _then);
 
-  @override
-  _$_GalleryImage get _value => super._value as _$_GalleryImage;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = freezed,
+    Object? type = null,
     Object? imgHeight = freezed,
     Object? imgWidth = freezed,
     Object? imageUrl = freezed,
     Object? href = freezed,
   }) {
     return _then(_$_GalleryImage(
-      type: type == freezed
+      type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      imgHeight: imgHeight == freezed
+      imgHeight: freezed == imgHeight
           ? _value.imgHeight
           : imgHeight // ignore: cast_nullable_to_non_nullable
               as int?,
-      imgWidth: imgWidth == freezed
+      imgWidth: freezed == imgWidth
           ? _value.imgWidth
           : imgWidth // ignore: cast_nullable_to_non_nullable
               as int?,
-      imageUrl: imageUrl == freezed
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      href: href == freezed
+      href: freezed == href
           ? _value.href
           : href // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -153,7 +156,7 @@ class __$$_GalleryImageCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_GalleryImage implements _GalleryImage {
+class _$_GalleryImage with DiagnosticableTreeMixin implements _GalleryImage {
   const _$_GalleryImage(
       {@JsonKey(name: 't') this.type = 'j',
       @JsonKey(name: 'h') this.imgHeight,
@@ -181,8 +184,20 @@ class _$_GalleryImage implements _GalleryImage {
   final String? href;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'GalleryImage(type: $type, imgHeight: $imgHeight, imgWidth: $imgWidth, imageUrl: $imageUrl, href: $href)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'GalleryImage'))
+      ..add(DiagnosticsProperty('type', type))
+      ..add(DiagnosticsProperty('imgHeight', imgHeight))
+      ..add(DiagnosticsProperty('imgWidth', imgWidth))
+      ..add(DiagnosticsProperty('imageUrl', imageUrl))
+      ..add(DiagnosticsProperty('href', href));
   }
 
   @override
@@ -190,25 +205,24 @@ class _$_GalleryImage implements _GalleryImage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GalleryImage &&
-            const DeepCollectionEquality().equals(other.type, type) &&
-            const DeepCollectionEquality().equals(other.imgHeight, imgHeight) &&
-            const DeepCollectionEquality().equals(other.imgWidth, imgWidth) &&
-            const DeepCollectionEquality().equals(other.imageUrl, imageUrl) &&
-            const DeepCollectionEquality().equals(other.href, href));
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.imgHeight, imgHeight) ||
+                other.imgHeight == imgHeight) &&
+            (identical(other.imgWidth, imgWidth) ||
+                other.imgWidth == imgWidth) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.href, href) || other.href == href));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(imgHeight),
-      const DeepCollectionEquality().hash(imgWidth),
-      const DeepCollectionEquality().hash(imageUrl),
-      const DeepCollectionEquality().hash(href));
+  int get hashCode =>
+      Object.hash(runtimeType, type, imgHeight, imgWidth, imageUrl, href);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GalleryImageCopyWith<_$_GalleryImage> get copyWith =>
       __$$_GalleryImageCopyWithImpl<_$_GalleryImage>(this, _$identity);
 

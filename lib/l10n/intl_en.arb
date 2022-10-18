@@ -83,5 +83,7 @@
   "read_model": "Read Model",
   "general": "General",
   "language": "Language",
-  "hide_bottom_navigation_on_scroll": "Hide Bottom Navigation on Scroll"
+  "hide_bottom_navigation_on_scroll": "Hide Bottom Navigation on Scroll",
+  "use_gallery_tint": "Use Gallery Tint",
+  "use_gallery_tint_tip": "Tint gallery pages base on the color of the cover"
 }

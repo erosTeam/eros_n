@@ -899,6 +899,26 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Use Gallery Tint`
+  String get use_gallery_tint {
+    return Intl.message(
+      'Use Gallery Tint',
+      name: 'use_gallery_tint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tint gallery pages base on the color of the cover`
+  String get use_gallery_tint_tip {
+    return Intl.message(
+      'Tint gallery pages base on the color of the cover',
+      name: 'use_gallery_tint_tip',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

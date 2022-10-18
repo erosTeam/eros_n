@@ -30,6 +30,7 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
       supportDynamicColors: json['supportDynamicColors'] as bool? ?? false,
       hideBottomNavigationOnScroll:
           json['hideBottomNavigationOnScroll'] as bool? ?? true,
+      useGalleryTint: json['useGalleryTint'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -48,6 +49,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'themeColorLabel': instance.themeColorLabel,
       'supportDynamicColors': instance.supportDynamicColors,
       'hideBottomNavigationOnScroll': instance.hideBottomNavigationOnScroll,
+      'useGalleryTint': instance.useGalleryTint,
     };
 
 const _$SearchSortEnumMap = {

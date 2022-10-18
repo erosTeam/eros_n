@@ -28,34 +28,37 @@ mixin _$GalleryViewState {
 abstract class $GalleryViewStateCopyWith<$Res> {
   factory $GalleryViewStateCopyWith(
           GalleryViewState value, $Res Function(GalleryViewState) then) =
-      _$GalleryViewStateCopyWithImpl<$Res>;
+      _$GalleryViewStateCopyWithImpl<$Res, GalleryViewState>;
+  @useResult
   $Res call({PageStatus? pageStatus, bool appBartTansparent});
 }
 
 /// @nodoc
-class _$GalleryViewStateCopyWithImpl<$Res>
+class _$GalleryViewStateCopyWithImpl<$Res, $Val extends GalleryViewState>
     implements $GalleryViewStateCopyWith<$Res> {
   _$GalleryViewStateCopyWithImpl(this._value, this._then);
 
-  final GalleryViewState _value;
   // ignore: unused_field
-  final $Res Function(GalleryViewState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? pageStatus = freezed,
-    Object? appBartTansparent = freezed,
+    Object? appBartTansparent = null,
   }) {
     return _then(_value.copyWith(
-      pageStatus: pageStatus == freezed
+      pageStatus: freezed == pageStatus
           ? _value.pageStatus
           : pageStatus // ignore: cast_nullable_to_non_nullable
               as PageStatus?,
-      appBartTansparent: appBartTansparent == freezed
+      appBartTansparent: null == appBartTansparent
           ? _value.appBartTansparent
           : appBartTansparent // ignore: cast_nullable_to_non_nullable
               as bool,
-    ));
+    ) as $Val);
   }
 }
 
@@ -66,31 +69,30 @@ abstract class _$$_GalleryViewStateCopyWith<$Res>
           _$_GalleryViewState value, $Res Function(_$_GalleryViewState) then) =
       __$$_GalleryViewStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({PageStatus? pageStatus, bool appBartTansparent});
 }
 
 /// @nodoc
 class __$$_GalleryViewStateCopyWithImpl<$Res>
-    extends _$GalleryViewStateCopyWithImpl<$Res>
+    extends _$GalleryViewStateCopyWithImpl<$Res, _$_GalleryViewState>
     implements _$$_GalleryViewStateCopyWith<$Res> {
   __$$_GalleryViewStateCopyWithImpl(
       _$_GalleryViewState _value, $Res Function(_$_GalleryViewState) _then)
-      : super(_value, (v) => _then(v as _$_GalleryViewState));
+      : super(_value, _then);
 
-  @override
-  _$_GalleryViewState get _value => super._value as _$_GalleryViewState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? pageStatus = freezed,
-    Object? appBartTansparent = freezed,
+    Object? appBartTansparent = null,
   }) {
     return _then(_$_GalleryViewState(
-      pageStatus: pageStatus == freezed
+      pageStatus: freezed == pageStatus
           ? _value.pageStatus
           : pageStatus // ignore: cast_nullable_to_non_nullable
               as PageStatus?,
-      appBartTansparent: appBartTansparent == freezed
+      appBartTansparent: null == appBartTansparent
           ? _value.appBartTansparent
           : appBartTansparent // ignore: cast_nullable_to_non_nullable
               as bool,
@@ -119,20 +121,18 @@ class _$_GalleryViewState implements _GalleryViewState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GalleryViewState &&
-            const DeepCollectionEquality()
-                .equals(other.pageStatus, pageStatus) &&
-            const DeepCollectionEquality()
-                .equals(other.appBartTansparent, appBartTansparent));
+            (identical(other.pageStatus, pageStatus) ||
+                other.pageStatus == pageStatus) &&
+            (identical(other.appBartTansparent, appBartTansparent) ||
+                other.appBartTansparent == appBartTansparent));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(pageStatus),
-      const DeepCollectionEquality().hash(appBartTansparent));
+  int get hashCode => Object.hash(runtimeType, pageStatus, appBartTansparent);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GalleryViewStateCopyWith<_$_GalleryViewState> get copyWith =>
       __$$_GalleryViewStateCopyWithImpl<_$_GalleryViewState>(this, _$identity);
 }

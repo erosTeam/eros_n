@@ -39,7 +39,8 @@ mixin _$Comment {
 /// @nodoc
 abstract class $CommentCopyWith<$Res> {
   factory $CommentCopyWith(Comment value, $Res Function(Comment) then) =
-      _$CommentCopyWithImpl<$Res>;
+      _$CommentCopyWithImpl<$Res, Comment>;
+  @useResult
   $Res call(
       {@JsonKey(name: 'id') int? commentId,
       @JsonKey(name: 'gallery_id') int? gid,
@@ -51,13 +52,16 @@ abstract class $CommentCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CommentCopyWithImpl<$Res> implements $CommentCopyWith<$Res> {
+class _$CommentCopyWithImpl<$Res, $Val extends Comment>
+    implements $CommentCopyWith<$Res> {
   _$CommentCopyWithImpl(this._value, this._then);
 
-  final Comment _value;
   // ignore: unused_field
-  final $Res Function(Comment) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? commentId = freezed,
@@ -67,37 +71,38 @@ class _$CommentCopyWithImpl<$Res> implements $CommentCopyWith<$Res> {
     Object? poster = freezed,
   }) {
     return _then(_value.copyWith(
-      commentId: commentId == freezed
+      commentId: freezed == commentId
           ? _value.commentId
           : commentId // ignore: cast_nullable_to_non_nullable
               as int?,
-      gid: gid == freezed
+      gid: freezed == gid
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
               as int?,
-      postDate: postDate == freezed
+      postDate: freezed == postDate
           ? _value.postDate
           : postDate // ignore: cast_nullable_to_non_nullable
               as int?,
-      commentText: commentText == freezed
+      commentText: freezed == commentText
           ? _value.commentText
           : commentText // ignore: cast_nullable_to_non_nullable
               as String?,
-      poster: poster == freezed
+      poster: freezed == poster
           ? _value.poster
           : poster // ignore: cast_nullable_to_non_nullable
               as CommentPoster?,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $CommentPosterCopyWith<$Res>? get poster {
     if (_value.poster == null) {
       return null;
     }
 
     return $CommentPosterCopyWith<$Res>(_value.poster!, (value) {
-      return _then(_value.copyWith(poster: value));
+      return _then(_value.copyWith(poster: value) as $Val);
     });
   }
 }
@@ -108,6 +113,7 @@ abstract class _$$_CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
           _$_Comment value, $Res Function(_$_Comment) then) =
       __$$_CommentCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: 'id') int? commentId,
       @JsonKey(name: 'gallery_id') int? gid,
@@ -120,14 +126,13 @@ abstract class _$$_CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_CommentCopyWithImpl<$Res> extends _$CommentCopyWithImpl<$Res>
+class __$$_CommentCopyWithImpl<$Res>
+    extends _$CommentCopyWithImpl<$Res, _$_Comment>
     implements _$$_CommentCopyWith<$Res> {
   __$$_CommentCopyWithImpl(_$_Comment _value, $Res Function(_$_Comment) _then)
-      : super(_value, (v) => _then(v as _$_Comment));
+      : super(_value, _then);
 
-  @override
-  _$_Comment get _value => super._value as _$_Comment;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? commentId = freezed,
@@ -137,23 +142,23 @@ class __$$_CommentCopyWithImpl<$Res> extends _$CommentCopyWithImpl<$Res>
     Object? poster = freezed,
   }) {
     return _then(_$_Comment(
-      commentId: commentId == freezed
+      commentId: freezed == commentId
           ? _value.commentId
           : commentId // ignore: cast_nullable_to_non_nullable
               as int?,
-      gid: gid == freezed
+      gid: freezed == gid
           ? _value.gid
           : gid // ignore: cast_nullable_to_non_nullable
               as int?,
-      postDate: postDate == freezed
+      postDate: freezed == postDate
           ? _value.postDate
           : postDate // ignore: cast_nullable_to_non_nullable
               as int?,
-      commentText: commentText == freezed
+      commentText: freezed == commentText
           ? _value.commentText
           : commentText // ignore: cast_nullable_to_non_nullable
               as String?,
-      poster: poster == freezed
+      poster: freezed == poster
           ? _value.poster
           : poster // ignore: cast_nullable_to_non_nullable
               as CommentPoster?,
@@ -164,7 +169,7 @@ class __$$_CommentCopyWithImpl<$Res> extends _$CommentCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_Comment implements _Comment {
+class _$_Comment with DiagnosticableTreeMixin implements _Comment {
   const _$_Comment(
       {@JsonKey(name: 'id') this.commentId,
       @JsonKey(name: 'gallery_id') this.gid,
@@ -192,8 +197,20 @@ class _$_Comment implements _Comment {
   final CommentPoster? poster;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'Comment(commentId: $commentId, gid: $gid, postDate: $postDate, commentText: $commentText, poster: $poster)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'Comment'))
+      ..add(DiagnosticsProperty('commentId', commentId))
+      ..add(DiagnosticsProperty('gid', gid))
+      ..add(DiagnosticsProperty('postDate', postDate))
+      ..add(DiagnosticsProperty('commentText', commentText))
+      ..add(DiagnosticsProperty('poster', poster));
   }
 
   @override
@@ -201,26 +218,24 @@ class _$_Comment implements _Comment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Comment &&
-            const DeepCollectionEquality().equals(other.commentId, commentId) &&
-            const DeepCollectionEquality().equals(other.gid, gid) &&
-            const DeepCollectionEquality().equals(other.postDate, postDate) &&
-            const DeepCollectionEquality()
-                .equals(other.commentText, commentText) &&
-            const DeepCollectionEquality().equals(other.poster, poster));
+            (identical(other.commentId, commentId) ||
+                other.commentId == commentId) &&
+            (identical(other.gid, gid) || other.gid == gid) &&
+            (identical(other.postDate, postDate) ||
+                other.postDate == postDate) &&
+            (identical(other.commentText, commentText) ||
+                other.commentText == commentText) &&
+            (identical(other.poster, poster) || other.poster == poster));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(commentId),
-      const DeepCollectionEquality().hash(gid),
-      const DeepCollectionEquality().hash(postDate),
-      const DeepCollectionEquality().hash(commentText),
-      const DeepCollectionEquality().hash(poster));
+  int get hashCode =>
+      Object.hash(runtimeType, commentId, gid, postDate, commentText, poster);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_CommentCopyWith<_$_Comment> get copyWith =>
       __$$_CommentCopyWithImpl<_$_Comment>(this, _$identity);
 

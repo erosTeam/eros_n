@@ -37,7 +37,8 @@ mixin _$ReadState {
 /// @nodoc
 abstract class $ReadStateCopyWith<$Res> {
   factory $ReadStateCopyWith(ReadState value, $Res Function(ReadState) then) =
-      _$ReadStateCopyWithImpl<$Res>;
+      _$ReadStateCopyWithImpl<$Res, ReadState>;
+  @useResult
   $Res call(
       {bool showAppBar,
       double topBarOffset,
@@ -49,53 +50,56 @@ abstract class $ReadStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ReadStateCopyWithImpl<$Res> implements $ReadStateCopyWith<$Res> {
+class _$ReadStateCopyWithImpl<$Res, $Val extends ReadState>
+    implements $ReadStateCopyWith<$Res> {
   _$ReadStateCopyWithImpl(this._value, this._then);
 
-  final ReadState _value;
   // ignore: unused_field
-  final $Res Function(ReadState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? showAppBar = freezed,
-    Object? topBarOffset = freezed,
-    Object? bottomBarOffset = freezed,
-    Object? bottomBarHeight = freezed,
-    Object? showThumbList = freezed,
-    Object? paddingTop = freezed,
-    Object? paddingBottom = freezed,
+    Object? showAppBar = null,
+    Object? topBarOffset = null,
+    Object? bottomBarOffset = null,
+    Object? bottomBarHeight = null,
+    Object? showThumbList = null,
+    Object? paddingTop = null,
+    Object? paddingBottom = null,
   }) {
     return _then(_value.copyWith(
-      showAppBar: showAppBar == freezed
+      showAppBar: null == showAppBar
           ? _value.showAppBar
           : showAppBar // ignore: cast_nullable_to_non_nullable
               as bool,
-      topBarOffset: topBarOffset == freezed
+      topBarOffset: null == topBarOffset
           ? _value.topBarOffset
           : topBarOffset // ignore: cast_nullable_to_non_nullable
               as double,
-      bottomBarOffset: bottomBarOffset == freezed
+      bottomBarOffset: null == bottomBarOffset
           ? _value.bottomBarOffset
           : bottomBarOffset // ignore: cast_nullable_to_non_nullable
               as double,
-      bottomBarHeight: bottomBarHeight == freezed
+      bottomBarHeight: null == bottomBarHeight
           ? _value.bottomBarHeight
           : bottomBarHeight // ignore: cast_nullable_to_non_nullable
               as double,
-      showThumbList: showThumbList == freezed
+      showThumbList: null == showThumbList
           ? _value.showThumbList
           : showThumbList // ignore: cast_nullable_to_non_nullable
               as bool,
-      paddingTop: paddingTop == freezed
+      paddingTop: null == paddingTop
           ? _value.paddingTop
           : paddingTop // ignore: cast_nullable_to_non_nullable
               as double,
-      paddingBottom: paddingBottom == freezed
+      paddingBottom: null == paddingBottom
           ? _value.paddingBottom
           : paddingBottom // ignore: cast_nullable_to_non_nullable
               as double,
-    ));
+    ) as $Val);
   }
 }
 
@@ -105,6 +109,7 @@ abstract class _$$_ReadStateCopyWith<$Res> implements $ReadStateCopyWith<$Res> {
           _$_ReadState value, $Res Function(_$_ReadState) then) =
       __$$_ReadStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {bool showAppBar,
       double topBarOffset,
@@ -116,51 +121,50 @@ abstract class _$$_ReadStateCopyWith<$Res> implements $ReadStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_ReadStateCopyWithImpl<$Res> extends _$ReadStateCopyWithImpl<$Res>
+class __$$_ReadStateCopyWithImpl<$Res>
+    extends _$ReadStateCopyWithImpl<$Res, _$_ReadState>
     implements _$$_ReadStateCopyWith<$Res> {
   __$$_ReadStateCopyWithImpl(
       _$_ReadState _value, $Res Function(_$_ReadState) _then)
-      : super(_value, (v) => _then(v as _$_ReadState));
+      : super(_value, _then);
 
-  @override
-  _$_ReadState get _value => super._value as _$_ReadState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? showAppBar = freezed,
-    Object? topBarOffset = freezed,
-    Object? bottomBarOffset = freezed,
-    Object? bottomBarHeight = freezed,
-    Object? showThumbList = freezed,
-    Object? paddingTop = freezed,
-    Object? paddingBottom = freezed,
+    Object? showAppBar = null,
+    Object? topBarOffset = null,
+    Object? bottomBarOffset = null,
+    Object? bottomBarHeight = null,
+    Object? showThumbList = null,
+    Object? paddingTop = null,
+    Object? paddingBottom = null,
   }) {
     return _then(_$_ReadState(
-      showAppBar: showAppBar == freezed
+      showAppBar: null == showAppBar
           ? _value.showAppBar
           : showAppBar // ignore: cast_nullable_to_non_nullable
               as bool,
-      topBarOffset: topBarOffset == freezed
+      topBarOffset: null == topBarOffset
           ? _value.topBarOffset
           : topBarOffset // ignore: cast_nullable_to_non_nullable
               as double,
-      bottomBarOffset: bottomBarOffset == freezed
+      bottomBarOffset: null == bottomBarOffset
           ? _value.bottomBarOffset
           : bottomBarOffset // ignore: cast_nullable_to_non_nullable
               as double,
-      bottomBarHeight: bottomBarHeight == freezed
+      bottomBarHeight: null == bottomBarHeight
           ? _value.bottomBarHeight
           : bottomBarHeight // ignore: cast_nullable_to_non_nullable
               as double,
-      showThumbList: showThumbList == freezed
+      showThumbList: null == showThumbList
           ? _value.showThumbList
           : showThumbList // ignore: cast_nullable_to_non_nullable
               as bool,
-      paddingTop: paddingTop == freezed
+      paddingTop: null == paddingTop
           ? _value.paddingTop
           : paddingTop // ignore: cast_nullable_to_non_nullable
               as double,
-      paddingBottom: paddingBottom == freezed
+      paddingBottom: null == paddingBottom
           ? _value.paddingBottom
           : paddingBottom // ignore: cast_nullable_to_non_nullable
               as double,
@@ -217,36 +221,37 @@ class _$_ReadState extends _ReadState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ReadState &&
-            const DeepCollectionEquality()
-                .equals(other.showAppBar, showAppBar) &&
-            const DeepCollectionEquality()
-                .equals(other.topBarOffset, topBarOffset) &&
-            const DeepCollectionEquality()
-                .equals(other.bottomBarOffset, bottomBarOffset) &&
-            const DeepCollectionEquality()
-                .equals(other.bottomBarHeight, bottomBarHeight) &&
-            const DeepCollectionEquality()
-                .equals(other.showThumbList, showThumbList) &&
-            const DeepCollectionEquality()
-                .equals(other.paddingTop, paddingTop) &&
-            const DeepCollectionEquality()
-                .equals(other.paddingBottom, paddingBottom));
+            (identical(other.showAppBar, showAppBar) ||
+                other.showAppBar == showAppBar) &&
+            (identical(other.topBarOffset, topBarOffset) ||
+                other.topBarOffset == topBarOffset) &&
+            (identical(other.bottomBarOffset, bottomBarOffset) ||
+                other.bottomBarOffset == bottomBarOffset) &&
+            (identical(other.bottomBarHeight, bottomBarHeight) ||
+                other.bottomBarHeight == bottomBarHeight) &&
+            (identical(other.showThumbList, showThumbList) ||
+                other.showThumbList == showThumbList) &&
+            (identical(other.paddingTop, paddingTop) ||
+                other.paddingTop == paddingTop) &&
+            (identical(other.paddingBottom, paddingBottom) ||
+                other.paddingBottom == paddingBottom));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(showAppBar),
-      const DeepCollectionEquality().hash(topBarOffset),
-      const DeepCollectionEquality().hash(bottomBarOffset),
-      const DeepCollectionEquality().hash(bottomBarHeight),
-      const DeepCollectionEquality().hash(showThumbList),
-      const DeepCollectionEquality().hash(paddingTop),
-      const DeepCollectionEquality().hash(paddingBottom));
+      showAppBar,
+      topBarOffset,
+      bottomBarOffset,
+      bottomBarHeight,
+      showThumbList,
+      paddingTop,
+      paddingBottom);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_ReadStateCopyWith<_$_ReadState> get copyWith =>
       __$$_ReadStateCopyWithImpl<_$_ReadState>(this, _$identity);
 

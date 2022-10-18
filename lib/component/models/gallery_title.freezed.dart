@@ -37,7 +37,8 @@ mixin _$GalleryTitle {
 abstract class $GalleryTitleCopyWith<$Res> {
   factory $GalleryTitleCopyWith(
           GalleryTitle value, $Res Function(GalleryTitle) then) =
-      _$GalleryTitleCopyWithImpl<$Res>;
+      _$GalleryTitleCopyWithImpl<$Res, GalleryTitle>;
+  @useResult
   $Res call(
       {@JsonKey(name: 'english') String? englishTitle,
       @JsonKey(name: 'japanese') String? japaneseTitle,
@@ -45,13 +46,16 @@ abstract class $GalleryTitleCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GalleryTitleCopyWithImpl<$Res> implements $GalleryTitleCopyWith<$Res> {
+class _$GalleryTitleCopyWithImpl<$Res, $Val extends GalleryTitle>
+    implements $GalleryTitleCopyWith<$Res> {
   _$GalleryTitleCopyWithImpl(this._value, this._then);
 
-  final GalleryTitle _value;
   // ignore: unused_field
-  final $Res Function(GalleryTitle) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? englishTitle = freezed,
@@ -59,19 +63,19 @@ class _$GalleryTitleCopyWithImpl<$Res> implements $GalleryTitleCopyWith<$Res> {
     Object? prettyTitle = freezed,
   }) {
     return _then(_value.copyWith(
-      englishTitle: englishTitle == freezed
+      englishTitle: freezed == englishTitle
           ? _value.englishTitle
           : englishTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      japaneseTitle: japaneseTitle == freezed
+      japaneseTitle: freezed == japaneseTitle
           ? _value.japaneseTitle
           : japaneseTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      prettyTitle: prettyTitle == freezed
+      prettyTitle: freezed == prettyTitle
           ? _value.prettyTitle
           : prettyTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -82,6 +86,7 @@ abstract class _$$_GalleryTitleCopyWith<$Res>
           _$_GalleryTitle value, $Res Function(_$_GalleryTitle) then) =
       __$$_GalleryTitleCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: 'english') String? englishTitle,
       @JsonKey(name: 'japanese') String? japaneseTitle,
@@ -90,15 +95,13 @@ abstract class _$$_GalleryTitleCopyWith<$Res>
 
 /// @nodoc
 class __$$_GalleryTitleCopyWithImpl<$Res>
-    extends _$GalleryTitleCopyWithImpl<$Res>
+    extends _$GalleryTitleCopyWithImpl<$Res, _$_GalleryTitle>
     implements _$$_GalleryTitleCopyWith<$Res> {
   __$$_GalleryTitleCopyWithImpl(
       _$_GalleryTitle _value, $Res Function(_$_GalleryTitle) _then)
-      : super(_value, (v) => _then(v as _$_GalleryTitle));
+      : super(_value, _then);
 
-  @override
-  _$_GalleryTitle get _value => super._value as _$_GalleryTitle;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? englishTitle = freezed,
@@ -106,15 +109,15 @@ class __$$_GalleryTitleCopyWithImpl<$Res>
     Object? prettyTitle = freezed,
   }) {
     return _then(_$_GalleryTitle(
-      englishTitle: englishTitle == freezed
+      englishTitle: freezed == englishTitle
           ? _value.englishTitle
           : englishTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      japaneseTitle: japaneseTitle == freezed
+      japaneseTitle: freezed == japaneseTitle
           ? _value.japaneseTitle
           : japaneseTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      prettyTitle: prettyTitle == freezed
+      prettyTitle: freezed == prettyTitle
           ? _value.prettyTitle
           : prettyTitle // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -125,7 +128,7 @@ class __$$_GalleryTitleCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_GalleryTitle implements _GalleryTitle {
+class _$_GalleryTitle with DiagnosticableTreeMixin implements _GalleryTitle {
   const _$_GalleryTitle(
       {@JsonKey(name: 'english') this.englishTitle,
       @JsonKey(name: 'japanese') this.japaneseTitle,
@@ -145,8 +148,18 @@ class _$_GalleryTitle implements _GalleryTitle {
   final String? prettyTitle;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'GalleryTitle(englishTitle: $englishTitle, japaneseTitle: $japaneseTitle, prettyTitle: $prettyTitle)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'GalleryTitle'))
+      ..add(DiagnosticsProperty('englishTitle', englishTitle))
+      ..add(DiagnosticsProperty('japaneseTitle', japaneseTitle))
+      ..add(DiagnosticsProperty('prettyTitle', prettyTitle));
   }
 
   @override
@@ -154,24 +167,22 @@ class _$_GalleryTitle implements _GalleryTitle {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GalleryTitle &&
-            const DeepCollectionEquality()
-                .equals(other.englishTitle, englishTitle) &&
-            const DeepCollectionEquality()
-                .equals(other.japaneseTitle, japaneseTitle) &&
-            const DeepCollectionEquality()
-                .equals(other.prettyTitle, prettyTitle));
+            (identical(other.englishTitle, englishTitle) ||
+                other.englishTitle == englishTitle) &&
+            (identical(other.japaneseTitle, japaneseTitle) ||
+                other.japaneseTitle == japaneseTitle) &&
+            (identical(other.prettyTitle, prettyTitle) ||
+                other.prettyTitle == prettyTitle));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(englishTitle),
-      const DeepCollectionEquality().hash(japaneseTitle),
-      const DeepCollectionEquality().hash(prettyTitle));
+  int get hashCode =>
+      Object.hash(runtimeType, englishTitle, japaneseTitle, prettyTitle);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GalleryTitleCopyWith<_$_GalleryTitle> get copyWith =>
       __$$_GalleryTitleCopyWithImpl<_$_GalleryTitle>(this, _$identity);
 

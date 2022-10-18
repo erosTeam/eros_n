@@ -16,41 +16,46 @@ class ThumbPage extends HookConsumerWidget {
   const ThumbPage({
     Key? key,
     required this.gid,
+    this.colorScheme,
   }) : super(key: key);
   final int gid;
+  final ColorScheme? colorScheme;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ScrollController scrollController = useScrollController();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(L10n.of(context).thumbs),
-      ),
-      floatingActionButton: ScrollingFab(
-        onPressed: () {
-          RouteUtil.goRead(ref);
-        },
-        scrollController: scrollController,
-        label: Consumer(builder: (context, ref, child) {
-          final currentPageIndex =
-              ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
-          final label = currentPageIndex == 0
-              ? L10n.of(context).read
-              : '${L10n.of(context).resume} ${currentPageIndex + 1}';
-          return Text(label);
-        }),
-        icon: const Icon(Icons.play_arrow),
-      ),
-      body: Scrollbar(
-        controller: scrollController,
-        child: CustomScrollView(
+    return Theme(
+      data: Theme.of(context).copyWith(colorScheme: colorScheme),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(L10n.of(context).thumbs),
+        ),
+        floatingActionButton: ScrollingFab(
+          onPressed: () {
+            RouteUtil.goRead(context, ref);
+          },
+          scrollController: scrollController,
+          label: Consumer(builder: (context, ref, child) {
+            final currentPageIndex = ref
+                .watch(galleryProvider(gid).select((g) => g.currentPageIndex));
+            final label = currentPageIndex == 0
+                ? L10n.of(context).read
+                : '${L10n.of(context).resume} ${currentPageIndex + 1}';
+            return Text(label);
+          }),
+          icon: const Icon(Icons.play_arrow),
+        ),
+        body: Scrollbar(
           controller: scrollController,
-          slivers: [
-            ThumbsView(
-              gid: gid,
-            ),
-          ],
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              ThumbsView(
+                gid: gid,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -96,7 +101,7 @@ class ThumbsView extends HookConsumerWidget {
               final thumb = pages[index];
               return GestureDetector(
                 onTap: () {
-                  RouteUtil.goRead(ref, index: index);
+                  RouteUtil.goRead(context, ref, index: index);
                 },
                 child: Column(
                   children: [

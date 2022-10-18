@@ -36,7 +36,8 @@ mixin _$Tag {
 /// @nodoc
 abstract class $TagCopyWith<$Res> {
   factory $TagCopyWith(Tag value, $Res Function(Tag) then) =
-      _$TagCopyWithImpl<$Res>;
+      _$TagCopyWithImpl<$Res, Tag>;
+  @useResult
   $Res call(
       {int? id,
       String? type,
@@ -47,13 +48,15 @@ abstract class $TagCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TagCopyWithImpl<$Res> implements $TagCopyWith<$Res> {
+class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
   _$TagCopyWithImpl(this._value, this._then);
 
-  final Tag _value;
   // ignore: unused_field
-  final $Res Function(Tag) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = freezed,
@@ -64,31 +67,31 @@ class _$TagCopyWithImpl<$Res> implements $TagCopyWith<$Res> {
     Object? translatedName = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      type: type == freezed
+      type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: name == freezed
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
-      url: url == freezed
+      url: freezed == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String?,
-      count: count == freezed
+      count: freezed == count
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int?,
-      translatedName: translatedName == freezed
+      translatedName: freezed == translatedName
           ? _value.translatedName
           : translatedName // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -97,6 +100,7 @@ abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
   factory _$$_TagCopyWith(_$_Tag value, $Res Function(_$_Tag) then) =
       __$$_TagCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {int? id,
       String? type,
@@ -107,14 +111,12 @@ abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res>
+class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
     implements _$$_TagCopyWith<$Res> {
   __$$_TagCopyWithImpl(_$_Tag _value, $Res Function(_$_Tag) _then)
-      : super(_value, (v) => _then(v as _$_Tag));
+      : super(_value, _then);
 
-  @override
-  _$_Tag get _value => super._value as _$_Tag;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = freezed,
@@ -125,27 +127,27 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res>
     Object? translatedName = freezed,
   }) {
     return _then(_$_Tag(
-      id: id == freezed
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      type: type == freezed
+      type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: name == freezed
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
-      url: url == freezed
+      url: freezed == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String?,
-      count: count == freezed
+      count: freezed == count
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int?,
-      translatedName: translatedName == freezed
+      translatedName: freezed == translatedName
           ? _value.translatedName
           : translatedName // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -156,7 +158,7 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_Tag implements _Tag {
+class _$_Tag with DiagnosticableTreeMixin implements _Tag {
   const _$_Tag(
       {this.id,
       this.type,
@@ -182,8 +184,21 @@ class _$_Tag implements _Tag {
   final String? translatedName;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'Tag(id: $id, type: $type, name: $name, url: $url, count: $count, translatedName: $translatedName)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'Tag'))
+      ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('type', type))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('url', url))
+      ..add(DiagnosticsProperty('count', count))
+      ..add(DiagnosticsProperty('translatedName', translatedName));
   }
 
   @override
@@ -191,28 +206,23 @@ class _$_Tag implements _Tag {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Tag &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.type, type) &&
-            const DeepCollectionEquality().equals(other.name, name) &&
-            const DeepCollectionEquality().equals(other.url, url) &&
-            const DeepCollectionEquality().equals(other.count, count) &&
-            const DeepCollectionEquality()
-                .equals(other.translatedName, translatedName));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.count, count) || other.count == count) &&
+            (identical(other.translatedName, translatedName) ||
+                other.translatedName == translatedName));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(name),
-      const DeepCollectionEquality().hash(url),
-      const DeepCollectionEquality().hash(count),
-      const DeepCollectionEquality().hash(translatedName));
+  int get hashCode =>
+      Object.hash(runtimeType, id, type, name, url, count, translatedName);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_TagCopyWith<_$_Tag> get copyWith =>
       __$$_TagCopyWithImpl<_$_Tag>(this, _$identity);
 

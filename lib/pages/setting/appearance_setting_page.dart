@@ -128,6 +128,23 @@ class AppearanceSettingPage extends StatelessWidget {
             );
           }),
 
+          // switch useGalleryTint
+          Consumer(builder: (context, ref, child) {
+            final useGalleryTint = ref.watch(
+                settingsProvider.select((settings) => settings.useGalleryTint));
+            return ListTile(
+              title: Text(L10n.of(context).use_gallery_tint),
+              subtitle: Text(L10n.of(context).use_gallery_tint_tip),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: useGalleryTint,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setUseGalleryTint(value);
+                },
+              ),
+            );
+          }),
+
           const Divider(height: 1.0),
 
           /// List Style

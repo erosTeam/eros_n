@@ -5,8 +5,8 @@ import 'entity/gallery_history.dart';
 import 'entity/nh_tag.dart';
 import 'entity/tag_translate.dart';
 
-Future<Isar> openIsar() async {
-  final dirPath = Global.appSupportPath;
+Future<Isar> openIsar({String? path}) async {
+  final dirPath = path ?? Global.appSupportPath;
 
   final isar = await Isar.open(
     [

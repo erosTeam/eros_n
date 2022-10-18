@@ -37,7 +37,8 @@ mixin _$GallerySearch {
 abstract class $GallerySearchCopyWith<$Res> {
   factory $GallerySearchCopyWith(
           GallerySearch value, $Res Function(GallerySearch) then) =
-      _$GallerySearchCopyWithImpl<$Res>;
+      _$GallerySearchCopyWithImpl<$Res, GallerySearch>;
+  @useResult
   $Res call(
       {@JsonKey(name: 'result') List<Gallery> result,
       @JsonKey(name: 'num_pages') int? numPages,
@@ -45,34 +46,36 @@ abstract class $GallerySearchCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GallerySearchCopyWithImpl<$Res>
+class _$GallerySearchCopyWithImpl<$Res, $Val extends GallerySearch>
     implements $GallerySearchCopyWith<$Res> {
   _$GallerySearchCopyWithImpl(this._value, this._then);
 
-  final GallerySearch _value;
   // ignore: unused_field
-  final $Res Function(GallerySearch) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? result = freezed,
+    Object? result = null,
     Object? numPages = freezed,
     Object? perPage = freezed,
   }) {
     return _then(_value.copyWith(
-      result: result == freezed
+      result: null == result
           ? _value.result
           : result // ignore: cast_nullable_to_non_nullable
               as List<Gallery>,
-      numPages: numPages == freezed
+      numPages: freezed == numPages
           ? _value.numPages
           : numPages // ignore: cast_nullable_to_non_nullable
               as int?,
-      perPage: perPage == freezed
+      perPage: freezed == perPage
           ? _value.perPage
           : perPage // ignore: cast_nullable_to_non_nullable
               as int?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -83,6 +86,7 @@ abstract class _$$_GallerySearchCopyWith<$Res>
           _$_GallerySearch value, $Res Function(_$_GallerySearch) then) =
       __$$_GallerySearchCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: 'result') List<Gallery> result,
       @JsonKey(name: 'num_pages') int? numPages,
@@ -91,31 +95,29 @@ abstract class _$$_GallerySearchCopyWith<$Res>
 
 /// @nodoc
 class __$$_GallerySearchCopyWithImpl<$Res>
-    extends _$GallerySearchCopyWithImpl<$Res>
+    extends _$GallerySearchCopyWithImpl<$Res, _$_GallerySearch>
     implements _$$_GallerySearchCopyWith<$Res> {
   __$$_GallerySearchCopyWithImpl(
       _$_GallerySearch _value, $Res Function(_$_GallerySearch) _then)
-      : super(_value, (v) => _then(v as _$_GallerySearch));
+      : super(_value, _then);
 
-  @override
-  _$_GallerySearch get _value => super._value as _$_GallerySearch;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? result = freezed,
+    Object? result = null,
     Object? numPages = freezed,
     Object? perPage = freezed,
   }) {
     return _then(_$_GallerySearch(
-      result: result == freezed
+      result: null == result
           ? _value._result
           : result // ignore: cast_nullable_to_non_nullable
               as List<Gallery>,
-      numPages: numPages == freezed
+      numPages: freezed == numPages
           ? _value.numPages
           : numPages // ignore: cast_nullable_to_non_nullable
               as int?,
-      perPage: perPage == freezed
+      perPage: freezed == perPage
           ? _value.perPage
           : perPage // ignore: cast_nullable_to_non_nullable
               as int?,
@@ -125,7 +127,7 @@ class __$$_GallerySearchCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GallerySearch implements _GallerySearch {
+class _$_GallerySearch with DiagnosticableTreeMixin implements _GallerySearch {
   const _$_GallerySearch(
       {@JsonKey(name: 'result') final List<Gallery> result = const <Gallery>[],
       @JsonKey(name: 'num_pages') this.numPages,
@@ -151,8 +153,18 @@ class _$_GallerySearch implements _GallerySearch {
   final int? perPage;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'GallerySearch(result: $result, numPages: $numPages, perPage: $perPage)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'GallerySearch'))
+      ..add(DiagnosticsProperty('result', result))
+      ..add(DiagnosticsProperty('numPages', numPages))
+      ..add(DiagnosticsProperty('perPage', perPage));
   }
 
   @override
@@ -161,20 +173,19 @@ class _$_GallerySearch implements _GallerySearch {
         (other.runtimeType == runtimeType &&
             other is _$_GallerySearch &&
             const DeepCollectionEquality().equals(other._result, _result) &&
-            const DeepCollectionEquality().equals(other.numPages, numPages) &&
-            const DeepCollectionEquality().equals(other.perPage, perPage));
+            (identical(other.numPages, numPages) ||
+                other.numPages == numPages) &&
+            (identical(other.perPage, perPage) || other.perPage == perPage));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_result),
-      const DeepCollectionEquality().hash(numPages),
-      const DeepCollectionEquality().hash(perPage));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_result), numPages, perPage);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GallerySearchCopyWith<_$_GallerySearch> get copyWith =>
       __$$_GallerySearchCopyWithImpl<_$_GallerySearch>(this, _$identity);
 

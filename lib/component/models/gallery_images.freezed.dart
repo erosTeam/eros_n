@@ -37,7 +37,8 @@ mixin _$GalleryImages {
 abstract class $GalleryImagesCopyWith<$Res> {
   factory $GalleryImagesCopyWith(
           GalleryImages value, $Res Function(GalleryImages) then) =
-      _$GalleryImagesCopyWithImpl<$Res>;
+      _$GalleryImagesCopyWithImpl<$Res, GalleryImages>;
+  @useResult
   $Res call(
       {@JsonKey(name: 'pages') List<GalleryImage> pages,
       @JsonKey(name: 'cover') GalleryImage cover,
@@ -48,47 +49,51 @@ abstract class $GalleryImagesCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GalleryImagesCopyWithImpl<$Res>
+class _$GalleryImagesCopyWithImpl<$Res, $Val extends GalleryImages>
     implements $GalleryImagesCopyWith<$Res> {
   _$GalleryImagesCopyWithImpl(this._value, this._then);
 
-  final GalleryImages _value;
   // ignore: unused_field
-  final $Res Function(GalleryImages) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? pages = freezed,
-    Object? cover = freezed,
-    Object? thumbnail = freezed,
+    Object? pages = null,
+    Object? cover = null,
+    Object? thumbnail = null,
   }) {
     return _then(_value.copyWith(
-      pages: pages == freezed
+      pages: null == pages
           ? _value.pages
           : pages // ignore: cast_nullable_to_non_nullable
               as List<GalleryImage>,
-      cover: cover == freezed
+      cover: null == cover
           ? _value.cover
           : cover // ignore: cast_nullable_to_non_nullable
               as GalleryImage,
-      thumbnail: thumbnail == freezed
+      thumbnail: null == thumbnail
           ? _value.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
               as GalleryImage,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $GalleryImageCopyWith<$Res> get cover {
     return $GalleryImageCopyWith<$Res>(_value.cover, (value) {
-      return _then(_value.copyWith(cover: value));
+      return _then(_value.copyWith(cover: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $GalleryImageCopyWith<$Res> get thumbnail {
     return $GalleryImageCopyWith<$Res>(_value.thumbnail, (value) {
-      return _then(_value.copyWith(thumbnail: value));
+      return _then(_value.copyWith(thumbnail: value) as $Val);
     });
   }
 }
@@ -100,6 +105,7 @@ abstract class _$$_GalleryImagesCopyWith<$Res>
           _$_GalleryImages value, $Res Function(_$_GalleryImages) then) =
       __$$_GalleryImagesCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: 'pages') List<GalleryImage> pages,
       @JsonKey(name: 'cover') GalleryImage cover,
@@ -113,31 +119,29 @@ abstract class _$$_GalleryImagesCopyWith<$Res>
 
 /// @nodoc
 class __$$_GalleryImagesCopyWithImpl<$Res>
-    extends _$GalleryImagesCopyWithImpl<$Res>
+    extends _$GalleryImagesCopyWithImpl<$Res, _$_GalleryImages>
     implements _$$_GalleryImagesCopyWith<$Res> {
   __$$_GalleryImagesCopyWithImpl(
       _$_GalleryImages _value, $Res Function(_$_GalleryImages) _then)
-      : super(_value, (v) => _then(v as _$_GalleryImages));
+      : super(_value, _then);
 
-  @override
-  _$_GalleryImages get _value => super._value as _$_GalleryImages;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? pages = freezed,
-    Object? cover = freezed,
-    Object? thumbnail = freezed,
+    Object? pages = null,
+    Object? cover = null,
+    Object? thumbnail = null,
   }) {
     return _then(_$_GalleryImages(
-      pages: pages == freezed
+      pages: null == pages
           ? _value._pages
           : pages // ignore: cast_nullable_to_non_nullable
               as List<GalleryImage>,
-      cover: cover == freezed
+      cover: null == cover
           ? _value.cover
           : cover // ignore: cast_nullable_to_non_nullable
               as GalleryImage,
-      thumbnail: thumbnail == freezed
+      thumbnail: null == thumbnail
           ? _value.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
               as GalleryImage,
@@ -148,7 +152,7 @@ class __$$_GalleryImagesCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_GalleryImages implements _GalleryImages {
+class _$_GalleryImages with DiagnosticableTreeMixin implements _GalleryImages {
   const _$_GalleryImages(
       {@JsonKey(name: 'pages')
           final List<GalleryImage> pages = const <GalleryImage>[],
@@ -177,8 +181,18 @@ class _$_GalleryImages implements _GalleryImages {
   final GalleryImage thumbnail;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'GalleryImages(pages: $pages, cover: $cover, thumbnail: $thumbnail)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'GalleryImages'))
+      ..add(DiagnosticsProperty('pages', pages))
+      ..add(DiagnosticsProperty('cover', cover))
+      ..add(DiagnosticsProperty('thumbnail', thumbnail));
   }
 
   @override
@@ -187,20 +201,19 @@ class _$_GalleryImages implements _GalleryImages {
         (other.runtimeType == runtimeType &&
             other is _$_GalleryImages &&
             const DeepCollectionEquality().equals(other._pages, _pages) &&
-            const DeepCollectionEquality().equals(other.cover, cover) &&
-            const DeepCollectionEquality().equals(other.thumbnail, thumbnail));
+            (identical(other.cover, cover) || other.cover == cover) &&
+            (identical(other.thumbnail, thumbnail) ||
+                other.thumbnail == thumbnail));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_pages),
-      const DeepCollectionEquality().hash(cover),
-      const DeepCollectionEquality().hash(thumbnail));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_pages), cover, thumbnail);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GalleryImagesCopyWith<_$_GalleryImages> get copyWith =>
       __$$_GalleryImagesCopyWithImpl<_$_GalleryImages>(this, _$identity);
 

@@ -37,7 +37,8 @@ mixin _$GallerySet {
 abstract class $GallerySetCopyWith<$Res> {
   factory $GallerySetCopyWith(
           GallerySet value, $Res Function(GallerySet) then) =
-      _$GallerySetCopyWithImpl<$Res>;
+      _$GallerySetCopyWithImpl<$Res, GallerySet>;
+  @useResult
   $Res call(
       {List<Gallery>? gallerys,
       List<Gallery>? populars,
@@ -48,13 +49,16 @@ abstract class $GallerySetCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GallerySetCopyWithImpl<$Res> implements $GallerySetCopyWith<$Res> {
+class _$GallerySetCopyWithImpl<$Res, $Val extends GallerySet>
+    implements $GallerySetCopyWith<$Res> {
   _$GallerySetCopyWithImpl(this._value, this._then);
 
-  final GallerySet _value;
   // ignore: unused_field
-  final $Res Function(GallerySet) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? gallerys = freezed,
@@ -65,31 +69,31 @@ class _$GallerySetCopyWithImpl<$Res> implements $GallerySetCopyWith<$Res> {
     Object? fromCache = freezed,
   }) {
     return _then(_value.copyWith(
-      gallerys: gallerys == freezed
+      gallerys: freezed == gallerys
           ? _value.gallerys
           : gallerys // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
-      populars: populars == freezed
+      populars: freezed == populars
           ? _value.populars
           : populars // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
-      favorites: favorites == freezed
+      favorites: freezed == favorites
           ? _value.favorites
           : favorites // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
-      maxPage: maxPage == freezed
+      maxPage: freezed == maxPage
           ? _value.maxPage
           : maxPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      currentPage: currentPage == freezed
+      currentPage: freezed == currentPage
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      fromCache: fromCache == freezed
+      fromCache: freezed == fromCache
           ? _value.fromCache
           : fromCache // ignore: cast_nullable_to_non_nullable
               as bool?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -100,6 +104,7 @@ abstract class _$$_GallerySetCopyWith<$Res>
           _$_GallerySet value, $Res Function(_$_GallerySet) then) =
       __$$_GallerySetCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {List<Gallery>? gallerys,
       List<Gallery>? populars,
@@ -110,15 +115,14 @@ abstract class _$$_GallerySetCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GallerySetCopyWithImpl<$Res> extends _$GallerySetCopyWithImpl<$Res>
+class __$$_GallerySetCopyWithImpl<$Res>
+    extends _$GallerySetCopyWithImpl<$Res, _$_GallerySet>
     implements _$$_GallerySetCopyWith<$Res> {
   __$$_GallerySetCopyWithImpl(
       _$_GallerySet _value, $Res Function(_$_GallerySet) _then)
-      : super(_value, (v) => _then(v as _$_GallerySet));
+      : super(_value, _then);
 
-  @override
-  _$_GallerySet get _value => super._value as _$_GallerySet;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? gallerys = freezed,
@@ -129,27 +133,27 @@ class __$$_GallerySetCopyWithImpl<$Res> extends _$GallerySetCopyWithImpl<$Res>
     Object? fromCache = freezed,
   }) {
     return _then(_$_GallerySet(
-      gallerys: gallerys == freezed
+      gallerys: freezed == gallerys
           ? _value._gallerys
           : gallerys // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
-      populars: populars == freezed
+      populars: freezed == populars
           ? _value._populars
           : populars // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
-      favorites: favorites == freezed
+      favorites: freezed == favorites
           ? _value._favorites
           : favorites // ignore: cast_nullable_to_non_nullable
               as List<Gallery>?,
-      maxPage: maxPage == freezed
+      maxPage: freezed == maxPage
           ? _value.maxPage
           : maxPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      currentPage: currentPage == freezed
+      currentPage: freezed == currentPage
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      fromCache: fromCache == freezed
+      fromCache: freezed == fromCache
           ? _value.fromCache
           : fromCache // ignore: cast_nullable_to_non_nullable
               as bool?,
@@ -222,10 +226,11 @@ class _$_GallerySet implements _GallerySet {
             const DeepCollectionEquality().equals(other._populars, _populars) &&
             const DeepCollectionEquality()
                 .equals(other._favorites, _favorites) &&
-            const DeepCollectionEquality().equals(other.maxPage, maxPage) &&
-            const DeepCollectionEquality()
-                .equals(other.currentPage, currentPage) &&
-            const DeepCollectionEquality().equals(other.fromCache, fromCache));
+            (identical(other.maxPage, maxPage) || other.maxPage == maxPage) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
+            (identical(other.fromCache, fromCache) ||
+                other.fromCache == fromCache));
   }
 
   @JsonKey(ignore: true)
@@ -235,12 +240,13 @@ class _$_GallerySet implements _GallerySet {
       const DeepCollectionEquality().hash(_gallerys),
       const DeepCollectionEquality().hash(_populars),
       const DeepCollectionEquality().hash(_favorites),
-      const DeepCollectionEquality().hash(maxPage),
-      const DeepCollectionEquality().hash(currentPage),
-      const DeepCollectionEquality().hash(fromCache));
+      maxPage,
+      currentPage,
+      fromCache);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GallerySetCopyWith<_$_GallerySet> get copyWith =>
       __$$_GallerySetCopyWithImpl<_$_GallerySet>(this, _$identity);
 

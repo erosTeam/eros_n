@@ -6,7 +6,11 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/gallery/comments_page.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/gallery/thumb_page.dart';
+import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
+import 'package:eros_n/pages/nav/front/front_view.dart';
+import 'package:eros_n/pages/nav/history/history_view.dart';
 import 'package:eros_n/pages/nav/index/index_view.dart';
+import 'package:eros_n/pages/nav/more/more_view.dart';
 import 'package:eros_n/pages/nav/search/search_provider.dart';
 import 'package:eros_n/pages/nav/search/search_view.dart';
 import 'package:eros_n/pages/read/read_view.dart';
@@ -29,25 +33,26 @@ part 'routes.gr.dart';
 
 class NHRoutes {
   static const String root = '/';
-  static const String home = '/home';
-  static const String front = '/front';
-  static const String favorite = '/favorite';
-  static const String history = '/history';
-  static const String gallery = '/gallery';
-  static const String read = '/read';
-  static const String settings = '/settings';
-  static const String appearanceSetting = '/appearanceSetting';
-  static const String readSetting = '/readSetting';
-  static const String advancedSetting = '/advancedSetting';
-  static const String generalSetting = '/generalSetting';
-  static const String login = '/login';
-  static const String webLogin = '/webLogin';
-  static const String webView = '/webView';
-  static const String about = '/about';
-  static const String license = '/license';
-  static const String thumb = '/thumb';
-  static const String comments = '/comments';
-  static const String search = '/search';
+  static const String home = 'home';
+  static const String front = 'front';
+  static const String favorite = 'favorite';
+  static const String history = 'history';
+  static const String gallery = 'gallery';
+  static const String read = 'read';
+  static const String settings = 'settings';
+  static const String appearanceSetting = 'appearanceSetting';
+  static const String readSetting = 'readSetting';
+  static const String advancedSetting = 'advancedSetting';
+  static const String generalSetting = 'generalSetting';
+  static const String login = 'login';
+  static const String webLogin = 'webLogin';
+  static const String webView = 'webView';
+  static const String about = 'about';
+  static const String license = 'license';
+  static const String thumb = 'thumb';
+  static const String comments = 'comments';
+  static const String search = 'search';
+  static const String more = 'more';
 }
 
 class AppRouteObserver extends AutoRouterObserver {
@@ -60,8 +65,15 @@ class AppRouteObserver extends AutoRouterObserver {
   routes: <AutoRoute>[
     AutoRoute(path: NHRoutes.root, page: SplashPage, initial: true),
     AutoRoute(path: NHRoutes.home, page: IndexPage),
-    AutoRoute(path: NHRoutes.gallery, page: GalleryPage),
+    AutoRoute(path: NHRoutes.front, page: FrontPage),
+    AutoRoute(path: NHRoutes.favorite, page: FavoritePage),
+    AutoRoute(path: NHRoutes.history, page: HistoryPage),
+    AutoRoute(path: NHRoutes.search, page: SearchPage),
+    AutoRoute(path: NHRoutes.more, page: MorePage),
+    AutoRoute(path: NHRoutes.gallery, page: GalleryPage, children: []),
     AutoRoute(path: NHRoutes.read, page: ReadPage),
+    AutoRoute(path: NHRoutes.thumb, page: ThumbPage),
+    AutoRoute(path: NHRoutes.comments, page: CommentsPage),
     AutoRoute(path: NHRoutes.settings, page: SettingsPage),
     AutoRoute(path: NHRoutes.appearanceSetting, page: AppearanceSettingPage),
     AutoRoute(path: NHRoutes.generalSetting, page: GeneralSettingPage),
@@ -72,15 +84,13 @@ class AppRouteObserver extends AutoRouterObserver {
     AutoRoute(path: NHRoutes.webView, page: NhWebViewPage),
     AutoRoute(path: NHRoutes.about, page: AboutPage),
     AutoRoute(path: NHRoutes.license, page: LicensePage),
-    AutoRoute(path: NHRoutes.thumb, page: ThumbPage),
-    AutoRoute(path: NHRoutes.comments, page: CommentsPage),
-    AutoRoute(path: NHRoutes.search, page: SearchPage),
   ],
 )
 class AppRouter extends _$AppRouter {}
 
 class RouteUtil {
   static Future<void> goRead(
+    BuildContext context,
     WidgetRef ref, {
     int? index,
   }) async {
@@ -88,7 +98,9 @@ class RouteUtil {
     if (index != null) {
       ref.read(galleryProvider(gid).notifier).setInitialPage(index);
     }
-    await erosRouter.push(ReadRoute(index: index));
+    // erosRouter.push(ReadRoute(index: index));
+    await context.router.push(
+        ReadRoute(index: index, colorScheme: Theme.of(context).colorScheme));
   }
 
   static Future<void> goGallery(

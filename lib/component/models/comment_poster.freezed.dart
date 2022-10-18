@@ -41,7 +41,8 @@ mixin _$CommentPoster {
 abstract class $CommentPosterCopyWith<$Res> {
   factory $CommentPosterCopyWith(
           CommentPoster value, $Res Function(CommentPoster) then) =
-      _$CommentPosterCopyWithImpl<$Res>;
+      _$CommentPosterCopyWithImpl<$Res, CommentPoster>;
+  @useResult
   $Res call(
       {@JsonKey(name: 'id') int? posterId,
       @JsonKey(name: 'username') String? username,
@@ -51,14 +52,16 @@ abstract class $CommentPosterCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CommentPosterCopyWithImpl<$Res>
+class _$CommentPosterCopyWithImpl<$Res, $Val extends CommentPoster>
     implements $CommentPosterCopyWith<$Res> {
   _$CommentPosterCopyWithImpl(this._value, this._then);
 
-  final CommentPoster _value;
   // ignore: unused_field
-  final $Res Function(CommentPoster) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? posterId = freezed,
@@ -68,27 +71,27 @@ class _$CommentPosterCopyWithImpl<$Res>
     Object? isStaff = freezed,
   }) {
     return _then(_value.copyWith(
-      posterId: posterId == freezed
+      posterId: freezed == posterId
           ? _value.posterId
           : posterId // ignore: cast_nullable_to_non_nullable
               as int?,
-      username: username == freezed
+      username: freezed == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String?,
-      avatarUrl: avatarUrl == freezed
+      avatarUrl: freezed == avatarUrl
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      isSuperuser: isSuperuser == freezed
+      isSuperuser: freezed == isSuperuser
           ? _value.isSuperuser
           : isSuperuser // ignore: cast_nullable_to_non_nullable
               as bool?,
-      isStaff: isStaff == freezed
+      isStaff: freezed == isStaff
           ? _value.isStaff
           : isStaff // ignore: cast_nullable_to_non_nullable
               as bool?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -99,6 +102,7 @@ abstract class _$$_CommentPosterCopyWith<$Res>
           _$_CommentPoster value, $Res Function(_$_CommentPoster) then) =
       __$$_CommentPosterCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {@JsonKey(name: 'id') int? posterId,
       @JsonKey(name: 'username') String? username,
@@ -109,15 +113,13 @@ abstract class _$$_CommentPosterCopyWith<$Res>
 
 /// @nodoc
 class __$$_CommentPosterCopyWithImpl<$Res>
-    extends _$CommentPosterCopyWithImpl<$Res>
+    extends _$CommentPosterCopyWithImpl<$Res, _$_CommentPoster>
     implements _$$_CommentPosterCopyWith<$Res> {
   __$$_CommentPosterCopyWithImpl(
       _$_CommentPoster _value, $Res Function(_$_CommentPoster) _then)
-      : super(_value, (v) => _then(v as _$_CommentPoster));
+      : super(_value, _then);
 
-  @override
-  _$_CommentPoster get _value => super._value as _$_CommentPoster;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? posterId = freezed,
@@ -127,23 +129,23 @@ class __$$_CommentPosterCopyWithImpl<$Res>
     Object? isStaff = freezed,
   }) {
     return _then(_$_CommentPoster(
-      posterId: posterId == freezed
+      posterId: freezed == posterId
           ? _value.posterId
           : posterId // ignore: cast_nullable_to_non_nullable
               as int?,
-      username: username == freezed
+      username: freezed == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String?,
-      avatarUrl: avatarUrl == freezed
+      avatarUrl: freezed == avatarUrl
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      isSuperuser: isSuperuser == freezed
+      isSuperuser: freezed == isSuperuser
           ? _value.isSuperuser
           : isSuperuser // ignore: cast_nullable_to_non_nullable
               as bool?,
-      isStaff: isStaff == freezed
+      isStaff: freezed == isStaff
           ? _value.isStaff
           : isStaff // ignore: cast_nullable_to_non_nullable
               as bool?,
@@ -154,7 +156,7 @@ class __$$_CommentPosterCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_CommentPoster implements _CommentPoster {
+class _$_CommentPoster with DiagnosticableTreeMixin implements _CommentPoster {
   const _$_CommentPoster(
       {@JsonKey(name: 'id') this.posterId,
       @JsonKey(name: 'username') this.username,
@@ -182,8 +184,20 @@ class _$_CommentPoster implements _CommentPoster {
   final bool? isStaff;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'CommentPoster(posterId: $posterId, username: $username, avatarUrl: $avatarUrl, isSuperuser: $isSuperuser, isStaff: $isStaff)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'CommentPoster'))
+      ..add(DiagnosticsProperty('posterId', posterId))
+      ..add(DiagnosticsProperty('username', username))
+      ..add(DiagnosticsProperty('avatarUrl', avatarUrl))
+      ..add(DiagnosticsProperty('isSuperuser', isSuperuser))
+      ..add(DiagnosticsProperty('isStaff', isStaff));
   }
 
   @override
@@ -191,26 +205,25 @@ class _$_CommentPoster implements _CommentPoster {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_CommentPoster &&
-            const DeepCollectionEquality().equals(other.posterId, posterId) &&
-            const DeepCollectionEquality().equals(other.username, username) &&
-            const DeepCollectionEquality().equals(other.avatarUrl, avatarUrl) &&
-            const DeepCollectionEquality()
-                .equals(other.isSuperuser, isSuperuser) &&
-            const DeepCollectionEquality().equals(other.isStaff, isStaff));
+            (identical(other.posterId, posterId) ||
+                other.posterId == posterId) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.avatarUrl, avatarUrl) ||
+                other.avatarUrl == avatarUrl) &&
+            (identical(other.isSuperuser, isSuperuser) ||
+                other.isSuperuser == isSuperuser) &&
+            (identical(other.isStaff, isStaff) || other.isStaff == isStaff));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(posterId),
-      const DeepCollectionEquality().hash(username),
-      const DeepCollectionEquality().hash(avatarUrl),
-      const DeepCollectionEquality().hash(isSuperuser),
-      const DeepCollectionEquality().hash(isStaff));
+      runtimeType, posterId, username, avatarUrl, isSuperuser, isStaff);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_CommentPosterCopyWith<_$_CommentPoster> get copyWith =>
       __$$_CommentPosterCopyWithImpl<_$_CommentPoster>(this, _$identity);
 

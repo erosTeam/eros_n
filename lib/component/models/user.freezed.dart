@@ -34,7 +34,8 @@ mixin _$User {
 /// @nodoc
 abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
-      _$UserCopyWithImpl<$Res>;
+      _$UserCopyWithImpl<$Res, User>;
+  @useResult
   $Res call(
       {String? userName,
       String? avatarUrl,
@@ -44,13 +45,16 @@ abstract class $UserCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
+class _$UserCopyWithImpl<$Res, $Val extends User>
+    implements $UserCopyWith<$Res> {
   _$UserCopyWithImpl(this._value, this._then);
 
-  final User _value;
   // ignore: unused_field
-  final $Res Function(User) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? userName = freezed,
@@ -60,27 +64,27 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? sessionid = freezed,
   }) {
     return _then(_value.copyWith(
-      userName: userName == freezed
+      userName: freezed == userName
           ? _value.userName
           : userName // ignore: cast_nullable_to_non_nullable
               as String?,
-      avatarUrl: avatarUrl == freezed
+      avatarUrl: freezed == avatarUrl
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      userId: userId == freezed
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String?,
-      userUrl: userUrl == freezed
+      userUrl: freezed == userUrl
           ? _value.userUrl
           : userUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      sessionid: sessionid == freezed
+      sessionid: freezed == sessionid
           ? _value.sessionid
           : sessionid // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -89,6 +93,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$$_UserCopyWith(_$_User value, $Res Function(_$_User) then) =
       __$$_UserCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String? userName,
       String? avatarUrl,
@@ -98,14 +103,12 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
+class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
     implements _$$_UserCopyWith<$Res> {
   __$$_UserCopyWithImpl(_$_User _value, $Res Function(_$_User) _then)
-      : super(_value, (v) => _then(v as _$_User));
+      : super(_value, _then);
 
-  @override
-  _$_User get _value => super._value as _$_User;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? userName = freezed,
@@ -115,23 +118,23 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? sessionid = freezed,
   }) {
     return _then(_$_User(
-      userName: userName == freezed
+      userName: freezed == userName
           ? _value.userName
           : userName // ignore: cast_nullable_to_non_nullable
               as String?,
-      avatarUrl: avatarUrl == freezed
+      avatarUrl: freezed == avatarUrl
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      userId: userId == freezed
+      userId: freezed == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String?,
-      userUrl: userUrl == freezed
+      userUrl: freezed == userUrl
           ? _value.userUrl
           : userUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      sessionid: sessionid == freezed
+      sessionid: freezed == sessionid
           ? _value.sessionid
           : sessionid // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -141,7 +144,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_User extends _User {
+class _$_User extends _User with DiagnosticableTreeMixin {
   const _$_User(
       {this.userName,
       this.avatarUrl,
@@ -164,8 +167,20 @@ class _$_User extends _User {
   final String? sessionid;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'User(userName: $userName, avatarUrl: $avatarUrl, userId: $userId, userUrl: $userUrl, sessionid: $sessionid)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'User'))
+      ..add(DiagnosticsProperty('userName', userName))
+      ..add(DiagnosticsProperty('avatarUrl', avatarUrl))
+      ..add(DiagnosticsProperty('userId', userId))
+      ..add(DiagnosticsProperty('userUrl', userUrl))
+      ..add(DiagnosticsProperty('sessionid', sessionid));
   }
 
   @override
@@ -173,25 +188,24 @@ class _$_User extends _User {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_User &&
-            const DeepCollectionEquality().equals(other.userName, userName) &&
-            const DeepCollectionEquality().equals(other.avatarUrl, avatarUrl) &&
-            const DeepCollectionEquality().equals(other.userId, userId) &&
-            const DeepCollectionEquality().equals(other.userUrl, userUrl) &&
-            const DeepCollectionEquality().equals(other.sessionid, sessionid));
+            (identical(other.userName, userName) ||
+                other.userName == userName) &&
+            (identical(other.avatarUrl, avatarUrl) ||
+                other.avatarUrl == avatarUrl) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.userUrl, userUrl) || other.userUrl == userUrl) &&
+            (identical(other.sessionid, sessionid) ||
+                other.sessionid == sessionid));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(userName),
-      const DeepCollectionEquality().hash(avatarUrl),
-      const DeepCollectionEquality().hash(userId),
-      const DeepCollectionEquality().hash(userUrl),
-      const DeepCollectionEquality().hash(sessionid));
+  int get hashCode =>
+      Object.hash(runtimeType, userName, avatarUrl, userId, userUrl, sessionid);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_UserCopyWith<_$_User> get copyWith =>
       __$$_UserCopyWithImpl<_$_User>(this, _$identity);
 

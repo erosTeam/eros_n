@@ -35,7 +35,8 @@ mixin _$TagTranslateInfo {
 abstract class $TagTranslateInfoCopyWith<$Res> {
   factory $TagTranslateInfoCopyWith(
           TagTranslateInfo value, $Res Function(TagTranslateInfo) then) =
-      _$TagTranslateInfoCopyWithImpl<$Res>;
+      _$TagTranslateInfoCopyWithImpl<$Res, TagTranslateInfo>;
+  @useResult
   $Res call(
       {String? version,
       String? remoteVersion,
@@ -44,14 +45,16 @@ abstract class $TagTranslateInfoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TagTranslateInfoCopyWithImpl<$Res>
+class _$TagTranslateInfoCopyWithImpl<$Res, $Val extends TagTranslateInfo>
     implements $TagTranslateInfoCopyWith<$Res> {
   _$TagTranslateInfoCopyWithImpl(this._value, this._then);
 
-  final TagTranslateInfo _value;
   // ignore: unused_field
-  final $Res Function(TagTranslateInfo) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? version = freezed,
@@ -60,23 +63,23 @@ class _$TagTranslateInfoCopyWithImpl<$Res>
     Object? nhTagVersion = freezed,
   }) {
     return _then(_value.copyWith(
-      version: version == freezed
+      version: freezed == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as String?,
-      remoteVersion: remoteVersion == freezed
+      remoteVersion: freezed == remoteVersion
           ? _value.remoteVersion
           : remoteVersion // ignore: cast_nullable_to_non_nullable
               as String?,
-      lastReleaseUrl: lastReleaseUrl == freezed
+      lastReleaseUrl: freezed == lastReleaseUrl
           ? _value.lastReleaseUrl
           : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      nhTagVersion: nhTagVersion == freezed
+      nhTagVersion: freezed == nhTagVersion
           ? _value.nhTagVersion
           : nhTagVersion // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -87,6 +90,7 @@ abstract class _$$_TagTranslateInfoCopyWith<$Res>
           _$_TagTranslateInfo value, $Res Function(_$_TagTranslateInfo) then) =
       __$$_TagTranslateInfoCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String? version,
       String? remoteVersion,
@@ -96,15 +100,13 @@ abstract class _$$_TagTranslateInfoCopyWith<$Res>
 
 /// @nodoc
 class __$$_TagTranslateInfoCopyWithImpl<$Res>
-    extends _$TagTranslateInfoCopyWithImpl<$Res>
+    extends _$TagTranslateInfoCopyWithImpl<$Res, _$_TagTranslateInfo>
     implements _$$_TagTranslateInfoCopyWith<$Res> {
   __$$_TagTranslateInfoCopyWithImpl(
       _$_TagTranslateInfo _value, $Res Function(_$_TagTranslateInfo) _then)
-      : super(_value, (v) => _then(v as _$_TagTranslateInfo));
+      : super(_value, _then);
 
-  @override
-  _$_TagTranslateInfo get _value => super._value as _$_TagTranslateInfo;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? version = freezed,
@@ -113,19 +115,19 @@ class __$$_TagTranslateInfoCopyWithImpl<$Res>
     Object? nhTagVersion = freezed,
   }) {
     return _then(_$_TagTranslateInfo(
-      version: version == freezed
+      version: freezed == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as String?,
-      remoteVersion: remoteVersion == freezed
+      remoteVersion: freezed == remoteVersion
           ? _value.remoteVersion
           : remoteVersion // ignore: cast_nullable_to_non_nullable
               as String?,
-      lastReleaseUrl: lastReleaseUrl == freezed
+      lastReleaseUrl: freezed == lastReleaseUrl
           ? _value.lastReleaseUrl
           : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      nhTagVersion: nhTagVersion == freezed
+      nhTagVersion: freezed == nhTagVersion
           ? _value.nhTagVersion
           : nhTagVersion // ignore: cast_nullable_to_non_nullable
               as String?,
@@ -136,7 +138,9 @@ class __$$_TagTranslateInfoCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_TagTranslateInfo implements _TagTranslateInfo {
+class _$_TagTranslateInfo
+    with DiagnosticableTreeMixin
+    implements _TagTranslateInfo {
   const _$_TagTranslateInfo(
       {this.version,
       this.remoteVersion,
@@ -156,8 +160,19 @@ class _$_TagTranslateInfo implements _TagTranslateInfo {
   final String? nhTagVersion;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'TagTranslateInfo'))
+      ..add(DiagnosticsProperty('version', version))
+      ..add(DiagnosticsProperty('remoteVersion', remoteVersion))
+      ..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))
+      ..add(DiagnosticsProperty('nhTagVersion', nhTagVersion));
   }
 
   @override
@@ -165,26 +180,23 @@ class _$_TagTranslateInfo implements _TagTranslateInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_TagTranslateInfo &&
-            const DeepCollectionEquality().equals(other.version, version) &&
-            const DeepCollectionEquality()
-                .equals(other.remoteVersion, remoteVersion) &&
-            const DeepCollectionEquality()
-                .equals(other.lastReleaseUrl, lastReleaseUrl) &&
-            const DeepCollectionEquality()
-                .equals(other.nhTagVersion, nhTagVersion));
+            (identical(other.version, version) || other.version == version) &&
+            (identical(other.remoteVersion, remoteVersion) ||
+                other.remoteVersion == remoteVersion) &&
+            (identical(other.lastReleaseUrl, lastReleaseUrl) ||
+                other.lastReleaseUrl == lastReleaseUrl) &&
+            (identical(other.nhTagVersion, nhTagVersion) ||
+                other.nhTagVersion == nhTagVersion));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(version),
-      const DeepCollectionEquality().hash(remoteVersion),
-      const DeepCollectionEquality().hash(lastReleaseUrl),
-      const DeepCollectionEquality().hash(nhTagVersion));
+      runtimeType, version, remoteVersion, lastReleaseUrl, nhTagVersion);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_TagTranslateInfoCopyWith<_$_TagTranslateInfo> get copyWith =>
       __$$_TagTranslateInfoCopyWithImpl<_$_TagTranslateInfo>(this, _$identity);
 

@@ -70,7 +70,7 @@ class MyApp extends HookConsumerWidget {
         final supportDynamicColors =
             lightDynamic != null && darkDynamic != null;
 
-        logger.d('supportDynamicColors: $supportDynamicColors');
+        logger.v('supportDynamicColors: $supportDynamicColors');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ref
               .read(settingsProvider.notifier)

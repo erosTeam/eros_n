@@ -41,6 +41,8 @@ const nhTagUrlCategoryMap = {
   TagCategory.characters: kCharactersUrl,
 };
 
+const chunkSize = 100;
+
 class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
   TagTranslateNotifier(this.ref) : super(hiveHelper.getTagTranslateInfo());
 
@@ -104,7 +106,12 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
     }
     // log len
     logger.d('tagTranslates len: ${tagTranslates.length}');
-    await isarHelper.putAllTagTranslate(tagTranslates);
+    // await isarHelper.putAllTagTranslate(tagTranslates);
+
+    tagTranslates.chunked(chunkSize).forEach((element) async {
+      await isarHelper.putAllTagTranslate(element);
+    });
+
     state = state.copyWith(
       version: state.remoteVersion,
     );
@@ -153,9 +160,9 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
       return tag..translateName = translated?.translateName;
     }).toList();
 
-    // 每500分块
+    // 每 [chunkSize] 分块
     final List<List<Future<NhTag>>> chunked =
-        tagFutureList.chunked(500).toList();
+        tagFutureList.chunked(chunkSize).toList();
 
     for (final chunk in chunked) {
       final List<NhTag> tags = await Future.wait(chunk);
