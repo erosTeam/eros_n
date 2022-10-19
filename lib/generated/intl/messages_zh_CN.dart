@@ -34,6 +34,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
         "clear_history_tip":
             MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
+        "comment_length_error":
+            MessageLookupByLibrary.simpleMessage("评论内容需要超过10个字符"),
         "comments": MessageLookupByLibrary.simpleMessage("评论"),
         "cover_blur": MessageLookupByLibrary.simpleMessage("封面模糊"),
         "curl_vertical": MessageLookupByLibrary.simpleMessage("垂直(连续)"),

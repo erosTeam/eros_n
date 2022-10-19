@@ -85,5 +85,6 @@
   "language": "Language",
   "hide_bottom_navigation_on_scroll": "Hide Bottom Navigation on Scroll",
   "use_gallery_tint": "Use Gallery Tint",
-  "use_gallery_tint_tip": "Tint gallery pages base on the color of the cover"
+  "use_gallery_tint_tip": "Tint gallery pages base on the color of the cover",
+  "comment_length_error": "Comment must be longer than 10 characters"
 }

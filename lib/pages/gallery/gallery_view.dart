@@ -502,7 +502,7 @@ class PaletteGeneratorWidget extends HookConsumerWidget {
                               ),
                             ),
                             Text(
-                              'dominant',
+                              'dm',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Text(

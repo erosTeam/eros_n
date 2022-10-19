@@ -5,8 +5,6 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
-import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
-import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

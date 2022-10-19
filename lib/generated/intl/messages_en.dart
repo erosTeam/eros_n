@@ -35,6 +35,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "clear_history": MessageLookupByLibrary.simpleMessage("Clear History"),
         "clear_history_tip": MessageLookupByLibrary.simpleMessage(
             "Are you sure to clear all history?"),
+        "comment_length_error": MessageLookupByLibrary.simpleMessage(
+            "Comment must be longer than 10 characters"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
         "cover_blur": MessageLookupByLibrary.simpleMessage("Cover Blur"),
         "curl_vertical": MessageLookupByLibrary.simpleMessage("Curl Vertical"),

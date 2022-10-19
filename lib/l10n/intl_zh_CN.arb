@@ -85,5 +85,6 @@
   "language": "语言",
   "hide_bottom_navigation_on_scroll": "滚动时隐藏底部导航栏",
   "use_gallery_tint": "使用画廊色调",
-  "use_gallery_tint_tip": "根据封面的颜色给画廊页面着色"
+  "use_gallery_tint_tip": "根据封面的颜色给画廊页面着色",
+  "comment_length_error": "评论内容需要超过10个字符"
 }

@@ -519,3 +519,61 @@ Future<Map> getGithubApi(String url) async {
     throw httpResponse.error ?? HttpException('getGithubApi error');
   }
 }
+
+Future<Tuple2<bool, Comment?>> postComment({
+  required int gid,
+  required String comment,
+  required String? csrfToken,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final dataMap = <String, dynamic>{
+    'body': comment,
+  };
+
+  final url = '/api/gallery/$gid/comments/submit';
+
+  final dataJson = jsonEncode(dataMap);
+
+  DioHttpResponse httpResponse = await dioHttpClient.post(
+    url,
+    data: dataJson,
+    options: getOptions(forceRefresh: true)
+      ..followRedirects = false
+      ..headers = {'x-csrftoken': csrfToken}
+      ..validateStatus = (status) => status! < 500,
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        logger.d('statusCode ${response.statusCode}');
+        logger.d('response ${response.data}');
+        final success = response.data['success'] as bool?;
+        final comment = response.data['comment'] as Map?;
+        final error = response.data['error'] as String?;
+        if (error != null) {
+          return DioHttpResponse<Tuple2<bool, Comment?>>.failure(
+            errorMsg: error,
+          );
+        }
+
+        if (success == true && comment != null) {
+          final Comment commentObj =
+              Comment.fromJson(comment as Map<String, dynamic>);
+          return DioHttpResponse<Tuple2<bool, Comment?>>.success(
+              Tuple2(true, commentObj));
+        } else {
+          return DioHttpResponse<Tuple2<bool, Comment?>>.success(
+              const Tuple2(false, null));
+        }
+      },
+    ),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is Tuple2<bool, Comment?>) {
+    return httpResponse.data as Tuple2<bool, Comment?>;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('postComment error');
+  }
+}

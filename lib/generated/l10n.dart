@@ -919,6 +919,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Comment must be longer than 10 characters`
+  String get comment_length_error {
+    return Intl.message(
+      'Comment must be longer than 10 characters',
+      name: 'comment_length_error',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

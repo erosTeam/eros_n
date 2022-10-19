@@ -8,6 +8,7 @@ import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
 import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
@@ -19,6 +20,8 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   final Ref ref;
 
   // ReadNotifier get readNotifier => reader(readProvider.notifier);
+  final TextEditingController commentEditingController =
+      TextEditingController();
 
   void initFromGallery(Gallery gallery) {
     logger.d('init ${gallery.toString()} ');
@@ -124,6 +127,31 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     state = state.copyWith(
       currentPageIndex: index,
     );
+  }
+
+  /// 评论
+  Future<void> comment() async {
+    final String comment = commentEditingController.text.trim();
+    if (comment.isEmpty) {
+      return;
+    }
+    final Tuple2<bool, Comment?> result = await postComment(
+      gid: state.gid,
+      comment: comment,
+      csrfToken: state.csrfToken,
+    );
+    final success = result.item1;
+    final Comment? commentData = result.item2;
+    if (success) {
+      commentEditingController.clear();
+      state = state.copyWith(
+        comments: [
+          commentData!,
+          ...state.comments,
+        ],
+      );
+      loadData(refresh: true);
+    }
   }
 }
 
