@@ -22,6 +22,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:nil/nil.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share/share.dart';
@@ -57,6 +58,19 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
     colorScheme = Theme.of(context).colorScheme;
   }
 
+  Color? getSeedColors(PaletteGenerator palette) {
+    const int threshold = 30;
+    if (palette.vibrantColor?.color != null &&
+        (palette.vibrantColor?.population ?? 0) > threshold) {
+      return palette.vibrantColor?.color;
+    } else if (palette.lightVibrantColor?.color != null &&
+        (palette.lightVibrantColor?.population ?? 0) > threshold) {
+      return palette.lightVibrantColor?.color;
+    } else {
+      return palette.dominantColor?.color;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final useGalleryTint =
@@ -67,9 +81,7 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
       final paletteGenerator = ref.watch(paletteGeneratorProvider(thumbUrl));
       paletteGenerator.whenData((palette) {
         // logger.d(palette);
-        final seedColor = palette.vibrantColor?.color ??
-            palette.lightVibrantColor?.color ??
-            palette.dominantColor?.color;
+        final seedColor = getSeedColors(palette);
         if (seedColor == null) {
           return;
         }
@@ -448,7 +460,7 @@ class DetailView extends HookConsumerWidget {
         bottom: false,
         sliver: MultiSliver(children: [
           TagsView(gid: gid),
-          if (kDebugMode) PaletteGenerator(gid: gid),
+          if (kDebugMode) PaletteGeneratorWidget(gid: gid),
           const SizedBox(height: 8),
           ThumbListView(gid: gid),
           const SizedBox(height: 8),
@@ -462,8 +474,8 @@ class DetailView extends HookConsumerWidget {
   }
 }
 
-class PaletteGenerator extends HookConsumerWidget {
-  const PaletteGenerator({
+class PaletteGeneratorWidget extends HookConsumerWidget {
+  const PaletteGeneratorWidget({
     Key? key,
     required this.gid,
   }) : super(key: key);
