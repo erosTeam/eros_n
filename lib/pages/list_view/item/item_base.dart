@@ -57,10 +57,16 @@ class SimpleTagsView extends HookConsumerWidget {
     Key? key,
     required this.simpleTags,
     this.padding = const EdgeInsets.symmetric(horizontal: 6),
+    this.tagLayoutOnItem,
+    this.color,
+    this.borderColor,
   }) : super(key: key);
 
   final List<Tag> simpleTags;
   final EdgeInsetsGeometry? padding;
+  final TagLayoutOnItem? tagLayoutOnItem;
+  final Color? color;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,21 +81,21 @@ class SimpleTagsView extends HookConsumerWidget {
     final tags = simpleTags.take(10).toList();
     // final tags = gallery.simpleTags;
 
-    switch (tagLayoutOnItem) {
-      case TagLayoutOnItem.row:
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            padding: padding,
-            child: Row(
-              children: [
-                ...tags
-                    .where((tag) => tag.name != null)
-                    .map((e) => SimpleTag(tag: e).paddingOnly(right: 4)),
-              ],
-            ),
-          ),
-        );
+    switch (this.tagLayoutOnItem ?? tagLayoutOnItem) {
+      // case TagLayoutOnItem.row:
+      //   return SingleChildScrollView(
+      //     scrollDirection: Axis.horizontal,
+      //     child: Container(
+      //       padding: padding,
+      //       child: Row(
+      //         children: [
+      //           ...tags
+      //               .where((tag) => tag.name != null)
+      //               .map((e) => SimpleTag(tag: e).paddingOnly(right: 4)),
+      //         ],
+      //       ),
+      //     ),
+      //   );
 
       case TagLayoutOnItem.singleLine:
         return SizedBox(
@@ -109,7 +115,8 @@ class SimpleTagsView extends HookConsumerWidget {
               return Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(right: 4),
-                child: SimpleTag(tag: tag),
+                child:
+                    SimpleTag(tag: tag, color: color, borderColor: borderColor),
               );
             },
             itemCount: tags.length,
@@ -123,7 +130,8 @@ class SimpleTagsView extends HookConsumerWidget {
             runSpacing: 4,
             children: tags
                 .where((tag) => tag.name != null)
-                .map((tag) => SimpleTag(tag: tag))
+                .map((tag) =>
+                    SimpleTag(tag: tag, color: color, borderColor: borderColor))
                 .toList(),
           ),
         );
@@ -135,8 +143,12 @@ class SimpleTag extends HookConsumerWidget {
   const SimpleTag({
     Key? key,
     required this.tag,
+    this.color,
+    this.borderColor,
   }) : super(key: key);
   final Tag tag;
+  final Color? color;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -146,15 +158,14 @@ class SimpleTag extends HookConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1.5),
       decoration: BoxDecoration(
-        // color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.grey[600]!),
+        border: Border.all(color: borderColor ?? Colors.grey[600]!),
       ),
       child: Text(
         isTagTranslate ? tag.translatedName ?? '' : tag.name ?? '',
         style: TextStyle(
           fontSize: 12,
-          color: Theme.of(context).colorScheme.primary,
+          color: color ?? Theme.of(context).colorScheme.primary,
           fontWeight: FontWeight.w500,
         ),
       ),

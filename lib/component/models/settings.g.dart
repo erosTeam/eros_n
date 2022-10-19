@@ -61,7 +61,6 @@ const _$SearchSortEnumMap = {
 
 const _$TagLayoutOnItemEnumMap = {
   TagLayoutOnItem.singleLine: 'singleLine',
-  TagLayoutOnItem.row: 'row',
   TagLayoutOnItem.wrap: 'wrap',
 };
 

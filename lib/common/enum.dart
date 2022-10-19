@@ -13,7 +13,7 @@ enum TagCategory {
 enum TagLayoutOnItem {
   singleLine,
 
-  row,
+  // row,
 
   wrap,
 }

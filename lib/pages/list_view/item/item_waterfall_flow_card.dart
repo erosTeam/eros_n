@@ -1,4 +1,6 @@
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
@@ -25,11 +27,12 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
     Widget item = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildCoverImage(context, compact),
+        buildCoverImage(context, compact, showTags),
         if (!compact) buildTitle(),
         if (!compact) SimpleTagsView(simpleTags: gallery.simpleTags),
       ],
@@ -55,7 +58,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
     );
   }
 
-  Widget buildCoverImage(BuildContext context, bool compact) {
+  Widget buildCoverImage(BuildContext context, bool compact, bool showTags) {
     Widget coverImage = Container(
       foregroundDecoration: (gallery.languageCode == 'ja' ||
               gallery.languageCode == null)
@@ -87,24 +90,52 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                   Colors.transparent,
                   Colors.transparent,
                   Colors.transparent,
-                  Colors.black.withOpacity(0.5),
+                  Colors.transparent,
+                  // Colors.transparent,
+                  if (showTags) Colors.black.withOpacity(0.5),
+                  if (showTags)
+                    Colors.black.withOpacity(0.7)
+                  else
+                    Colors.black.withOpacity(0.55),
                 ],
               ).createShader(rect);
             },
             blendMode: BlendMode.darken,
             child: coverImage,
           ),
-          Container(
-            padding: const EdgeInsets.all(4),
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              (gallery.title.englishTitle ?? '').prettyTitle,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Spacer(),
+              SizedBox(
+                height: 20,
+                child: SimpleTagsView(
+                  simpleTags: gallery.simpleTags,
+                  tagLayoutOnItem: TagLayoutOnItem.singleLine,
+                  color: Colors.white,
+                  borderColor: Colors.white,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(4),
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  (gallery.title.englishTitle ?? '').prettyTitle,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.8),
+                        offset: const Offset(0, 0),
+                        blurRadius: 2,
+                      ),
+                    ],
                   ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
         ],
       );

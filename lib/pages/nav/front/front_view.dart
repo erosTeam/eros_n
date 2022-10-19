@@ -239,8 +239,15 @@ class PopularListView extends ConsumerWidget {
                                   .textTheme
                                   .bodyMedium
                                   ?.copyWith(
-                                    color: Colors.white,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.8),
+                                    offset: const Offset(0, 0),
+                                    blurRadius: 2,
                                   ),
+                                ],
+                              ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),

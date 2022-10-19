@@ -990,7 +990,9 @@ class CommentsListView extends HookConsumerWidget {
                     clipBehavior: Clip.antiAlias,
                     child: InkWell(
                       onTap: () {
-                        erosRouter.push(CommentsRoute(gid: gid));
+                        erosRouter.push(CommentsRoute(
+                            gid: gid,
+                            colorScheme: Theme.of(context).colorScheme));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
