@@ -58,6 +58,8 @@ Future<Gallery> parseGalleryDetail(String html) async {
       document.querySelectorAll(selectorThumb);
   logger.v('galleryThumbsElm ${galleryThumbsElm.length}');
 
+  String? mediaId;
+
   final List<GalleryImage> galleryImagePages = [];
   // for galleryThumbsElm
   for (final elm in galleryThumbsElm) {
@@ -65,6 +67,10 @@ Future<Gallery> parseGalleryDetail(String html) async {
     final thumbUrl = elm.querySelector('img')?.attributes['data-src'] ?? '';
     final imgHeight = elm.querySelector('img')?.attributes['height'];
     final imgWidth = elm.querySelector('img')?.attributes['width'];
+
+    mediaId ??=
+        RegExp(r'/galleries/(\d+)/').firstMatch(thumbUrl ?? '')?.group(1);
+    // logger.d('mediaId: $mediaId');
 
     // 扩展名
     final ext = RegExp(r'\.(\w+)$').firstMatch(thumbUrl)?.group(1) ?? '';
@@ -78,6 +84,12 @@ Future<Gallery> parseGalleryDetail(String html) async {
       imgWidth: int.parse(imgWidth ?? '0'),
     ));
   }
+
+  final thumbImage = GalleryImage(
+    type: galleryImagePages.first.type,
+    imgHeight: galleryImagePages.first.imgHeight,
+    imgWidth: galleryImagePages.first.imgWidth,
+  );
 
   final tuple = parseGalleryTags(document);
   final tags = tuple.item1;
@@ -105,7 +117,9 @@ Future<Gallery> parseGalleryDetail(String html) async {
     ),
     images: GalleryImages(
       pages: galleryImagePages,
+      thumbnail: thumbImage,
     ),
+    mediaId: mediaId,
     isFavorited: isFav,
     numFavorites: int.tryParse(favNum) ?? 0,
     moreLikeGallerys: moreLikeGalleryList,

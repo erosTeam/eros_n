@@ -35,8 +35,19 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
     loadData();
     500.milliseconds.delay(() {
-      ref.read(historyProvider.notifier).addHistory(gallery);
+      ref.read(historyProvider.notifier).addHistory(state);
     });
+  }
+
+  void initFromGid(int gid) {
+    logger.d('init $gid');
+
+    state = state.copyWith(
+      gid: gid,
+    );
+
+    loadData()
+        .then((value) => ref.read(historyProvider.notifier).addHistory(state));
   }
 
   void setInitialPage(int page) {
@@ -45,13 +56,14 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   /// 加载数据
   Future<void> loadData({bool refresh = false}) async {
-    logger.v('loadData refresh $refresh  url: ${state.url}');
+    logger.d('loadData refresh $refresh  url: ${state.url}');
     if (state.images.pages.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.loading));
     }
 
+    logger.d('url ${state.url}');
     // 获取画廊数据
     try {
       final gallery = await getGalleryDetail(
@@ -59,12 +71,9 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         refresh: refresh,
       );
       state = gallery.copyWith(
-        images: gallery.images.copyWith(
-          thumbnail: state.images.thumbnail,
-        ),
-        gid: state.gid,
-        mediaId: state.mediaId,
+        mediaId: gallery.mediaId ?? state.mediaId,
         currentPageIndex: state.currentPageIndex,
+        gid: state.gid,
       );
     } on HttpException catch (e) {
       rethrow;
@@ -75,6 +84,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     }
 
     // 获取评论数据
+    logger.d('url ${state.url}');
     try {
       final comments = await getGalleryComments(
         gid: state.gid,

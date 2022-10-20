@@ -271,6 +271,7 @@ Future<List<Comment>> getGalleryComments({
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
   final url = '/api/gallery/$gid/comments';
+  logger.d('url $url');
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,

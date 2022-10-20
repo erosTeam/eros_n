@@ -78,7 +78,8 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
     final thumbUrl =
         ref.watch(galleryProvider(widget.gid).select((g) => g.thumbUrl));
     if (useGalleryTint) {
-      final paletteGenerator = ref.watch(paletteGeneratorProvider(thumbUrl));
+      final paletteGenerator =
+          ref.watch(paletteGeneratorProvider(thumbUrl ?? ''));
       paletteGenerator.whenData((palette) {
         // logger.d(palette);
         final seedColor = getSeedColors(palette);
@@ -87,7 +88,7 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
         }
         final hslColor = HSLColor.fromColor(seedColor);
         final hsvColor = HSVColor.fromColor(seedColor);
-        logger.d('$seedColor, $hslColor, $hsvColor');
+        logger.v('$seedColor, $hslColor, $hsvColor');
         if (hsvColor.hue < 0.1) {
           return;
         }
@@ -132,8 +133,14 @@ class GalleryPageBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gallery = ref.read(galleryProvider(gid));
-    logger.v('build gallery $gid ${gallery.title}');
+    // final gallery = ref.read(galleryProvider(gid));
+    // logger.v('build gallery $gid ${gallery.title}');
+
+    final thumbUrl = ref.watch(galleryProvider(gid).select((g) => g.thumbUrl));
+    final title = ref.watch(galleryProvider(gid).select((g) => g.title));
+    final url = ref.watch(galleryProvider(gid).select((g) => g.url));
+    final images = ref.watch(galleryProvider(gid).select((g) => g.images));
+    final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
 
     final ScrollController scrollController = useScrollController();
 
@@ -156,14 +163,15 @@ class GalleryPageBody extends HookConsumerWidget {
         blendMode: BlendMode.dstOut,
         child: ClipRect(
           child: BlurImage(
-            // sigma: context.isTablet ? 4 : 4,
             sigma: 4,
             color: Theme.of(context).canvasColor.withOpacity(0.5),
-            child: ErosCachedNetworkImage(
-              imageUrl: gallery.thumbUrl,
-              filterQuality: FilterQuality.medium,
-              fit: BoxFit.cover,
-            ),
+            child: thumbUrl != null
+                ? ErosCachedNetworkImage(
+                    imageUrl: thumbUrl,
+                    filterQuality: FilterQuality.medium,
+                    fit: BoxFit.cover,
+                  )
+                : const SizedBox(),
           ),
         ),
       );
@@ -187,7 +195,7 @@ class GalleryPageBody extends HookConsumerWidget {
             icon: const Icon(Icons.share),
             onPressed: () {
               final shareText =
-                  '${gallery.title}  ${NHConst.baseUrl}${gallery.url}';
+                  '${title.englishTitle}  ${NHConst.baseUrl}${url}';
               logger.d(shareText);
               Share.share(shareText);
             },
@@ -239,7 +247,7 @@ class GalleryPageBody extends HookConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SelectableText(
-                            gallery.title.englishTitle ?? '',
+                            title.englishTitle ?? '',
                             style: Theme.of(context).textTheme.titleLarge,
                             maxLines: context.isTablet ? 2 : 3,
                             minLines: 1,
@@ -256,27 +264,28 @@ class GalleryPageBody extends HookConsumerWidget {
                                   margin: const EdgeInsets.only(right: 12),
                                   alignment: Alignment.center,
                                   child: Hero(
-                                    tag: '${heroTag ?? ''}_${gallery.thumbUrl}',
+                                    tag: '${heroTag ?? ''}_$thumbUrl',
                                     child: Card(
                                       margin: const EdgeInsets.all(0),
                                       clipBehavior: Clip.antiAlias,
                                       child: AspectRatio(
-                                        aspectRatio: (gallery.images.thumbnail
-                                                    .imgWidth ??
-                                                300) /
-                                            (gallery.images.thumbnail
-                                                    .imgHeight ??
-                                                400),
-                                        child: ErosCachedNetworkImage(
-                                          imageUrl: gallery.thumbUrl,
-                                          fit: BoxFit.cover,
-                                        ),
+                                        aspectRatio:
+                                            (images.thumbnail.imgWidth ?? 300) /
+                                                (images.thumbnail.imgHeight ??
+                                                    400),
+                                        child: thumbUrl == null
+                                            ? nil
+                                            : ErosCachedNetworkImage(
+                                                imageUrl: thumbUrl,
+                                                fit: BoxFit.cover,
+                                              ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: buildGalleryInfo(gallery, context),
+                                  child:
+                                      HeadInfoView(gid: gid, context: context),
                                 ),
                               ],
                             ),
@@ -296,8 +305,20 @@ class GalleryPageBody extends HookConsumerWidget {
       ),
     );
   }
+}
 
-  Widget buildGalleryInfo(Gallery gallery, BuildContext context) {
+class HeadInfoView extends StatelessWidget {
+  const HeadInfoView({
+    super.key,
+    required this.gid,
+    required this.context,
+  });
+
+  final int gid;
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(right: 12),
       child: Column(
@@ -320,14 +341,11 @@ class GalleryPageBody extends HookConsumerWidget {
           ),
           const SizedBox(height: 8),
           Wrap(
-            // mainAxisSize: MainAxisSize.min,
-            // mainAxisAlignment: MainAxisAlignment.start,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 12,
             runSpacing: 2,
             children: [
               Text(
-                '#${gallery.gid}',
+                '#$gid',
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),
@@ -409,7 +427,8 @@ class GalleryPageBody extends HookConsumerWidget {
                 final artistTagsWidgetsWithSeparator = artistTagsWidgets
                     .expand((element) => [
                           element,
-                          Text('/', style: Theme.of(context).textTheme.caption)
+                          Text('/',
+                              style: Theme.of(context).textTheme.bodySmall)
                         ])
                     .toList();
 
@@ -484,7 +503,8 @@ class PaletteGeneratorWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final thumbUrl = ref.watch(galleryProvider(gid).select((g) => g.thumbUrl));
-    final paletteGenerator = ref.watch(paletteGeneratorProvider(thumbUrl));
+    final paletteGenerator =
+        ref.watch(paletteGeneratorProvider(thumbUrl ?? ''));
     return MultiSliver(children: [
       ListTile(
         title: const Text('PaletteGenerator (debug)'),
@@ -791,11 +811,6 @@ class ThumbListView extends HookConsumerWidget {
               gid: gid,
               colorScheme: Theme.of(context).colorScheme,
             ));
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => ThumbPage(gid: gid),
-            //   ),
-            // );
           },
         ),
         SizedBox(
@@ -819,11 +834,13 @@ class ThumbListView extends HookConsumerWidget {
                           clipBehavior: Clip.antiAlias,
                           child: Hero(
                             tag: '${gid}_$index',
-                            child: ErosCachedNetworkImage(
-                              imageUrl:
-                                  'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
-                              fit: BoxFit.cover,
-                            ),
+                            child: mediaId == null
+                                ? nil
+                                : ErosCachedNetworkImage(
+                                    imageUrl:
+                                        'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                         ),
                       ),
@@ -907,7 +924,7 @@ class MoreLikeListView extends HookConsumerWidget {
                                             ),
                                           ),
                                 child: ErosCachedNetworkImage(
-                                  imageUrl: likeGallery.thumbUrl,
+                                  imageUrl: likeGallery.thumbUrl ?? '',
                                   fit: BoxFit.cover,
                                 ),
                               ),

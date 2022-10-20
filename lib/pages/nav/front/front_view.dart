@@ -226,7 +226,7 @@ class PopularListView extends ConsumerWidget {
                             },
                             blendMode: BlendMode.darken,
                             child: CoverImg(
-                              imgUrl: gallery.thumbUrl,
+                              imgUrl: gallery.thumbUrl ?? '',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -262,11 +262,12 @@ class PopularListView extends ConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   // popular
-                  RouteUtil.goGallery(
-                    ref,
-                    gallery,
-                    heroTag: '${NHRoutes.front}_popular',
-                  );
+                  // RouteUtil.goGallery(
+                  //   ref,
+                  //   gallery,
+                  //   heroTag: '${NHRoutes.front}_popular',
+                  // );
+                  RouteUtil.goGalleryByGid(ref, gallery.gid);
                 },
                 child: card,
               );

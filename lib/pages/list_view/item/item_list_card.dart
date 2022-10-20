@@ -70,7 +70,7 @@ class ItemListCard extends HookConsumerWidget {
                   child: Hero(
                     tag: '${tabTag ?? ''}_${gallery.thumbUrl}',
                     child: ErosCachedNetworkImage(
-                      imageUrl: gallery.thumbUrl,
+                      imageUrl: gallery.thumbUrl ?? '',
                       height: gallery.images.thumbnail.imgHeight?.toDouble(),
                       width: gallery.images.thumbnail.imgWidth?.toDouble(),
                       fit: isBoxFitCover ? BoxFit.cover : BoxFit.contain,

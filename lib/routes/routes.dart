@@ -117,6 +117,20 @@ class RouteUtil {
     }
   }
 
+  static Future<void> goGalleryByGid(
+    WidgetRef ref,
+    int gid, {
+    String? heroTag,
+  }) async {
+    ref.watch(galleryProvider(gid).notifier).initFromGid(gid);
+    pushGalleryPage(gid);
+    try {
+      await erosRouter.push(GalleryRoute(gid: gid, heroTag: heroTag));
+    } finally {
+      popGalleryPage();
+    }
+  }
+
   static Future<void> goSearch({
     Tag? tag,
     String? keyword,

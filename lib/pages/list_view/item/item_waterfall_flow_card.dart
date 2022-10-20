@@ -73,7 +73,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
               ),
             ),
       child: CoverImg(
-        imgUrl: gallery.thumbUrl,
+        imgUrl: gallery.thumbUrl ?? '',
         fit: BoxFit.contain,
       ),
     );

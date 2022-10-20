@@ -43,11 +43,13 @@ class Gallery with _$Gallery {
       DateTime.tryParse(uploadedDateTime ?? '')?.toLocal();
 
   @JsonKey(ignore: true)
-  String get thumbUrl =>
-      'https://t.nhentai.net/galleries/$mediaId/thumb.${NHConst.extMap[images.thumbnail.type]}';
+  String? get thumbUrl => mediaId != null
+      ? 'https://t.nhentai.net/galleries/$mediaId/thumb.${NHConst.extMap[images.thumbnail.type]}'
+      : null;
   @JsonKey(ignore: true)
-  String get coverUrl =>
-      'https://t.nhentai.net/galleries/$mediaId/cover.${NHConst.extMap[images.cover.type]}';
+  String? get coverUrl => mediaId != null
+      ? 'https://t.nhentai.net/galleries/$mediaId/cover.${NHConst.extMap[images.cover.type]}'
+      : null;
   @JsonKey(ignore: true)
   String get url => 'https://nhentai.net/g/$gid/';
 }
