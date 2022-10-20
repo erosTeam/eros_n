@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
@@ -9,7 +11,9 @@ import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:nil/nil.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class HistoryPage extends StatefulHookConsumerWidget {
@@ -25,12 +29,29 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
   ScrollDirection _lastScrollDirection = ScrollDirection.idle;
   double lastScrollOffset = 0;
   IndexNotifier get indexProviderNoti => ref.read(indexProvider.notifier);
+  late StreamSubscription<bool> keyboardSubscription;
 
   @override
   void initState() {
     super.initState();
     indexProviderNoti.addScrollController(scrollController);
     scrollController.addListener(_scrollListener);
+
+    final keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      if (!visible) {
+        // unfocus
+        FocusScope.of(context).unfocus();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.removeListener(_scrollListener);
+    keyboardSubscription.cancel();
   }
 
   void _scrollListener() {
@@ -68,59 +89,103 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
           controller: scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            SliverAppBar(
-              title: Row(
-                children: [
-                  Text(L10n.of(context).history),
-                ],
-              ),
-              floating: true,
-              pinned: true,
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: SizedBox(height: 0),
-              ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: IconButton(
-                    icon: const Icon(Icons.delete_sweep_outlined),
-                    onPressed: () {
-                      // dialog show
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(L10n.of(context).clear_history),
-                            content: Text(L10n.of(context).clear_history_tip),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(L10n.of(context).cancel),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  ref
-                                      .read(historyProvider.notifier)
-                                      .clearHistory();
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(L10n.of(context).ok),
-                              ),
-                            ],
-                          );
+            Consumer(builder: (context, ref, child) {
+              final appBarSearch =
+                  ref.watch(historyProvider.select((s) => s.appBarSearch));
+              return SliverAppBar(
+                title: appBarSearch
+                    ? TextField(
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          hintText: L10n.of(context).search,
+                          border: InputBorder.none,
+                        ),
+                        textInputAction: TextInputAction.search,
+                        // onSubmitted: (value) {
+                        //   logger.d('onSubmitted $value');
+                        // },
+                        onChanged: (value) {
+                          ref
+                              .read(searchKeyProvider.notifier)
+                              .update((state) => state = value);
                         },
-                      );
-                    },
-                  ),
+                      )
+                    : Row(
+                        children: [
+                          Text(L10n.of(context).history),
+                        ],
+                      ),
+                leadingWidth: appBarSearch ? 60 : 0,
+                leading: appBarSearch
+                    ? IconButton(
+                        onPressed: () {
+                          ref
+                              .read(historyProvider.notifier)
+                              .setAppBarSearch(false);
+                        },
+                        icon: const Icon(Icons.arrow_back))
+                    : nil,
+                floating: true,
+                pinned: true,
+                bottom: const PreferredSize(
+                  preferredSize: Size.fromHeight(0),
+                  child: SizedBox(height: 0),
                 ),
-              ],
-            ),
+                actions: appBarSearch
+                    ? null
+                    : [
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            ref
+                                .read(historyProvider.notifier)
+                                .setAppBarSearch(true);
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: IconButton(
+                            icon: const Icon(Icons.delete_sweep_outlined),
+                            onPressed: () {
+                              // dialog show
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(L10n.of(context).clear_history),
+                                    content: Text(
+                                        L10n.of(context).clear_history_tip),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(L10n.of(context).cancel),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          ref
+                                              .read(historyProvider.notifier)
+                                              .clearHistory();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(L10n.of(context).ok),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        //search
+                      ],
+              );
+            }),
             Consumer(
               builder: (context, ref, child) {
-                final historys = ref.watch(historyGallerysProvider);
+                // final historys = ref.watch(historyGallerysProvider);
+                final historys = ref.watch(filteredHistoryGallerysProvider);
                 final historysGroupByDate = groupByDate(historys);
                 return SliverSafeArea(
                   top: false,

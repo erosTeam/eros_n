@@ -14,6 +14,7 @@ _$_ListViewState _$$_ListViewStateFromJson(Map<String, dynamic> json) =>
       maxPage: json['max_page'] as int? ?? 1,
       floatingAppBar: json['floating_app_bar'] as bool? ?? true,
       errorMessage: json['error_message'] as String?,
+      appBarSearch: json['app_bar_search'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_ListViewStateToJson(_$_ListViewState instance) =>
@@ -23,6 +24,7 @@ Map<String, dynamic> _$$_ListViewStateToJson(_$_ListViewState instance) =>
       'max_page': instance.maxPage,
       'floating_app_bar': instance.floatingAppBar,
       'error_message': instance.errorMessage,
+      'app_bar_search': instance.appBarSearch,
     };
 
 const _$LoadStatusEnumMap = {

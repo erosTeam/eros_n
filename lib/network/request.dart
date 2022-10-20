@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
@@ -576,5 +577,46 @@ Future<Tuple2<bool, Comment?>> postComment({
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('postComment error');
+  }
+}
+
+Future<List<Tag>> nhAutocomplete({
+  String? name,
+  TagCategory? type,
+  CancelToken? cancelToken,
+}) async {
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final dataMap = <String, dynamic>{
+    'name': name,
+    'type': type?.value,
+  };
+
+  const url = '/api/autocomplete';
+  final dataForm = FormData.fromMap(dataMap);
+
+  DioHttpResponse httpResponse = await dioHttpClient.post(
+    url,
+    data: dataForm,
+    options: getOptions(forceRefresh: true),
+    httpTransformer: HttpTransformerBuilder(
+      (response) {
+        logger.d('statusCode ${response.statusCode}');
+        logger.d('response ${response.data}');
+        final List<dynamic> tags = response.data['result'] as List<dynamic>;
+        final List<Tag> tagList = tags
+            .map((e) => Tag.fromJson(e as Map<String, dynamic>))
+            .toList(growable: false);
+        return DioHttpResponse<List<Tag>>.success(tagList);
+      },
+    ),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is List<Tag>) {
+    return httpResponse.data as List<Tag>;
+  } else {
+    logger.e('${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('autocomplete error');
   }
 }

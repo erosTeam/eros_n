@@ -25,6 +25,7 @@ mixin _$ListViewState {
   int get maxPage => throw _privateConstructorUsedError;
   bool get floatingAppBar => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  bool get appBarSearch => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +44,8 @@ abstract class $ListViewStateCopyWith<$Res> {
       int curPage,
       int maxPage,
       bool floatingAppBar,
-      String? errorMessage});
+      String? errorMessage,
+      bool appBarSearch});
 }
 
 /// @nodoc
@@ -64,6 +66,7 @@ class _$ListViewStateCopyWithImpl<$Res, $Val extends ListViewState>
     Object? maxPage = null,
     Object? floatingAppBar = null,
     Object? errorMessage = freezed,
+    Object? appBarSearch = null,
   }) {
     return _then(_value.copyWith(
       status: null == status
@@ -86,6 +89,10 @@ class _$ListViewStateCopyWithImpl<$Res, $Val extends ListViewState>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      appBarSearch: null == appBarSearch
+          ? _value.appBarSearch
+          : appBarSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$_ListViewStateCopyWith<$Res>
       int curPage,
       int maxPage,
       bool floatingAppBar,
-      String? errorMessage});
+      String? errorMessage,
+      bool appBarSearch});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$_ListViewStateCopyWithImpl<$Res>
     Object? maxPage = null,
     Object? floatingAppBar = null,
     Object? errorMessage = freezed,
+    Object? appBarSearch = null,
   }) {
     return _then(_$_ListViewState(
       status: null == status
@@ -144,6 +153,10 @@ class __$$_ListViewStateCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      appBarSearch: null == appBarSearch
+          ? _value.appBarSearch
+          : appBarSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -157,7 +170,8 @@ class _$_ListViewState extends _ListViewState {
       this.curPage = 1,
       this.maxPage = 1,
       this.floatingAppBar = true,
-      this.errorMessage})
+      this.errorMessage,
+      this.appBarSearch = false})
       : super._();
 
   factory _$_ListViewState.fromJson(Map<String, dynamic> json) =>
@@ -177,10 +191,13 @@ class _$_ListViewState extends _ListViewState {
   final bool floatingAppBar;
   @override
   final String? errorMessage;
+  @override
+  @JsonKey()
+  final bool appBarSearch;
 
   @override
   String toString() {
-    return 'ListViewState(status: $status, curPage: $curPage, maxPage: $maxPage, floatingAppBar: $floatingAppBar, errorMessage: $errorMessage)';
+    return 'ListViewState(status: $status, curPage: $curPage, maxPage: $maxPage, floatingAppBar: $floatingAppBar, errorMessage: $errorMessage, appBarSearch: $appBarSearch)';
   }
 
   @override
@@ -194,13 +211,15 @@ class _$_ListViewState extends _ListViewState {
             (identical(other.floatingAppBar, floatingAppBar) ||
                 other.floatingAppBar == floatingAppBar) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            (identical(other.appBarSearch, appBarSearch) ||
+                other.appBarSearch == appBarSearch));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, status, curPage, maxPage, floatingAppBar, errorMessage);
+  int get hashCode => Object.hash(runtimeType, status, curPage, maxPage,
+      floatingAppBar, errorMessage, appBarSearch);
 
   @JsonKey(ignore: true)
   @override
@@ -222,7 +241,8 @@ abstract class _ListViewState extends ListViewState {
       final int curPage,
       final int maxPage,
       final bool floatingAppBar,
-      final String? errorMessage}) = _$_ListViewState;
+      final String? errorMessage,
+      final bool appBarSearch}) = _$_ListViewState;
   const _ListViewState._() : super._();
 
   factory _ListViewState.fromJson(Map<String, dynamic> json) =
@@ -238,6 +258,8 @@ abstract class _ListViewState extends ListViewState {
   bool get floatingAppBar;
   @override
   String? get errorMessage;
+  @override
+  bool get appBarSearch;
   @override
   @JsonKey(ignore: true)
   _$$_ListViewStateCopyWith<_$_ListViewState> get copyWith =>

@@ -14,6 +14,7 @@ class ListViewState with _$ListViewState {
     @Default(1) int maxPage,
     @Default(true) bool floatingAppBar,
     String? errorMessage,
+    @Default(false) bool appBarSearch,
   }) = _ListViewState;
 
   factory ListViewState.fromJson(Map<String, dynamic> json) =>

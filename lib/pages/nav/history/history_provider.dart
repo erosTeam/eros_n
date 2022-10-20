@@ -11,6 +11,14 @@ class HistoryNotifier extends StateNotifier<ListViewState> {
   HistoryGalleryNotifier get historyGalleryNotifier =>
       ref.read(historyGallerysProvider.notifier);
 
+  // set appBarSearch
+  void setAppBarSearch(bool val) {
+    if (!val) {
+      ref.read(searchKeyProvider.notifier).update((state) => state = '');
+    }
+    state = state.copyWith(appBarSearch: val);
+  }
+
   Future<void> addHistory(Gallery gallery) async {
     final galleryHistory = GalleryHistory()
       ..gid = gallery.gid
@@ -66,6 +74,22 @@ final historyGallerysProvider =
     StateNotifierProvider<HistoryGalleryNotifier, List<GalleryHistory>>((ref) {
   return HistoryGalleryNotifier(isarHelper.getAllHistory());
 });
+
+final filteredHistoryGallerysProvider = Provider<List<GalleryHistory>>((ref) {
+  final historyGallerys = ref.watch(historyGallerysProvider);
+  final searchKey = ref.watch(searchKeyProvider);
+  if (searchKey.isEmpty) {
+    return historyGallerys;
+  }
+  return historyGallerys.where((GalleryHistory his) {
+    return (his.title ?? '').toLowerCase().contains(searchKey.toLowerCase()) ||
+        (his.japaneseTitle ?? '')
+            .toLowerCase()
+            .contains(searchKey.toLowerCase());
+  }).toList();
+});
+
+final searchKeyProvider = StateProvider<String>((ref) => '');
 
 final historyProvider =
     StateNotifierProvider<HistoryNotifier, ListViewState>((ref) {
