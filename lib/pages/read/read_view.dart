@@ -221,7 +221,7 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
   Widget buildImage(String imageUrl) {
     return ErosCachedNetworkImage(
       imageUrl: imageUrl,
-      fit: BoxFit.contain,
+      fit: BoxFit.fitWidth,
       progressIndicatorBuilder: (context, url, downloadProgress) {
         return Center(
           child: SizedBox(
