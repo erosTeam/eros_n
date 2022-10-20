@@ -87,7 +87,15 @@ dependencies:
       path: plugins/window_size
   palette_generator: ^0.3.3+2
   nil: ^1.1.1
+  receive_sharing_intent: ^1.4.5
 #  extended_image: ^6.3.1
+  open_by_default:
+    git:
+      url: https://github.com/honjow/open_by_default.git
+  flutter_android_volume_keydown:
+    git:
+      url: https://github.com/honjow/flutter_android_volume_keydown.git
+      ref: dev
 
 dev_dependencies:
   # flutter pub run apn_json2model

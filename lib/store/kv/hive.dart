@@ -19,8 +19,20 @@ class HiveHelper {
 
   static Future<void> init() async {
     await Hive.initFlutter();
-    await Hive.openBox<String>(configBox);
-    await Hive.openBox<String>(userKey);
+    await Hive.openBox<String>(
+      configBox,
+      compactionStrategy: (int entries, int deletedEntries) {
+        logger.v('entries $entries');
+        return entries > 10;
+      },
+    );
+    await Hive.openBox<String>(
+      userKey,
+      compactionStrategy: (int entries, int deletedEntries) {
+        logger.v('entries $entries');
+        return entries > 10;
+      },
+    );
   }
 
   String? getString(String key) {

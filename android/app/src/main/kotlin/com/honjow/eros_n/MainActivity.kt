@@ -4,8 +4,9 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.view.WindowCompat
 import io.flutter.embedding.android.FlutterFragmentActivity
+import dev.darttools.flutter_android_volume_keydown.FlutterAndroidVolumeKeydownFragmentActivity
 
-class MainActivity: FlutterFragmentActivity() {
+class MainActivity: FlutterAndroidVolumeKeydownFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false)
 

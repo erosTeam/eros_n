@@ -394,6 +394,28 @@ class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
               ),
             );
           }),
+          // switch volumeKeyTurnPage
+          Consumer(builder: (context, ref, child) {
+            final volumeKeyTurnPage = ref.watch(settingsProvider
+                .select((settings) => settings.volumeKeyTurnPage));
+            return ListTile(
+              title: Text(L10n.of(context).volume_key_turn_page),
+              trailing: Switch(
+                activeColor: Theme.of(context).colorScheme.primary,
+                value: volumeKeyTurnPage,
+                onChanged: (value) {
+                  ref
+                      .read(settingsProvider.notifier)
+                      .setVolumeKeyTurnPage(value);
+                  if (value) {
+                    ref.read(readProvider.notifier).addVolumeKeydownListen();
+                  } else {
+                    ref.read(readProvider.notifier).closeVolumeKeydownListen();
+                  }
+                },
+              ),
+            );
+          }),
         ],
       ),
     );

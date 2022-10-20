@@ -100,19 +100,23 @@ class ReadPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final gid = currentGalleryGid;
     logger.d('ReadPage build $gid');
+    final ReadNotifier readNotifier = ref.watch(readProvider.notifier);
+
     useEffect(() {
       if (!ref.read(readProvider).showAppBar) {
-        ref.read(readProvider.notifier).setFullscreen();
+        readNotifier.setFullscreen();
       }
+      readNotifier.addVolumeKeydownListen();
       return () {
+        logger.d('ReadPage dispose');
         // 恢复状态栏显示
         SystemChrome.setEnabledSystemUIMode(
           SystemUiMode.edgeToEdge,
         );
+
+        readNotifier.closeVolumeKeydownListen();
       };
     });
-
-    final ReadNotifier readNotifier = ref.watch(readProvider.notifier);
 
     final readModel = ref.watch(settingsProvider.select((s) => s.readModel));
     logger.d('readModel $readModel');

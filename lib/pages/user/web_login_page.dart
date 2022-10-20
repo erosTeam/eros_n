@@ -24,6 +24,7 @@ class WebLoginPage extends StatelessWidget {
       ),
       body: GetCookieWebView(
           url: NHConst.loginUrl,
+          deletedCookie: false,
           callback: (info) async {
             final cookies = info.cookies;
             if (cookies.any((element) => element.name == 'sessionid') &&

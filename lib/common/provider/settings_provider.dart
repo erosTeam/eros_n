@@ -94,6 +94,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(useGalleryTint: value);
     hiveHelper.setSettings(state);
   }
+
+  void setVolumeKeyTurnPage(bool value) {
+    state = state.copyWith(volumeKeyTurnPage: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

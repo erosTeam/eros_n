@@ -929,6 +929,36 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Open supported links`
+  String get open_supported_links {
+    return Intl.message(
+      'Open supported links',
+      name: 'open_supported_links',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Starting with Android 12, apps can only be used as web link handling apps if they are approved. Otherwise it will be processed using the default browser. You can manually approve it here`
+  String get open_supported_links_tip {
+    return Intl.message(
+      'Starting with Android 12, apps can only be used as web link handling apps if they are approved. Otherwise it will be processed using the default browser. You can manually approve it here',
+      name: 'open_supported_links_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Volume key to turn page`
+  String get volume_key_turn_page {
+    return Intl.message(
+      'Volume key to turn page',
+      name: 'volume_key_turn_page',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

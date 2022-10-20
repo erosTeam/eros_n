@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
@@ -9,6 +10,7 @@ import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -210,6 +212,29 @@ class ReadNotifier extends StateNotifier<ReadState> {
 
       onChanged?.call(tempIndex);
     }
+  }
+
+  StreamSubscription? _volumeKeyDownSubscription;
+
+  void addVolumeKeydownListen() {
+    logger.d('addVolumeKeydownListen');
+    final volumeKeyTurnPage =
+        ref.read(settingsProvider.select((s) => s.volumeKeyTurnPage));
+    if (volumeKeyTurnPage) {
+      _volumeKeyDownSubscription =
+          FlutterAndroidVolumeKeydown.stream.listen((event) {
+        if (event == HardwareButton.volume_down) {
+          toNext();
+        } else if (event == HardwareButton.volume_up) {
+          toPrev();
+        }
+      });
+    }
+  }
+
+  void closeVolumeKeydownListen() {
+    logger.d('closeVolumeKeydownListen');
+    _volumeKeyDownSubscription?.cancel();
   }
 }
 

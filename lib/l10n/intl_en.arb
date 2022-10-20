@@ -86,5 +86,8 @@
   "hide_bottom_navigation_on_scroll": "Hide Bottom Navigation on Scroll",
   "use_gallery_tint": "Use Gallery Tint",
   "use_gallery_tint_tip": "Tint gallery pages base on the color of the cover",
-  "comment_length_error": "Comment must be longer than 10 characters"
+  "comment_length_error": "Comment must be longer than 10 characters",
+  "open_supported_links": "Open supported links",
+  "open_supported_links_tip": "Starting with Android 12, apps can only be used as web link handling apps if they are approved. Otherwise it will be processed using the default browser. You can manually approve it here",
+  "volume_key_turn_page": "Volume key to turn page"
 }

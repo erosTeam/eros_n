@@ -25,6 +25,7 @@ class Settings with _$Settings {
     @Default(false) bool supportDynamicColors,
     @Default(true) bool hideBottomNavigationOnScroll,
     @Default(true) bool useGalleryTint,
+    @Default(false) bool volumeKeyTurnPage,
   }) = _Settings;
 
   const Settings._();

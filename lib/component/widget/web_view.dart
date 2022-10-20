@@ -25,10 +25,15 @@ class WebViewCookieInfo {
 typedef WebViewCallback = Function(WebViewCookieInfo);
 
 class MobileWebView extends StatefulWidget {
-  const MobileWebView({super.key, required this.url, this.callback});
+  const MobileWebView(
+      {super.key,
+      required this.url,
+      this.callback,
+      this.deletedCookie = false});
 
   final WebViewCallback? callback;
   final String url;
+  final bool deletedCookie;
 
   @override
   State<MobileWebView> createState() => _MobileWebViewState();
@@ -44,10 +49,14 @@ class _MobileWebViewState extends State<MobileWebView> {
     super.initState();
   }
 
-  void initWebView() async {
+  Future<void> initWebView() async {
     cookieManager = CookieManager.instance();
-    await cookieManager.deleteAllCookies();
-    if (!mounted) return;
+    if (widget.deletedCookie) {
+      await cookieManager.deleteAllCookies();
+    }
+    if (!mounted) {
+      return;
+    }
     setState(() {
       initOk = true;
     });
@@ -209,17 +218,27 @@ class _WindowsWebViewState extends State<WindowsWebView> {
 }
 
 class GetCookieWebView extends StatelessWidget {
-  const GetCookieWebView({required this.url, this.callback, super.key});
+  const GetCookieWebView({
+    required this.url,
+    this.callback,
+    this.deletedCookie = true,
+    super.key,
+  });
 
   final String url;
   final WebViewCallback? callback;
+  final bool deletedCookie;
 
   @override
   Widget build(BuildContext context) {
     switch (Platform.operatingSystem) {
       case 'ios':
       case 'android':
-        return MobileWebView(url: url, callback: callback);
+        return MobileWebView(
+          url: url,
+          callback: callback,
+          deletedCookie: deletedCookie,
+        );
       case 'windows':
         return WindowsWebView(url: url, callback: callback);
       default:

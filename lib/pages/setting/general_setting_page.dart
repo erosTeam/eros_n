@@ -4,9 +4,9 @@ import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/setting/setting_base.dart';
-import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:open_by_default/open_by_default.dart';
 
 class GeneralSettingPage extends StatelessWidget {
   const GeneralSettingPage({Key? key}) : super(key: key);
@@ -58,6 +58,12 @@ class GeneralSettingPage extends StatelessWidget {
                 },
               );
             }),
+            // open_supported_links
+            ListTile(
+              title: Text(L10n.of(context).open_supported_links),
+              subtitle: Text(L10n.of(context).open_supported_links_tip),
+              onTap: OpenByDefault.open,
+            ),
           ],
         ));
   }

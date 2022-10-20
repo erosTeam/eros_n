@@ -194,8 +194,7 @@ class GalleryPageBody extends HookConsumerWidget {
           IconButton(
             icon: const Icon(Icons.share),
             onPressed: () {
-              final shareText =
-                  '${title.englishTitle}  ${NHConst.baseUrl}${url}';
+              final shareText = 'title:${title.englishTitle}\n$url';
               logger.d(shareText);
               Share.share(shareText);
             },

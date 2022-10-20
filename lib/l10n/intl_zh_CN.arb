@@ -86,5 +86,8 @@
   "hide_bottom_navigation_on_scroll": "滚动时隐藏底部导航栏",
   "use_gallery_tint": "使用画廊色调",
   "use_gallery_tint_tip": "根据封面的颜色给画廊页面着色",
-  "comment_length_error": "评论内容需要超过10个字符"
+  "comment_length_error": "评论内容需要超过10个字符",
+  "open_supported_links": "打开支持的链接",
+  "open_supported_links_tip": "从 Android 12 开始, 应用只有在获得许可的情况下，才能作为网络链接的处理应用。否则会使用默认浏览器处理。您可以在此手动许可",
+  "volume_key_turn_page": "音量键翻页"
 }

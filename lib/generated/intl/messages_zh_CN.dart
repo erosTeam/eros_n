@@ -71,6 +71,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "never": MessageLookupByLibrary.simpleMessage("从不"),
         "newest": MessageLookupByLibrary.simpleMessage("最新"),
         "ok": MessageLookupByLibrary.simpleMessage("确定"),
+        "open_supported_links": MessageLookupByLibrary.simpleMessage("打开支持的链接"),
+        "open_supported_links_tip": MessageLookupByLibrary.simpleMessage(
+            "从 Android 12 开始, 应用只有在获得许可的情况下，才能作为网络链接的处理应用。否则会使用默认浏览器处理。您可以在此手动许可"),
         "password": MessageLookupByLibrary.simpleMessage("密码"),
         "please_login_first": MessageLookupByLibrary.simpleMessage("请先登录"),
         "please_login_web": MessageLookupByLibrary.simpleMessage("请通过网页登录"),
@@ -113,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("根据封面的颜色给画廊页面着色"),
         "username": MessageLookupByLibrary.simpleMessage("用户名"),
         "vertical": MessageLookupByLibrary.simpleMessage("垂直"),
+        "volume_key_turn_page": MessageLookupByLibrary.simpleMessage("音量键翻页"),
         "waterfall": MessageLookupByLibrary.simpleMessage("瀑布流"),
         "waterfall_compact": MessageLookupByLibrary.simpleMessage("瀑布流 (紧凑)"),
         "webtoon": MessageLookupByLibrary.simpleMessage("条漫"),

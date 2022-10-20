@@ -35,6 +35,7 @@ mixin _$Settings {
   bool get supportDynamicColors => throw _privateConstructorUsedError;
   bool get hideBottomNavigationOnScroll => throw _privateConstructorUsedError;
   bool get useGalleryTint => throw _privateConstructorUsedError;
+  bool get volumeKeyTurnPage => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -62,7 +63,8 @@ abstract class $SettingsCopyWith<$Res> {
       String themeColorLabel,
       bool supportDynamicColors,
       bool hideBottomNavigationOnScroll,
-      bool useGalleryTint});
+      bool useGalleryTint,
+      bool volumeKeyTurnPage});
 }
 
 /// @nodoc
@@ -93,6 +95,7 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
     Object? supportDynamicColors = null,
     Object? hideBottomNavigationOnScroll = null,
     Object? useGalleryTint = null,
+    Object? volumeKeyTurnPage = null,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: null == isCoverBlur
@@ -155,6 +158,10 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
           ? _value.useGalleryTint
           : useGalleryTint // ignore: cast_nullable_to_non_nullable
               as bool,
+      volumeKeyTurnPage: null == volumeKeyTurnPage
+          ? _value.volumeKeyTurnPage
+          : volumeKeyTurnPage // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -181,7 +188,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       String themeColorLabel,
       bool supportDynamicColors,
       bool hideBottomNavigationOnScroll,
-      bool useGalleryTint});
+      bool useGalleryTint,
+      bool volumeKeyTurnPage});
 }
 
 /// @nodoc
@@ -210,6 +218,7 @@ class __$$_SettingsCopyWithImpl<$Res>
     Object? supportDynamicColors = null,
     Object? hideBottomNavigationOnScroll = null,
     Object? useGalleryTint = null,
+    Object? volumeKeyTurnPage = null,
   }) {
     return _then(_$_Settings(
       isCoverBlur: null == isCoverBlur
@@ -272,6 +281,10 @@ class __$$_SettingsCopyWithImpl<$Res>
           ? _value.useGalleryTint
           : useGalleryTint // ignore: cast_nullable_to_non_nullable
               as bool,
+      volumeKeyTurnPage: null == volumeKeyTurnPage
+          ? _value.volumeKeyTurnPage
+          : volumeKeyTurnPage // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -294,7 +307,8 @@ class _$_Settings extends _Settings {
       this.themeColorLabel = ThemeConfig.dynamicThemeColorLabel,
       this.supportDynamicColors = false,
       this.hideBottomNavigationOnScroll = true,
-      this.useGalleryTint = true})
+      this.useGalleryTint = true,
+      this.volumeKeyTurnPage = false})
       : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
@@ -345,10 +359,13 @@ class _$_Settings extends _Settings {
   @override
   @JsonKey()
   final bool useGalleryTint;
+  @override
+  @JsonKey()
+  final bool volumeKeyTurnPage;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll, useGalleryTint: $useGalleryTint)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll, useGalleryTint: $useGalleryTint, volumeKeyTurnPage: $volumeKeyTurnPage)';
   }
 
   @override
@@ -387,7 +404,9 @@ class _$_Settings extends _Settings {
                 other.hideBottomNavigationOnScroll ==
                     hideBottomNavigationOnScroll) &&
             (identical(other.useGalleryTint, useGalleryTint) ||
-                other.useGalleryTint == useGalleryTint));
+                other.useGalleryTint == useGalleryTint) &&
+            (identical(other.volumeKeyTurnPage, volumeKeyTurnPage) ||
+                other.volumeKeyTurnPage == volumeKeyTurnPage));
   }
 
   @JsonKey(ignore: true)
@@ -408,7 +427,8 @@ class _$_Settings extends _Settings {
       themeColorLabel,
       supportDynamicColors,
       hideBottomNavigationOnScroll,
-      useGalleryTint);
+      useGalleryTint,
+      volumeKeyTurnPage);
 
   @JsonKey(ignore: true)
   @override
@@ -440,7 +460,8 @@ abstract class _Settings extends Settings {
       final String themeColorLabel,
       final bool supportDynamicColors,
       final bool hideBottomNavigationOnScroll,
-      final bool useGalleryTint}) = _$_Settings;
+      final bool useGalleryTint,
+      final bool volumeKeyTurnPage}) = _$_Settings;
   const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
@@ -475,6 +496,8 @@ abstract class _Settings extends Settings {
   bool get hideBottomNavigationOnScroll;
   @override
   bool get useGalleryTint;
+  @override
+  bool get volumeKeyTurnPage;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

@@ -1,16 +1,86 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends StatefulHookConsumerWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
+  late StreamSubscription _intentDataStreamSubscription;
+  late String? sharedText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    if (!Platform.isIOS && !Platform.isAndroid) {
+      0
+          .milliseconds
+          .delay()
+          .then((value) => erosRouter.replaceNamed(NHRoutes.home));
+    } else {
+      // For sharing or opening urls/text coming from outside the app while the app is in the memory
+      _intentDataStreamSubscription =
+          ReceiveSharingIntent.getTextStream().listen((String value) {
+        sharedText = value;
+        logger.d('getTextStream Shared: $sharedText');
+        _goPage(sharedText ?? '', replace: false);
+      }, onError: (err) {
+        logger.e('getTextStream error: $err');
+      });
+
+      // For sharing or opening urls/text coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialText().then((String? value) {
+        // logger.i('value(closed): $value');
+        sharedText = value ?? '';
+        logger.v('Shared: $sharedText');
+        _goPage(sharedText ?? '');
+      });
+    }
+  }
+
+  Future<void> _goPage(String url, {bool replace = true}) async {
+    if (url.isEmpty) {
+      0
+          .milliseconds
+          .delay()
+          .then((value) => erosRouter.replaceNamed(NHRoutes.home));
+    } else {
+      final RegExp regGalleryUrl = RegExp(r'https?://nhentai.net/g/(\d+)/?');
+      final RegExp regGalleryPageUrl =
+          RegExp(r'https://nhentai.net/g/(\d+)/\d+');
+
+      if (regGalleryUrl.hasMatch(url)) {
+        final String gid = regGalleryUrl.firstMatch(url)!.group(1)!;
+        RouteUtil.goGalleryByGid(ref, int.parse(gid), replace: replace);
+      } else if (regGalleryPageUrl.hasMatch(url)) {
+        final String gid = regGalleryPageUrl.firstMatch(url)!.group(1)!;
+        RouteUtil.goGalleryByGid(ref, int.parse(gid), replace: replace);
+      } else {
+        0
+            .milliseconds
+            .delay()
+            .then((value) => erosRouter.replaceNamed(NHRoutes.home));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _intentDataStreamSubscription.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
@@ -21,14 +91,5 @@ class _SplashPageState extends State<SplashPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    0
-        .milliseconds
-        .delay()
-        .then((value) => erosRouter.replaceNamed(NHRoutes.home));
   }
 }

@@ -121,11 +121,16 @@ class RouteUtil {
     WidgetRef ref,
     int gid, {
     String? heroTag,
+    bool replace = false,
   }) async {
     ref.watch(galleryProvider(gid).notifier).initFromGid(gid);
     pushGalleryPage(gid);
     try {
-      await erosRouter.push(GalleryRoute(gid: gid, heroTag: heroTag));
+      if (replace) {
+        await erosRouter.replace(GalleryRoute(gid: gid, heroTag: heroTag));
+      } else {
+        await erosRouter.push(GalleryRoute(gid: gid, heroTag: heroTag));
+      }
     } finally {
       popGalleryPage();
     }

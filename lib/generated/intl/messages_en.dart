@@ -75,6 +75,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "never": MessageLookupByLibrary.simpleMessage("Never"),
         "newest": MessageLookupByLibrary.simpleMessage("Newest"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "open_supported_links":
+            MessageLookupByLibrary.simpleMessage("Open supported links"),
+        "open_supported_links_tip": MessageLookupByLibrary.simpleMessage(
+            "Starting with Android 12, apps can only be used as web link handling apps if they are approved. Otherwise it will be processed using the default browser. You can manually approve it here"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "please_login_first":
             MessageLookupByLibrary.simpleMessage("Please login first"),
@@ -124,6 +128,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Tint gallery pages base on the color of the cover"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
         "vertical": MessageLookupByLibrary.simpleMessage("Vertical"),
+        "volume_key_turn_page":
+            MessageLookupByLibrary.simpleMessage("Volume key to turn page"),
         "waterfall": MessageLookupByLibrary.simpleMessage("Waterfall Flow"),
         "waterfall_compact":
             MessageLookupByLibrary.simpleMessage("Waterfall Flow (Compact)"),

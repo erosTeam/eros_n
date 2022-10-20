@@ -262,12 +262,12 @@ class PopularListView extends ConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   // popular
-                  // RouteUtil.goGallery(
-                  //   ref,
-                  //   gallery,
-                  //   heroTag: '${NHRoutes.front}_popular',
-                  // );
-                  RouteUtil.goGalleryByGid(ref, gallery.gid);
+                  RouteUtil.goGallery(
+                    ref,
+                    gallery,
+                    heroTag: '${NHRoutes.front}_popular',
+                  );
+                  // RouteUtil.goGalleryByGid(ref, gallery.gid);
                 },
                 child: card,
               );

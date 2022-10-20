@@ -119,7 +119,7 @@ packages:
       name: build_config
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   build_daemon:
     dependency: transitive
     description:
@@ -140,14 +140,14 @@ packages:
       name: build_runner
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.2"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "7.2.4"
+    version: "7.2.6"
   built_collection:
     dependency: transitive
     description:
@@ -405,6 +405,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_android_volume_keydown:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: dev
+      resolved-ref: db2453edc7edfbab0c50a58f551a8aa89d0b9e69
+      url: "https://github.com/honjow/flutter_android_volume_keydown.git"
+    source: git
+    version: "1.0.0"
   flutter_blurhash:
     dependency: transitive
     description:
@@ -432,7 +441,7 @@ packages:
       name: flutter_inappwebview
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.5.0+2"
+    version: "5.5.0+4"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
@@ -552,7 +561,7 @@ packages:
       name: frontend_server_client
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.3"
+    version: "3.0.0"
   fullscreen:
     dependency: "direct main"
     description:
@@ -608,7 +617,7 @@ packages:
       name: html
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.15.0"
+    version: "0.15.1"
   http:
     dependency: "direct main"
     description:
@@ -699,7 +708,7 @@ packages:
       name: json_serializable
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "6.5.1"
+    version: "6.5.3"
   keframe:
     dependency: "direct main"
     description:
@@ -791,6 +800,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.2"
+  open_by_default:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: a0b5eca4aca7be24296064e4a63da103f7480f25
+      url: "https://github.com/honjow/open_by_default.git"
+    source: git
+    version: "0.0.1"
   package_config:
     dependency: transitive
     description:
@@ -825,7 +843,7 @@ packages:
       name: package_info_plus_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   package_info_plus_web:
     dependency: transitive
     description:
@@ -994,6 +1012,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.0"
+  receive_sharing_intent:
+    dependency: "direct main"
+    description:
+      name: receive_sharing_intent
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.4.5"
   riverpod:
     dependency: transitive
     description:
