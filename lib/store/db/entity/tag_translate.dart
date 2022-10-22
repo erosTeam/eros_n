@@ -28,10 +28,16 @@ class TagTranslate {
     final reg = RegExp(r'!\[(\S+)?\]\(.+?\)(\S+)');
     final match = reg.allMatches(translateName ?? '');
     if (match.isNotEmpty) {
-      return translateName?.replaceAllMapped(reg, (match) => match.group(2) ?? '') ??
+      return translateName?.replaceAllMapped(
+              reg, (match) => match.group(2) ?? '') ??
           translateName;
     } else {
       return translateName;
     }
+  }
+
+  @override
+  String toString() {
+    return 'TagTranslate{namespace: $namespace, name: $name, translateName: $translateName, intro: $intro, links: $links}';
   }
 }

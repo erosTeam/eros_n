@@ -17,7 +17,7 @@ class SplashPage extends StatefulHookConsumerWidget {
 }
 
 class _SplashPageState extends ConsumerState<SplashPage> {
-  late StreamSubscription _intentDataStreamSubscription;
+  StreamSubscription? _intentDataStreamSubscription;
   late String? sharedText = '';
 
   @override
@@ -78,7 +78,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void dispose() {
     super.dispose();
-    _intentDataStreamSubscription.cancel();
+    _intentDataStreamSubscription?.cancel();
   }
 
   @override

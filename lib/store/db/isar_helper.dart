@@ -42,7 +42,19 @@ class IsarHelper {
     List<TagTranslate> tagTranslates,
   ) async {
     await isar.writeTxn(() async {
-      await isar.tagTranslates.putAll(tagTranslates);
+      await isar.tagTranslates.putAllByNameNamespace(tagTranslates);
+    });
+  }
+
+  Future<void> putTagTranslate(TagTranslate tagTranslate) async {
+    await isar.writeTxn(() async {
+      await isar.tagTranslates.putByNameNamespace(tagTranslate);
+    });
+  }
+
+  Future<void> deleteAllTagTranslate() async {
+    await isar.writeTxn(() async {
+      await isar.tagTranslates.where().deleteAll();
     });
   }
 

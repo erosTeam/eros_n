@@ -104,6 +104,7 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
             links: links));
       });
     }
+
     // log len
     logger.d('tagTranslates len: ${tagTranslates.length}');
     // await isarHelper.putAllTagTranslate(tagTranslates);
