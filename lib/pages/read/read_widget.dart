@@ -11,6 +11,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../setting/read_setting_page.dart';
 import 'read_view.dart';
 
 class ViewTopBar extends HookConsumerWidget {
@@ -234,7 +235,8 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
   }
 }
 
-class ControllerButtonBar extends StatelessWidget {
+// 阅读控制按钮栏
+class ControllerButtonBar extends HookConsumerWidget {
   const ControllerButtonBar({
     Key? key,
     this.mainAxisAlignment = MainAxisAlignment.start,
@@ -249,7 +251,7 @@ class ControllerButtonBar extends StatelessWidget {
   static const buttonWidth = 44.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: mainAxisAlignment,
       mainAxisSize: mainAxisSize,
@@ -259,19 +261,30 @@ class ControllerButtonBar extends StatelessWidget {
         //   onPressed: () {},
         //   icon: const Icon(Icons.share_outlined),
         // ),
+        const AutoReadButton(),
         IconButton(
-          onPressed: () {
+          onPressed: () async {
             // showModalBottomSheet
             // showMaterialModalBottomSheet(
             //   context: context,
             //   enableDrag: true,
             //   builder: (context) => ReadSettings(),
             // );
-            showDialog(
+
+            // now auto read
+            final nowAutoRead =
+                ref.read(readProvider.select((s) => s.autoRead));
+
+            // stop auto read
+            if (nowAutoRead) {
+              ref.read(readProvider.notifier).stopAutoRead();
+            }
+
+            await showDialog(
               context: context,
-              builder: (context) => AlertDialog(
+              builder: (context) => const AlertDialog(
                 // title: const Text('Read Setting'),
-                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                contentPadding: EdgeInsets.symmetric(vertical: 16),
                 content: ReadSettings(),
               ),
             );
@@ -285,6 +298,11 @@ class ControllerButtonBar extends StatelessWidget {
             //     },
             //   ),
             // );
+
+            // restart auto read
+            if (nowAutoRead) {
+              ref.read(readProvider.notifier).startAutoRead();
+            }
           },
           icon: const Icon(Icons.settings_outlined),
         ),
@@ -293,6 +311,26 @@ class ControllerButtonBar extends StatelessWidget {
   }
 }
 
+class AutoReadButton extends HookConsumerWidget {
+  const AutoReadButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final autoRead = ref.watch(readProvider.select((r) => r.autoRead));
+    return IconButton(
+      onPressed: () {
+        ref.read(readProvider.notifier).toggleAutoRead();
+      },
+      icon: autoRead
+          ? const Icon(Icons.timer_off_outlined)
+          : const Icon(Icons.timer_outlined),
+    );
+  }
+}
+
+// 阅读模式按钮
 class ReadModelButton extends HookConsumerWidget {
   const ReadModelButton({
     Key? key,
@@ -345,6 +383,7 @@ class ReadModelButton extends HookConsumerWidget {
   }
 }
 
+// 阅读设置
 class ReadSettings extends StatefulHookConsumerWidget {
   const ReadSettings({
     Key? key,
@@ -367,55 +406,17 @@ class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
+    return SizedBox(
       height: 400,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Consumer(builder: (context, ref, child) {
-            final fullScreenReader = ref.watch(settingsProvider
-                .select((settings) => settings.fullScreenReader));
-            return ListTile(
-              title: Text(L10n.of(context).full_screen),
-              trailing: Switch(
-                activeColor: Theme.of(context).colorScheme.primary,
-                value: fullScreenReader,
-                onChanged: (value) {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setFullScreenReader(value);
-                  if (value) {
-                    ref.read(readProvider.notifier).setFullscreen();
-                  } else {
-                    ref.read(readProvider.notifier).unFullscreen();
-                  }
-                },
-              ),
-            );
-          }),
+        children: const [
+          FullScreenListTile(onReadView: true),
           // switch volumeKeyTurnPage
-          Consumer(builder: (context, ref, child) {
-            final volumeKeyTurnPage = ref.watch(settingsProvider
-                .select((settings) => settings.volumeKeyTurnPage));
-            return ListTile(
-              title: Text(L10n.of(context).volume_key_turn_page),
-              trailing: Switch(
-                activeColor: Theme.of(context).colorScheme.primary,
-                value: volumeKeyTurnPage,
-                onChanged: (value) {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setVolumeKeyTurnPage(value);
-                  if (value) {
-                    ref.read(readProvider.notifier).addVolumeKeydownListen();
-                  } else {
-                    ref.read(readProvider.notifier).closeVolumeKeydownListen();
-                  }
-                },
-              ),
-            );
-          }),
+          VolumeKeyTurnPageListTile(onReadView: true),
+          // autoReadInterval slider
+          AutoReadIntervalListTile(),
         ],
       ),
     );

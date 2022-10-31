@@ -26,6 +26,7 @@ class Settings with _$Settings {
     @Default(true) bool hideBottomNavigationOnScroll,
     @Default(true) bool useGalleryTint,
     @Default(false) bool volumeKeyTurnPage,
+    @Default(2.0) double autoReadInterval,
   }) = _Settings;
 
   const Settings._();
@@ -35,5 +36,7 @@ class Settings with _$Settings {
 
   @JsonKey(ignore: true)
   bool get readModelPageView =>
-      readModel == ReadModel.leftToRight || readModel == ReadModel.rightToLeft;
+      readModel == ReadModel.leftToRight ||
+      readModel == ReadModel.rightToLeft ||
+      readModel == ReadModel.vertical;
 }

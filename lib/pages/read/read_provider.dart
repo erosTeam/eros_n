@@ -21,7 +21,8 @@ class ReadNotifier extends StateNotifier<ReadState> {
   ReadNotifier(super.state, this.ref)
       : preloadPageController = PreloadPageController(
             initialPage:
-                ref.read(galleryProvider(currentGalleryGid)).currentPageIndex);
+                ref.read(galleryProvider(currentGalleryGid)).currentPageIndex,
+            keepPage: true);
   final Ref ref;
 
   final PreloadPageController preloadPageController;
@@ -235,6 +236,44 @@ class ReadNotifier extends StateNotifier<ReadState> {
   void closeVolumeKeydownListen() {
     logger.d('closeVolumeKeydownListen');
     _volumeKeyDownSubscription?.cancel();
+  }
+
+  Timer? _autoReadTimer;
+
+  void toggleAutoRead() {
+    if (state.autoRead) {
+      stopAutoRead();
+    } else {
+      startAutoRead();
+    }
+  }
+
+  void stopAutoRead() {
+    state = state.copyWith(autoRead: false);
+    _autoReadTimer?.cancel();
+    _autoReadTimer = null;
+  }
+
+  void startAutoRead() {
+    state = state.copyWith(autoRead: true);
+    _autoReadTimer?.cancel();
+    _autoReadTimer = null;
+
+    final autoReadInterval =
+        ref.read(settingsProvider.select((s) => s.autoReadInterval));
+    final autoReadDuration =
+        Duration(milliseconds: (autoReadInterval * 1000).round());
+
+    _autoReadTimer = Timer.periodic(
+      autoReadDuration,
+      (timer) async {
+        if (state.autoRead) {
+          toNext();
+        } else {
+          timer.cancel();
+        }
+      },
+    );
   }
 }
 

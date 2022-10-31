@@ -32,6 +32,7 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
           json['hideBottomNavigationOnScroll'] as bool? ?? true,
       useGalleryTint: json['useGalleryTint'] as bool? ?? true,
       volumeKeyTurnPage: json['volumeKeyTurnPage'] as bool? ?? false,
+      autoReadInterval: (json['autoReadInterval'] as num?)?.toDouble() ?? 2.0,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -52,6 +53,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'hideBottomNavigationOnScroll': instance.hideBottomNavigationOnScroll,
       'useGalleryTint': instance.useGalleryTint,
       'volumeKeyTurnPage': instance.volumeKeyTurnPage,
+      'autoReadInterval': instance.autoReadInterval,
     };
 
 const _$SearchSortEnumMap = {

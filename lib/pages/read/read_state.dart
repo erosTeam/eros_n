@@ -14,6 +14,7 @@ class ReadState with _$ReadState {
     @Default(false) bool showThumbList,
     @Default(0.0) double paddingTop,
     @Default(0.0) double paddingBottom,
+    @Default(false) bool autoRead,
   }) = _ReadState;
 
   const ReadState._();

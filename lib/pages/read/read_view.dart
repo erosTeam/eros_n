@@ -355,6 +355,7 @@ class ReadPageView extends HookConsumerWidget {
 
         return PreloadPhotoViewGallery.builder(
           scrollDirection: scrollDirection,
+          wantKeepAlive: false,
           builder: (BuildContext context, int index) {
             final imageUrl = getGalleryImageUrl(
                 mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');

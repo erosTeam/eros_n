@@ -7,139 +7,158 @@ part of 'gallery_history.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
 extension GetGalleryHistoryCollection on Isar {
-  IsarCollection<GalleryHistory> get galleryHistorys => collection();
+  IsarCollection<GalleryHistory> get galleryHistorys => this.collection();
 }
 
 const GalleryHistorySchema = CollectionSchema(
   name: r'GalleryHistory',
-  schema:
-      r'{"name":"GalleryHistory","idName":"gid","properties":[{"name":"coverImgHeight","type":"Long"},{"name":"coverImgWidth","type":"Long"},{"name":"csrfToken","type":"String"},{"name":"japaneseTitle","type":"String"},{"name":"lastReadTime","type":"Long"},{"name":"mediaId","type":"String"},{"name":"thumbUrl","type":"String"},{"name":"title","type":"String"},{"name":"url","type":"String"}],"indexes":[{"name":"lastReadTime","unique":false,"replace":false,"properties":[{"name":"lastReadTime","type":"Value","caseSensitive":false}]}],"links":[]}',
+  id: -2235609206467228336,
+  properties: {
+    r'coverImgHeight': PropertySchema(
+      id: 0,
+      name: r'coverImgHeight',
+      type: IsarType.long,
+    ),
+    r'coverImgWidth': PropertySchema(
+      id: 1,
+      name: r'coverImgWidth',
+      type: IsarType.long,
+    ),
+    r'csrfToken': PropertySchema(
+      id: 2,
+      name: r'csrfToken',
+      type: IsarType.string,
+    ),
+    r'japaneseTitle': PropertySchema(
+      id: 3,
+      name: r'japaneseTitle',
+      type: IsarType.string,
+    ),
+    r'lastReadTime': PropertySchema(
+      id: 4,
+      name: r'lastReadTime',
+      type: IsarType.long,
+    ),
+    r'mediaId': PropertySchema(
+      id: 5,
+      name: r'mediaId',
+      type: IsarType.string,
+    ),
+    r'thumbUrl': PropertySchema(
+      id: 6,
+      name: r'thumbUrl',
+      type: IsarType.string,
+    ),
+    r'title': PropertySchema(
+      id: 7,
+      name: r'title',
+      type: IsarType.string,
+    ),
+    r'url': PropertySchema(
+      id: 8,
+      name: r'url',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _galleryHistoryEstimateSize,
+  serialize: _galleryHistorySerialize,
+  deserialize: _galleryHistoryDeserialize,
+  deserializeProp: _galleryHistoryDeserializeProp,
   idName: r'gid',
-  propertyIds: {
-    r'coverImgHeight': 0,
-    r'coverImgWidth': 1,
-    r'csrfToken': 2,
-    r'japaneseTitle': 3,
-    r'lastReadTime': 4,
-    r'mediaId': 5,
-    r'thumbUrl': 6,
-    r'title': 7,
-    r'url': 8
+  indexes: {
+    r'lastReadTime': IndexSchema(
+      id: -6238597228386762325,
+      name: r'lastReadTime',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'lastReadTime',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
   },
-  listProperties: {},
-  indexIds: {r'lastReadTime': 0},
-  indexValueTypes: {
-    r'lastReadTime': [
-      IndexValueType.long,
-    ]
-  },
-  linkIds: {},
-  backlinkLinkNames: {},
+  links: {},
+  embeddedSchemas: {},
   getId: _galleryHistoryGetId,
-  setId: _galleryHistorySetId,
   getLinks: _galleryHistoryGetLinks,
-  attachLinks: _galleryHistoryAttachLinks,
-  serializeNative: _galleryHistorySerializeNative,
-  deserializeNative: _galleryHistoryDeserializeNative,
-  deserializePropNative: _galleryHistoryDeserializePropNative,
-  serializeWeb: _galleryHistorySerializeWeb,
-  deserializeWeb: _galleryHistoryDeserializeWeb,
-  deserializePropWeb: _galleryHistoryDeserializePropWeb,
-  version: 4,
+  attach: _galleryHistoryAttach,
+  version: '3.0.2',
 );
 
-int? _galleryHistoryGetId(GalleryHistory object) {
-  if (object.gid == Isar.autoIncrement) {
-    return null;
-  } else {
-    return object.gid;
+int _galleryHistoryEstimateSize(
+  GalleryHistory object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.csrfToken;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
   }
+  {
+    final value = object.japaneseTitle;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.mediaId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.thumbUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.title;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.url;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
 }
 
-void _galleryHistorySetId(GalleryHistory object, int id) {
-  object.gid = id;
-}
-
-List<IsarLinkBase<dynamic>> _galleryHistoryGetLinks(GalleryHistory object) {
-  return [];
-}
-
-void _galleryHistorySerializeNative(
-    IsarCollection<GalleryHistory> collection,
-    IsarCObject cObj,
-    GalleryHistory object,
-    int staticSize,
-    List<int> offsets,
-    AdapterAlloc alloc) {
-  IsarUint8List? csrfToken$Bytes;
-  final csrfToken$Value = object.csrfToken;
-  if (csrfToken$Value != null) {
-    csrfToken$Bytes = IsarBinaryWriter.utf8Encoder.convert(csrfToken$Value);
-  }
-  IsarUint8List? japaneseTitle$Bytes;
-  final japaneseTitle$Value = object.japaneseTitle;
-  if (japaneseTitle$Value != null) {
-    japaneseTitle$Bytes =
-        IsarBinaryWriter.utf8Encoder.convert(japaneseTitle$Value);
-  }
-  IsarUint8List? mediaId$Bytes;
-  final mediaId$Value = object.mediaId;
-  if (mediaId$Value != null) {
-    mediaId$Bytes = IsarBinaryWriter.utf8Encoder.convert(mediaId$Value);
-  }
-  IsarUint8List? thumbUrl$Bytes;
-  final thumbUrl$Value = object.thumbUrl;
-  if (thumbUrl$Value != null) {
-    thumbUrl$Bytes = IsarBinaryWriter.utf8Encoder.convert(thumbUrl$Value);
-  }
-  IsarUint8List? title$Bytes;
-  final title$Value = object.title;
-  if (title$Value != null) {
-    title$Bytes = IsarBinaryWriter.utf8Encoder.convert(title$Value);
-  }
-  IsarUint8List? url$Bytes;
-  final url$Value = object.url;
-  if (url$Value != null) {
-    url$Bytes = IsarBinaryWriter.utf8Encoder.convert(url$Value);
-  }
-  final size = (staticSize +
-      3 +
-      (csrfToken$Bytes?.length ?? 0) +
-      3 +
-      (japaneseTitle$Bytes?.length ?? 0) +
-      3 +
-      (mediaId$Bytes?.length ?? 0) +
-      3 +
-      (thumbUrl$Bytes?.length ?? 0) +
-      3 +
-      (title$Bytes?.length ?? 0) +
-      3 +
-      (url$Bytes?.length ?? 0)) as int;
-  cObj.buffer = alloc(size);
-  cObj.buffer_length = size;
-
-  final buffer = IsarNative.bufAsBytes(cObj.buffer, size);
-  final writer = IsarBinaryWriter(buffer, staticSize);
-  writer.writeHeader();
+void _galleryHistorySerialize(
+  GalleryHistory object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
   writer.writeLong(offsets[0], object.coverImgHeight);
   writer.writeLong(offsets[1], object.coverImgWidth);
-  writer.writeByteList(offsets[2], csrfToken$Bytes);
-  writer.writeByteList(offsets[3], japaneseTitle$Bytes);
+  writer.writeString(offsets[2], object.csrfToken);
+  writer.writeString(offsets[3], object.japaneseTitle);
   writer.writeLong(offsets[4], object.lastReadTime);
-  writer.writeByteList(offsets[5], mediaId$Bytes);
-  writer.writeByteList(offsets[6], thumbUrl$Bytes);
-  writer.writeByteList(offsets[7], title$Bytes);
-  writer.writeByteList(offsets[8], url$Bytes);
+  writer.writeString(offsets[5], object.mediaId);
+  writer.writeString(offsets[6], object.thumbUrl);
+  writer.writeString(offsets[7], object.title);
+  writer.writeString(offsets[8], object.url);
 }
 
-GalleryHistory _galleryHistoryDeserializeNative(
-    IsarCollection<GalleryHistory> collection,
-    int id,
-    IsarBinaryReader reader,
-    List<int> offsets) {
+GalleryHistory _galleryHistoryDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
   final object = GalleryHistory();
   object.coverImgHeight = reader.readLongOrNull(offsets[0]);
   object.coverImgWidth = reader.readLongOrNull(offsets[1]);
@@ -154,11 +173,13 @@ GalleryHistory _galleryHistoryDeserializeNative(
   return object;
 }
 
-P _galleryHistoryDeserializePropNative<P>(
-    int id, IsarBinaryReader reader, int propertyIndex, int offset) {
-  switch (propertyIndex) {
-    case -1:
-      return id as P;
+P _galleryHistoryDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
@@ -178,71 +199,22 @@ P _galleryHistoryDeserializePropNative<P>(
     case 8:
       return (reader.readStringOrNull(offset)) as P;
     default:
-      throw IsarError('Illegal propertyIndex');
+      throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Object _galleryHistorySerializeWeb(
-    IsarCollection<GalleryHistory> collection, GalleryHistory object) {
-  final jsObj = IsarNative.newJsObject();
-  IsarNative.jsObjectSet(jsObj, r'coverImgHeight', object.coverImgHeight);
-  IsarNative.jsObjectSet(jsObj, r'coverImgWidth', object.coverImgWidth);
-  IsarNative.jsObjectSet(jsObj, r'csrfToken', object.csrfToken);
-  IsarNative.jsObjectSet(jsObj, r'gid', object.gid);
-  IsarNative.jsObjectSet(jsObj, r'japaneseTitle', object.japaneseTitle);
-  IsarNative.jsObjectSet(jsObj, r'lastReadTime', object.lastReadTime);
-  IsarNative.jsObjectSet(jsObj, r'mediaId', object.mediaId);
-  IsarNative.jsObjectSet(jsObj, r'thumbUrl', object.thumbUrl);
-  IsarNative.jsObjectSet(jsObj, r'title', object.title);
-  IsarNative.jsObjectSet(jsObj, r'url', object.url);
-  return jsObj;
+Id _galleryHistoryGetId(GalleryHistory object) {
+  return object.gid;
 }
 
-GalleryHistory _galleryHistoryDeserializeWeb(
-    IsarCollection<GalleryHistory> collection, Object jsObj) {
-  final object = GalleryHistory();
-  object.coverImgHeight = IsarNative.jsObjectGet(jsObj, r'coverImgHeight');
-  object.coverImgWidth = IsarNative.jsObjectGet(jsObj, r'coverImgWidth');
-  object.csrfToken = IsarNative.jsObjectGet(jsObj, r'csrfToken');
-  object.gid = IsarNative.jsObjectGet(jsObj, r'gid');
-  object.japaneseTitle = IsarNative.jsObjectGet(jsObj, r'japaneseTitle');
-  object.lastReadTime = IsarNative.jsObjectGet(jsObj, r'lastReadTime');
-  object.mediaId = IsarNative.jsObjectGet(jsObj, r'mediaId');
-  object.thumbUrl = IsarNative.jsObjectGet(jsObj, r'thumbUrl');
-  object.title = IsarNative.jsObjectGet(jsObj, r'title');
-  object.url = IsarNative.jsObjectGet(jsObj, r'url');
-  return object;
+List<IsarLinkBase<dynamic>> _galleryHistoryGetLinks(GalleryHistory object) {
+  return [];
 }
 
-P _galleryHistoryDeserializePropWeb<P>(Object jsObj, String propertyName) {
-  switch (propertyName) {
-    case r'coverImgHeight':
-      return (IsarNative.jsObjectGet(jsObj, r'coverImgHeight')) as P;
-    case r'coverImgWidth':
-      return (IsarNative.jsObjectGet(jsObj, r'coverImgWidth')) as P;
-    case r'csrfToken':
-      return (IsarNative.jsObjectGet(jsObj, r'csrfToken')) as P;
-    case r'gid':
-      return (IsarNative.jsObjectGet(jsObj, r'gid')) as P;
-    case r'japaneseTitle':
-      return (IsarNative.jsObjectGet(jsObj, r'japaneseTitle')) as P;
-    case r'lastReadTime':
-      return (IsarNative.jsObjectGet(jsObj, r'lastReadTime')) as P;
-    case r'mediaId':
-      return (IsarNative.jsObjectGet(jsObj, r'mediaId')) as P;
-    case r'thumbUrl':
-      return (IsarNative.jsObjectGet(jsObj, r'thumbUrl')) as P;
-    case r'title':
-      return (IsarNative.jsObjectGet(jsObj, r'title')) as P;
-    case r'url':
-      return (IsarNative.jsObjectGet(jsObj, r'url')) as P;
-    default:
-      throw IsarError('Illegal propertyName');
-  }
+void _galleryHistoryAttach(
+    IsarCollection<dynamic> col, Id id, GalleryHistory object) {
+  object.gid = id;
 }
-
-void _galleryHistoryAttachLinks(
-    IsarCollection<dynamic> col, int id, GalleryHistory object) {}
 
 extension GalleryHistoryQueryWhereSort
     on QueryBuilder<GalleryHistory, GalleryHistory, QWhere> {
@@ -264,7 +236,7 @@ extension GalleryHistoryQueryWhereSort
 extension GalleryHistoryQueryWhere
     on QueryBuilder<GalleryHistory, GalleryHistory, QWhereClause> {
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause> gidEqualTo(
-      int gid) {
+      Id gid) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: gid,
@@ -274,7 +246,7 @@ extension GalleryHistoryQueryWhere
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause> gidNotEqualTo(
-      int gid) {
+      Id gid) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -297,7 +269,7 @@ extension GalleryHistoryQueryWhere
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause>
-      gidGreaterThan(int gid, {bool include = false}) {
+      gidGreaterThan(Id gid, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: gid, includeLower: include),
@@ -306,7 +278,7 @@ extension GalleryHistoryQueryWhere
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause> gidLessThan(
-      int gid,
+      Id gid,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -316,8 +288,8 @@ extension GalleryHistoryQueryWhere
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause> gidBetween(
-    int lowerGid,
-    int upperGid, {
+    Id lowerGid,
+    Id upperGid, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -327,6 +299,28 @@ extension GalleryHistoryQueryWhere
         includeLower: includeLower,
         upper: upperGid,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause>
+      lastReadTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'lastReadTime',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause>
+      lastReadTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lastReadTime',
+        lower: [null],
+        includeLower: false,
+        upper: [],
       ));
     });
   }
@@ -373,28 +367,6 @@ extension GalleryHistoryQueryWhere
               includeUpper: false,
             ));
       }
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause>
-      lastReadTimeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'lastReadTime',
-        value: [null],
-      ));
-    });
-  }
-
-  QueryBuilder<GalleryHistory, GalleryHistory, QAfterWhereClause>
-      lastReadTimeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'lastReadTime',
-        lower: [null],
-        includeLower: false,
-        upper: [],
-      ));
     });
   }
 
@@ -453,6 +425,15 @@ extension GalleryHistoryQueryFilter
       coverImgHeightIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'coverImgHeight',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgHeightIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'coverImgHeight',
       ));
     });
@@ -524,6 +505,15 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      coverImgWidthIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'coverImgWidth',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       coverImgWidthEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -589,6 +579,15 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      csrfTokenIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'csrfToken',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       csrfTokenEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -605,8 +604,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       csrfTokenGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -621,8 +620,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       csrfTokenLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -638,9 +637,9 @@ extension GalleryHistoryQueryFilter
       csrfTokenBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -705,7 +704,27 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
-      gidEqualTo(int value) {
+      csrfTokenIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'csrfToken',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      csrfTokenIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'csrfToken',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      gidEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'gid',
@@ -716,7 +735,7 @@ extension GalleryHistoryQueryFilter
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       gidGreaterThan(
-    int value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -730,7 +749,7 @@ extension GalleryHistoryQueryFilter
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       gidLessThan(
-    int value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -744,8 +763,8 @@ extension GalleryHistoryQueryFilter
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       gidBetween(
-    int lower,
-    int upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -770,6 +789,15 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      japaneseTitleIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'japaneseTitle',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       japaneseTitleEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -786,8 +814,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       japaneseTitleGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -802,8 +830,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       japaneseTitleLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -819,9 +847,9 @@ extension GalleryHistoryQueryFilter
       japaneseTitleBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -886,9 +914,38 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      japaneseTitleIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'japaneseTitle',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      japaneseTitleIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'japaneseTitle',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       lastReadTimeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastReadTime',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      lastReadTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'lastReadTime',
       ));
     });
@@ -960,6 +1017,15 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      mediaIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'mediaId',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       mediaIdEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -976,8 +1042,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       mediaIdGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -992,8 +1058,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       mediaIdLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1009,9 +1075,9 @@ extension GalleryHistoryQueryFilter
       mediaIdBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1076,9 +1142,38 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      mediaIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'mediaId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      mediaIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'mediaId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       thumbUrlIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'thumbUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      thumbUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'thumbUrl',
       ));
     });
@@ -1101,8 +1196,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       thumbUrlGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1117,8 +1212,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       thumbUrlLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1134,9 +1229,9 @@ extension GalleryHistoryQueryFilter
       thumbUrlBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1201,9 +1296,38 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      thumbUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'thumbUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      thumbUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'thumbUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       titleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'title',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      titleIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'title',
       ));
     });
@@ -1226,8 +1350,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       titleGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1242,8 +1366,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       titleLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1259,9 +1383,9 @@ extension GalleryHistoryQueryFilter
       titleBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1326,9 +1450,38 @@ extension GalleryHistoryQueryFilter
   }
 
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      titleIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'title',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      titleIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'title',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       urlIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'url',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      urlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'url',
       ));
     });
@@ -1351,8 +1504,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       urlGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1367,8 +1520,8 @@ extension GalleryHistoryQueryFilter
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
       urlLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1384,9 +1537,9 @@ extension GalleryHistoryQueryFilter
       urlBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1449,12 +1602,35 @@ extension GalleryHistoryQueryFilter
       ));
     });
   }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      urlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'url',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GalleryHistory, GalleryHistory, QAfterFilterCondition>
+      urlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'url',
+        value: '',
+      ));
+    });
+  }
 }
+
+extension GalleryHistoryQueryObject
+    on QueryBuilder<GalleryHistory, GalleryHistory, QFilterCondition> {}
 
 extension GalleryHistoryQueryLinks
     on QueryBuilder<GalleryHistory, GalleryHistory, QFilterCondition> {}
 
-extension GalleryHistoryQueryWhereSortBy
+extension GalleryHistoryQuerySortBy
     on QueryBuilder<GalleryHistory, GalleryHistory, QSortBy> {
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
       sortByCoverImgHeight() {
@@ -1576,7 +1752,7 @@ extension GalleryHistoryQueryWhereSortBy
   }
 }
 
-extension GalleryHistoryQueryWhereSortThenBy
+extension GalleryHistoryQuerySortThenBy
     on QueryBuilder<GalleryHistory, GalleryHistory, QSortThenBy> {
   QueryBuilder<GalleryHistory, GalleryHistory, QAfterSortBy>
       thenByCoverImgHeight() {

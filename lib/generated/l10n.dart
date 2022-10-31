@@ -959,6 +959,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Auto read interval`
+  String get auto_read_interval {
+    return Intl.message(
+      'Auto read interval',
+      name: 'auto_read_interval',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
         "appearance": MessageLookupByLibrary.simpleMessage("外观"),
         "auto": MessageLookupByLibrary.simpleMessage("自动"),
+        "auto_read_interval": MessageLookupByLibrary.simpleMessage("自动阅读间隔"),
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
         "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
         "clear_history_tip":

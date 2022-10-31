@@ -7,101 +7,136 @@ part of 'nh_tag.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
 extension GetNhTagCollection on Isar {
-  IsarCollection<NhTag> get nhTags => collection();
+  IsarCollection<NhTag> get nhTags => this.collection();
 }
 
 const NhTagSchema = CollectionSchema(
   name: r'NhTag',
-  schema:
-      r'{"name":"NhTag","idName":"id","properties":[{"name":"count","type":"Long"},{"name":"name","type":"String"},{"name":"translateName","type":"String"},{"name":"type","type":"String"}],"indexes":[{"name":"name","unique":false,"replace":false,"properties":[{"name":"name","type":"Hash","caseSensitive":true}]},{"name":"translateName","unique":false,"replace":false,"properties":[{"name":"translateName","type":"Hash","caseSensitive":true}]},{"name":"type","unique":false,"replace":false,"properties":[{"name":"type","type":"Hash","caseSensitive":true}]}],"links":[]}',
-  idName: r'id',
-  propertyIds: {r'count': 0, r'name': 1, r'translateName': 2, r'type': 3},
-  listProperties: {},
-  indexIds: {r'name': 0, r'translateName': 1, r'type': 2},
-  indexValueTypes: {
-    r'name': [
-      IndexValueType.stringHash,
-    ],
-    r'translateName': [
-      IndexValueType.stringHash,
-    ],
-    r'type': [
-      IndexValueType.stringHash,
-    ]
+  id: 2914014455521172708,
+  properties: {
+    r'count': PropertySchema(
+      id: 0,
+      name: r'count',
+      type: IsarType.long,
+    ),
+    r'name': PropertySchema(
+      id: 1,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'translateName': PropertySchema(
+      id: 2,
+      name: r'translateName',
+      type: IsarType.string,
+    ),
+    r'type': PropertySchema(
+      id: 3,
+      name: r'type',
+      type: IsarType.string,
+    )
   },
-  linkIds: {},
-  backlinkLinkNames: {},
+  estimateSize: _nhTagEstimateSize,
+  serialize: _nhTagSerialize,
+  deserialize: _nhTagDeserialize,
+  deserializeProp: _nhTagDeserializeProp,
+  idName: r'id',
+  indexes: {
+    r'type': IndexSchema(
+      id: 5117122708147080838,
+      name: r'type',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'type',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'translateName': IndexSchema(
+      id: -5259999136743835192,
+      name: r'translateName',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'translateName',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
+  links: {},
+  embeddedSchemas: {},
   getId: _nhTagGetId,
-  setId: _nhTagSetId,
   getLinks: _nhTagGetLinks,
-  attachLinks: _nhTagAttachLinks,
-  serializeNative: _nhTagSerializeNative,
-  deserializeNative: _nhTagDeserializeNative,
-  deserializePropNative: _nhTagDeserializePropNative,
-  serializeWeb: _nhTagSerializeWeb,
-  deserializeWeb: _nhTagDeserializeWeb,
-  deserializePropWeb: _nhTagDeserializePropWeb,
-  version: 4,
+  attach: _nhTagAttach,
+  version: '3.0.2',
 );
 
-int? _nhTagGetId(NhTag object) {
-  if (object.id == Isar.autoIncrement) {
-    return null;
-  } else {
-    return object.id;
+int _nhTagEstimateSize(
+  NhTag object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.name;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
   }
+  {
+    final value = object.translateName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.type;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
 }
 
-void _nhTagSetId(NhTag object, int id) {
-  object.id = id;
-}
-
-List<IsarLinkBase<dynamic>> _nhTagGetLinks(NhTag object) {
-  return [];
-}
-
-void _nhTagSerializeNative(IsarCollection<NhTag> collection, IsarCObject cObj,
-    NhTag object, int staticSize, List<int> offsets, AdapterAlloc alloc) {
-  IsarUint8List? name$Bytes;
-  final name$Value = object.name;
-  if (name$Value != null) {
-    name$Bytes = IsarBinaryWriter.utf8Encoder.convert(name$Value);
-  }
-  IsarUint8List? translateName$Bytes;
-  final translateName$Value = object.translateName;
-  if (translateName$Value != null) {
-    translateName$Bytes =
-        IsarBinaryWriter.utf8Encoder.convert(translateName$Value);
-  }
-  IsarUint8List? type$Bytes;
-  final type$Value = object.type;
-  if (type$Value != null) {
-    type$Bytes = IsarBinaryWriter.utf8Encoder.convert(type$Value);
-  }
-  final size = (staticSize +
-      3 +
-      (name$Bytes?.length ?? 0) +
-      3 +
-      (translateName$Bytes?.length ?? 0) +
-      3 +
-      (type$Bytes?.length ?? 0)) as int;
-  cObj.buffer = alloc(size);
-  cObj.buffer_length = size;
-
-  final buffer = IsarNative.bufAsBytes(cObj.buffer, size);
-  final writer = IsarBinaryWriter(buffer, staticSize);
-  writer.writeHeader();
+void _nhTagSerialize(
+  NhTag object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
   writer.writeLong(offsets[0], object.count);
-  writer.writeByteList(offsets[1], name$Bytes);
-  writer.writeByteList(offsets[2], translateName$Bytes);
-  writer.writeByteList(offsets[3], type$Bytes);
+  writer.writeString(offsets[1], object.name);
+  writer.writeString(offsets[2], object.translateName);
+  writer.writeString(offsets[3], object.type);
 }
 
-NhTag _nhTagDeserializeNative(IsarCollection<NhTag> collection, int id,
-    IsarBinaryReader reader, List<int> offsets) {
+NhTag _nhTagDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
   final object = NhTag(
     count: reader.readLongOrNull(offsets[0]),
     id: id,
@@ -112,11 +147,13 @@ NhTag _nhTagDeserializeNative(IsarCollection<NhTag> collection, int id,
   return object;
 }
 
-P _nhTagDeserializePropNative<P>(
-    int id, IsarBinaryReader reader, int propertyIndex, int offset) {
-  switch (propertyIndex) {
-    case -1:
-      return id as P;
+P _nhTagDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
@@ -126,49 +163,21 @@ P _nhTagDeserializePropNative<P>(
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     default:
-      throw IsarError('Illegal propertyIndex');
+      throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Object _nhTagSerializeWeb(IsarCollection<NhTag> collection, NhTag object) {
-  final jsObj = IsarNative.newJsObject();
-  IsarNative.jsObjectSet(jsObj, r'count', object.count);
-  IsarNative.jsObjectSet(jsObj, r'id', object.id);
-  IsarNative.jsObjectSet(jsObj, r'name', object.name);
-  IsarNative.jsObjectSet(jsObj, r'translateName', object.translateName);
-  IsarNative.jsObjectSet(jsObj, r'type', object.type);
-  return jsObj;
+Id _nhTagGetId(NhTag object) {
+  return object.id ?? Isar.autoIncrement;
 }
 
-NhTag _nhTagDeserializeWeb(IsarCollection<NhTag> collection, Object jsObj) {
-  final object = NhTag(
-    count: IsarNative.jsObjectGet(jsObj, r'count'),
-    id: IsarNative.jsObjectGet(jsObj, r'id'),
-    name: IsarNative.jsObjectGet(jsObj, r'name'),
-    type: IsarNative.jsObjectGet(jsObj, r'type'),
-  );
-  object.translateName = IsarNative.jsObjectGet(jsObj, r'translateName');
-  return object;
+List<IsarLinkBase<dynamic>> _nhTagGetLinks(NhTag object) {
+  return [];
 }
 
-P _nhTagDeserializePropWeb<P>(Object jsObj, String propertyName) {
-  switch (propertyName) {
-    case r'count':
-      return (IsarNative.jsObjectGet(jsObj, r'count')) as P;
-    case r'id':
-      return (IsarNative.jsObjectGet(jsObj, r'id')) as P;
-    case r'name':
-      return (IsarNative.jsObjectGet(jsObj, r'name')) as P;
-    case r'translateName':
-      return (IsarNative.jsObjectGet(jsObj, r'translateName')) as P;
-    case r'type':
-      return (IsarNative.jsObjectGet(jsObj, r'type')) as P;
-    default:
-      throw IsarError('Illegal propertyName');
-  }
+void _nhTagAttach(IsarCollection<dynamic> col, Id id, NhTag object) {
+  object.id = id;
 }
-
-void _nhTagAttachLinks(IsarCollection<dynamic> col, int id, NhTag object) {}
 
 extension NhTagQueryWhereSort on QueryBuilder<NhTag, NhTag, QWhere> {
   QueryBuilder<NhTag, NhTag, QAfterWhere> anyId() {
@@ -179,7 +188,7 @@ extension NhTagQueryWhereSort on QueryBuilder<NhTag, NhTag, QWhere> {
 }
 
 extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idEqualTo(int id) {
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -188,7 +197,7 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
     });
   }
 
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idNotEqualTo(int id) {
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -210,7 +219,7 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
     });
   }
 
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idGreaterThan(int id,
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -219,7 +228,7 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
     });
   }
 
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idLessThan(int id,
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -229,8 +238,8 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
   }
 
   QueryBuilder<NhTag, NhTag, QAfterWhereClause> idBetween(
-    int lowerId,
-    int upperId, {
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -240,6 +249,89 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
         includeLower: includeLower,
         upper: upperId,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'type',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'type',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeEqualTo(String? type) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'type',
+        value: [type],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeNotEqualTo(String? type) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'type',
+              lower: [],
+              upper: [type],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'type',
+              lower: [type],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'type',
+              lower: [type],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'type',
+              lower: [],
+              upper: [type],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'name',
+        lower: [null],
+        includeLower: false,
+        upper: [],
       ));
     });
   }
@@ -287,19 +379,19 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
     });
   }
 
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameIsNull() {
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'name',
+        indexName: r'translateName',
         value: [null],
       ));
     });
   }
 
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> nameIsNotNull() {
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'name',
+        indexName: r'translateName',
         lower: [null],
         includeLower: false,
         upper: [],
@@ -351,95 +443,20 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
       }
     });
   }
-
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'translateName',
-        value: [null],
-      ));
-    });
-  }
-
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> translateNameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'translateName',
-        lower: [null],
-        includeLower: false,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeEqualTo(String? type) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'type',
-        value: [type],
-      ));
-    });
-  }
-
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeNotEqualTo(String? type) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [],
-              upper: [type],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [type],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [type],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [],
-              upper: [type],
-              includeUpper: false,
-            ));
-      }
-    });
-  }
-
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'type',
-        value: [null],
-      ));
-    });
-  }
-
-  QueryBuilder<NhTag, NhTag, QAfterWhereClause> typeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'type',
-        lower: [null],
-        includeLower: false,
-        upper: [],
-      ));
-    });
-  }
 }
 
 extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> countIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'count',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> countIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'count',
       ));
     });
@@ -505,7 +522,15 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
     });
   }
 
-  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> idEqualTo(int value) {
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> idEqualTo(Id? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -515,7 +540,7 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
   }
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> idGreaterThan(
-    int value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -528,7 +553,7 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
   }
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> idLessThan(
-    int value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -541,8 +566,8 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
   }
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> idBetween(
-    int lower,
-    int upper, {
+    Id? lower,
+    Id? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -565,6 +590,14 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'name',
+      ));
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> nameEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -580,8 +613,8 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> nameGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -595,8 +628,8 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> nameLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -611,9 +644,9 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> nameBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -675,9 +708,35 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'translateName',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'translateName',
       ));
     });
@@ -698,8 +757,8 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -713,8 +772,8 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -729,9 +788,9 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -795,9 +854,35 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'translateName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> translateNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'translateName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'type',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'type',
       ));
     });
@@ -818,8 +903,8 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -833,8 +918,8 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
 
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -849,9 +934,9 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
   QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -912,11 +997,31 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> typeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
 }
+
+extension NhTagQueryObject on QueryBuilder<NhTag, NhTag, QFilterCondition> {}
 
 extension NhTagQueryLinks on QueryBuilder<NhTag, NhTag, QFilterCondition> {}
 
-extension NhTagQueryWhereSortBy on QueryBuilder<NhTag, NhTag, QSortBy> {
+extension NhTagQuerySortBy on QueryBuilder<NhTag, NhTag, QSortBy> {
   QueryBuilder<NhTag, NhTag, QAfterSortBy> sortByCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'count', Sort.asc);
@@ -966,7 +1071,7 @@ extension NhTagQueryWhereSortBy on QueryBuilder<NhTag, NhTag, QSortBy> {
   }
 }
 
-extension NhTagQueryWhereSortThenBy on QueryBuilder<NhTag, NhTag, QSortThenBy> {
+extension NhTagQuerySortThenBy on QueryBuilder<NhTag, NhTag, QSortThenBy> {
   QueryBuilder<NhTag, NhTag, QAfterSortBy> thenByCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'count', Sort.asc);

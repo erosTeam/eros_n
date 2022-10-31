@@ -90,6 +90,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
                   child: SizedBox(height: 0),
                 ),
                 toolbarHeight: 0,
+                elevation: 0,
               ),
               SliverSafeArea(
                 top: false,

@@ -99,6 +99,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(volumeKeyTurnPage: value);
     hiveHelper.setSettings(state);
   }
+
+  void setAutoReadInterval(double value) {
+    state = state.copyWith(autoReadInterval: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

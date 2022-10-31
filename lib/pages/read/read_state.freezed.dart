@@ -27,6 +27,7 @@ mixin _$ReadState {
   bool get showThumbList => throw _privateConstructorUsedError;
   double get paddingTop => throw _privateConstructorUsedError;
   double get paddingBottom => throw _privateConstructorUsedError;
+  bool get autoRead => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +47,8 @@ abstract class $ReadStateCopyWith<$Res> {
       double bottomBarHeight,
       bool showThumbList,
       double paddingTop,
-      double paddingBottom});
+      double paddingBottom,
+      bool autoRead});
 }
 
 /// @nodoc
@@ -69,6 +71,7 @@ class _$ReadStateCopyWithImpl<$Res, $Val extends ReadState>
     Object? showThumbList = null,
     Object? paddingTop = null,
     Object? paddingBottom = null,
+    Object? autoRead = null,
   }) {
     return _then(_value.copyWith(
       showAppBar: null == showAppBar
@@ -99,6 +102,10 @@ class _$ReadStateCopyWithImpl<$Res, $Val extends ReadState>
           ? _value.paddingBottom
           : paddingBottom // ignore: cast_nullable_to_non_nullable
               as double,
+      autoRead: null == autoRead
+          ? _value.autoRead
+          : autoRead // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -117,7 +124,8 @@ abstract class _$$_ReadStateCopyWith<$Res> implements $ReadStateCopyWith<$Res> {
       double bottomBarHeight,
       bool showThumbList,
       double paddingTop,
-      double paddingBottom});
+      double paddingBottom,
+      bool autoRead});
 }
 
 /// @nodoc
@@ -138,6 +146,7 @@ class __$$_ReadStateCopyWithImpl<$Res>
     Object? showThumbList = null,
     Object? paddingTop = null,
     Object? paddingBottom = null,
+    Object? autoRead = null,
   }) {
     return _then(_$_ReadState(
       showAppBar: null == showAppBar
@@ -168,6 +177,10 @@ class __$$_ReadStateCopyWithImpl<$Res>
           ? _value.paddingBottom
           : paddingBottom // ignore: cast_nullable_to_non_nullable
               as double,
+      autoRead: null == autoRead
+          ? _value.autoRead
+          : autoRead // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -183,7 +196,8 @@ class _$_ReadState extends _ReadState {
       this.bottomBarHeight = 0.0,
       this.showThumbList = false,
       this.paddingTop = 0.0,
-      this.paddingBottom = 0.0})
+      this.paddingBottom = 0.0,
+      this.autoRead = false})
       : super._();
 
   factory _$_ReadState.fromJson(Map<String, dynamic> json) =>
@@ -210,10 +224,13 @@ class _$_ReadState extends _ReadState {
   @override
   @JsonKey()
   final double paddingBottom;
+  @override
+  @JsonKey()
+  final bool autoRead;
 
   @override
   String toString() {
-    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, paddingTop: $paddingTop, paddingBottom: $paddingBottom)';
+    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, paddingTop: $paddingTop, paddingBottom: $paddingBottom, autoRead: $autoRead)';
   }
 
   @override
@@ -234,7 +251,9 @@ class _$_ReadState extends _ReadState {
             (identical(other.paddingTop, paddingTop) ||
                 other.paddingTop == paddingTop) &&
             (identical(other.paddingBottom, paddingBottom) ||
-                other.paddingBottom == paddingBottom));
+                other.paddingBottom == paddingBottom) &&
+            (identical(other.autoRead, autoRead) ||
+                other.autoRead == autoRead));
   }
 
   @JsonKey(ignore: true)
@@ -247,7 +266,8 @@ class _$_ReadState extends _ReadState {
       bottomBarHeight,
       showThumbList,
       paddingTop,
-      paddingBottom);
+      paddingBottom,
+      autoRead);
 
   @JsonKey(ignore: true)
   @override
@@ -271,7 +291,8 @@ abstract class _ReadState extends ReadState {
       final double bottomBarHeight,
       final bool showThumbList,
       final double paddingTop,
-      final double paddingBottom}) = _$_ReadState;
+      final double paddingBottom,
+      final bool autoRead}) = _$_ReadState;
   const _ReadState._() : super._();
 
   factory _ReadState.fromJson(Map<String, dynamic> json) =
@@ -291,6 +312,8 @@ abstract class _ReadState extends ReadState {
   double get paddingTop;
   @override
   double get paddingBottom;
+  @override
+  bool get autoRead;
   @override
   @JsonKey(ignore: true)
   _$$_ReadStateCopyWith<_$_ReadState> get copyWith =>

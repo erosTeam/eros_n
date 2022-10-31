@@ -1,6 +1,7 @@
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,22 +20,7 @@ class ReadSettingPage extends StatelessWidget {
         children: <Widget>[
           SmallTitle(title: L10n.of(context).display),
           // Switch full screen reader
-          Consumer(builder: (context, ref, child) {
-            final fullScreenReader = ref.watch(settingsProvider
-                .select((settings) => settings.fullScreenReader));
-            return ListTile(
-              title: Text(L10n.of(context).full_screen),
-              trailing: Switch(
-                activeColor: Theme.of(context).colorScheme.primary,
-                value: fullScreenReader,
-                onChanged: (value) {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setFullScreenReader(value);
-                },
-              ),
-            );
-          }),
+          const FullScreenListTile(),
           // switch read model
           Consumer(builder: (context, ref, child) {
             final readModel = ref.watch(
@@ -56,22 +42,110 @@ class ReadSettingPage extends StatelessWidget {
           }),
           const Divider(height: 1.0),
           // switch volumeKeyTurnPage
-          Consumer(builder: (context, ref, child) {
-            final volumeKeyTurnPage = ref.watch(settingsProvider
-                .select((settings) => settings.volumeKeyTurnPage));
-            return ListTile(
-              title: Text(L10n.of(context).volume_key_turn_page),
-              trailing: Switch(
-                activeColor: Theme.of(context).colorScheme.primary,
-                value: volumeKeyTurnPage,
-                onChanged: (value) {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setVolumeKeyTurnPage(value);
-                },
-              ),
-            );
-          }),
+          const VolumeKeyTurnPageListTile(),
+          const AutoReadIntervalListTile(),
+        ],
+      ),
+    );
+  }
+}
+
+class VolumeKeyTurnPageListTile extends StatelessWidget {
+  const VolumeKeyTurnPageListTile({
+    Key? key,
+    this.onReadView = false,
+  }) : super(key: key);
+  final bool onReadView;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(builder: (context, ref, child) {
+      final volumeKeyTurnPage = ref.watch(
+          settingsProvider.select((settings) => settings.volumeKeyTurnPage));
+      return ListTile(
+        title: Text(L10n.of(context).volume_key_turn_page),
+        trailing: Switch(
+          activeColor: Theme.of(context).colorScheme.primary,
+          value: volumeKeyTurnPage,
+          onChanged: (value) {
+            ref.read(settingsProvider.notifier).setVolumeKeyTurnPage(value);
+
+            if (onReadView) {
+              if (value) {
+                ref.read(readProvider.notifier).addVolumeKeydownListen();
+              } else {
+                ref.read(readProvider.notifier).closeVolumeKeydownListen();
+              }
+            }
+          },
+        ),
+      );
+    });
+  }
+}
+
+class FullScreenListTile extends HookConsumerWidget {
+  const FullScreenListTile({
+    Key? key,
+    this.onReadView = false,
+  }) : super(key: key);
+  final bool onReadView;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fullScreenReader = ref.watch(
+        settingsProvider.select((settings) => settings.fullScreenReader));
+    return ListTile(
+      title: Text(L10n.of(context).full_screen),
+      trailing: Switch(
+        activeColor: Theme.of(context).colorScheme.primary,
+        value: fullScreenReader,
+        onChanged: (value) {
+          ref.read(settingsProvider.notifier).setFullScreenReader(value);
+
+          if (onReadView) {
+            if (value) {
+              ref.read(readProvider.notifier).setFullscreen();
+            } else {
+              ref.read(readProvider.notifier).unFullscreen();
+            }
+          }
+        },
+      ),
+    );
+  }
+}
+
+class AutoReadIntervalListTile extends HookConsumerWidget {
+  const AutoReadIntervalListTile({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final autoReadInterval = ref.watch(
+        settingsProvider.select((settings) => settings.autoReadInterval));
+
+    return ListTile(
+      title: Text(L10n.of(context).auto_read_interval),
+      subtitle: Row(
+        children: [
+          Container(
+            width: 36,
+            alignment: Alignment.center,
+            child: Text('${autoReadInterval}s'),
+          ),
+          Expanded(
+            child: Slider(
+              value: autoReadInterval.toDouble(),
+              min: 0.5,
+              max: 10,
+              divisions: 19,
+              onChanged: (value) {
+                ref.read(settingsProvider.notifier).setAutoReadInterval(value);
+              },
+            ),
+          ),
         ],
       ),
     );

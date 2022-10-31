@@ -105,142 +105,174 @@ extension $TagTranslateCopyWith on TagTranslate {
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
 extension GetTagTranslateCollection on Isar {
-  IsarCollection<TagTranslate> get tagTranslates => collection();
+  IsarCollection<TagTranslate> get tagTranslates => this.collection();
 }
 
 const TagTranslateSchema = CollectionSchema(
   name: r'TagTranslate',
-  schema:
-      r'{"name":"TagTranslate","idName":"id","properties":[{"name":"intro","type":"String"},{"name":"links","type":"String"},{"name":"name","type":"String"},{"name":"namespace","type":"String"},{"name":"translateName","type":"String"},{"name":"translateNameNotMD","type":"String"}],"indexes":[{"name":"name","unique":false,"replace":false,"properties":[{"name":"name","type":"Hash","caseSensitive":true}]},{"name":"name_namespace","unique":true,"replace":true,"properties":[{"name":"name","type":"Hash","caseSensitive":true},{"name":"namespace","type":"Hash","caseSensitive":true}]},{"name":"namespace","unique":false,"replace":false,"properties":[{"name":"namespace","type":"Hash","caseSensitive":true}]},{"name":"translateName","unique":false,"replace":false,"properties":[{"name":"translateName","type":"Hash","caseSensitive":true}]}],"links":[]}',
+  id: 3102014280040731013,
+  properties: {
+    r'intro': PropertySchema(
+      id: 0,
+      name: r'intro',
+      type: IsarType.string,
+    ),
+    r'links': PropertySchema(
+      id: 1,
+      name: r'links',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 2,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'namespace': PropertySchema(
+      id: 3,
+      name: r'namespace',
+      type: IsarType.string,
+    ),
+    r'translateName': PropertySchema(
+      id: 4,
+      name: r'translateName',
+      type: IsarType.string,
+    ),
+    r'translateNameNotMD': PropertySchema(
+      id: 5,
+      name: r'translateNameNotMD',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _tagTranslateEstimateSize,
+  serialize: _tagTranslateSerialize,
+  deserialize: _tagTranslateDeserialize,
+  deserializeProp: _tagTranslateDeserializeProp,
   idName: r'id',
-  propertyIds: {
-    r'intro': 0,
-    r'links': 1,
-    r'name': 2,
-    r'namespace': 3,
-    r'translateName': 4,
-    r'translateNameNotMD': 5
+  indexes: {
+    r'namespace': IndexSchema(
+      id: 2334977328868235416,
+      name: r'namespace',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'namespace',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'name_namespace': IndexSchema(
+      id: -8993266001380523020,
+      name: r'name_namespace',
+      unique: true,
+      replace: true,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: true,
+        ),
+        IndexPropertySchema(
+          name: r'namespace',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'translateName': IndexSchema(
+      id: -5259999136743835192,
+      name: r'translateName',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'translateName',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
   },
-  listProperties: {},
-  indexIds: {
-    r'name': 0,
-    r'name_namespace': 1,
-    r'namespace': 2,
-    r'translateName': 3
-  },
-  indexValueTypes: {
-    r'name': [
-      IndexValueType.stringHash,
-    ],
-    r'name_namespace': [
-      IndexValueType.stringHash,
-      IndexValueType.stringHash,
-    ],
-    r'namespace': [
-      IndexValueType.stringHash,
-    ],
-    r'translateName': [
-      IndexValueType.stringHash,
-    ]
-  },
-  linkIds: {},
-  backlinkLinkNames: {},
+  links: {},
+  embeddedSchemas: {},
   getId: _tagTranslateGetId,
-  setId: _tagTranslateSetId,
   getLinks: _tagTranslateGetLinks,
-  attachLinks: _tagTranslateAttachLinks,
-  serializeNative: _tagTranslateSerializeNative,
-  deserializeNative: _tagTranslateDeserializeNative,
-  deserializePropNative: _tagTranslateDeserializePropNative,
-  serializeWeb: _tagTranslateSerializeWeb,
-  deserializeWeb: _tagTranslateDeserializeWeb,
-  deserializePropWeb: _tagTranslateDeserializePropWeb,
-  version: 4,
+  attach: _tagTranslateAttach,
+  version: '3.0.2',
 );
 
-int? _tagTranslateGetId(TagTranslate object) {
-  if (object.id == Isar.autoIncrement) {
-    return null;
-  } else {
-    return object.id;
+int _tagTranslateEstimateSize(
+  TagTranslate object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.intro;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
   }
+  {
+    final value = object.links;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.namespace.length * 3;
+  {
+    final value = object.translateName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.translateNameNotMD;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
 }
 
-void _tagTranslateSetId(TagTranslate object, int id) {
-  object.id = id;
+void _tagTranslateSerialize(
+  TagTranslate object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.intro);
+  writer.writeString(offsets[1], object.links);
+  writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.namespace);
+  writer.writeString(offsets[4], object.translateName);
+  writer.writeString(offsets[5], object.translateNameNotMD);
 }
 
-List<IsarLinkBase<dynamic>> _tagTranslateGetLinks(TagTranslate object) {
-  return [];
-}
-
-void _tagTranslateSerializeNative(
-    IsarCollection<TagTranslate> collection,
-    IsarCObject cObj,
-    TagTranslate object,
-    int staticSize,
-    List<int> offsets,
-    AdapterAlloc alloc) {
-  IsarUint8List? intro$Bytes;
-  final intro$Value = object.intro;
-  if (intro$Value != null) {
-    intro$Bytes = IsarBinaryWriter.utf8Encoder.convert(intro$Value);
-  }
-  IsarUint8List? links$Bytes;
-  final links$Value = object.links;
-  if (links$Value != null) {
-    links$Bytes = IsarBinaryWriter.utf8Encoder.convert(links$Value);
-  }
-  final name$Bytes = IsarBinaryWriter.utf8Encoder.convert(object.name);
-  final namespace$Bytes =
-      IsarBinaryWriter.utf8Encoder.convert(object.namespace);
-  IsarUint8List? translateName$Bytes;
-  final translateName$Value = object.translateName;
-  if (translateName$Value != null) {
-    translateName$Bytes =
-        IsarBinaryWriter.utf8Encoder.convert(translateName$Value);
-  }
-  IsarUint8List? translateNameNotMD$Bytes;
-  final translateNameNotMD$Value = object.translateNameNotMD;
-  if (translateNameNotMD$Value != null) {
-    translateNameNotMD$Bytes =
-        IsarBinaryWriter.utf8Encoder.convert(translateNameNotMD$Value);
-  }
-  final size = (staticSize +
-      3 +
-      (intro$Bytes?.length ?? 0) +
-      3 +
-      (links$Bytes?.length ?? 0) +
-      3 +
-      (name$Bytes.length) +
-      3 +
-      (namespace$Bytes.length) +
-      3 +
-      (translateName$Bytes?.length ?? 0) +
-      3 +
-      (translateNameNotMD$Bytes?.length ?? 0)) as int;
-  cObj.buffer = alloc(size);
-  cObj.buffer_length = size;
-
-  final buffer = IsarNative.bufAsBytes(cObj.buffer, size);
-  final writer = IsarBinaryWriter(buffer, staticSize);
-  writer.writeHeader();
-  writer.writeByteList(offsets[0], intro$Bytes);
-  writer.writeByteList(offsets[1], links$Bytes);
-  writer.writeByteList(offsets[2], name$Bytes);
-  writer.writeByteList(offsets[3], namespace$Bytes);
-  writer.writeByteList(offsets[4], translateName$Bytes);
-  writer.writeByteList(offsets[5], translateNameNotMD$Bytes);
-}
-
-TagTranslate _tagTranslateDeserializeNative(
-    IsarCollection<TagTranslate> collection,
-    int id,
-    IsarBinaryReader reader,
-    List<int> offsets) {
+TagTranslate _tagTranslateDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
   final object = TagTranslate(
     intro: reader.readStringOrNull(offsets[0]),
     links: reader.readStringOrNull(offsets[1]),
@@ -252,11 +284,13 @@ TagTranslate _tagTranslateDeserializeNative(
   return object;
 }
 
-P _tagTranslateDeserializePropNative<P>(
-    int id, IsarBinaryReader reader, int propertyIndex, int offset) {
-  switch (propertyIndex) {
-    case -1:
-      return id as P;
+P _tagTranslateDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
@@ -270,60 +304,22 @@ P _tagTranslateDeserializePropNative<P>(
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     default:
-      throw IsarError('Illegal propertyIndex');
+      throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Object _tagTranslateSerializeWeb(
-    IsarCollection<TagTranslate> collection, TagTranslate object) {
-  final jsObj = IsarNative.newJsObject();
-  IsarNative.jsObjectSet(jsObj, r'id', object.id);
-  IsarNative.jsObjectSet(jsObj, r'intro', object.intro);
-  IsarNative.jsObjectSet(jsObj, r'links', object.links);
-  IsarNative.jsObjectSet(jsObj, r'name', object.name);
-  IsarNative.jsObjectSet(jsObj, r'namespace', object.namespace);
-  IsarNative.jsObjectSet(jsObj, r'translateName', object.translateName);
-  IsarNative.jsObjectSet(
-      jsObj, r'translateNameNotMD', object.translateNameNotMD);
-  return jsObj;
+Id _tagTranslateGetId(TagTranslate object) {
+  return object.id;
 }
 
-TagTranslate _tagTranslateDeserializeWeb(
-    IsarCollection<TagTranslate> collection, Object jsObj) {
-  final object = TagTranslate(
-    intro: IsarNative.jsObjectGet(jsObj, r'intro'),
-    links: IsarNative.jsObjectGet(jsObj, r'links'),
-    name: IsarNative.jsObjectGet(jsObj, r'name') ?? '',
-    namespace: IsarNative.jsObjectGet(jsObj, r'namespace') ?? '',
-    translateName: IsarNative.jsObjectGet(jsObj, r'translateName'),
-  );
-  object.id = IsarNative.jsObjectGet(jsObj, r'id');
-  return object;
+List<IsarLinkBase<dynamic>> _tagTranslateGetLinks(TagTranslate object) {
+  return [];
 }
 
-P _tagTranslateDeserializePropWeb<P>(Object jsObj, String propertyName) {
-  switch (propertyName) {
-    case r'id':
-      return (IsarNative.jsObjectGet(jsObj, r'id')) as P;
-    case r'intro':
-      return (IsarNative.jsObjectGet(jsObj, r'intro')) as P;
-    case r'links':
-      return (IsarNative.jsObjectGet(jsObj, r'links')) as P;
-    case r'name':
-      return (IsarNative.jsObjectGet(jsObj, r'name') ?? '') as P;
-    case r'namespace':
-      return (IsarNative.jsObjectGet(jsObj, r'namespace') ?? '') as P;
-    case r'translateName':
-      return (IsarNative.jsObjectGet(jsObj, r'translateName')) as P;
-    case r'translateNameNotMD':
-      return (IsarNative.jsObjectGet(jsObj, r'translateNameNotMD')) as P;
-    default:
-      throw IsarError('Illegal propertyName');
-  }
+void _tagTranslateAttach(
+    IsarCollection<dynamic> col, Id id, TagTranslate object) {
+  object.id = id;
 }
-
-void _tagTranslateAttachLinks(
-    IsarCollection<dynamic> col, int id, TagTranslate object) {}
 
 extension TagTranslateByIndex on IsarCollection<TagTranslate> {
   Future<TagTranslate?> getByNameNamespace(String name, String namespace) {
@@ -394,19 +390,19 @@ extension TagTranslateByIndex on IsarCollection<TagTranslate> {
     return deleteAllByIndexSync(r'name_namespace', values);
   }
 
-  Future<int> putByNameNamespace(TagTranslate object) {
+  Future<Id> putByNameNamespace(TagTranslate object) {
     return putByIndex(r'name_namespace', object);
   }
 
-  int putByNameNamespaceSync(TagTranslate object, {bool saveLinks = true}) {
+  Id putByNameNamespaceSync(TagTranslate object, {bool saveLinks = true}) {
     return putByIndexSync(r'name_namespace', object, saveLinks: saveLinks);
   }
 
-  Future<List<int>> putAllByNameNamespace(List<TagTranslate> objects) {
+  Future<List<Id>> putAllByNameNamespace(List<TagTranslate> objects) {
     return putAllByIndex(r'name_namespace', objects);
   }
 
-  List<int> putAllByNameNamespaceSync(List<TagTranslate> objects,
+  List<Id> putAllByNameNamespaceSync(List<TagTranslate> objects,
       {bool saveLinks = true}) {
     return putAllByIndexSync(r'name_namespace', objects, saveLinks: saveLinks);
   }
@@ -423,8 +419,7 @@ extension TagTranslateQueryWhereSort
 
 extension TagTranslateQueryWhere
     on QueryBuilder<TagTranslate, TagTranslate, QWhereClause> {
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> idEqualTo(
-      int id) {
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -434,7 +429,7 @@ extension TagTranslateQueryWhere
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> idNotEqualTo(
-      int id) {
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -457,7 +452,7 @@ extension TagTranslateQueryWhere
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> idGreaterThan(
-      int id,
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -466,7 +461,7 @@ extension TagTranslateQueryWhere
     });
   }
 
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> idLessThan(int id,
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -476,8 +471,8 @@ extension TagTranslateQueryWhere
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> idBetween(
-    int lowerId,
-    int upperId, {
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -491,45 +486,45 @@ extension TagTranslateQueryWhere
     });
   }
 
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> nameEqualTo(
-      String name) {
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> namespaceEqualTo(
+      String namespace) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'name',
-        value: [name],
+        indexName: r'namespace',
+        value: [namespace],
       ));
     });
   }
 
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> nameNotEqualTo(
-      String name) {
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause>
+      namespaceNotEqualTo(String namespace) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
+              indexName: r'namespace',
               lower: [],
-              upper: [name],
+              upper: [namespace],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
-              lower: [name],
+              indexName: r'namespace',
+              lower: [namespace],
               includeLower: false,
               upper: [],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
-              lower: [name],
+              indexName: r'namespace',
+              lower: [namespace],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
+              indexName: r'namespace',
               lower: [],
-              upper: [name],
+              upper: [namespace],
               includeUpper: false,
             ));
       }
@@ -626,48 +621,70 @@ extension TagTranslateQueryWhere
     });
   }
 
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> namespaceEqualTo(
-      String namespace) {
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> nameEqualTo(
+      String name) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'namespace',
-        value: [namespace],
+        indexName: r'name',
+        value: [name],
       ));
     });
   }
 
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause>
-      namespaceNotEqualTo(String namespace) {
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause> nameNotEqualTo(
+      String name) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'namespace',
+              indexName: r'name',
               lower: [],
-              upper: [namespace],
+              upper: [name],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'namespace',
-              lower: [namespace],
+              indexName: r'name',
+              lower: [name],
               includeLower: false,
               upper: [],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'namespace',
-              lower: [namespace],
+              indexName: r'name',
+              lower: [name],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'namespace',
+              indexName: r'name',
               lower: [],
-              upper: [namespace],
+              upper: [name],
               includeUpper: false,
             ));
       }
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause>
+      translateNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'translateName',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause>
+      translateNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'translateName',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
     });
   }
 
@@ -715,34 +732,12 @@ extension TagTranslateQueryWhere
       }
     });
   }
-
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause>
-      translateNameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'translateName',
-        value: [null],
-      ));
-    });
-  }
-
-  QueryBuilder<TagTranslate, TagTranslate, QAfterWhereClause>
-      translateNameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'translateName',
-        lower: [null],
-        includeLower: false,
-        upper: [],
-      ));
-    });
-  }
 }
 
 extension TagTranslateQueryFilter
     on QueryBuilder<TagTranslate, TagTranslate, QFilterCondition> {
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> idEqualTo(
-      int value) {
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -752,7 +747,7 @@ extension TagTranslateQueryFilter
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> idGreaterThan(
-    int value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -765,7 +760,7 @@ extension TagTranslateQueryFilter
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> idLessThan(
-    int value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -778,8 +773,8 @@ extension TagTranslateQueryFilter
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> idBetween(
-    int lower,
-    int upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -803,6 +798,15 @@ extension TagTranslateQueryFilter
     });
   }
 
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      introIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'intro',
+      ));
+    });
+  }
+
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> introEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -819,8 +823,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       introGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -834,8 +838,8 @@ extension TagTranslateQueryFilter
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> introLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -850,9 +854,9 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> introBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -918,9 +922,38 @@ extension TagTranslateQueryFilter
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      introIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'intro',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      introIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'intro',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       linksIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'links',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      linksIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'links',
       ));
     });
@@ -942,8 +975,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       linksGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -957,8 +990,8 @@ extension TagTranslateQueryFilter
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> linksLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -973,9 +1006,9 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> linksBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1040,6 +1073,26 @@ extension TagTranslateQueryFilter
     });
   }
 
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      linksIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'links',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      linksIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'links',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1056,8 +1109,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       nameGreaterThan(
     String value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1071,8 +1124,8 @@ extension TagTranslateQueryFilter
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> nameLessThan(
     String value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1087,9 +1140,9 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1155,6 +1208,26 @@ extension TagTranslateQueryFilter
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       namespaceEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1171,8 +1244,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       namespaceGreaterThan(
     String value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1187,8 +1260,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       namespaceLessThan(
     String value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1204,9 +1277,9 @@ extension TagTranslateQueryFilter
       namespaceBetween(
     String lower,
     String upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1271,9 +1344,38 @@ extension TagTranslateQueryFilter
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      namespaceIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'namespace',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      namespaceIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'namespace',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       translateNameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'translateName',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      translateNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'translateName',
       ));
     });
@@ -1296,8 +1398,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       translateNameGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1312,8 +1414,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       translateNameLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1329,9 +1431,9 @@ extension TagTranslateQueryFilter
       translateNameBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1396,9 +1498,38 @@ extension TagTranslateQueryFilter
   }
 
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      translateNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'translateName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      translateNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'translateName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       translateNameNotMDIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'translateNameNotMD',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      translateNameNotMDIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'translateNameNotMD',
       ));
     });
@@ -1421,8 +1552,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       translateNameNotMDGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1437,8 +1568,8 @@ extension TagTranslateQueryFilter
   QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
       translateNameNotMDLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
@@ -1454,9 +1585,9 @@ extension TagTranslateQueryFilter
       translateNameNotMDBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1519,12 +1650,35 @@ extension TagTranslateQueryFilter
       ));
     });
   }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      translateNameNotMDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'translateNameNotMD',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TagTranslate, TagTranslate, QAfterFilterCondition>
+      translateNameNotMDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'translateNameNotMD',
+        value: '',
+      ));
+    });
+  }
 }
+
+extension TagTranslateQueryObject
+    on QueryBuilder<TagTranslate, TagTranslate, QFilterCondition> {}
 
 extension TagTranslateQueryLinks
     on QueryBuilder<TagTranslate, TagTranslate, QFilterCondition> {}
 
-extension TagTranslateQueryWhereSortBy
+extension TagTranslateQuerySortBy
     on QueryBuilder<TagTranslate, TagTranslate, QSortBy> {
   QueryBuilder<TagTranslate, TagTranslate, QAfterSortBy> sortByIntro() {
     return QueryBuilder.apply(this, (query) {
@@ -1602,7 +1756,7 @@ extension TagTranslateQueryWhereSortBy
   }
 }
 
-extension TagTranslateQueryWhereSortThenBy
+extension TagTranslateQuerySortThenBy
     on QueryBuilder<TagTranslate, TagTranslate, QSortThenBy> {
   QueryBuilder<TagTranslate, TagTranslate, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {

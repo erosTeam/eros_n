@@ -14,6 +14,7 @@ _$_ReadState _$$_ReadStateFromJson(Map<String, dynamic> json) => _$_ReadState(
       showThumbList: json['show_thumb_list'] as bool? ?? false,
       paddingTop: (json['padding_top'] as num?)?.toDouble() ?? 0.0,
       paddingBottom: (json['padding_bottom'] as num?)?.toDouble() ?? 0.0,
+      autoRead: json['auto_read'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_ReadStateToJson(_$_ReadState instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$$_ReadStateToJson(_$_ReadState instance) =>
       'show_thumb_list': instance.showThumbList,
       'padding_top': instance.paddingTop,
       'padding_bottom': instance.paddingBottom,
+      'auto_read': instance.autoRead,
     };
