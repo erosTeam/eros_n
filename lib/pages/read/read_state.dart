@@ -15,6 +15,7 @@ class ReadState with _$ReadState {
     @Default(0.0) double paddingTop,
     @Default(0.0) double paddingBottom,
     @Default(false) bool autoRead,
+    @Default({}) Set<int> loadCompleteIndexSet,
   }) = _ReadState;
 
   const ReadState._();

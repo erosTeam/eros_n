@@ -27,6 +27,7 @@ class Settings with _$Settings {
     @Default(true) bool useGalleryTint,
     @Default(false) bool volumeKeyTurnPage,
     @Default(2.0) double autoReadInterval,
+    @Default(3) int preloadPagesCount,
   }) = _Settings;
 
   const Settings._();

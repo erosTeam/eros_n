@@ -14,6 +14,7 @@ import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.da
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../../utils/logger.dart';
 
@@ -26,6 +27,18 @@ class ReadNotifier extends StateNotifier<ReadState> {
   final Ref ref;
 
   final PreloadPageController preloadPageController;
+
+  final completerMap = <int, Completer<void>>{};
+
+  Completer<void>? getCompleter(int index) {
+    if (completerMap.containsKey(index)) {
+      return completerMap[index];
+    } else {
+      final completer = Completer<void>();
+      completerMap[index] = completer;
+      return completer;
+    }
+  }
 
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
@@ -59,7 +72,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
     }
   }
 
-  void toNext() {
+  Future<void> toNext() async {
     if (isPageView) {
       preloadPageController.nextPage(
           duration: const Duration(milliseconds: 200), curve: Curves.ease);
@@ -234,7 +247,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void closeVolumeKeydownListen() {
-    logger.d('closeVolumeKeydownListen');
+    logger.v('closeVolumeKeydownListen');
     _volumeKeyDownSubscription?.cancel();
   }
 
@@ -249,9 +262,12 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void stopAutoRead() {
+    logger.v('stopAutoRead');
     state = state.copyWith(autoRead: false);
     _autoReadTimer?.cancel();
     _autoReadTimer = null;
+
+    Wakelock.disable();
   }
 
   void startAutoRead() {
@@ -264,16 +280,63 @@ class ReadNotifier extends StateNotifier<ReadState> {
     final autoReadDuration =
         Duration(milliseconds: (autoReadInterval * 1000).round());
 
+    Wakelock.enable();
+
     _autoReadTimer = Timer.periodic(
       autoReadDuration,
       (timer) async {
-        if (state.autoRead) {
-          toNext();
+        if (state.autoRead && mounted) {
+          // toNext();
+          waitAutoRead();
         } else {
           timer.cancel();
         }
       },
     );
+  }
+
+  Future<void> waitAutoRead() async {
+    if (state.autoRead && mounted) {
+      if (ref
+              .read(readProvider.notifier)
+              .getCompleter(currentPageIndex)
+              ?.isCompleted ??
+          false) {
+        logger.v('waitAutoRead toNext');
+        toNext();
+      } else {
+        logger.d('waitAutoRead delay');
+        _autoReadTimer?.cancel();
+        _autoReadTimer = null;
+        await ref
+            .read(readProvider.notifier)
+            .getCompleter(currentPageIndex)
+            ?.future;
+        if (state.autoRead) {
+          logger.d('resume toNext');
+          startAutoRead();
+        }
+      }
+    } else {
+      _autoReadTimer?.cancel();
+      _autoReadTimer = null;
+    }
+  }
+
+  void addLoadCompleteIndexSet(int index) {
+    if (!state.loadCompleteIndexSet.contains(index)) {
+      state = state.copyWith(
+        loadCompleteIndexSet: {...state.loadCompleteIndexSet, index},
+      );
+    }
+  }
+
+  void removeLoadCompleteIndexSet(int index) {
+    if (state.loadCompleteIndexSet.contains(index)) {
+      state = state.copyWith(
+        loadCompleteIndexSet: {...state.loadCompleteIndexSet}..remove(index),
+      );
+    }
   }
 }
 

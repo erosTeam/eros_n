@@ -15,6 +15,10 @@ _$_ReadState _$$_ReadStateFromJson(Map<String, dynamic> json) => _$_ReadState(
       paddingTop: (json['padding_top'] as num?)?.toDouble() ?? 0.0,
       paddingBottom: (json['padding_bottom'] as num?)?.toDouble() ?? 0.0,
       autoRead: json['auto_read'] as bool? ?? false,
+      loadCompleteIndexSet: (json['load_complete_index_set'] as List<dynamic>?)
+              ?.map((e) => e as int)
+              .toSet() ??
+          const {},
     );
 
 Map<String, dynamic> _$$_ReadStateToJson(_$_ReadState instance) =>
@@ -27,4 +31,5 @@ Map<String, dynamic> _$$_ReadStateToJson(_$_ReadState instance) =>
       'padding_top': instance.paddingTop,
       'padding_bottom': instance.paddingBottom,
       'auto_read': instance.autoRead,
+      'load_complete_index_set': instance.loadCompleteIndexSet.toList(),
     };

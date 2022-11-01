@@ -8,7 +8,7 @@ import 'package:palette_generator/palette_generator.dart';
 
 final paletteGeneratorProvider = FutureProvider.autoDispose
     .family<PaletteGenerator, String>((ref, imageUrl) async {
-  final imageProvider = ResizeImage(getErorsImageProvider(imageUrl), width: 32);
+  final imageProvider = ResizeImage(getErosImageProvider(imageUrl), width: 32);
 
   final completer = Completer<PaletteGenerator>();
   imageProvider.resolve(const ImageConfiguration()).addListener(

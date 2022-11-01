@@ -104,6 +104,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(autoReadInterval: value);
     hiveHelper.setSettings(state);
   }
+
+  void setPreloadPagesCount(int value) {
+    state = state.copyWith(preloadPagesCount: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

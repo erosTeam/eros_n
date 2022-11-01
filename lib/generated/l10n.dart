@@ -969,6 +969,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Preload pages count`
+  String get preload_pages_count {
+    return Intl.message(
+      'Preload pages count',
+      name: 'preload_pages_count',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

@@ -28,6 +28,7 @@ mixin _$ReadState {
   double get paddingTop => throw _privateConstructorUsedError;
   double get paddingBottom => throw _privateConstructorUsedError;
   bool get autoRead => throw _privateConstructorUsedError;
+  Set<int> get loadCompleteIndexSet => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,7 +49,8 @@ abstract class $ReadStateCopyWith<$Res> {
       bool showThumbList,
       double paddingTop,
       double paddingBottom,
-      bool autoRead});
+      bool autoRead,
+      Set<int> loadCompleteIndexSet});
 }
 
 /// @nodoc
@@ -72,6 +74,7 @@ class _$ReadStateCopyWithImpl<$Res, $Val extends ReadState>
     Object? paddingTop = null,
     Object? paddingBottom = null,
     Object? autoRead = null,
+    Object? loadCompleteIndexSet = null,
   }) {
     return _then(_value.copyWith(
       showAppBar: null == showAppBar
@@ -106,6 +109,10 @@ class _$ReadStateCopyWithImpl<$Res, $Val extends ReadState>
           ? _value.autoRead
           : autoRead // ignore: cast_nullable_to_non_nullable
               as bool,
+      loadCompleteIndexSet: null == loadCompleteIndexSet
+          ? _value.loadCompleteIndexSet
+          : loadCompleteIndexSet // ignore: cast_nullable_to_non_nullable
+              as Set<int>,
     ) as $Val);
   }
 }
@@ -125,7 +132,8 @@ abstract class _$$_ReadStateCopyWith<$Res> implements $ReadStateCopyWith<$Res> {
       bool showThumbList,
       double paddingTop,
       double paddingBottom,
-      bool autoRead});
+      bool autoRead,
+      Set<int> loadCompleteIndexSet});
 }
 
 /// @nodoc
@@ -147,6 +155,7 @@ class __$$_ReadStateCopyWithImpl<$Res>
     Object? paddingTop = null,
     Object? paddingBottom = null,
     Object? autoRead = null,
+    Object? loadCompleteIndexSet = null,
   }) {
     return _then(_$_ReadState(
       showAppBar: null == showAppBar
@@ -181,6 +190,10 @@ class __$$_ReadStateCopyWithImpl<$Res>
           ? _value.autoRead
           : autoRead // ignore: cast_nullable_to_non_nullable
               as bool,
+      loadCompleteIndexSet: null == loadCompleteIndexSet
+          ? _value._loadCompleteIndexSet
+          : loadCompleteIndexSet // ignore: cast_nullable_to_non_nullable
+              as Set<int>,
     ));
   }
 }
@@ -197,8 +210,10 @@ class _$_ReadState extends _ReadState {
       this.showThumbList = false,
       this.paddingTop = 0.0,
       this.paddingBottom = 0.0,
-      this.autoRead = false})
-      : super._();
+      this.autoRead = false,
+      final Set<int> loadCompleteIndexSet = const {}})
+      : _loadCompleteIndexSet = loadCompleteIndexSet,
+        super._();
 
   factory _$_ReadState.fromJson(Map<String, dynamic> json) =>
       _$$_ReadStateFromJson(json);
@@ -227,10 +242,17 @@ class _$_ReadState extends _ReadState {
   @override
   @JsonKey()
   final bool autoRead;
+  final Set<int> _loadCompleteIndexSet;
+  @override
+  @JsonKey()
+  Set<int> get loadCompleteIndexSet {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_loadCompleteIndexSet);
+  }
 
   @override
   String toString() {
-    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, paddingTop: $paddingTop, paddingBottom: $paddingBottom, autoRead: $autoRead)';
+    return 'ReadState(showAppBar: $showAppBar, topBarOffset: $topBarOffset, bottomBarOffset: $bottomBarOffset, bottomBarHeight: $bottomBarHeight, showThumbList: $showThumbList, paddingTop: $paddingTop, paddingBottom: $paddingBottom, autoRead: $autoRead, loadCompleteIndexSet: $loadCompleteIndexSet)';
   }
 
   @override
@@ -253,7 +275,9 @@ class _$_ReadState extends _ReadState {
             (identical(other.paddingBottom, paddingBottom) ||
                 other.paddingBottom == paddingBottom) &&
             (identical(other.autoRead, autoRead) ||
-                other.autoRead == autoRead));
+                other.autoRead == autoRead) &&
+            const DeepCollectionEquality()
+                .equals(other._loadCompleteIndexSet, _loadCompleteIndexSet));
   }
 
   @JsonKey(ignore: true)
@@ -267,7 +291,8 @@ class _$_ReadState extends _ReadState {
       showThumbList,
       paddingTop,
       paddingBottom,
-      autoRead);
+      autoRead,
+      const DeepCollectionEquality().hash(_loadCompleteIndexSet));
 
   @JsonKey(ignore: true)
   @override
@@ -292,7 +317,8 @@ abstract class _ReadState extends ReadState {
       final bool showThumbList,
       final double paddingTop,
       final double paddingBottom,
-      final bool autoRead}) = _$_ReadState;
+      final bool autoRead,
+      final Set<int> loadCompleteIndexSet}) = _$_ReadState;
   const _ReadState._() : super._();
 
   factory _ReadState.fromJson(Map<String, dynamic> json) =
@@ -314,6 +340,8 @@ abstract class _ReadState extends ReadState {
   double get paddingBottom;
   @override
   bool get autoRead;
+  @override
+  Set<int> get loadCompleteIndexSet;
   @override
   @JsonKey(ignore: true)
   _$$_ReadStateCopyWith<_$_ReadState> get copyWith =>

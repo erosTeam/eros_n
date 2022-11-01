@@ -82,6 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "popular_all": MessageLookupByLibrary.simpleMessage("所有热门"),
         "popular_today": MessageLookupByLibrary.simpleMessage("本日热门"),
         "popular_week": MessageLookupByLibrary.simpleMessage("本周热门"),
+        "preload_pages_count": MessageLookupByLibrary.simpleMessage("预载页数"),
         "read": MessageLookupByLibrary.simpleMessage("阅读"),
         "read_model": MessageLookupByLibrary.simpleMessage("阅读模式"),
         "recent": MessageLookupByLibrary.simpleMessage("最新发布"),

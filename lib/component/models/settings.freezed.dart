@@ -37,6 +37,7 @@ mixin _$Settings {
   bool get useGalleryTint => throw _privateConstructorUsedError;
   bool get volumeKeyTurnPage => throw _privateConstructorUsedError;
   double get autoReadInterval => throw _privateConstructorUsedError;
+  int get preloadPagesCount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -66,7 +67,8 @@ abstract class $SettingsCopyWith<$Res> {
       bool hideBottomNavigationOnScroll,
       bool useGalleryTint,
       bool volumeKeyTurnPage,
-      double autoReadInterval});
+      double autoReadInterval,
+      int preloadPagesCount});
 }
 
 /// @nodoc
@@ -99,6 +101,7 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
     Object? useGalleryTint = null,
     Object? volumeKeyTurnPage = null,
     Object? autoReadInterval = null,
+    Object? preloadPagesCount = null,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: null == isCoverBlur
@@ -169,6 +172,10 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
           ? _value.autoReadInterval
           : autoReadInterval // ignore: cast_nullable_to_non_nullable
               as double,
+      preloadPagesCount: null == preloadPagesCount
+          ? _value.preloadPagesCount
+          : preloadPagesCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -197,7 +204,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       bool hideBottomNavigationOnScroll,
       bool useGalleryTint,
       bool volumeKeyTurnPage,
-      double autoReadInterval});
+      double autoReadInterval,
+      int preloadPagesCount});
 }
 
 /// @nodoc
@@ -228,6 +236,7 @@ class __$$_SettingsCopyWithImpl<$Res>
     Object? useGalleryTint = null,
     Object? volumeKeyTurnPage = null,
     Object? autoReadInterval = null,
+    Object? preloadPagesCount = null,
   }) {
     return _then(_$_Settings(
       isCoverBlur: null == isCoverBlur
@@ -298,6 +307,10 @@ class __$$_SettingsCopyWithImpl<$Res>
           ? _value.autoReadInterval
           : autoReadInterval // ignore: cast_nullable_to_non_nullable
               as double,
+      preloadPagesCount: null == preloadPagesCount
+          ? _value.preloadPagesCount
+          : preloadPagesCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -322,7 +335,8 @@ class _$_Settings extends _Settings {
       this.hideBottomNavigationOnScroll = true,
       this.useGalleryTint = true,
       this.volumeKeyTurnPage = false,
-      this.autoReadInterval = 2.0})
+      this.autoReadInterval = 2.0,
+      this.preloadPagesCount = 3})
       : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
@@ -379,10 +393,13 @@ class _$_Settings extends _Settings {
   @override
   @JsonKey()
   final double autoReadInterval;
+  @override
+  @JsonKey()
+  final int preloadPagesCount;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll, useGalleryTint: $useGalleryTint, volumeKeyTurnPage: $volumeKeyTurnPage, autoReadInterval: $autoReadInterval)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll, useGalleryTint: $useGalleryTint, volumeKeyTurnPage: $volumeKeyTurnPage, autoReadInterval: $autoReadInterval, preloadPagesCount: $preloadPagesCount)';
   }
 
   @override
@@ -425,7 +442,9 @@ class _$_Settings extends _Settings {
             (identical(other.volumeKeyTurnPage, volumeKeyTurnPage) ||
                 other.volumeKeyTurnPage == volumeKeyTurnPage) &&
             (identical(other.autoReadInterval, autoReadInterval) ||
-                other.autoReadInterval == autoReadInterval));
+                other.autoReadInterval == autoReadInterval) &&
+            (identical(other.preloadPagesCount, preloadPagesCount) ||
+                other.preloadPagesCount == preloadPagesCount));
   }
 
   @JsonKey(ignore: true)
@@ -448,7 +467,8 @@ class _$_Settings extends _Settings {
       hideBottomNavigationOnScroll,
       useGalleryTint,
       volumeKeyTurnPage,
-      autoReadInterval);
+      autoReadInterval,
+      preloadPagesCount);
 
   @JsonKey(ignore: true)
   @override
@@ -482,7 +502,8 @@ abstract class _Settings extends Settings {
       final bool hideBottomNavigationOnScroll,
       final bool useGalleryTint,
       final bool volumeKeyTurnPage,
-      final double autoReadInterval}) = _$_Settings;
+      final double autoReadInterval,
+      final int preloadPagesCount}) = _$_Settings;
   const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
@@ -521,6 +542,8 @@ abstract class _Settings extends Settings {
   bool get volumeKeyTurnPage;
   @override
   double get autoReadInterval;
+  @override
+  int get preloadPagesCount;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

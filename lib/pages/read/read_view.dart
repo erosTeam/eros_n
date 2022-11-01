@@ -107,14 +107,24 @@ class ReadPage extends HookConsumerWidget {
         readNotifier.setFullscreen();
       }
       readNotifier.addVolumeKeydownListen();
+
+      // ref.listen<Gallery>(galleryProvider(gid), (previous, next) {
+      //   if (next.currentPageIndex != previous?.currentPageIndex) {
+      //     logger.d('ReadPage currentPageIndex change ${next.currentPageIndex}');
+      //   }
+      // });
+
       return () {
-        logger.d('ReadPage dispose');
+        logger.v('ReadPage dispose');
         // 恢复状态栏显示
         SystemChrome.setEnabledSystemUIMode(
           SystemUiMode.edgeToEdge,
         );
 
         readNotifier.closeVolumeKeydownListen();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          readNotifier.stopAutoRead();
+        });
       };
     });
 
@@ -222,10 +232,20 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
     });
   }
 
-  Widget buildImage(String imageUrl) {
+  Widget buildImage(String imageUrl, {int? index}) {
     return ErosCachedNetworkImage(
       imageUrl: imageUrl,
       fit: BoxFit.fitWidth,
+      onLoadCompleted: () {
+        if (index != null) {
+          logger.d(
+              'onLoadCompleted $imageUrl ${ref.read(readProvider).loadCompleteIndexSet}');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // ref.read(readProvider.notifier).addLoadCompleteIndexSet(index);
+            ref.read(readProvider.notifier).getCompleter(index)?.complete();
+          });
+        }
+      },
       progressIndicatorBuilder: (context, url, downloadProgress) {
         return Center(
           child: SizedBox(
@@ -264,7 +284,9 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
         final imageUrl = getGalleryImageUrl(
             mediaId ?? '', index, NHConst.extMap[page.type] ?? '');
 
-        Widget image = buildImage(imageUrl);
+        ref.read(readProvider.notifier).getCompleter(index);
+
+        Widget image = buildImage(imageUrl, index: index);
 
         image = AspectRatio(
           aspectRatio: (page.imgWidth ?? 300) / (page.imgHeight ?? 400),
@@ -327,7 +349,7 @@ class ReadPageView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // logger.d('ReadPageView build');
     final gid = currentGalleryGid;
-    final ReadNotifier readNotifier = ref.watch(readProvider.notifier);
+    final ReadNotifier readNotifier = ref.read(readProvider.notifier);
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -339,7 +361,7 @@ class ReadPageView extends HookConsumerWidget {
 
     return Consumer(
       builder: (context, ref, child) {
-        logger.d('ReadPageView Consumer build');
+        logger.v('ReadPageView Consumer build');
         void onPageChanged(int index) {
           ref.read(galleryProvider(gid).notifier).onPageChanged(index);
         }
@@ -348,6 +370,9 @@ class ReadPageView extends HookConsumerWidget {
             ref.watch(galleryProvider(gid).select((g) => g.images.pages));
         final mediaId =
             ref.watch(galleryProvider(gid).select((g) => g.mediaId));
+
+        final preloadPagesCount =
+            ref.watch(settingsProvider.select((s) => s.preloadPagesCount));
 
         // 用于控制hero动画
         final currentIndex = ref.watch(
@@ -360,10 +385,28 @@ class ReadPageView extends HookConsumerWidget {
             final imageUrl = getGalleryImageUrl(
                 mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');
 
-            return PhotoViewGalleryPageOptions(
-              imageProvider: getErorsImageProvider(
-                imageUrl,
+            final completer =
+                ref.read(readProvider.notifier).getCompleter(index);
+
+            final imageProvider = getErosImageProvider(imageUrl);
+
+            imageProvider.resolve(const ImageConfiguration()).addListener(
+              ImageStreamListener(
+                (ImageInfo imageInfo, _) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    // ref
+                    //     .read(readProvider.notifier)
+                    //     .addLoadCompleteIndexSet(index);
+                    if (completer?.isCompleted == false) {
+                      completer?.complete();
+                    }
+                  });
+                },
               ),
+            );
+
+            return PhotoViewGalleryPageOptions(
+              imageProvider: imageProvider,
               scaleStateCycle: imageScaleStateCycle,
               filterQuality: FilterQuality.medium,
               initialScale: PhotoViewComputedScale.contained * 0.99,
@@ -376,7 +419,7 @@ class ReadPageView extends HookConsumerWidget {
           },
           reverse: reverse,
           customSize: MediaQuery.of(context).size,
-          preloadPagesCount: 3,
+          preloadPagesCount: preloadPagesCount,
           itemCount: pages.length,
           loadingBuilder: (context, event) => Center(
             child: CircularProgressIndicator(

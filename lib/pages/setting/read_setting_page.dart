@@ -44,6 +44,7 @@ class ReadSettingPage extends StatelessWidget {
           // switch volumeKeyTurnPage
           const VolumeKeyTurnPageListTile(),
           const AutoReadIntervalListTile(),
+          const PreloadPagesCountListTile(),
         ],
       ),
     );
@@ -111,6 +112,43 @@ class FullScreenListTile extends HookConsumerWidget {
             }
           }
         },
+      ),
+    );
+  }
+}
+
+class PreloadPagesCountListTile extends HookConsumerWidget {
+  const PreloadPagesCountListTile({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final preloadPageCount = ref.watch(
+        settingsProvider.select((settings) => settings.preloadPagesCount));
+    return ListTile(
+      title: Text(L10n.of(context).preload_pages_count),
+      subtitle: Row(
+        children: [
+          Container(
+            width: 36,
+            alignment: Alignment.center,
+            child: Text('$preloadPageCount'),
+          ),
+          Expanded(
+            child: Slider(
+              value: preloadPageCount.toDouble(),
+              min: 0,
+              max: 7,
+              divisions: 7,
+              onChanged: (value) {
+                ref
+                    .read(settingsProvider.notifier)
+                    .setPreloadPagesCount(value.round());
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

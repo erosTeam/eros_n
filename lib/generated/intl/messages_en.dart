@@ -90,6 +90,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "popular_all": MessageLookupByLibrary.simpleMessage("Popular All"),
         "popular_today": MessageLookupByLibrary.simpleMessage("Popular Today"),
         "popular_week": MessageLookupByLibrary.simpleMessage("Popular Week"),
+        "preload_pages_count":
+            MessageLookupByLibrary.simpleMessage("Preload pages count"),
         "read": MessageLookupByLibrary.simpleMessage("Read"),
         "read_model": MessageLookupByLibrary.simpleMessage("Read Model"),
         "recent": MessageLookupByLibrary.simpleMessage("Recent"),

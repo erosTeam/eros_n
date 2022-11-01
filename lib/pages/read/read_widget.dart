@@ -119,7 +119,7 @@ class BottomBarControlWidget extends HookConsumerWidget {
         ref.watch(galleryProvider(gid).select((val) => val.currentPageIndex));
     final totNum = ref
         .watch(galleryProvider(gid).select((val) => val.images.pages.length));
-    final readNotifier = ref.watch(readProvider.notifier);
+    final readNotifier = ref.read(readProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -417,6 +417,7 @@ class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
           VolumeKeyTurnPageListTile(onReadView: true),
           // autoReadInterval slider
           AutoReadIntervalListTile(),
+          PreloadPagesCountListTile(),
         ],
       ),
     );
@@ -510,7 +511,7 @@ class ImageGestureDetector extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final readNoti = ref.watch(readProvider.notifier);
+    final readNoti = ref.read(readProvider.notifier);
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
       onTapUp: (details) {

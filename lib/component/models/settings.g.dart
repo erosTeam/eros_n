@@ -33,6 +33,7 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
       useGalleryTint: json['useGalleryTint'] as bool? ?? true,
       volumeKeyTurnPage: json['volumeKeyTurnPage'] as bool? ?? false,
       autoReadInterval: (json['autoReadInterval'] as num?)?.toDouble() ?? 2.0,
+      preloadPagesCount: json['preloadPagesCount'] as int? ?? 3,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -54,6 +55,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
       'useGalleryTint': instance.useGalleryTint,
       'volumeKeyTurnPage': instance.volumeKeyTurnPage,
       'autoReadInterval': instance.autoReadInterval,
+      'preloadPagesCount': instance.preloadPagesCount,
     };
 
 const _$SearchSortEnumMap = {
