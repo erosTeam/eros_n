@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
         "advanced": MessageLookupByLibrary.simpleMessage("Advanced"),
+        "all": MessageLookupByLibrary.simpleMessage("All"),
         "always": MessageLookupByLibrary.simpleMessage("Always"),
         "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
@@ -34,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "auto_read_interval":
             MessageLookupByLibrary.simpleMessage("Auto read interval"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "chinese": MessageLookupByLibrary.simpleMessage("Chinese"),
         "clear_history": MessageLookupByLibrary.simpleMessage("Clear History"),
         "clear_history_tip": MessageLookupByLibrary.simpleMessage(
             "Are you sure to clear all history?"),
@@ -48,6 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dynamic_color": MessageLookupByLibrary.simpleMessage("Dynamic Color"),
         "dynamic_color_tip": MessageLookupByLibrary.simpleMessage(
             "Color will change according to the wallpaper"),
+        "english": MessageLookupByLibrary.simpleMessage("English"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "full_screen": MessageLookupByLibrary.simpleMessage("Full Screen"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
@@ -58,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Hide Bottom Navigation on Scroll"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "japanese": MessageLookupByLibrary.simpleMessage("Japanese"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "language_name": MessageLookupByLibrary.simpleMessage("English"),
         "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
@@ -76,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("More like this"),
         "never": MessageLookupByLibrary.simpleMessage("Never"),
         "newest": MessageLookupByLibrary.simpleMessage("Newest"),
+        "none": MessageLookupByLibrary.simpleMessage("None"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "open_supported_links":
             MessageLookupByLibrary.simpleMessage("Open supported links"),
@@ -126,6 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "theme_mode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
         "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
+        "translated": MessageLookupByLibrary.simpleMessage("Translated"),
         "use_gallery_tint":
             MessageLookupByLibrary.simpleMessage("Use Gallery Tint"),
         "use_gallery_tint_tip": MessageLookupByLibrary.simpleMessage(

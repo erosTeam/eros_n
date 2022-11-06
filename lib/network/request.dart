@@ -9,7 +9,6 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/enum.dart';
-import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 
@@ -89,6 +88,8 @@ Future<GallerySet> searchGallery({
     if (sort != null && sort.value.isNotEmpty) 'sort': sort.value,
     'q': query ?? '',
   };
+
+  logger.d('searchGallery params $params');
 
   int? statusCode;
   final httpTransformer = HttpTransformerBuilder(

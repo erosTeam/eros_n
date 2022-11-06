@@ -91,5 +91,11 @@
   "open_supported_links_tip": "从 Android 12 开始, 应用只有在获得许可的情况下，才能作为网络链接的处理应用。否则会使用默认浏览器处理。您可以在此手动许可",
   "volume_key_turn_page": "音量键翻页",
   "auto_read_interval": "自动阅读间隔",
-  "preload_pages_count": "预载页数"
+  "preload_pages_count": "预载页数",
+  "japanese": "日语",
+  "chinese": "汉语",
+  "english": "英语",
+  "translated": "翻译",
+  "none": "无",
+  "all": "全部"
 }

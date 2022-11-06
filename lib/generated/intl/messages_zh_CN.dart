@@ -26,12 +26,14 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("关于"),
         "advanced": MessageLookupByLibrary.simpleMessage("高级"),
+        "all": MessageLookupByLibrary.simpleMessage("全部"),
         "always": MessageLookupByLibrary.simpleMessage("始终"),
         "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
         "appearance": MessageLookupByLibrary.simpleMessage("外观"),
         "auto": MessageLookupByLibrary.simpleMessage("自动"),
         "auto_read_interval": MessageLookupByLibrary.simpleMessage("自动阅读间隔"),
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "chinese": MessageLookupByLibrary.simpleMessage("汉语"),
         "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
         "clear_history_tip":
             MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
@@ -46,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dynamic_color": MessageLookupByLibrary.simpleMessage("动态颜色"),
         "dynamic_color_tip":
             MessageLookupByLibrary.simpleMessage("根据壁纸自动调整主题颜色"),
+        "english": MessageLookupByLibrary.simpleMessage("英语"),
         "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
         "full_screen": MessageLookupByLibrary.simpleMessage("全屏"),
         "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
@@ -55,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("滚动时隐藏底部导航栏"),
         "history": MessageLookupByLibrary.simpleMessage("历史"),
         "home": MessageLookupByLibrary.simpleMessage("主页"),
+        "japanese": MessageLookupByLibrary.simpleMessage("日语"),
         "language": MessageLookupByLibrary.simpleMessage("语言"),
         "language_name": MessageLookupByLibrary.simpleMessage("简体中文"),
         "left_to_right": MessageLookupByLibrary.simpleMessage("从左到右"),
@@ -71,6 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "more_like_this": MessageLookupByLibrary.simpleMessage("更多相似"),
         "never": MessageLookupByLibrary.simpleMessage("从不"),
         "newest": MessageLookupByLibrary.simpleMessage("最新"),
+        "none": MessageLookupByLibrary.simpleMessage("无"),
         "ok": MessageLookupByLibrary.simpleMessage("确定"),
         "open_supported_links": MessageLookupByLibrary.simpleMessage("打开支持的链接"),
         "open_supported_links_tip": MessageLookupByLibrary.simpleMessage(
@@ -113,6 +118,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "theme_mode": MessageLookupByLibrary.simpleMessage("主题模式"),
         "thumbs": MessageLookupByLibrary.simpleMessage("缩略图"),
         "today": MessageLookupByLibrary.simpleMessage("今天"),
+        "translated": MessageLookupByLibrary.simpleMessage("翻译"),
         "use_gallery_tint": MessageLookupByLibrary.simpleMessage("使用画廊色调"),
         "use_gallery_tint_tip":
             MessageLookupByLibrary.simpleMessage("根据封面的颜色给画廊页面着色"),

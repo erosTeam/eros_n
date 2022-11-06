@@ -109,6 +109,16 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(preloadPagesCount: value);
     hiveHelper.setSettings(state);
   }
+
+  void setSearchSortOnFrontPage(SearchSort value) {
+    state = state.copyWith(searchSortOnFrontPage: value);
+    hiveHelper.setSettings(state);
+  }
+
+  void setFrontLanguagesFilter(LanguagesFilter value) {
+    state = state.copyWith(frontLanguagesFilter: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

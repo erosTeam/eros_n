@@ -1,6 +1,9 @@
 import 'package:eros_n/common/extension.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
+import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
@@ -92,57 +95,8 @@ class _FrontPageState extends ConsumerState<FrontPage>
                 toolbarHeight: 0,
                 elevation: 0,
               ),
-              SliverSafeArea(
-                top: false,
-                bottom: false,
-                sliver: MultiSliver(
-                  pushPinnedChildren: true,
-                  children: [
-                    SliverPinnedHeader(
-                      child: Container(
-                        height: kToolbarHeight,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          L10n.of(context).popular,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                    ),
-                    const PopularListView(),
-                  ],
-                ),
-              ),
-              SliverSafeArea(
-                top: false,
-                bottom: false,
-                sliver: MultiSliver(
-                  pushPinnedChildren: true,
-                  children: [
-                    SliverPinnedHeader(
-                      child: GestureDetector(
-                        onTap: () {
-                          scrollController.animateTo(0,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.ease);
-                        },
-                        child: Container(
-                          height: kToolbarHeight,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            L10n.of(context).newest,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const GalleryListView(),
-                  ],
-                ),
-              ),
+              const PopularListView(),
+              SliverGalleryListView(scrollController: scrollController),
               Consumer(builder: (context, ref, _) {
                 final state = ref.watch(frontProvider);
                 return EndIndicator(
@@ -166,6 +120,99 @@ class _FrontPageState extends ConsumerState<FrontPage>
   bool get wantKeepAlive => true;
 }
 
+class SliverGalleryListView extends HookConsumerWidget {
+  const SliverGalleryListView({
+    super.key,
+    required this.scrollController,
+  });
+
+  final ScrollController scrollController;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sortMap = <SearchSort, String>{
+      SearchSort.recent: L10n.of(context).recent,
+      SearchSort.popularToday: L10n.of(context).popular_today,
+      SearchSort.popularWeek: L10n.of(context).popular_week,
+      SearchSort.popular: L10n.of(context).popular,
+    };
+
+    return SliverSafeArea(
+      top: false,
+      bottom: false,
+      sliver: MultiSliver(
+        pushPinnedChildren: true,
+        children: [
+          Consumer(builder: (context, ref, child) {
+            final searchSortOnFrontPage = ref
+                .watch(settingsProvider.select((s) => s.searchSortOnFrontPage));
+            final frontLanguagesFilter = ref
+                .watch(settingsProvider.select((s) => s.frontLanguagesFilter));
+            return SliverPinnedHeader(
+              child: GestureDetector(
+                onTap: () {
+                  scrollController.animateTo(0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease);
+                },
+                child: Container(
+                  height: kToolbarHeight,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            sortMap[searchSortOnFrontPage] ??
+                                L10n.of(context).recent,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                      ),
+                      LanguagesFilterPopupButton(
+                        onSelected: (LanguagesFilter value) {
+                          if (value ==
+                              ref.read(settingsProvider).frontLanguagesFilter) {
+                            return;
+                          }
+                          ref
+                              .read(settingsProvider.notifier)
+                              .setFrontLanguagesFilter(value);
+                          ref.read(frontProvider.notifier).reloadData();
+                        },
+                        initValue: frontLanguagesFilter,
+                      ),
+                      SortPopupButton(
+                        onSelected: (value) {
+                          // if not change, do nothing
+                          if (value == searchSortOnFrontPage) {
+                            return;
+                          }
+                          ref
+                              .read(settingsProvider.notifier)
+                              .setSearchSortOnFrontPage(value);
+
+                          // reload
+                          ref.read(frontProvider.notifier).reloadData();
+                        },
+                        initValue: searchSortOnFrontPage,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+          const GalleryListView(),
+        ],
+      ),
+    );
+  }
+}
+
 class PopularListView extends ConsumerWidget {
   const PopularListView({
     Key? key,
@@ -174,109 +221,128 @@ class PopularListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final popularList = ref.watch(popularProvider);
-    return MultiSliver(
-      children: [
-        SizedBox(
-          height: 240,
-          child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              final gallery = popularList[index];
-              final card = SizedBox(
-                width: 160,
-                child: Hero(
-                  tag: '${NHRoutes.front}_popular_${gallery.thumbUrl}',
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Container(
-                      foregroundDecoration: (gallery.languageCode == 'ja' ||
-                              gallery.languageCode == null)
-                          ? null
-                          : RotatedCornerDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.8),
-                              geometry:
-                                  const BadgeGeometry(width: 38, height: 28),
-                              textSpan: TextSpan(
-                                text: gallery.languageCode?.toUpperCase() ?? '',
-                                style: const TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.bold),
+    return SliverSafeArea(
+      top: false,
+      bottom: false,
+      sliver: MultiSliver(
+        pushPinnedChildren: true,
+        children: [
+          SliverPinnedHeader(
+            child: Container(
+              height: kToolbarHeight,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              color: Theme.of(context).scaffoldBackgroundColor,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                L10n.of(context).popular,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 240,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(8),
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                final gallery = popularList[index];
+                final card = SizedBox(
+                  width: 160,
+                  child: Hero(
+                    tag: '${NHRoutes.front}_popular_${gallery.thumbUrl}',
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Container(
+                        foregroundDecoration: (gallery.languageCode == 'ja' ||
+                                gallery.languageCode == null)
+                            ? null
+                            : RotatedCornerDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.8),
+                                geometry:
+                                    const BadgeGeometry(width: 38, height: 28),
+                                textSpan: TextSpan(
+                                  text:
+                                      gallery.languageCode?.toUpperCase() ?? '',
+                                  style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          fit: StackFit.expand,
+                          children: [
+                            ShaderMask(
+                              shaderCallback: (Rect bounds) {
+                                return const LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      Colors.black54,
+                                    ]).createShader(
+                                  Rect.fromLTRB(
+                                      0, 0, bounds.width, bounds.height),
+                                );
+                              },
+                              blendMode: BlendMode.darken,
+                              child: CoverImg(
+                                imgUrl: gallery.thumbUrl ?? '',
+                                fit: BoxFit.cover,
                               ),
                             ),
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        fit: StackFit.expand,
-                        children: [
-                          ShaderMask(
-                            shaderCallback: (Rect bounds) {
-                              return const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.transparent,
-                                    Colors.transparent,
-                                    Colors.black54,
-                                  ]).createShader(
-                                Rect.fromLTRB(
-                                    0, 0, bounds.width, bounds.height),
-                              );
-                            },
-                            blendMode: BlendMode.darken,
-                            child: CoverImg(
-                              imgUrl: gallery.thumbUrl ?? '',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            alignment: Alignment.bottomCenter,
-                            child: Text(
-                              (gallery.title.englishTitle ?? '').prettyTitle,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black.withOpacity(0.8),
-                                    offset: const Offset(0, 0),
-                                    blurRadius: 2,
-                                  ),
-                                ],
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                (gallery.title.englishTitle ?? '').prettyTitle,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.8),
+                                      offset: const Offset(0, 0),
+                                      blurRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
+                );
 
-              return GestureDetector(
-                onTap: () {
-                  // popular
-                  RouteUtil.goGallery(
-                    ref,
-                    gallery,
-                    heroTag: '${NHRoutes.front}_popular',
-                  );
-                  // RouteUtil.goGalleryByGid(ref, gallery.gid);
-                },
-                child: card,
-              );
-            },
-            itemCount: popularList.length,
+                return GestureDetector(
+                  onTap: () {
+                    // popular
+                    RouteUtil.goGallery(
+                      ref,
+                      gallery,
+                      heroTag: '${NHRoutes.front}_popular',
+                    );
+                    // RouteUtil.goGalleryByGid(ref, gallery.gid);
+                  },
+                  child: card,
+                );
+              },
+              itemCount: popularList.length,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

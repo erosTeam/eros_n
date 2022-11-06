@@ -8,3 +8,14 @@ enum SearchSort {
 
   final String value;
 }
+
+enum LanguagesFilter {
+  japanese('japanese'),
+  chinese('chinese'),
+  english('english'),
+  translated('translated'),
+  all('');
+
+  const LanguagesFilter(this.value);
+  final String value;
+}

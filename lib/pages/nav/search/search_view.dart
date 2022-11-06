@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
@@ -84,84 +85,6 @@ class _SearchPageState extends ConsumerState<SearchPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    Widget buildMenuButton() {
-      return PopupMenuButton<SearchSort>(
-        onSelected: (value) {
-          ref.read(settingsProvider.notifier).setSearchSort(value);
-        },
-        padding: EdgeInsets.zero,
-        icon: const Icon(Icons.sort),
-        offset: const Offset(0, kToolbarHeight),
-        color: Theme.of(context).colorScheme.onInverseSurface,
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: SearchSort.recent,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.access_time,
-                  color: ref.watch(settingsProvider).searchSort ==
-                          SearchSort.recent
-                      ? Theme.of(context).colorScheme.primary
-                      : null,
-                ),
-                SizedBox(width: 8),
-                Text(L10n.of(context).recent),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: SearchSort.popularToday,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.whatshot,
-                  color: ref.watch(settingsProvider).searchSort ==
-                          SearchSort.popularToday
-                      ? Theme.of(context).colorScheme.primary
-                      : null,
-                ),
-                SizedBox(width: 8),
-                Text(L10n.of(context).popular_today),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: SearchSort.popularWeek,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.whatshot,
-                  color: ref.watch(settingsProvider).searchSort ==
-                          SearchSort.popularWeek
-                      ? Theme.of(context).colorScheme.primary
-                      : null,
-                ),
-                SizedBox(width: 8),
-                Text(L10n.of(context).popular_week),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: SearchSort.popular,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.whatshot,
-                  color: ref.watch(settingsProvider).searchSort ==
-                          SearchSort.popular
-                      ? Theme.of(context).colorScheme.primary
-                      : null,
-                ),
-                const SizedBox(width: 8),
-                Text(L10n.of(context).popular_all),
-              ],
-            ),
-          ),
-        ],
-      );
-    }
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -185,7 +108,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                 leading: const SizedBox(),
                 leadingWidth: 0,
                 // titleSpacing: 0,
-                title: buildSearchBar2(buildMenuButton()),
+                title: buildSearchBar2(),
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 bottom: const PreferredSize(
                   preferredSize: Size.fromHeight(0),
@@ -202,7 +125,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
     );
   }
 
-  Widget buildSearchBar2(Widget menuButton) {
+  Widget buildSearchBar2() {
     return StatefulBuilder(
       builder: (context, setState) {
         return TypeAheadField<NhTag>(
@@ -237,7 +160,22 @@ class _SearchPageState extends ConsumerState<SearchPage>
                           setState(() {});
                         },
                       ),
-                    menuButton,
+                    SortPopupButton(
+                      onSelected: (value) {
+                        if (value == ref.read(settingsProvider).searchSort) {
+                          return;
+                        }
+
+                        ref
+                            .read(settingsProvider.notifier)
+                            .setSearchSort(value);
+
+                        // reload
+                        searchProviderNoti.reloadData();
+                      },
+                      initValue: ref
+                          .watch(settingsProvider.select((s) => s.searchSort)),
+                    ),
                   ],
                 );
               }),

@@ -28,6 +28,8 @@ class Settings with _$Settings {
     @Default(false) bool volumeKeyTurnPage,
     @Default(2.0) double autoReadInterval,
     @Default(3) int preloadPagesCount,
+    @Default(SearchSort.recent) SearchSort searchSortOnFrontPage,
+    @Default(LanguagesFilter.all) LanguagesFilter frontLanguagesFilter,
   }) = _Settings;
 
   const Settings._();

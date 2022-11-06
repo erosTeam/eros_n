@@ -1,12 +1,15 @@
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
+import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 class GallerysNotifier extends StateNotifier<List<Gallery>> {
   GallerysNotifier(super.create);
@@ -87,11 +90,35 @@ class FrontNotifier extends StateNotifier<ListViewState> {
     logger.v('toPage: $toPage');
 
     try {
-      final gallerySet = await getGalleryList(
+      if (page == 1 || refresh || first) {
+        getGalleryList(
+          refresh: refresh || next || prev,
+          page: page,
+        ).then((gallerySetPopular) {
+          final populars = gallerySetPopular.populars ?? [];
+
+          popularNoti.clearGallerys();
+          popularNoti.addGallerys(populars);
+        });
+      }
+
+      late String query;
+      final queryUuid = '-"${const Uuid().v4()}"';
+      if (ref.read(settingsProvider).frontLanguagesFilter !=
+          LanguagesFilter.all) {
+        query =
+            'language:${ref.read(settingsProvider).frontLanguagesFilter.value}';
+      } else {
+        query = queryUuid;
+      }
+
+      final gallerySet = await searchGallery(
         refresh: refresh || next || prev,
         page: toPage,
+        query: query,
+        sort: ref.read(settingsProvider).searchSortOnFrontPage,
       );
-      final populars = gallerySet.populars ?? [];
+
       final gallerys = gallerySet.gallerys ?? [];
 
       if (next) {
@@ -101,9 +128,6 @@ class FrontNotifier extends StateNotifier<ListViewState> {
       } else {
         gallerysNoti.clearGallerys();
         gallerysNoti.addGallerys(gallerys);
-
-        popularNoti.clearGallerys();
-        popularNoti.addGallerys(populars);
       }
 
       state = state.copyWith(
