@@ -231,7 +231,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
   StreamSubscription? _volumeKeyDownSubscription;
 
   void addVolumeKeydownListen() {
-    logger.d('addVolumeKeydownListen');
+    logger.v('addVolumeKeydownListen');
     final volumeKeyTurnPage =
         ref.read(settingsProvider.select((s) => s.volumeKeyTurnPage));
     if (volumeKeyTurnPage) {

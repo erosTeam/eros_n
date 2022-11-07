@@ -99,7 +99,7 @@ class ReadPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gid = currentGalleryGid;
-    logger.d('ReadPage build $gid');
+    logger.v('ReadPage build $gid');
     final ReadNotifier readNotifier = ref.watch(readProvider.notifier);
 
     useEffect(() {
@@ -129,7 +129,7 @@ class ReadPage extends HookConsumerWidget {
     });
 
     final readModel = ref.watch(settingsProvider.select((s) => s.readModel));
-    logger.d('readModel $readModel');
+    logger.v('readModel $readModel');
 
     late Widget readView;
 
@@ -378,6 +378,8 @@ class ReadPageView extends HookConsumerWidget {
         final currentIndex = ref.watch(
             galleryProvider(gid).select((gallery) => gallery.currentPageIndex));
 
+        final thumbHeroTagPrefix = ref.watch(thumbHeroTagPrefixProvider);
+
         return PreloadPhotoViewGallery.builder(
           scrollDirection: scrollDirection,
           wantKeepAlive: false,
@@ -413,7 +415,8 @@ class ReadPageView extends HookConsumerWidget {
               minScale: PhotoViewComputedScale.contained * 0.8,
               maxScale: PhotoViewComputedScale.contained * 2,
               heroAttributes: currentIndex == index
-                  ? PhotoViewHeroAttributes(tag: '${gid}_$index')
+                  ? PhotoViewHeroAttributes(
+                      tag: '$thumbHeroTagPrefix${gid}_$index')
                   : null,
             );
           },

@@ -93,14 +93,22 @@ class RouteUtil {
     BuildContext context,
     WidgetRef ref, {
     int? index,
+    String? heroTagPrefix,
   }) async {
     final gid = currentGalleryGid;
     if (index != null) {
       ref.read(galleryProvider(gid).notifier).setInitialPage(index);
     }
+
+    ref
+        .read(thumbHeroTagPrefixProvider.notifier)
+        .update((state) => heroTagPrefix ?? '');
+
     // erosRouter.push(ReadRoute(index: index));
-    await context.router.push(
-        ReadRoute(index: index, colorScheme: Theme.of(context).colorScheme));
+    await context.router.push(ReadRoute(
+      index: index,
+      colorScheme: Theme.of(context).colorScheme,
+    ));
   }
 
   static Future<void> goGallery(

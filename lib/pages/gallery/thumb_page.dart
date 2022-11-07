@@ -71,14 +71,18 @@ class ThumbsView extends HookConsumerWidget {
   const ThumbsView({
     Key? key,
     required this.gid,
+    this.enableHero = false,
   }) : super(key: key);
 
   final int gid;
+  final bool enableHero;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.v('build thumbs $gid');
     // final pages = ref.watch(galleryProvider(gid).select((g) => g.pages));
+
+    const kHeroTagPrefix = 'thumb_';
 
     final List<GalleryImage> pages =
         ref.watch(galleryProvider(gid).select((g) => g.images.pages));
@@ -104,9 +108,12 @@ class ThumbsView extends HookConsumerWidget {
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               final thumb = pages[index];
+              final imageUrl =
+                  'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[thumb.type]}';
               return GestureDetector(
                 onTap: () {
-                  RouteUtil.goRead(context, ref, index: index);
+                  RouteUtil.goRead(context, ref,
+                      index: index, heroTagPrefix: kHeroTagPrefix);
                 },
                 child: Column(
                   children: [
@@ -117,10 +124,9 @@ class ThumbsView extends HookConsumerWidget {
                           child: Card(
                             clipBehavior: Clip.antiAlias,
                             child: Hero(
-                              tag: '${gid}_$index',
+                              tag: '$kHeroTagPrefix${gid}_$index',
                               child: ErosCachedNetworkImage(
-                                imageUrl:
-                                    'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[thumb.type]}',
+                                imageUrl: imageUrl,
                                 fit: BoxFit.cover,
                               ),
                             ),

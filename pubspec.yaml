@@ -101,6 +101,7 @@ dependencies:
       ref: dev
   wakelock: ^0.6.2
   uuid: ^3.0.6
+  animations: ^2.0.7
 
 dev_dependencies:
   # flutter pub run apn_json2model

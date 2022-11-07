@@ -202,3 +202,7 @@ String getGalleryImageUrl(String imageKey, int index, String ext) {
   return 'https://i.nhentai.net/galleries/$imageKey/${index + 1}.$ext';
   // return 'https://i$subDomain.nhentai.net/galleries/$imageKey/${index + 1}.jpg';
 }
+
+final thumbHeroTagPrefixProvider = StateProvider<String>((ref) {
+  return '';
+});
