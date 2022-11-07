@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart' hide Cookie;
@@ -74,6 +75,7 @@ class _MobileWebViewState extends State<MobileWebView> {
           return NavigationActionPolicy.ALLOW;
         },
         onTitleChanged: (controller, title) async {
+          logger.d('onTitleChanged: $title');
           final cookies =
               await cookieManager.getCookies(url: Uri.parse(NHConst.baseUrl));
 
@@ -83,7 +85,6 @@ class _MobileWebViewState extends State<MobileWebView> {
               source: 'navigator.userAgent');
 
           widget.callback?.call(WebViewCookieInfo(
-              // url: uri.toString(),
               url: NHConst.baseUrl,
               cookies: ioCookies,
               userAgent: ua as String,

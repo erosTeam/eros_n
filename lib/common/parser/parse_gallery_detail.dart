@@ -68,8 +68,7 @@ Future<Gallery> parseGalleryDetail(String html) async {
     final imgHeight = elm.querySelector('img')?.attributes['height'];
     final imgWidth = elm.querySelector('img')?.attributes['width'];
 
-    mediaId ??=
-        RegExp(r'/galleries/(\d+)/').firstMatch(thumbUrl ?? '')?.group(1);
+    mediaId ??= RegExp(r'/galleries/(\d+)/').firstMatch(thumbUrl)?.group(1);
     // logger.d('mediaId: $mediaId');
 
     // 扩展名

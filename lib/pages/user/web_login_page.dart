@@ -27,8 +27,8 @@ class WebLoginPage extends StatelessWidget {
           deletedCookie: false,
           callback: (info) async {
             final cookies = info.cookies;
-            if (cookies.any((element) => element.name == 'sessionid') &&
-                cookies.any((element) => element.name == 'cf_clearance')) {
+            logger.d('cookies: $cookies');
+            if (cookies.any((element) => element.name == 'sessionid')) {
               await Global.setUserAgent(info.userAgent);
               await Global.setCookies(NHConst.baseUrl, info.cookies);
               erosRouter.pop<List<io.Cookie>>(cookies);
