@@ -97,5 +97,6 @@
   "english": "English",
   "translated": "Translated",
   "none": "None",
-  "all": "All"
+  "all": "All",
+  "clipboard_detection": "Clipboard link detection"
 }

@@ -1039,6 +1039,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Clipboard link detection`
+  String get clipboard_detection {
+    return Intl.message(
+      'Clipboard link detection',
+      name: 'clipboard_detection',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

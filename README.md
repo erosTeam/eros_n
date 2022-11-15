@@ -20,7 +20,7 @@ An unofficial Nhentai app.
 - [ ] Download gallery
 - [x] Similar galleries
 - [x] Gallery comments
-- [ ] Post comments
+- [x] Post comments
 - [x] History
 - [x] Search
 - [ ] More settings

@@ -43,6 +43,7 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
       searchLanguagesFilter: $enumDecodeNullable(
               _$LanguagesFilterEnumMap, json['searchLanguagesFilter']) ??
           LanguagesFilter.all,
+      clipboardDetection: json['clipboardDetection'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -71,6 +72,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
           _$LanguagesFilterEnumMap[instance.frontLanguagesFilter]!,
       'searchLanguagesFilter':
           _$LanguagesFilterEnumMap[instance.searchLanguagesFilter]!,
+      'clipboardDetection': instance.clipboardDetection,
     };
 
 const _$SearchSortEnumMap = {

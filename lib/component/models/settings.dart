@@ -31,6 +31,7 @@ class Settings with _$Settings {
     @Default(SearchSort.recent) SearchSort searchSortOnFrontPage,
     @Default(LanguagesFilter.all) LanguagesFilter frontLanguagesFilter,
     @Default(LanguagesFilter.all) LanguagesFilter searchLanguagesFilter,
+    @Default(false) bool clipboardDetection,
   }) = _Settings;
 
   const Settings._();

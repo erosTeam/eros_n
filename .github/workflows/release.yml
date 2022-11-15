@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - 'master'
+#      - 'master'
     tags:
       - v*
 
@@ -210,7 +210,7 @@ jobs:
           path: ${{ matrix.artifact_path }}
 
   publish:
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'beta') && !contains(github.ref, 'alpha') && !contains(github.ref, 'rc')
     name: Publish
     needs: build_upload
     runs-on: ubuntu-latest
@@ -246,7 +246,7 @@ jobs:
           artifacts: /tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa
           tag: ${{ github.ref_name }}
           bodyFile: changelog/v${{ env.app_version }}.md
-          prerelease: false
+          prerelease: contains(github.ref, 'pre')
           allowUpdates: true
           artifactErrorsFailBuild: true
           replacesArtifacts: true

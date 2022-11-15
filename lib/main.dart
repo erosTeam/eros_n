@@ -43,11 +43,37 @@ Future<void> main() async {
   }
 }
 
-class MyApp extends HookConsumerWidget {
+class MyApp extends StatefulHookConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state != AppLifecycleState.resumed) {}
+    if (state == AppLifecycleState.resumed) {
+      clipboardHelper.chkClipboardLink(context, ref);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     logger.v('build MyApp');
     final themeMode =
         ref.watch(settingsProvider.select((settings) => settings.themeMode));
@@ -129,23 +155,23 @@ class MyApp extends HookConsumerWidget {
               FlutterSmartDialog.observer,
             ],
           ),
-          // builder: FlutterSmartDialog.init(
-          //   styleBuilder: (child) {
-          //     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-          //       return Desktop(child: child);
-          //     }
-          //     return child;
-          //   },
-          //   builder: BrokenShield.init(),
-          // ),
-          builder: (BuildContext context, Widget? child) {
-            final widget =
-                BrokenShield(child: FlutterSmartDialog.init()(context, child));
-            if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-              return Desktop(child: widget);
-            }
-            return widget;
-          },
+          builder: FlutterSmartDialog.init(
+            styleBuilder: (child) {
+              if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+                return Desktop(child: child);
+              }
+              return child;
+            },
+            builder: BrokenShield.init(),
+          ),
+          // builder: (BuildContext context, Widget? child) {
+          //   final widget =
+          //       BrokenShield(child: FlutterSmartDialog.init()(context, child));
+          //   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          //     return Desktop(child: widget);
+          //   }
+          //   return widget;
+          // },
           locale: locale(localeCode),
           onGenerateTitle: (BuildContext context) => L10n.of(context).app_title,
           // debugShowCheckedModeBanner: false,

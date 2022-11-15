@@ -97,5 +97,6 @@
   "english": "英语",
   "translated": "翻译",
   "none": "无",
-  "all": "全部"
+  "all": "全部",
+  "clipboard_detection": "剪贴板链接检测"
 }

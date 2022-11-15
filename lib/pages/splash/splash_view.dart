@@ -50,28 +50,11 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   }
 
   Future<void> _goPage(String url, {bool replace = true}) async {
-    if (url.isEmpty) {
+    if (url.isEmpty || !RouteUtil.goGalleryByUrl(ref, url, replace: replace)) {
       0
           .milliseconds
           .delay()
           .then((value) => erosRouter.replaceNamed(NHRoutes.home));
-    } else {
-      final RegExp regGalleryUrl = RegExp(r'https?://nhentai.net/g/(\d+)/?');
-      final RegExp regGalleryPageUrl =
-          RegExp(r'https://nhentai.net/g/(\d+)/\d+');
-
-      if (regGalleryUrl.hasMatch(url)) {
-        final String gid = regGalleryUrl.firstMatch(url)!.group(1)!;
-        RouteUtil.goGalleryByGid(ref, int.parse(gid), replace: replace);
-      } else if (regGalleryPageUrl.hasMatch(url)) {
-        final String gid = regGalleryPageUrl.firstMatch(url)!.group(1)!;
-        RouteUtil.goGalleryByGid(ref, int.parse(gid), replace: replace);
-      } else {
-        0
-            .milliseconds
-            .delay()
-            .then((value) => erosRouter.replaceNamed(NHRoutes.home));
-      }
     }
   }
 

@@ -58,6 +58,22 @@ class GeneralSettingPage extends StatelessWidget {
                 },
               );
             }),
+            // switch clipboardDetection
+            Consumer(builder: (context, ref, child) {
+              final clipboardDetection = ref.watch(settingsProvider
+                  .select((settings) => settings.clipboardDetection));
+
+              return SwitchListTile(
+                title: Text(L10n.of(context).clipboard_detection),
+                value: clipboardDetection,
+                onChanged: (value) {
+                  ref
+                      .read(settingsProvider.notifier)
+                      .setClipboardDetection(value);
+                },
+              );
+            }),
+
             // open_supported_links
             ListTile(
               title: Text(L10n.of(context).open_supported_links),

@@ -144,6 +144,26 @@ class RouteUtil {
     }
   }
 
+  static bool goGalleryByUrl(
+    WidgetRef ref,
+    String url, {
+    bool replace = false,
+  }) {
+    final RegExp regGalleryUrl = RegExp(r'https?://nhentai.net/g/(\d+)/?');
+    final RegExp regGalleryPageUrl = RegExp(r'https://nhentai.net/g/(\d+)/\d+');
+
+    if (regGalleryUrl.hasMatch(url)) {
+      final String gid = regGalleryUrl.firstMatch(url)!.group(1)!;
+      RouteUtil.goGalleryByGid(ref, int.parse(gid), replace: replace);
+    } else if (regGalleryPageUrl.hasMatch(url)) {
+      final String gid = regGalleryPageUrl.firstMatch(url)!.group(1)!;
+      RouteUtil.goGalleryByGid(ref, int.parse(gid), replace: replace);
+    } else {
+      return false;
+    }
+    return true;
+  }
+
   static Future<void> goSearch({
     Tag? tag,
     String? keyword,
