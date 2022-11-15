@@ -41,6 +41,8 @@ mixin _$Settings {
   SearchSort get searchSortOnFrontPage => throw _privateConstructorUsedError;
   LanguagesFilter get frontLanguagesFilter =>
       throw _privateConstructorUsedError;
+  LanguagesFilter get searchLanguagesFilter =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -73,7 +75,8 @@ abstract class $SettingsCopyWith<$Res> {
       double autoReadInterval,
       int preloadPagesCount,
       SearchSort searchSortOnFrontPage,
-      LanguagesFilter frontLanguagesFilter});
+      LanguagesFilter frontLanguagesFilter,
+      LanguagesFilter searchLanguagesFilter});
 }
 
 /// @nodoc
@@ -109,6 +112,7 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
     Object? preloadPagesCount = null,
     Object? searchSortOnFrontPage = null,
     Object? frontLanguagesFilter = null,
+    Object? searchLanguagesFilter = null,
   }) {
     return _then(_value.copyWith(
       isCoverBlur: null == isCoverBlur
@@ -191,6 +195,10 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
           ? _value.frontLanguagesFilter
           : frontLanguagesFilter // ignore: cast_nullable_to_non_nullable
               as LanguagesFilter,
+      searchLanguagesFilter: null == searchLanguagesFilter
+          ? _value.searchLanguagesFilter
+          : searchLanguagesFilter // ignore: cast_nullable_to_non_nullable
+              as LanguagesFilter,
     ) as $Val);
   }
 }
@@ -222,7 +230,8 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       double autoReadInterval,
       int preloadPagesCount,
       SearchSort searchSortOnFrontPage,
-      LanguagesFilter frontLanguagesFilter});
+      LanguagesFilter frontLanguagesFilter,
+      LanguagesFilter searchLanguagesFilter});
 }
 
 /// @nodoc
@@ -256,6 +265,7 @@ class __$$_SettingsCopyWithImpl<$Res>
     Object? preloadPagesCount = null,
     Object? searchSortOnFrontPage = null,
     Object? frontLanguagesFilter = null,
+    Object? searchLanguagesFilter = null,
   }) {
     return _then(_$_Settings(
       isCoverBlur: null == isCoverBlur
@@ -338,6 +348,10 @@ class __$$_SettingsCopyWithImpl<$Res>
           ? _value.frontLanguagesFilter
           : frontLanguagesFilter // ignore: cast_nullable_to_non_nullable
               as LanguagesFilter,
+      searchLanguagesFilter: null == searchLanguagesFilter
+          ? _value.searchLanguagesFilter
+          : searchLanguagesFilter // ignore: cast_nullable_to_non_nullable
+              as LanguagesFilter,
     ));
   }
 }
@@ -365,7 +379,8 @@ class _$_Settings extends _Settings {
       this.autoReadInterval = 2.0,
       this.preloadPagesCount = 3,
       this.searchSortOnFrontPage = SearchSort.recent,
-      this.frontLanguagesFilter = LanguagesFilter.all})
+      this.frontLanguagesFilter = LanguagesFilter.all,
+      this.searchLanguagesFilter = LanguagesFilter.all})
       : super._();
 
   factory _$_Settings.fromJson(Map<String, dynamic> json) =>
@@ -431,10 +446,13 @@ class _$_Settings extends _Settings {
   @override
   @JsonKey()
   final LanguagesFilter frontLanguagesFilter;
+  @override
+  @JsonKey()
+  final LanguagesFilter searchLanguagesFilter;
 
   @override
   String toString() {
-    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll, useGalleryTint: $useGalleryTint, volumeKeyTurnPage: $volumeKeyTurnPage, autoReadInterval: $autoReadInterval, preloadPagesCount: $preloadPagesCount, searchSortOnFrontPage: $searchSortOnFrontPage, frontLanguagesFilter: $frontLanguagesFilter)';
+    return 'Settings(isCoverBlur: $isCoverBlur, isTagTranslate: $isTagTranslate, dynamicColor: $dynamicColor, searchSort: $searchSort, showTags: $showTags, tagLayoutOnItem: $tagLayoutOnItem, themeMode: $themeMode, fullScreenReader: $fullScreenReader, readModel: $readModel, listModel: $listModel, localeCode: $localeCode, themeColorLabel: $themeColorLabel, supportDynamicColors: $supportDynamicColors, hideBottomNavigationOnScroll: $hideBottomNavigationOnScroll, useGalleryTint: $useGalleryTint, volumeKeyTurnPage: $volumeKeyTurnPage, autoReadInterval: $autoReadInterval, preloadPagesCount: $preloadPagesCount, searchSortOnFrontPage: $searchSortOnFrontPage, frontLanguagesFilter: $frontLanguagesFilter, searchLanguagesFilter: $searchLanguagesFilter)';
   }
 
   @override
@@ -483,7 +501,9 @@ class _$_Settings extends _Settings {
             (identical(other.searchSortOnFrontPage, searchSortOnFrontPage) ||
                 other.searchSortOnFrontPage == searchSortOnFrontPage) &&
             (identical(other.frontLanguagesFilter, frontLanguagesFilter) ||
-                other.frontLanguagesFilter == frontLanguagesFilter));
+                other.frontLanguagesFilter == frontLanguagesFilter) &&
+            (identical(other.searchLanguagesFilter, searchLanguagesFilter) ||
+                other.searchLanguagesFilter == searchLanguagesFilter));
   }
 
   @JsonKey(ignore: true)
@@ -509,7 +529,8 @@ class _$_Settings extends _Settings {
         autoReadInterval,
         preloadPagesCount,
         searchSortOnFrontPage,
-        frontLanguagesFilter
+        frontLanguagesFilter,
+        searchLanguagesFilter
       ]);
 
   @JsonKey(ignore: true)
@@ -547,7 +568,8 @@ abstract class _Settings extends Settings {
       final double autoReadInterval,
       final int preloadPagesCount,
       final SearchSort searchSortOnFrontPage,
-      final LanguagesFilter frontLanguagesFilter}) = _$_Settings;
+      final LanguagesFilter frontLanguagesFilter,
+      final LanguagesFilter searchLanguagesFilter}) = _$_Settings;
   const _Settings._() : super._();
 
   factory _Settings.fromJson(Map<String, dynamic> json) = _$_Settings.fromJson;
@@ -592,6 +614,8 @@ abstract class _Settings extends Settings {
   SearchSort get searchSortOnFrontPage;
   @override
   LanguagesFilter get frontLanguagesFilter;
+  @override
+  LanguagesFilter get searchLanguagesFilter;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

@@ -7,10 +7,12 @@ class SortPopupButton extends StatelessWidget {
     super.key,
     required this.onSelected,
     this.initValue = SearchSort.recent,
+    this.iconSize,
   });
 
   final ValueChanged<SearchSort> onSelected;
   final SearchSort initValue;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class SortPopupButton extends StatelessWidget {
       onSelected: onSelected,
       padding: EdgeInsets.zero,
       icon: const Icon(Icons.sort),
+      iconSize: iconSize,
       offset: const Offset(0, kToolbarHeight),
       color: Theme.of(context).colorScheme.onInverseSurface,
       initialValue: initValue,
@@ -48,10 +51,12 @@ class LanguagesFilterPopupButton extends StatelessWidget {
     super.key,
     required this.onSelected,
     this.initValue = LanguagesFilter.all,
+    this.iconSize,
   });
 
   final ValueChanged<LanguagesFilter> onSelected;
   final LanguagesFilter initValue;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +72,7 @@ class LanguagesFilterPopupButton extends StatelessWidget {
       onSelected: onSelected,
       padding: EdgeInsets.zero,
       icon: const Icon(Icons.language),
+      iconSize: iconSize,
       offset: const Offset(0, kToolbarHeight),
       color: Theme.of(context).colorScheme.onInverseSurface,
       initialValue: initValue,

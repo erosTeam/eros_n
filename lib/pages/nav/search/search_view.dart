@@ -151,31 +151,52 @@ class _SearchPageState extends ConsumerState<SearchPage>
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (searchProviderNoti.searchController.text.isNotEmpty ||
+                    if (searchProviderNoti.searchController.text
+                            .trim()
+                            .isNotEmpty &&
                         isKeyboardVisible)
                       IconButton(
                         icon: const Icon(Icons.clear),
+                        constraints: const BoxConstraints(),
                         onPressed: () {
                           searchProviderNoti.searchController.clear();
                           setState(() {});
                         },
                       ),
-                    SortPopupButton(
-                      onSelected: (value) {
-                        if (value == ref.read(settingsProvider).searchSort) {
-                          return;
-                        }
+                    if (!isKeyboardVisible)
+                      LanguagesFilterPopupButton(
+                        onSelected: (LanguagesFilter value) {
+                          if (value ==
+                              ref
+                                  .read(settingsProvider)
+                                  .searchLanguagesFilter) {
+                            return;
+                          }
+                          ref
+                              .read(settingsProvider.notifier)
+                              .setSearchLanguagesFilter(value);
+                          searchProviderNoti.reloadData();
+                        },
+                        initValue: ref.watch(settingsProvider
+                            .select((s) => s.searchLanguagesFilter)),
+                      ),
+                    if (!isKeyboardVisible)
+                      SortPopupButton(
+                        onSelected: (value) {
+                          if (value == ref.read(settingsProvider).searchSort) {
+                            return;
+                          }
 
-                        ref
-                            .read(settingsProvider.notifier)
-                            .setSearchSort(value);
+                          ref
+                              .read(settingsProvider.notifier)
+                              .setSearchSort(value);
 
-                        // reload
-                        searchProviderNoti.reloadData();
-                      },
-                      initValue: ref
-                          .watch(settingsProvider.select((s) => s.searchSort)),
-                    ),
+                          // reload
+                          searchProviderNoti.reloadData();
+                        },
+                        initValue: ref.watch(
+                            settingsProvider.select((s) => s.searchSort)),
+                      ),
                   ],
                 );
               }),

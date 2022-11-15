@@ -1,5 +1,6 @@
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
@@ -8,6 +9,7 @@ import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 class SearchNotifier extends StateNotifier<ListViewState> {
   SearchNotifier(this.ref) : super(const ListViewState());
@@ -95,9 +97,20 @@ class SearchNotifier extends StateNotifier<ListViewState> {
     final toPage =
         page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
 
+    late final String realQuery;
+
+    // final queryUuid = '-"${const Uuid().v4()}"';
+    final searchLanguagesFilter =
+        ref.read(settingsProvider.select((s) => s.searchLanguagesFilter));
+    if (searchLanguagesFilter != LanguagesFilter.all && query.isNotEmpty) {
+      realQuery = '$query language:${searchLanguagesFilter.value}';
+    } else {
+      realQuery = query;
+    }
+
     try {
       final result = await searchGallery(
-        query: query,
+        query: realQuery,
         page: toPage,
         refresh: refresh || next || prev,
         sort: ref.read(settingsProvider).searchSort,

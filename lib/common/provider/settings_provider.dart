@@ -119,6 +119,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = state.copyWith(frontLanguagesFilter: value);
     hiveHelper.setSettings(state);
   }
+
+  void setSearchLanguagesFilter(LanguagesFilter value) {
+    state = state.copyWith(searchLanguagesFilter: value);
+    hiveHelper.setSettings(state);
+  }
 }
 
 final settingsProvider =

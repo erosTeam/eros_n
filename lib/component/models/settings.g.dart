@@ -40,6 +40,9 @@ _$_Settings _$$_SettingsFromJson(Map<String, dynamic> json) => _$_Settings(
       frontLanguagesFilter: $enumDecodeNullable(
               _$LanguagesFilterEnumMap, json['frontLanguagesFilter']) ??
           LanguagesFilter.all,
+      searchLanguagesFilter: $enumDecodeNullable(
+              _$LanguagesFilterEnumMap, json['searchLanguagesFilter']) ??
+          LanguagesFilter.all,
     );
 
 Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
@@ -66,6 +69,8 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
           _$SearchSortEnumMap[instance.searchSortOnFrontPage]!,
       'frontLanguagesFilter':
           _$LanguagesFilterEnumMap[instance.frontLanguagesFilter]!,
+      'searchLanguagesFilter':
+          _$LanguagesFilterEnumMap[instance.searchLanguagesFilter]!,
     };
 
 const _$SearchSortEnumMap = {

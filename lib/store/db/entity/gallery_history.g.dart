@@ -88,7 +88,7 @@ const GalleryHistorySchema = CollectionSchema(
   getId: _galleryHistoryGetId,
   getLinks: _galleryHistoryGetLinks,
   attach: _galleryHistoryAttach,
-  version: '3.0.2',
+  version: '3.0.4',
 );
 
 int _galleryHistoryEstimateSize(

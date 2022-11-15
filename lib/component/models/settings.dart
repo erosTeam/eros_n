@@ -30,6 +30,7 @@ class Settings with _$Settings {
     @Default(3) int preloadPagesCount,
     @Default(SearchSort.recent) SearchSort searchSortOnFrontPage,
     @Default(LanguagesFilter.all) LanguagesFilter frontLanguagesFilter,
+    @Default(LanguagesFilter.all) LanguagesFilter searchLanguagesFilter,
   }) = _Settings;
 
   const Settings._();
