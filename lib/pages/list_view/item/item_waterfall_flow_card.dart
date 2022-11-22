@@ -113,7 +113,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                   simpleTags: gallery.simpleTags,
                   tagLayoutOnItem: TagLayoutOnItem.singleLine,
                   color: Colors.white,
-                  borderColor: Colors.white,
+                  borderColor: Colors.transparent,
                 ),
               ),
               Container(

@@ -76,6 +76,7 @@ Map<String, dynamic> _$$_SettingsToJson(_$_Settings instance) =>
     };
 
 const _$SearchSortEnumMap = {
+  SearchSort.popularMonth: 'popularMonth',
   SearchSort.popularWeek: 'popularWeek',
   SearchSort.popularToday: 'popularToday',
   SearchSort.popular: 'popular',

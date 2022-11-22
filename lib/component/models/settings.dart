@@ -1,6 +1,5 @@
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/component/theme/theme.dart';
-import 'package:eros_n/network/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

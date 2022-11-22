@@ -520,6 +520,16 @@ class L10n {
     );
   }
 
+  /// `Popular Month`
+  String get popular_month {
+    return Intl.message(
+      'Popular Month',
+      name: 'popular_month',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Popular All`
   String get popular_all {
     return Intl.message(

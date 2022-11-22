@@ -23,14 +23,14 @@ class HiveHelper {
       configBox,
       compactionStrategy: (int entries, int deletedEntries) {
         logger.v('entries $entries');
-        return entries > 10;
+        return entries > 2;
       },
     );
     await Hive.openBox<String>(
       userKey,
       compactionStrategy: (int entries, int deletedEntries) {
         logger.v('entries $entries');
-        return entries > 10;
+        return true;
       },
     );
   }

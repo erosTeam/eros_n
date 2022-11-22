@@ -89,7 +89,7 @@ const NhTagSchema = CollectionSchema(
   getId: _nhTagGetId,
   getLinks: _nhTagGetLinks,
   attach: _nhTagAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _nhTagEstimateSize(

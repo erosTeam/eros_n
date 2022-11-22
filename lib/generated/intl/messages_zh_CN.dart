@@ -86,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "please_login_web": MessageLookupByLibrary.simpleMessage("请通过网页登录"),
         "popular": MessageLookupByLibrary.simpleMessage("热门"),
         "popular_all": MessageLookupByLibrary.simpleMessage("所有热门"),
+        "popular_month": MessageLookupByLibrary.simpleMessage("本月热门"),
         "popular_today": MessageLookupByLibrary.simpleMessage("本日热门"),
         "popular_week": MessageLookupByLibrary.simpleMessage("本周热门"),
         "preload_pages_count": MessageLookupByLibrary.simpleMessage("预载页数"),

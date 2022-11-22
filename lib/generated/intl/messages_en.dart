@@ -95,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please login with web"),
         "popular": MessageLookupByLibrary.simpleMessage("Popular"),
         "popular_all": MessageLookupByLibrary.simpleMessage("Popular All"),
+        "popular_month": MessageLookupByLibrary.simpleMessage("Popular Month"),
         "popular_today": MessageLookupByLibrary.simpleMessage("Popular Today"),
         "popular_week": MessageLookupByLibrary.simpleMessage("Popular Week"),
         "preload_pages_count":

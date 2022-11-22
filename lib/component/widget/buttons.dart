@@ -1,5 +1,5 @@
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/network/enum.dart';
 import 'package:flutter/material.dart';
 
 class SortPopupButton extends StatelessWidget {
@@ -20,6 +20,7 @@ class SortPopupButton extends StatelessWidget {
       SearchSort.recent: L10n.of(context).recent,
       SearchSort.popularToday: L10n.of(context).popular_today,
       SearchSort.popularWeek: L10n.of(context).popular_week,
+      SearchSort.popularMonth: L10n.of(context).popular_month,
       SearchSort.popular: L10n.of(context).popular,
     };
 

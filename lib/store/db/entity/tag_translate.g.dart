@@ -215,7 +215,7 @@ const TagTranslateSchema = CollectionSchema(
   getId: _tagTranslateGetId,
   getLinks: _tagTranslateGetLinks,
   attach: _tagTranslateAttach,
-  version: '3.0.4',
+  version: '3.0.5',
 );
 
 int _tagTranslateEstimateSize(

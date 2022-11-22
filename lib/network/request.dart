@@ -8,7 +8,6 @@ import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/network/enum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 

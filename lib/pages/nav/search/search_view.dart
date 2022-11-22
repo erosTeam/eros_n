@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/routes/routes.dart';

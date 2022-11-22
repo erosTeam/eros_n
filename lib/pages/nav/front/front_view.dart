@@ -1,9 +1,9 @@
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/network/enum.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
@@ -134,6 +134,7 @@ class SliverGalleryListView extends HookConsumerWidget {
       SearchSort.recent: L10n.of(context).recent,
       SearchSort.popularToday: L10n.of(context).popular_today,
       SearchSort.popularWeek: L10n.of(context).popular_week,
+      SearchSort.popularMonth: L10n.of(context).popular_month,
       SearchSort.popular: L10n.of(context).popular,
     };
 
