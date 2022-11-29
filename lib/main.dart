@@ -1,22 +1,20 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:window_size/window_size.dart';
 
 import 'component/widget/broken_shield.dart';
@@ -55,6 +53,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    listenReceiveSharing();
   }
 
   @override
@@ -188,6 +187,35 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         );
       },
     );
+  }
+
+  late String? sharedText = '';
+
+  void listenReceiveSharing() {
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    ReceiveSharingIntent.getTextStream().listen((String value) {
+      sharedText = value;
+      logger.d('getTextStream Shared: $sharedText');
+      _goPage(sharedText ?? '', replace: false);
+    }, onError: (err) {
+      logger.e('getTextStream error: $err');
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then((String? value) {
+      sharedText = value ?? '';
+      logger.v('Shared: $sharedText');
+      _goPage(sharedText ?? '');
+    });
+  }
+
+  Future<void> _goPage(String url, {bool replace = true}) async {
+    if (url.isEmpty || !RouteUtil.goGalleryByUrl(ref, url, replace: replace)) {
+      0
+          .milliseconds
+          .delay()
+          .then((value) => erosRouter.replaceNamed(NHRoutes.home));
+    }
   }
 }
 
