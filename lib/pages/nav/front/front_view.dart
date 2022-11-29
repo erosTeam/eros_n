@@ -174,7 +174,7 @@ class SliverGalleryListView extends HookConsumerWidget {
                         ),
                       ),
                       LanguagesFilterPopupButton(
-                        onSelected: (LanguagesFilter value) {
+                        onSelected: (LanguagesFilter value) async {
                           if (value ==
                               ref.read(settingsProvider).frontLanguagesFilter) {
                             return;
@@ -182,12 +182,12 @@ class SliverGalleryListView extends HookConsumerWidget {
                           ref
                               .read(settingsProvider.notifier)
                               .setFrontLanguagesFilter(value);
-                          ref.read(frontProvider.notifier).reloadData();
+                          await ref.read(frontProvider.notifier).reloadData();
                         },
                         initValue: frontLanguagesFilter,
                       ),
                       SortPopupButton(
-                        onSelected: (value) {
+                        onSelected: (value) async {
                           // if not change, do nothing
                           if (value == searchSortOnFrontPage) {
                             return;
@@ -197,7 +197,7 @@ class SliverGalleryListView extends HookConsumerWidget {
                               .setSearchSortOnFrontPage(value);
 
                           // reload
-                          ref.read(frontProvider.notifier).reloadData();
+                          await ref.read(frontProvider.notifier).reloadData();
                         },
                         initValue: searchSortOnFrontPage,
                       ),

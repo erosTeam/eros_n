@@ -2,7 +2,11 @@ import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
-class SortPopupButton extends StatelessWidget {
+import '../../utils/logger.dart';
+
+typedef AsyncValueChanged<T> = Future<void> Function(T value);
+
+class SortPopupButton extends StatefulWidget {
   const SortPopupButton({
     super.key,
     required this.onSelected,
@@ -10,10 +14,16 @@ class SortPopupButton extends StatelessWidget {
     this.iconSize,
   });
 
-  final ValueChanged<SearchSort> onSelected;
+  final AsyncValueChanged<SearchSort> onSelected;
   final SearchSort initValue;
   final double? iconSize;
 
+  @override
+  State<SortPopupButton> createState() => _SortPopupButtonState();
+}
+
+class _SortPopupButtonState extends State<SortPopupButton> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     final sortMap = {
@@ -24,14 +34,37 @@ class SortPopupButton extends StatelessWidget {
       SearchSort.popular: L10n.of(context).popular,
     };
 
+    logger.d('loading $loading');
+
+    final indicatorSize =
+        (widget.iconSize ?? Theme.of(context).iconTheme.size ?? 24.0) * 0.8;
+
     return PopupMenuButton<SearchSort>(
-      onSelected: onSelected,
+      onSelected: (val) async {
+        try {
+          setState(() {
+            loading = true;
+          });
+          await widget.onSelected(val);
+        } finally {
+          setState(() {
+            loading = false;
+          });
+        }
+      },
+      enabled: !loading,
       padding: EdgeInsets.zero,
-      icon: const Icon(Icons.sort),
-      iconSize: iconSize,
+      icon: loading
+          ? SizedBox(
+              width: indicatorSize,
+              height: indicatorSize,
+              child: const CircularProgressIndicator(strokeWidth: 3),
+            )
+          : const Icon(Icons.sort),
+      iconSize: widget.iconSize,
       offset: const Offset(0, kToolbarHeight),
       color: Theme.of(context).colorScheme.onInverseSurface,
-      initialValue: initValue,
+      initialValue: widget.initValue,
       itemBuilder: (context) => sortMap.entries
           .map(
             (e) => PopupMenuItem<SearchSort>(
@@ -47,7 +80,7 @@ class SortPopupButton extends StatelessWidget {
 }
 
 // LanguagesFilterPopupButton
-class LanguagesFilterPopupButton extends StatelessWidget {
+class LanguagesFilterPopupButton extends StatefulWidget {
   const LanguagesFilterPopupButton({
     super.key,
     required this.onSelected,
@@ -55,9 +88,18 @@ class LanguagesFilterPopupButton extends StatelessWidget {
     this.iconSize,
   });
 
-  final ValueChanged<LanguagesFilter> onSelected;
+  final AsyncValueChanged<LanguagesFilter> onSelected;
   final LanguagesFilter initValue;
   final double? iconSize;
+
+  @override
+  State<LanguagesFilterPopupButton> createState() =>
+      _LanguagesFilterPopupButtonState();
+}
+
+class _LanguagesFilterPopupButtonState
+    extends State<LanguagesFilterPopupButton> {
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +111,34 @@ class LanguagesFilterPopupButton extends StatelessWidget {
       LanguagesFilter.translated: L10n.of(context).translated,
     };
 
+    final indicatorSize =
+        (widget.iconSize ?? Theme.of(context).iconTheme.size ?? 24.0) * 0.8;
+
     return PopupMenuButton<LanguagesFilter>(
-      onSelected: onSelected,
+      onSelected: (val) async {
+        try {
+          setState(() {
+            loading = true;
+          });
+          await widget.onSelected(val);
+        } finally {
+          setState(() {
+            loading = false;
+          });
+        }
+      },
       padding: EdgeInsets.zero,
-      icon: const Icon(Icons.language),
-      iconSize: iconSize,
+      icon: loading
+          ? SizedBox(
+              width: indicatorSize,
+              height: indicatorSize,
+              child: const CircularProgressIndicator(strokeWidth: 3),
+            )
+          : const Icon(Icons.language),
+      iconSize: widget.iconSize,
       offset: const Offset(0, kToolbarHeight),
       color: Theme.of(context).colorScheme.onInverseSurface,
-      initialValue: initValue,
+      initialValue: widget.initValue,
       itemBuilder: (context) => languagesMap.entries
           .map(
             (e) => PopupMenuItem<LanguagesFilter>(

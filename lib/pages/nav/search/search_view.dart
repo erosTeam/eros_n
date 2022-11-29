@@ -165,7 +165,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                       ),
                     if (!isKeyboardVisible)
                       LanguagesFilterPopupButton(
-                        onSelected: (LanguagesFilter value) {
+                        onSelected: (LanguagesFilter value) async {
                           if (value ==
                               ref
                                   .read(settingsProvider)
@@ -175,14 +175,14 @@ class _SearchPageState extends ConsumerState<SearchPage>
                           ref
                               .read(settingsProvider.notifier)
                               .setSearchLanguagesFilter(value);
-                          searchProviderNoti.reloadData();
+                          await searchProviderNoti.reloadData();
                         },
                         initValue: ref.watch(settingsProvider
                             .select((s) => s.searchLanguagesFilter)),
                       ),
                     if (!isKeyboardVisible)
                       SortPopupButton(
-                        onSelected: (value) {
+                        onSelected: (value) async {
                           if (value == ref.read(settingsProvider).searchSort) {
                             return;
                           }
@@ -192,7 +192,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                               .setSearchSort(value);
 
                           // reload
-                          searchProviderNoti.reloadData();
+                          await searchProviderNoti.reloadData();
                         },
                         initValue: ref.watch(
                             settingsProvider.select((s) => s.searchSort)),
