@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
@@ -14,13 +12,11 @@ class SplashPage extends StatefulHookConsumerWidget {
 }
 
 class _SplashPageState extends ConsumerState<SplashPage> {
-  StreamSubscription? _intentDataStreamSubscription;
-  late String? sharedText = '';
-
   @override
   void initState() {
     super.initState();
-    0
+
+    10
         .milliseconds
         .delay()
         .then((value) => erosRouter.replaceNamed(NHRoutes.home));
@@ -29,7 +25,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void dispose() {
     super.dispose();
-    _intentDataStreamSubscription?.cancel();
   }
 
   @override

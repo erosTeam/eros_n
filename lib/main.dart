@@ -53,7 +53,6 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    listenReceiveSharing();
   }
 
   @override
@@ -187,35 +186,6 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         );
       },
     );
-  }
-
-  late String? sharedText = '';
-
-  void listenReceiveSharing() {
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    ReceiveSharingIntent.getTextStream().listen((String value) {
-      sharedText = value;
-      logger.d('getTextStream Shared: $sharedText');
-      _goPage(sharedText ?? '', replace: false);
-    }, onError: (err) {
-      logger.e('getTextStream error: $err');
-    });
-
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialText().then((String? value) {
-      sharedText = value ?? '';
-      logger.v('Shared: $sharedText');
-      _goPage(sharedText ?? '');
-    });
-  }
-
-  Future<void> _goPage(String url, {bool replace = true}) async {
-    if (url.isEmpty || !RouteUtil.goGalleryByUrl(ref, url, replace: replace)) {
-      0
-          .milliseconds
-          .delay()
-          .then((value) => erosRouter.replaceNamed(NHRoutes.home));
-    }
   }
 }
 
