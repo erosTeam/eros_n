@@ -29,6 +29,7 @@ import 'package:share/share.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'gallery_provider.dart';
+import 'thumb_page.dart';
 
 class GalleryPage extends StatefulHookConsumerWidget {
   const GalleryPage({
@@ -143,39 +144,7 @@ class GalleryPageBody extends HookConsumerWidget {
     final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
 
     final ScrollController scrollController = useScrollController();
-
-    Widget backGround() {
-      return ShaderMask(
-        shaderCallback: (Rect bounds) {
-          return LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                // Theme.of(context).canvasColor,
-                // Colors.black,
-                Colors.transparent,
-                Theme.of(context).canvasColor,
-                // Colors.white,
-              ]).createShader(
-            Rect.fromLTRB(0, 0, bounds.width, bounds.height - 0),
-          );
-        },
-        blendMode: BlendMode.dstOut,
-        child: ClipRect(
-          child: BlurImage(
-            sigma: 4,
-            color: Theme.of(context).canvasColor.withOpacity(0.5),
-            child: thumbUrl != null
-                ? ErosCachedNetworkImage(
-                    imageUrl: thumbUrl,
-                    filterQuality: FilterQuality.medium,
-                    fit: BoxFit.cover,
-                  )
-                : const SizedBox(),
-          ),
-        ),
-      );
-    }
+    final ScrollController thumbScrollController = useScrollController();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -220,87 +189,204 @@ class GalleryPageBody extends HookConsumerWidget {
         }),
         icon: const Icon(Icons.play_arrow),
       ),
-      body: RefreshIndicator(
-        onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
-        edgeOffset: MediaQuery.of(context).padding.top,
-        child: CustomScrollView(
-          physics: const ClampingScrollPhysics(),
-          controller: scrollController,
-          slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: context.isTablet ? 400 : 460,
+      body: LayoutBuilder(builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth;
+        final large = context.isTablet;
+
+        const kMinWidget = 386.0;
+
+        final widget =
+            maxWidth / 2 - kMinWidget > 50 ? kMinWidget : maxWidth / 2;
+
+        return Row(
+          children: [
+            AnimatedContainer(
+              width: large ? widget : maxWidth,
+              duration: const Duration(milliseconds: 400),
+              child: GalleryDetailBody(
+                gid: gid,
+                scrollController: scrollController,
+                title: title,
+                heroTag: heroTag,
+                thumbUrl: thumbUrl,
+                images: images,
+                backGround: _BackGround(thumbUrl: thumbUrl),
+                large: large,
+              ),
+            ),
+            if (large)
+              Expanded(
                 child: Stack(
-                  alignment: Alignment.bottomLeft,
                   children: [
-                    backGround(),
-                    Container(
-                      padding: EdgeInsets.only(
-                        left: context.mediaQueryPadding.left + 16,
-                        right: context.mediaQueryPadding.right + 16,
-                        top: 16,
-                        bottom: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SelectableText(
-                            title.englishTitle ?? '',
-                            style: Theme.of(context).textTheme.titleLarge,
-                            maxLines: context.isTablet ? 2 : 3,
-                            minLines: 1,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            height: 240,
-                            child: Row(
-                              // crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // 封面
-                                Container(
-                                  width: 140,
-                                  margin: const EdgeInsets.only(right: 12),
-                                  alignment: Alignment.center,
-                                  child: Hero(
-                                    tag: '${heroTag ?? ''}_$thumbUrl',
-                                    child: Card(
-                                      margin: const EdgeInsets.all(0),
-                                      clipBehavior: Clip.antiAlias,
-                                      child: AspectRatio(
-                                        aspectRatio:
-                                            (images.thumbnail.imgWidth ?? 300) /
-                                                (images.thumbnail.imgHeight ??
-                                                    400),
-                                        child: thumbUrl == null
-                                            ? nil
-                                            : ErosCachedNetworkImage(
-                                                imageUrl: thumbUrl,
-                                                fit: BoxFit.cover,
-                                              ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child:
-                                      HeadInfoView(gid: gid, context: context),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                        ],
+                    SizedBox(
+                      height: context.isTablet ? 420 : 460,
+                      child: _BackGround(thumbUrl: thumbUrl),
+                    ),
+                    SafeArea(
+                      bottom: false,
+                      child: ThumbBody(
+                        gid: gid,
+                        scrollController: thumbScrollController,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            // ThumbsView(gid: gid),
-            DetailView(gid: gid),
           ],
+        );
+      }),
+    );
+  }
+}
+
+class _BackGround extends StatelessWidget {
+  const _BackGround({
+    super.key,
+    required this.thumbUrl,
+  });
+
+  final String? thumbUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              // Theme.of(context).canvasColor,
+              // Colors.black,
+              Colors.transparent,
+              Theme.of(context).canvasColor,
+              // Colors.white,
+            ]).createShader(
+          Rect.fromLTRB(0, 0, bounds.width, bounds.height - 0),
+        );
+      },
+      blendMode: BlendMode.dstOut,
+      child: ClipRect(
+        child: BlurImage(
+          sigma: 4,
+          color: Theme.of(context).canvasColor.withOpacity(0.5),
+          child: thumbUrl != null
+              ? ErosCachedNetworkImage(
+                  imageUrl: thumbUrl,
+                  filterQuality: FilterQuality.medium,
+                  fit: BoxFit.cover,
+                )
+              : const SizedBox(),
         ),
+      ),
+    );
+  }
+}
+
+class GalleryDetailBody extends HookConsumerWidget {
+  const GalleryDetailBody({
+    super.key,
+    required this.gid,
+    required this.scrollController,
+    required this.title,
+    required this.heroTag,
+    required this.thumbUrl,
+    required this.images,
+    this.backGround,
+    this.large = false,
+  });
+
+  final int gid;
+  final ScrollController scrollController;
+  final GalleryTitle title;
+  final String? heroTag;
+  final String? thumbUrl;
+  final GalleryImages images;
+  final Widget? backGround;
+  final bool large;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return RefreshIndicator(
+      onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
+      edgeOffset: MediaQuery.of(context).padding.top,
+      child: CustomScrollView(
+        physics: const ClampingScrollPhysics(),
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: context.isTablet ? 420 : 460,
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  backGround ?? const SizedBox(),
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: context.mediaQueryPadding.left + 16,
+                      right: context.mediaQueryPadding.right + 16,
+                      top: 16,
+                      bottom: 16,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SelectableText(
+                          title.englishTitle ?? '',
+                          style: Theme.of(context).textTheme.titleLarge,
+                          maxLines: context.isTablet ? 2 : 3,
+                          minLines: 1,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          height: 240,
+                          child: Row(
+                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // 封面
+                              Container(
+                                width: 140,
+                                margin: const EdgeInsets.only(right: 12),
+                                alignment: Alignment.center,
+                                child: Hero(
+                                  tag: '${heroTag ?? ''}_$thumbUrl',
+                                  child: Card(
+                                    margin: const EdgeInsets.all(0),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: AspectRatio(
+                                      aspectRatio: (images.thumbnail.imgWidth ??
+                                              300) /
+                                          (images.thumbnail.imgHeight ?? 400),
+                                      child: thumbUrl == null
+                                          ? nil
+                                          : ErosCachedNetworkImage(
+                                              imageUrl: thumbUrl,
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: HeadInfoView(gid: gid, context: context),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // ThumbsView(gid: gid),
+          DetailView(
+            gid: gid,
+            showThumbs: !large,
+          ),
+        ],
       ),
     );
   }
@@ -457,9 +543,11 @@ class DetailView extends HookConsumerWidget {
   const DetailView({
     Key? key,
     required this.gid,
+    this.showThumbs = true,
   }) : super(key: key);
 
   final int gid;
+  final bool showThumbs;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -479,8 +567,8 @@ class DetailView extends HookConsumerWidget {
         sliver: MultiSliver(children: [
           TagsView(gid: gid),
           if (kDebugMode) PaletteGeneratorWidget(gid: gid),
-          const SizedBox(height: 8),
-          ThumbListView(gid: gid),
+          if (showThumbs) const SizedBox(height: 8),
+          if (showThumbs) ThumbListView(gid: gid),
           const SizedBox(height: 8),
           MoreLikeListView(gid: gid),
           const SizedBox(height: 8),

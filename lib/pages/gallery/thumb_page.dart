@@ -7,6 +7,7 @@ import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -50,19 +51,45 @@ class ThumbPage extends HookConsumerWidget {
             }),
             icon: const Icon(Icons.play_arrow),
           ),
-          body: Scrollbar(
-            controller: scrollController,
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                ThumbsView(
-                  gid: gid,
-                ),
-              ],
-            ),
+          body: ThumbBody(
+            scrollController: scrollController,
+            gid: gid,
           ),
         );
       }),
+    );
+  }
+}
+
+class ThumbBody extends StatelessWidget {
+  const ThumbBody({
+    super.key,
+    required this.scrollController,
+    required this.gid,
+    this.backGround,
+  });
+
+  final ScrollController scrollController;
+  final int gid;
+  final Widget? backGround;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        if (backGround != null) backGround!,
+        Scrollbar(
+          controller: scrollController,
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              ThumbsView(
+                gid: gid,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -103,7 +130,11 @@ class ThumbsView extends HookConsumerWidget {
         .min;
     // logger.d('minRatio: $minRatio');
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      padding: EdgeInsets.only(
+        bottom: 16 + context.mediaQueryPadding.bottom,
+        left: 8,
+        right: 8,
+      ),
       sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
