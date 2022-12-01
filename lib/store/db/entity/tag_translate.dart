@@ -12,6 +12,7 @@ class TagTranslate {
     this.translateName,
     this.intro,
     this.links,
+    this.lastUseTime = 0,
   }) : id = Isar.autoIncrement;
   Id id;
   @Index()
@@ -23,6 +24,8 @@ class TagTranslate {
   final String? translateName;
   final String? intro;
   final String? links;
+  @Index()
+  final int lastUseTime;
 
   String? get translateNameNotMD {
     final reg = RegExp(r'!\[(\S+)?\]\(.+?\)(\S+)');
@@ -38,6 +41,6 @@ class TagTranslate {
 
   @override
   String toString() {
-    return 'TagTranslate{namespace: $namespace, name: $name, translateName: $translateName, intro: $intro, links: $links}';
+    return 'TagTranslate{id: $id, namespace: $namespace, name: $name, translateName: $translateName, intro: $intro, links: $links, lastUseTime: $lastUseTime}';
   }
 }

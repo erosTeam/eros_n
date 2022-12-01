@@ -113,9 +113,12 @@ class IsarHelper {
   Future<List<TagTranslate>> findTagTranslateContains(
       String text, int limit) async {
     final result = await isar.tagTranslates
-        .where()
-        .namespaceNotEqualTo('rows')
+        .where(sort: Sort.desc)
+        .anyLastUseTime()
         .filter()
+        .not()
+        .namespaceEqualTo('rows')
+        .and()
         .nameContains(text)
         .or()
         .translateNameContains(text)
@@ -153,6 +156,8 @@ class IsarHelper {
 
   Future<List<NhTag>> findNhTagContains(String text, int limit) async {
     final result = await isar.nhTags
+        .where(sort: Sort.desc)
+        .anyLastUseTime()
         .filter()
         .nameContains(text)
         .or()
@@ -160,8 +165,21 @@ class IsarHelper {
         .limit(limit)
         .findAll();
 
-    logger.d('result.len ${result.length}');
+    logger.v('result.len ${result.length}');
 
     return result;
+  }
+
+  Future<void> updateNhTagTime(int nhTagId) async {
+    final NhTag? oriNhTag = await isar.nhTags.get(nhTagId);
+    final newTag = oriNhTag?.copyWith(
+      lastUseTime: DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (newTag != null) {
+      await isar.writeTxn(() async {
+        await isar.nhTags.put(newTag);
+      });
+    }
   }
 }

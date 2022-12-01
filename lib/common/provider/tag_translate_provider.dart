@@ -158,7 +158,7 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
       final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
           tag.name ?? '',
           namespace: getTagNamespace(tag.type ?? ''));
-      return tag..translateName = translated?.translateName;
+      return tag.copyWith(translateName: translated?.translateName);
     }).toList();
 
     // 每 [chunkSize] 分块

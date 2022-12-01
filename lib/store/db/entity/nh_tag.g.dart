@@ -3,6 +3,116 @@
 part of 'nh_tag.dart';
 
 // **************************************************************************
+// CopyWithGenerator
+// **************************************************************************
+
+abstract class _$NhTagCWProxy {
+  NhTag count(int? count);
+
+  NhTag id(int? id);
+
+  NhTag lastUseTime(int lastUseTime);
+
+  NhTag name(String? name);
+
+  NhTag translateName(String? translateName);
+
+  NhTag type(String? type);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NhTag(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// NhTag(...).copyWith(id: 12, name: "My name")
+  /// ````
+  NhTag call({
+    int? count,
+    int? id,
+    int? lastUseTime,
+    String? name,
+    String? translateName,
+    String? type,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfNhTag.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfNhTag.copyWith.fieldName(...)`
+class _$NhTagCWProxyImpl implements _$NhTagCWProxy {
+  final NhTag _value;
+
+  const _$NhTagCWProxyImpl(this._value);
+
+  @override
+  NhTag count(int? count) => this(count: count);
+
+  @override
+  NhTag id(int? id) => this(id: id);
+
+  @override
+  NhTag lastUseTime(int lastUseTime) => this(lastUseTime: lastUseTime);
+
+  @override
+  NhTag name(String? name) => this(name: name);
+
+  @override
+  NhTag translateName(String? translateName) =>
+      this(translateName: translateName);
+
+  @override
+  NhTag type(String? type) => this(type: type);
+
+  @override
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NhTag(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// NhTag(...).copyWith(id: 12, name: "My name")
+  /// ````
+  NhTag call({
+    Object? count = const $CopyWithPlaceholder(),
+    Object? id = const $CopyWithPlaceholder(),
+    Object? lastUseTime = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? translateName = const $CopyWithPlaceholder(),
+    Object? type = const $CopyWithPlaceholder(),
+  }) {
+    return NhTag(
+      count: count == const $CopyWithPlaceholder()
+          ? _value.count
+          // ignore: cast_nullable_to_non_nullable
+          : count as int?,
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as int?,
+      lastUseTime:
+          lastUseTime == const $CopyWithPlaceholder() || lastUseTime == null
+              ? _value.lastUseTime
+              // ignore: cast_nullable_to_non_nullable
+              : lastUseTime as int,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String?,
+      translateName: translateName == const $CopyWithPlaceholder()
+          ? _value.translateName
+          // ignore: cast_nullable_to_non_nullable
+          : translateName as String?,
+      type: type == const $CopyWithPlaceholder()
+          ? _value.type
+          // ignore: cast_nullable_to_non_nullable
+          : type as String?,
+    );
+  }
+}
+
+extension $NhTagCopyWith on NhTag {
+  /// Returns a callable class that can be used as follows: `instanceOfNhTag.copyWith(...)` or like so:`instanceOfNhTag.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$NhTagCWProxy get copyWith => _$NhTagCWProxyImpl(this);
+}
+
+// **************************************************************************
 // IsarCollectionGenerator
 // **************************************************************************
 
@@ -22,18 +132,23 @@ const NhTagSchema = CollectionSchema(
       name: r'count',
       type: IsarType.long,
     ),
-    r'name': PropertySchema(
+    r'lastUseTime': PropertySchema(
       id: 1,
+      name: r'lastUseTime',
+      type: IsarType.long,
+    ),
+    r'name': PropertySchema(
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
     r'translateName': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'translateName',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'type',
       type: IsarType.string,
     )
@@ -82,6 +197,19 @@ const NhTagSchema = CollectionSchema(
           caseSensitive: true,
         )
       ],
+    ),
+    r'lastUseTime': IndexSchema(
+      id: 9135219936382264109,
+      name: r'lastUseTime',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'lastUseTime',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
     )
   },
   links: {},
@@ -126,9 +254,10 @@ void _nhTagSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.count);
-  writer.writeString(offsets[1], object.name);
-  writer.writeString(offsets[2], object.translateName);
-  writer.writeString(offsets[3], object.type);
+  writer.writeLong(offsets[1], object.lastUseTime);
+  writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.translateName);
+  writer.writeString(offsets[4], object.type);
 }
 
 NhTag _nhTagDeserialize(
@@ -140,10 +269,11 @@ NhTag _nhTagDeserialize(
   final object = NhTag(
     count: reader.readLongOrNull(offsets[0]),
     id: id,
-    name: reader.readStringOrNull(offsets[1]),
-    type: reader.readStringOrNull(offsets[3]),
+    lastUseTime: reader.readLongOrNull(offsets[1]) ?? 0,
+    name: reader.readStringOrNull(offsets[2]),
+    translateName: reader.readStringOrNull(offsets[3]),
+    type: reader.readStringOrNull(offsets[4]),
   );
-  object.translateName = reader.readStringOrNull(offsets[2]);
   return object;
 }
 
@@ -157,10 +287,12 @@ P _nhTagDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    case 4:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -175,14 +307,20 @@ List<IsarLinkBase<dynamic>> _nhTagGetLinks(NhTag object) {
   return [];
 }
 
-void _nhTagAttach(IsarCollection<dynamic> col, Id id, NhTag object) {
-  object.id = id;
-}
+void _nhTagAttach(IsarCollection<dynamic> col, Id id, NhTag object) {}
 
 extension NhTagQueryWhereSort on QueryBuilder<NhTag, NhTag, QWhere> {
   QueryBuilder<NhTag, NhTag, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhere> anyLastUseTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'lastUseTime'),
+      );
     });
   }
 }
@@ -443,6 +581,96 @@ extension NhTagQueryWhere on QueryBuilder<NhTag, NhTag, QWhereClause> {
       }
     });
   }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> lastUseTimeEqualTo(
+      int lastUseTime) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'lastUseTime',
+        value: [lastUseTime],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> lastUseTimeNotEqualTo(
+      int lastUseTime) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lastUseTime',
+              lower: [],
+              upper: [lastUseTime],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lastUseTime',
+              lower: [lastUseTime],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lastUseTime',
+              lower: [lastUseTime],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'lastUseTime',
+              lower: [],
+              upper: [lastUseTime],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> lastUseTimeGreaterThan(
+    int lastUseTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lastUseTime',
+        lower: [lastUseTime],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> lastUseTimeLessThan(
+    int lastUseTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lastUseTime',
+        lower: [],
+        upper: [lastUseTime],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterWhereClause> lastUseTimeBetween(
+    int lowerLastUseTime,
+    int upperLastUseTime, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'lastUseTime',
+        lower: [lowerLastUseTime],
+        includeLower: includeLower,
+        upper: [upperLastUseTime],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
@@ -574,6 +802,59 @@ extension NhTagQueryFilter on QueryBuilder<NhTag, NhTag, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> lastUseTimeEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastUseTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> lastUseTimeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastUseTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> lastUseTimeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastUseTime',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterFilterCondition> lastUseTimeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastUseTime',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1034,6 +1315,18 @@ extension NhTagQuerySortBy on QueryBuilder<NhTag, NhTag, QSortBy> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> sortByLastUseTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUseTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> sortByLastUseTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUseTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1096,6 +1389,18 @@ extension NhTagQuerySortThenBy on QueryBuilder<NhTag, NhTag, QSortThenBy> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> thenByLastUseTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUseTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NhTag, NhTag, QAfterSortBy> thenByLastUseTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastUseTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1140,6 +1445,12 @@ extension NhTagQueryWhereDistinct on QueryBuilder<NhTag, NhTag, QDistinct> {
     });
   }
 
+  QueryBuilder<NhTag, NhTag, QDistinct> distinctByLastUseTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastUseTime');
+    });
+  }
+
   QueryBuilder<NhTag, NhTag, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1176,6 +1487,12 @@ extension NhTagQueryProperty on QueryBuilder<NhTag, NhTag, QQueryProperty> {
     });
   }
 
+  QueryBuilder<NhTag, int, QQueryOperations> lastUseTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastUseTime');
+    });
+  }
+
   QueryBuilder<NhTag, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -1203,11 +1520,14 @@ NhTag _$NhTagFromJson(Map<String, dynamic> json) => NhTag(
       id: json['id'] as int?,
       name: json['name'] as String?,
       count: json['count'] as int?,
-    )..translateName = json['translateName'] as String?;
+      lastUseTime: json['lastUseTime'] as int? ?? 0,
+      translateName: json['translateName'] as String?,
+    );
 
 Map<String, dynamic> _$NhTagToJson(NhTag instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'translateName': instance.translateName,
       'count': instance.count,
+      'lastUseTime': instance.lastUseTime,
     };

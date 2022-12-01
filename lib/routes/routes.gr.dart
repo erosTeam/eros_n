@@ -24,11 +24,9 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     IndexRoute.name: (routeData) {
-      final args = routeData.argsAs<IndexRouteArgs>(
-          orElse: () => const IndexRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: IndexPage(key: args.key),
+        child: const IndexPage(),
       );
     },
     FrontRoute.name: (routeData) {
@@ -288,26 +286,14 @@ class SplashRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [IndexPage]
-class IndexRoute extends PageRouteInfo<IndexRouteArgs> {
-  IndexRoute({Key? key})
+class IndexRoute extends PageRouteInfo<void> {
+  const IndexRoute()
       : super(
           IndexRoute.name,
           path: 'home',
-          args: IndexRouteArgs(key: key),
         );
 
   static const String name = 'IndexRoute';
-}
-
-class IndexRouteArgs {
-  const IndexRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'IndexRouteArgs{key: $key}';
-  }
 }
 
 /// generated route for

@@ -47,7 +47,6 @@ class _IndexPageState extends ConsumerState<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    logger.e('build IndexPage');
     final state = ref.watch(indexProvider);
 
     return Scaffold(

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'gallery.dart';
 
@@ -423,6 +423,7 @@ class _$_Gallery extends _Gallery {
   @override
   @JsonKey()
   List<Tag> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_tags);
   }
@@ -431,6 +432,7 @@ class _$_Gallery extends _Gallery {
   @override
   @JsonKey(ignore: true)
   List<Tag> get simpleTags {
+    if (_simpleTags is EqualUnmodifiableListView) return _simpleTags;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_simpleTags);
   }
@@ -445,6 +447,7 @@ class _$_Gallery extends _Gallery {
   @override
   @JsonKey(ignore: true)
   List<Comment> get comments {
+    if (_comments is EqualUnmodifiableListView) return _comments;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_comments);
   }
@@ -453,6 +456,8 @@ class _$_Gallery extends _Gallery {
   @override
   @JsonKey(ignore: true)
   List<Gallery> get moreLikeGallerys {
+    if (_moreLikeGallerys is EqualUnmodifiableListView)
+      return _moreLikeGallerys;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_moreLikeGallerys);
   }

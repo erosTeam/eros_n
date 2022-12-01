@@ -1,4 +1,5 @@
 import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
@@ -40,9 +41,8 @@ class SearchNotifier extends StateNotifier<ListViewState> {
       selection: TextSelection.collapsed(offset: '$newQuery '.length),
     );
 
-    // searchController.text = '$newQuery ';
-    // searchController.selection =
-    //     TextSelection.collapsed(offset: '$newQuery '.length);
+    isarHelper.updateNhTagTime(tag.id!);
+
     if (search) {
       searchFocusNode.unfocus();
       this.search();

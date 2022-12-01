@@ -34,7 +34,7 @@ class _SortPopupButtonState extends State<SortPopupButton> {
       SearchSort.popular: L10n.of(context).popular,
     };
 
-    logger.d('loading $loading');
+    logger.v('loading $loading');
 
     final indicatorSize =
         (widget.iconSize ?? Theme.of(context).iconTheme.size ?? 24.0) * 0.8;
