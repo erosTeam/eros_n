@@ -108,7 +108,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                 leading: const SizedBox(),
                 leadingWidth: 0,
                 // titleSpacing: 0,
-                title: buildSearchBar2(),
+                title: buildSearchBar(),
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 bottom: const PreferredSize(
                   preferredSize: Size.fromHeight(0),
@@ -125,7 +125,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
     );
   }
 
-  Widget buildSearchBar2() {
+  Widget buildSearchBar() {
     return StatefulBuilder(
       builder: (context, setState) {
         return TypeAheadField<NhTag>(
@@ -255,59 +255,6 @@ class _SearchPageState extends ConsumerState<SearchPage>
           // keepSuggestionsOnSuggestionSelected: true,
           // keepSuggestionsOnLoading: false,
           // hideOnEmpty: true,
-        );
-      },
-    );
-  }
-
-  Widget buildSearchBar(Widget menuButton) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return TextField(
-          controller: searchProviderNoti.searchController,
-          focusNode: searchProviderNoti.searchFocusNode,
-          decoration: InputDecoration(
-            fillColor: Theme.of(context).colorScheme.surfaceVariant,
-            filled: true,
-            contentPadding: const EdgeInsets.only(),
-            // isCollapsed: true,
-            isDense: false,
-            hintText: L10n.of(context).search,
-            // border: InputBorder.none,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(100),
-              borderSide: BorderSide.none,
-            ),
-            // prefixIcon: const Icon(Icons.search),
-            prefixIcon: getPrefixIcon(context),
-            suffixIcon: KeyboardVisibilityBuilder(
-                builder: (context, isKeyboardVisible) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (searchProviderNoti.searchController.text.isNotEmpty ||
-                      isKeyboardVisible)
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        searchProviderNoti.searchController.clear();
-                        setState(() {});
-                      },
-                    ),
-                  menuButton,
-                ],
-              );
-            }),
-          ),
-          onChanged: (value) {
-            setState(() {});
-          },
-          textInputAction: TextInputAction.search,
-          onEditingComplete: () {
-            //focusNode
-            searchProviderNoti.searchFocusNode.unfocus();
-            searchProviderNoti.search();
-          },
         );
       },
     );

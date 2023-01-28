@@ -7,17 +7,17 @@ part of 'nh_tag.dart';
 // **************************************************************************
 
 abstract class _$NhTagCWProxy {
-  NhTag count(int? count);
-
   NhTag id(int? id);
-
-  NhTag lastUseTime(int lastUseTime);
 
   NhTag name(String? name);
 
-  NhTag translateName(String? translateName);
+  NhTag count(int? count);
 
   NhTag type(String? type);
+
+  NhTag lastUseTime(int lastUseTime);
+
+  NhTag translateName(String? translateName);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NhTag(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -26,41 +26,41 @@ abstract class _$NhTagCWProxy {
   /// NhTag(...).copyWith(id: 12, name: "My name")
   /// ````
   NhTag call({
-    int? count,
     int? id,
-    int? lastUseTime,
     String? name,
-    String? translateName,
+    int? count,
     String? type,
+    int? lastUseTime,
+    String? translateName,
   });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfNhTag.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfNhTag.copyWith.fieldName(...)`
 class _$NhTagCWProxyImpl implements _$NhTagCWProxy {
-  final NhTag _value;
-
   const _$NhTagCWProxyImpl(this._value);
 
-  @override
-  NhTag count(int? count) => this(count: count);
+  final NhTag _value;
 
   @override
   NhTag id(int? id) => this(id: id);
 
   @override
-  NhTag lastUseTime(int lastUseTime) => this(lastUseTime: lastUseTime);
+  NhTag name(String? name) => this(name: name);
 
   @override
-  NhTag name(String? name) => this(name: name);
+  NhTag count(int? count) => this(count: count);
+
+  @override
+  NhTag type(String? type) => this(type: type);
+
+  @override
+  NhTag lastUseTime(int lastUseTime) => this(lastUseTime: lastUseTime);
 
   @override
   NhTag translateName(String? translateName) =>
       this(translateName: translateName);
 
   @override
-  NhTag type(String? type) => this(type: type);
-
-  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NhTag(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -69,39 +69,40 @@ class _$NhTagCWProxyImpl implements _$NhTagCWProxy {
   /// NhTag(...).copyWith(id: 12, name: "My name")
   /// ````
   NhTag call({
-    Object? count = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
-    Object? lastUseTime = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? translateName = const $CopyWithPlaceholder(),
+    Object? count = const $CopyWithPlaceholder(),
     Object? type = const $CopyWithPlaceholder(),
+    Object? lastUseTime = const $CopyWithPlaceholder(),
+    Object? translateName = const $CopyWithPlaceholder(),
   }) {
     return NhTag(
-      count: count == const $CopyWithPlaceholder()
-          ? _value.count
-          // ignore: cast_nullable_to_non_nullable
-          : count as int?,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as int?,
-      lastUseTime:
-          lastUseTime == const $CopyWithPlaceholder() || lastUseTime == null
-              ? _value.lastUseTime
-              // ignore: cast_nullable_to_non_nullable
-              : lastUseTime as int,
       name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String?,
-      translateName: translateName == const $CopyWithPlaceholder()
-          ? _value.translateName
+      count: count == const $CopyWithPlaceholder()
+          ? _value.count
           // ignore: cast_nullable_to_non_nullable
-          : translateName as String?,
+          : count as int?,
       type: type == const $CopyWithPlaceholder()
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as String?,
+      lastUseTime:
+          lastUseTime == const $CopyWithPlaceholder() || lastUseTime == null
+              // ignore: unnecessary_non_null_assertion
+              ? _value.lastUseTime!
+              // ignore: cast_nullable_to_non_nullable
+              : lastUseTime as int,
+      translateName: translateName == const $CopyWithPlaceholder()
+          ? _value.translateName
+          // ignore: cast_nullable_to_non_nullable
+          : translateName as String?,
     );
   }
 }

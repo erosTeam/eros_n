@@ -63,7 +63,7 @@ class _SortPopupButtonState extends State<SortPopupButton> {
           : const Icon(Icons.sort),
       iconSize: widget.iconSize,
       offset: const Offset(0, kToolbarHeight),
-      color: Theme.of(context).colorScheme.onInverseSurface,
+      // color: Theme.of(context).colorScheme.onInverseSurface,
       initialValue: widget.initValue,
       itemBuilder: (context) => sortMap.entries
           .map(
@@ -137,7 +137,6 @@ class _LanguagesFilterPopupButtonState
           : const Icon(Icons.language),
       iconSize: widget.iconSize,
       offset: const Offset(0, kToolbarHeight),
-      color: Theme.of(context).colorScheme.onInverseSurface,
       initialValue: widget.initValue,
       itemBuilder: (context) => languagesMap.entries
           .map(

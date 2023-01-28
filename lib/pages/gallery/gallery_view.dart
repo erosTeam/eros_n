@@ -156,9 +156,22 @@ class GalleryPageBody extends HookConsumerWidget {
           }
           return Colors.transparent;
         }),
-        systemOverlayStyle: Theme.of(context).brightness == Brightness.light
-            ? SystemUiOverlayStyle.dark
-            : SystemUiOverlayStyle.light,
+        // systemOverlayStyle: Theme.of(context).brightness == Brightness.light
+        //     ? SystemUiOverlayStyle.dark
+        //     : SystemUiOverlayStyle.light,
+        // systemOverlayStyle: Theme.of(context).brightness == Brightness.light
+        //     ? const SystemUiOverlayStyle(
+        //         systemNavigationBarColor: Colors.transparent,
+        //         systemNavigationBarDividerColor: Colors.transparent,
+        //         statusBarColor: Colors.transparent,
+        //         // statusBarIconBrightness: Brightness.dark,
+        //       )
+        //     : const SystemUiOverlayStyle(
+        //         systemNavigationBarColor: Colors.transparent,
+        //         systemNavigationBarDividerColor: Colors.transparent,
+        //         statusBarColor: Colors.transparent,
+        //         // statusBarIconBrightness: Brightness.light,
+        //       ),
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
@@ -241,7 +254,6 @@ class GalleryPageBody extends HookConsumerWidget {
 
 class _BackGround extends StatelessWidget {
   const _BackGround({
-    super.key,
     required this.thumbUrl,
   });
 

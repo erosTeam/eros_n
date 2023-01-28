@@ -2,7 +2,7 @@ name: eros_n
 description: An unofficial nhentai app.
 
 publish_to: 'none'
-version: 1.0.18+18
+version: 1.0.19+19
 
 environment:
   sdk: '>=2.17.0 <3.0.0'
@@ -26,7 +26,7 @@ dependencies:
   english_words: ^4.0.0
   flutter_inappwebview: ^5.4.3+7
   http: ^0.13.5
-  webview_flutter: ^3.0.4
+  webview_flutter: ^4.0.2
   html: ^0.15.0
   isar: ^3.0.2
   isar_flutter_libs: ^3.0.0-dev.8
@@ -60,10 +60,10 @@ dependencies:
 #  package_info: ^2.0.0
   url_launcher: ^6.0.3
   share: ^2.0.4
-  copy_with_extension: ^4.0.0
+  copy_with_extension: ^5.0.0
   path: ^1.8.2
   archive: ^3.3.1
-  package_info_plus: ^2.0.0
+  package_info_plus: ^3.0.2
   rotated_corner_decoration: ^2.0.0
   webview_windows:
     git:
@@ -111,7 +111,7 @@ dev_dependencies:
   # flutter pub run build_runner watch --delete-conflicting-outputs
   build_runner: ^2.0.3
   json_serializable: ^6.0.1
-  copy_with_extension_gen: ^4.0.0
+  copy_with_extension_gen: ^5.0.0
   isar_generator: ^3.0.0-dev.8
   auto_route_generator: ^5.0.2
   index_generator: ^3.3.2

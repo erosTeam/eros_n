@@ -87,8 +87,27 @@ class Global {
 
     if (Platform.isAndroid) {
       await iaw.AndroidInAppWebViewController.setWebContentsDebuggingEnabled(
-          true);
-      WebView.platform = AndroidWebView();
+        true,
+      );
+
+      final swAvailable = await iaw.AndroidWebViewFeature.isFeatureSupported(
+          iaw.AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+      final swInterceptAvailable =
+          await iaw.AndroidWebViewFeature.isFeatureSupported(iaw
+              .AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+
+      if (swAvailable && swInterceptAvailable) {
+        iaw.AndroidServiceWorkerController serviceWorkerController =
+            iaw.AndroidServiceWorkerController.instance();
+
+        // await serviceWorkerController
+        //     .setServiceWorkerClient(iaw.AndroidServiceWorkerClient(
+        //   shouldInterceptRequest: (request) async {
+        //     print(request);
+        //     return null;
+        //   },
+        // ));
+      }
     }
 
     packageInfo = await PackageInfo.fromPlatform();
