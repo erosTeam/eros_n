@@ -142,12 +142,12 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
 
-      - name: replace isar
-        if: matrix.target == 'windows'
-        shell: bash
-        run: |
-          sed -i "s#isar: ^3.0.2'#isar: 3.0.0-dev.8#g" pubspec.yaml
-          git stash
+#      - name: replace isar
+#        if: matrix.target == 'windows'
+#        shell: bash
+#        run: |
+#          sed -i "s#isar: ^3.0.2'#isar: 3.0.0-dev.8#g" pubspec.yaml
+#          git stash
 
       - name: Flutter pub get
         run: |
@@ -168,6 +168,7 @@ jobs:
       - name: Build ios app
         if: matrix.target == 'ios'
         run: |
+#          sed -i '' 's/com.dev.honjow.erosn/com.honjow.erosn/g' 'ios/Runner.xcodeproj/project.pbxproj'
           cd ios && pod update && pod install && cd ..
           flutter build ios --release --no-codesign
       - name: Thin app
