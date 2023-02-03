@@ -168,7 +168,7 @@ jobs:
       - name: Build ios app
         if: matrix.target == 'ios'
         run: |
-#          sed -i '' 's/com.dev.honjow.erosn/com.honjow.erosn/g' 'ios/Runner.xcodeproj/project.pbxproj'
+          sed -i '' 's/com.dev.honjow.erosn/com.honjow.erosn/g' 'ios/Runner.xcodeproj/project.pbxproj'
           cd ios && pod update && pod install && cd ..
           flutter build ios --release --no-codesign
       - name: Thin app
