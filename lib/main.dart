@@ -11,6 +11,7 @@ import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,6 +20,7 @@ import 'package:window_size/window_size.dart';
 
 import 'component/widget/broken_shield.dart';
 import 'component/widget/desktop.dart';
+import 'component/widget/system_ui_overlay.dart';
 import 'generated/l10n.dart';
 
 Future<void> main() async {
@@ -153,14 +155,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
               FlutterSmartDialog.observer,
             ],
           ),
-          builder: FlutterSmartDialog.init(
-            styleBuilder: (child) {
-              if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-                return Desktop(child: child);
-              }
-              return child;
-            },
-            builder: BrokenShield.init(),
+          builder: SystemUIOverlay.init(
+            builder: FlutterSmartDialog.init(
+              styleBuilder: (child) {
+                if (Platform.isWindows ||
+                    Platform.isMacOS ||
+                    Platform.isLinux) {
+                  return Desktop(child: child);
+                }
+                return child;
+              },
+              builder: BrokenShield.init(),
+            ),
           ),
           // builder: (BuildContext context, Widget? child) {
           //   final widget =

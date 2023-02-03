@@ -59,11 +59,12 @@ class Global {
   static late PackageInfo packageInfo;
 
   static Future<void> init() async {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarDividerColor: Colors.transparent,
-      statusBarColor: Colors.transparent,
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //   systemNavigationBarColor: Colors.transparent,
+    //   systemNavigationBarDividerColor: Colors.transparent,
+    //   statusBarColor: Colors.transparent,
+    //   systemNavigationBarContrastEnforced: false,
+    // ));
 
     // SystemChrome.setEnabledSystemUIMode(
     //   SystemUiMode.edgeToEdge,

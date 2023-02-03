@@ -163,6 +163,7 @@ class GalleryPageBody extends HookConsumerWidget {
         //     ? const SystemUiOverlayStyle(
         //         systemNavigationBarColor: Colors.transparent,
         //         systemNavigationBarDividerColor: Colors.transparent,
+        //         systemNavigationBarIconBrightness: Brightness.dark,
         //         statusBarColor: Colors.transparent,
         //         // statusBarIconBrightness: Brightness.dark,
         //       )
@@ -172,6 +173,11 @@ class GalleryPageBody extends HookConsumerWidget {
         //         statusBarColor: Colors.transparent,
         //         // statusBarIconBrightness: Brightness.light,
         //       ),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarDividerColor: Colors.transparent,
+          statusBarColor: Colors.transparent,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
