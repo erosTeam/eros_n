@@ -10,17 +10,23 @@ import '../../common/const/const.dart';
 import '../../pages/webview/webview.dart';
 
 class WebViewCookieInfo {
-  WebViewCookieInfo({
-    required this.url,
-    required this.cookies,
-    required this.userAgent,
-    this.completed = false,
-  });
+  const WebViewCookieInfo(
+      {required this.url,
+      required this.cookies,
+      required this.userAgent,
+      this.manualRequired = false,
+      this.message});
+
+  @override
+  String toString() {
+    return 'WebViewCookieInfo<MR:$manualRequired, $message, $userAgent, $cookies>';
+  }
 
   final String url;
   final List<Cookie> cookies;
   final String userAgent;
-  final bool completed;
+  final bool manualRequired;
+  final String? message;
 }
 
 typedef WebViewCallback = Function(WebViewCookieInfo);
@@ -83,12 +89,10 @@ class _MobileWebViewState extends State<MobileWebView> {
               cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
           final ua = await controller.evaluateJavascript(
               source: 'navigator.userAgent');
-
           widget.callback?.call(WebViewCookieInfo(
               url: NHConst.baseUrl,
               cookies: ioCookies,
-              userAgent: ua as String,
-              completed: true));
+              userAgent: ua as String));
         },
         // onLoadStop: (InAppWebViewController controller, Uri? uri) async {
         //   if (uri == null) {
@@ -127,10 +131,56 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   final _controller = WebviewController();
   final List<StreamSubscription> _subscriptions = [];
 
+  Timer? anomalyTimer;
+
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    if(widget.callback != null) {
+      anomalyTimer = Timer.periodic(const Duration(seconds: 1), anomalyMonitor);
+    }
+  }
+
+  Future<void> anomalyMonitor(Timer timer) async {
+
+    if ( !mounted || !_controller.value.isInitialized ) {
+      return;
+    }
+    callbackChallengeInfo();
+  }
+
+  Future<bool> getManualRequired() async {
+    if(_controller.value.isInitialized) {
+      final manualRequiredText = await _controller.executeScript(
+          '(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null');
+      return manualRequiredText == 'true';
+    }
+    return false;
+  }
+
+  Future<String?> getChallengeMessage() async {
+    if(_controller.value.isInitialized) {
+      final String msg = await _controller.executeScript(
+          '(document.querySelector("#challenge-body-text") != null) ? document.querySelector("#challenge-body-text").textContent : ""') as String;;
+      return msg.trim();
+    }
+    return null;
+  }
+
+  Future<String> getUserAgent() async {
+    if(_controller.value.isInitialized) {
+      final value = await _controller.executeScript('navigator.userAgent');
+      return value is String ? value : '';
+    }
+    return '';
+  }
+
+  Future<List<Cookie>> getCookies() async {
+    if(_controller.value.isInitialized) {
+      return await _controller.getCookies([Uri.parse(widget.url)]) ?? [];
+    }
+    return [];
   }
 
   @override
@@ -138,11 +188,25 @@ class _WindowsWebViewState extends State<WindowsWebView> {
     for (final s in _subscriptions) {
       s.cancel();
     }
+    anomalyTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
 
   String url = '';
+
+  Future callbackChallengeInfo() async {
+
+    if(_controller.value.isInitialized) {
+      widget.callback?.call(WebViewCookieInfo(
+          url: NHConst.baseUrl,
+          cookies: await getCookies(),
+          userAgent: await getUserAgent(),
+          manualRequired: (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
+          message: await getChallengeMessage()
+      ));
+    }
+  }
 
   Future<void> initPlatformState() async {
     url = widget.url;
@@ -153,14 +217,8 @@ class _WindowsWebViewState extends State<WindowsWebView> {
     _subscriptions.add(_controller.loadingState.listen((state) async {
       if (state == LoadingState.navigationCompleted ||
           state == LoadingState.loading) {
-        final cookies = await _controller.getCookies([Uri.parse(url)]);
-        final ua = await _controller.executeScript('navigator.userAgent');
         if (widget.callback != null) {
-          widget.callback!(WebViewCookieInfo(
-              url: url,
-              cookies: cookies ?? [],
-              userAgent: ua as String,
-              completed: state == LoadingState.navigationCompleted));
+          callbackChallengeInfo();
         }
       }
     }));

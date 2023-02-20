@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:eros_n/component/widget/web_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,6 +39,9 @@ class _BrokenShieldState extends State<BrokenShield> {
   StreamController<void> pendingConnectionsChangeCtrl =
       StreamController<void>.broadcast();
 
+  StreamController<WebViewCookieInfo> webViewCookieInfoChangeCtrl =
+      StreamController<WebViewCookieInfo>.broadcast();
+
   GlobalKey<OverlayState> overlay = GlobalKey();
 
   StateSetter? urlListSetState;
@@ -63,83 +64,57 @@ class _BrokenShieldState extends State<BrokenShield> {
     entry = OverlayEntry(
         maintainState: true,
         builder: (BuildContext context) {
-          const showWebview = kDebugMode;
-          return Stack(
-            children: [
-              Positioned.fill(
-                  child:
-                      Opacity(opacity: showWebview ? 1 : 0, child: webView())),
-              Positioned.fill(child: Container(color: Colors.black38)),
-              if (!showWebview)
-                Center(
-                  child: SizedBox(
-                    width: 150,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                            Text('Checking connection is secure',
-                                style: TextStyle(
-                                  fontSize: 9,
+          return StreamBuilder<WebViewCookieInfo>(
+              stream: webViewCookieInfoChangeCtrl.stream,
+              builder: (context, snapshot) {
+                final manualRequired = snapshot.data?.manualRequired ?? false;
+                final message = snapshot.data?.message ?? '安全挑战';
+                final showWebView = manualRequired;
+                double opacity = 0;
+                if (kDebugMode) {
+                  opacity = 0.5;
+                }
+                if (showWebView) {
+                  opacity = 1;
+                }
+                return Container(
+                  color: Colors.black,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                          child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 230),
+                              opacity: opacity,
+                              child: webView())),
+                      if (!showWebView)
+                        Center(
+                          child: SizedBox(
+                            width: 150,
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    Text(message,
+                                        style: const TextStyle(
+                                          fontSize: 9,
+                                        ),
+                                        textAlign: TextAlign.center),
+                                  ],
                                 ),
-                                textAlign: TextAlign.center),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              if (showWebview)
-                Center(
-                  child: SizedBox(
-                    width: 400,
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            FutureBuilder<List<Cookie>>(
-                                future: Global.cookieJar.loadForRequest(
-                                    Uri.parse(NHConst.baseHost)),
-                                builder: (context, snapshot) {
-                                  final Cookie? csrfTokenCookie = snapshot.data
-                                      ?.firstWhereOrNull(
-                                          (e) => e.name == 'csrftoken');
-                                  return Text(
-                                    'csrftoken: ${csrfTokenCookie?.value ?? '-'}',
-                                    style: const TextStyle(fontSize: 9),
-                                  );
-                                }),
-                            Text(
-                              Global.userAgent ?? NHConst.userAgent,
-                              style: const TextStyle(fontSize: 9),
+                              ),
                             ),
-                            StreamBuilder<void>(
-                                stream: pendingConnectionsChangeCtrl.stream,
-                                builder: (context, snapshot) {
-                                  return Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      for (final request in pendingConnections)
-                                        Text(request.uri.toString())
-                                    ],
-                                  );
-                                }),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
+                    ],
                   ),
-                ),
-            ],
-          );
+                );
+              });
         });
 
     overlay.currentState!.insert(entry!);
@@ -157,11 +132,15 @@ class _BrokenShieldState extends State<BrokenShield> {
   @override
   void dispose() {
     pendingConnectionsChangeCtrl.close();
+    webViewCookieInfoChangeCtrl.close();
     super.dispose();
   }
 
   Future<void> injectionCookieAndUA(WebViewCookieInfo info) async {
+    webViewCookieInfoChangeCtrl.sink.add(info);
     if (info.cookies.any((e) => e.name == 'csrftoken')) {
+      print(info);
+
       await Global.setUserAgent(info.userAgent);
       await Global.setCookies(NHConst.baseUrl, info.cookies);
       pendingConnections.clear();
@@ -173,9 +152,12 @@ class _BrokenShieldState extends State<BrokenShield> {
   }
 
   Widget webView() {
-    return GetCookieWebView(
-      callback: injectionCookieAndUA,
-      url: NHConst.baseUrl,
+    return Scaffold(
+      appBar: AppBar(title: Text("安全挑战")),
+      body: GetCookieWebView(
+        callback: injectionCookieAndUA,
+        url: NHConst.baseUrl,
+      ),
     );
   }
 

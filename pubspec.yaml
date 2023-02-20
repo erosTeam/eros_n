@@ -68,7 +68,7 @@ dependencies:
   webview_windows:
     git:
       url: https://github.com/xioxin/flutter-webview-windows.git
-      ref: c9bdab7
+      ref: 4837e6d
   system_network_proxy: ^1.0.2
   system_proxy: ^0.1.0
   keframe: ^3.0.0
