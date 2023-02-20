@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dio/dio.dart';
 import 'package:eros_n/component/widget/web_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../common/const/const.dart';
@@ -77,41 +78,44 @@ class _BrokenShieldState extends State<BrokenShield> {
                 if (showWebView) {
                   opacity = 1;
                 }
-                return Container(
-                  color: Colors.black,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                          child: AnimatedOpacity(
-                              duration: Duration(milliseconds: 230),
-                              opacity: opacity,
-                              child: webView())),
-                      if (!showWebView)
-                        Center(
-                          child: SizedBox(
-                            width: 150,
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.all(16.0),
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    Text(message,
-                                        style: const TextStyle(
-                                          fontSize: 9,
-                                        ),
-                                        textAlign: TextAlign.center),
-                                  ],
+                return Padding(
+                  padding: EdgeInsets.only(top: Platform.isWindows ? appWindow.titleBarHeight : 0),
+                  child: Container(
+                    color: Colors.black,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                            child: AnimatedOpacity(
+                                duration: Duration(milliseconds: 230),
+                                opacity: opacity,
+                                child: webView())),
+                        if (!showWebView)
+                          Center(
+                            child: SizedBox(
+                              width: 150,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                      Text(message,
+                                          style: const TextStyle(
+                                            fontSize: 9,
+                                          ),
+                                          textAlign: TextAlign.center),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               });
@@ -139,8 +143,6 @@ class _BrokenShieldState extends State<BrokenShield> {
   Future<void> injectionCookieAndUA(WebViewCookieInfo info) async {
     webViewCookieInfoChangeCtrl.sink.add(info);
     if (info.cookies.any((e) => e.name == 'csrftoken')) {
-      print(info);
-
       await Global.setUserAgent(info.userAgent);
       await Global.setCookies(NHConst.baseUrl, info.cookies);
       pendingConnections.clear();
