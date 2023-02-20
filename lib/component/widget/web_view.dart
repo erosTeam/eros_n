@@ -50,10 +50,21 @@ class _MobileWebViewState extends State<MobileWebView> {
   late CookieManager cookieManager;
   bool initOk = false;
 
+  Timer? anomalyTimer;
+
   @override
   void initState() {
     initWebView();
     super.initState();
+    if(widget.callback != null) {
+      anomalyTimer = Timer.periodic(const Duration(seconds: 1), anomalyMonitor);
+    }
+  }
+
+  Future<void> anomalyMonitor(Timer timer) async {
+    if(mounted && initOk && _controller != null) {
+      callbackChallengeInfo();
+    }
   }
 
   Future<void> initWebView() async {
@@ -69,6 +80,45 @@ class _MobileWebViewState extends State<MobileWebView> {
     });
   }
 
+  Future callbackChallengeInfo() async {
+    if(_controller == null) {
+      return;
+    }
+    final cookies =
+    await cookieManager.getCookies(url: Uri.parse(NHConst.baseUrl));
+    final ioCookies =
+    cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
+    final ua = await _controller!.evaluateJavascript(
+        source: 'navigator.userAgent');
+    final userAgent = ua is String ? ua : '';
+    widget.callback?.call(WebViewCookieInfo(
+        url: NHConst.baseUrl,
+        cookies: ioCookies,
+        userAgent: userAgent,
+        manualRequired: (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
+        message: await getChallengeMessage()
+    ));
+  }
+
+  Future<bool> getManualRequired() async {
+    if(_controller != null) {
+      final manualRequiredText = await _controller!.evaluateJavascript(
+          source:'(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null');
+      return manualRequiredText == 'true';
+    }
+    return false;
+  }
+
+  Future<String?> getChallengeMessage() async {
+    if(_controller != null) {
+      final String msg = await _controller!.evaluateJavascript(source: '(document.querySelector("#challenge-body-text") != null) ? document.querySelector("#challenge-body-text").textContent : ""') as String;
+      return msg.trim();
+    }
+    return null;
+  }
+
+  InAppWebViewController? _controller;
+
   @override
   Widget build(BuildContext context) {
     if (initOk) {
@@ -81,18 +131,9 @@ class _MobileWebViewState extends State<MobileWebView> {
           return NavigationActionPolicy.ALLOW;
         },
         onTitleChanged: (controller, title) async {
+          _controller = controller;
           logger.d('onTitleChanged: $title');
-          final cookies =
-              await cookieManager.getCookies(url: Uri.parse(NHConst.baseUrl));
-
-          final ioCookies =
-              cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
-          final ua = await controller.evaluateJavascript(
-              source: 'navigator.userAgent');
-          widget.callback?.call(WebViewCookieInfo(
-              url: NHConst.baseUrl,
-              cookies: ioCookies,
-              userAgent: ua as String));
+          callbackChallengeInfo();
         },
         // onLoadStop: (InAppWebViewController controller, Uri? uri) async {
         //   if (uri == null) {
