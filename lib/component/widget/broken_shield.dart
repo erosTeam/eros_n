@@ -72,16 +72,14 @@ class _BrokenShieldState extends State<BrokenShield> {
                 final message = snapshot.data?.message ?? '安全挑战';
                 final showWebView = manualRequired;
                 double opacity = 0;
-                if (kDebugMode) {
-                  opacity = 0.5;
-                }
                 if (showWebView) {
                   opacity = 1;
                 }
                 return Padding(
-                  padding: EdgeInsets.only(top: Platform.isWindows ? appWindow.titleBarHeight : 0),
+                  padding: EdgeInsets.only(
+                      top: Platform.isWindows ? appWindow.titleBarHeight : 0),
                   child: Container(
-                    color: Colors.black,
+                    color: Colors.black54,
                     child: Stack(
                       children: [
                         Positioned.fill(
@@ -147,9 +145,11 @@ class _BrokenShieldState extends State<BrokenShield> {
       await Global.setCookies(NHConst.baseUrl, info.cookies);
       pendingConnections.clear();
       pendingConnectionsChangeCtrl.sink.add(null);
-      completer?.complete(true);
       entry?.remove();
       entry = null;
+      if (completer != null && completer!.isCompleted == false) {
+        completer?.complete(true);
+      }
     }
   }
 
