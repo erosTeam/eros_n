@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dio/dio.dart';
 import 'package:eros_n/component/widget/web_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../common/const/const.dart';
 import '../../common/global.dart';
@@ -77,7 +76,7 @@ class _BrokenShieldState extends State<BrokenShield> {
                 }
                 return Padding(
                   padding: EdgeInsets.only(
-                      top: Platform.isWindows ? appWindow.titleBarHeight : 0),
+                      top: (Platform.isWindows && showWebView) ? appWindow.titleBarHeight : 0),
                   child: Container(
                     color: Colors.black54,
                     child: Stack(
@@ -153,10 +152,32 @@ class _BrokenShieldState extends State<BrokenShield> {
     }
   }
 
+  GlobalKey<GetCookieWebViewState> webViewState = GlobalKey();
+
   Widget webView() {
     return Scaffold(
-      appBar: AppBar(title: Text("安全挑战")),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: BackButtonIcon(),
+          onPressed: () {
+            pendingConnections.clear();
+            pendingConnectionsChangeCtrl.sink.add(null);
+            entry?.remove();
+            entry = null;
+            if (completer != null && completer!.isCompleted == false) {
+              completer?.completeError(Exception('用户终止了挑战'));
+            }
+          },
+        ),
+          title: Text("安全挑战"),
+        actions: [
+          IconButton(icon: const Icon(Icons.refresh), onPressed: () {
+            webViewState.currentState?.reload();
+          })
+        ],
+      ),
       body: GetCookieWebView(
+        key: webViewState,
         callback: injectionCookieAndUA,
         url: NHConst.baseUrl,
       ),

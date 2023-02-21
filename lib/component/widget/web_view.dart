@@ -119,6 +119,10 @@ class _MobileWebViewState extends State<MobileWebView> {
 
   InAppWebViewController? _controller;
 
+  Future reload() async {
+    await _controller?.reload();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (initOk) {
@@ -173,6 +177,10 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   final List<StreamSubscription> _subscriptions = [];
 
   Timer? anomalyTimer;
+
+  Future reload() {
+    return _controller.reload();
+  }
 
   @override
   void initState() {
@@ -317,7 +325,7 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   }
 }
 
-class GetCookieWebView extends StatelessWidget {
+class GetCookieWebView extends StatefulWidget {
   const GetCookieWebView({
     required this.url,
     this.callback,
@@ -330,17 +338,33 @@ class GetCookieWebView extends StatelessWidget {
   final bool deletedCookie;
 
   @override
+  State<GetCookieWebView> createState() => GetCookieWebViewState();
+}
+
+class GetCookieWebViewState extends State<GetCookieWebView> {
+
+
+  GlobalKey<_MobileWebViewState> mobileState = GlobalKey();
+  GlobalKey<_WindowsWebViewState> windowsState = GlobalKey();
+
+  Future reload() async {
+    await mobileState.currentState?.reload();
+    await windowsState.currentState?.reload();
+  }
+
+  @override
   Widget build(BuildContext context) {
     switch (Platform.operatingSystem) {
       case 'ios':
       case 'android':
         return MobileWebView(
-          url: url,
-          callback: callback,
-          deletedCookie: deletedCookie,
+          key: mobileState,
+          url: widget.url,
+          callback: widget.callback,
+          deletedCookie: widget.deletedCookie,
         );
       case 'windows':
-        return WindowsWebView(url: url, callback: callback);
+        return WindowsWebView(key: windowsState, url: widget.url, callback: widget.callback);
       default:
         throw UnimplementedError();
     }
