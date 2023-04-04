@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -8,6 +9,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+@RoutePage()
 class MorePage extends StatefulHookConsumerWidget {
   const MorePage({super.key});
 

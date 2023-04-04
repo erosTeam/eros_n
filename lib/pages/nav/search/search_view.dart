@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'dart:async';
 
 import 'package:eros_n/common/enum.dart';
@@ -21,6 +22,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 import '../../../utils/logger.dart';
 import 'search_provider.dart';
 
+@RoutePage()
 class SearchPage extends StatefulHookConsumerWidget {
   const SearchPage({Key? key, required this.query}) : super(key: key);
   final String query;

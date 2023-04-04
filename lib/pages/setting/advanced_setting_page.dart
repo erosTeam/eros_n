@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'setting_base.dart';
 
+@RoutePage()
 class AdvancedSettingPage extends StatelessWidget {
   const AdvancedSettingPage({Key? key}) : super(key: key);
 

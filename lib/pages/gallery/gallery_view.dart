@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/const/const.dart';
@@ -31,6 +32,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'gallery_provider.dart';
 import 'thumb_page.dart';
 
+@RoutePage()
 class GalleryPage extends StatefulHookConsumerWidget {
   const GalleryPage({
     Key? key,
@@ -1012,13 +1014,14 @@ class MoreLikeListView extends HookConsumerWidget {
                                     (likeGallery.languageCode == 'ja' ||
                                             likeGallery.languageCode == null)
                                         ? null
-                                        : RotatedCornerDecoration(
+                                        : RotatedCornerDecoration.withColor(
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .primary
                                                 .withOpacity(0.8),
-                                            geometry: const BadgeGeometry(
-                                                width: 38, height: 28),
+                                      badgeSize: const Size(38, 28),
+                                            // geometry: const BadgeGeometry(
+                                            //     width: 38, height: 28),
                                             textSpan: TextSpan(
                                               text: likeGallery.languageCode
                                                       ?.toUpperCase() ??

@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
 

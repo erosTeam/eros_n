@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+@RoutePage()
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);
 

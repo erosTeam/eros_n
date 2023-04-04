@@ -8,14 +8,11 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/routes/routes.dart';
-import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:window_size/window_size.dart';
 
 import 'component/widget/broken_shield.dart';

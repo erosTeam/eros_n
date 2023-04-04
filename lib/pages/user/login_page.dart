@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'dart:io';
 
 import 'package:eros_n/common/const/const.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+@RoutePage()
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({
     Key? key,

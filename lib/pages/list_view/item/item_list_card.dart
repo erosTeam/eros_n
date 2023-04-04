@@ -49,14 +49,11 @@ class ItemListCard extends HookConsumerWidget {
             foregroundDecoration: (gallery.languageCode == 'ja' ||
                     gallery.languageCode == null)
                 ? null
-                : RotatedCornerDecoration(
+                : RotatedCornerDecoration.withColor(
                     color:
                         Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                    geometry: const BadgeGeometry(
-                      width: 38,
-                      height: 28,
-                      alignment: BadgeAlignment.topLeft,
-                    ),
+                    badgeSize: const Size(38, 28),
+                    badgePosition: BadgePosition.topStart,
                     textSpan: TextSpan(
                       text: gallery.languageCode?.toUpperCase() ?? '',
                       style: const TextStyle(

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
@@ -13,6 +14,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 import '../index/index_provider.dart';
 import 'favorite_provider.dart';
 
+@RoutePage()
 class FavoritePage extends StatefulHookConsumerWidget {
   const FavoritePage({
     Key? key,

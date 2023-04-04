@@ -18,6 +18,7 @@ import 'package:eros_n/pages/setting/about_page.dart';
 import 'package:eros_n/pages/setting/advanced_setting_page.dart';
 import 'package:eros_n/pages/setting/appearance_setting_page.dart';
 import 'package:eros_n/pages/setting/general_setting_page.dart';
+import 'package:eros_n/pages/setting/license_page.dart';
 import 'package:eros_n/pages/setting/read_setting_page.dart';
 import 'package:eros_n/pages/setting/settings_page.dart';
 import 'package:eros_n/pages/splash/splash_view.dart';
@@ -33,26 +34,26 @@ part 'routes.gr.dart';
 
 class NHRoutes {
   static const String root = '/';
-  static const String home = 'home';
-  static const String front = 'front';
-  static const String favorite = 'favorite';
-  static const String history = 'history';
-  static const String gallery = 'gallery';
-  static const String read = 'read';
-  static const String settings = 'settings';
-  static const String appearanceSetting = 'appearanceSetting';
-  static const String readSetting = 'readSetting';
-  static const String advancedSetting = 'advancedSetting';
-  static const String generalSetting = 'generalSetting';
-  static const String login = 'login';
-  static const String webLogin = 'webLogin';
-  static const String webView = 'webView';
-  static const String about = 'about';
-  static const String license = 'license';
-  static const String thumb = 'thumb';
-  static const String comments = 'comments';
-  static const String search = 'search';
-  static const String more = 'more';
+  static const String home = '/home';
+  static const String front = '/front';
+  static const String favorite = '/favorite';
+  static const String history = '/history';
+  static const String gallery = '/gallery';
+  static const String read = '/read';
+  static const String settings = '/settings';
+  static const String appearanceSetting = '/appearanceSetting';
+  static const String readSetting = '/readSetting';
+  static const String advancedSetting = '/advancedSetting';
+  static const String generalSetting = '/generalSetting';
+  static const String login = '/login';
+  static const String webLogin = '/webLogin';
+  static const String webView = '/webView';
+  static const String about = '/about';
+  static const String license = '/license';
+  static const String thumb = '/thumb';
+  static const String comments = '/comments';
+  static const String search = '/search';
+  static const String more = '/more';
 }
 
 class AppRouteObserver extends AutoRouterObserver {
@@ -60,33 +61,38 @@ class AppRouteObserver extends AutoRouterObserver {
   void didPush(Route route, Route? previousRoute) {}
 }
 
-@MaterialAutoRouter(
+@AutoRouterConfig(
   replaceInRouteName: 'Page,Route',
-  routes: <AutoRoute>[
-    AutoRoute(path: NHRoutes.root, page: SplashPage, initial: true),
-    AutoRoute(path: NHRoutes.home, page: IndexPage),
-    AutoRoute(path: NHRoutes.front, page: FrontPage),
-    AutoRoute(path: NHRoutes.favorite, page: FavoritePage),
-    AutoRoute(path: NHRoutes.history, page: HistoryPage),
-    AutoRoute(path: NHRoutes.search, page: SearchPage),
-    AutoRoute(path: NHRoutes.more, page: MorePage),
-    AutoRoute(path: NHRoutes.gallery, page: GalleryPage, children: []),
-    AutoRoute(path: NHRoutes.read, page: ReadPage),
-    AutoRoute(path: NHRoutes.thumb, page: ThumbPage),
-    AutoRoute(path: NHRoutes.comments, page: CommentsPage),
-    AutoRoute(path: NHRoutes.settings, page: SettingsPage),
-    AutoRoute(path: NHRoutes.appearanceSetting, page: AppearanceSettingPage),
-    AutoRoute(path: NHRoutes.generalSetting, page: GeneralSettingPage),
-    AutoRoute(path: NHRoutes.readSetting, page: ReadSettingPage),
-    AutoRoute(path: NHRoutes.advancedSetting, page: AdvancedSettingPage),
-    AutoRoute(path: NHRoutes.login, page: LoginPage),
-    AutoRoute<List<Cookie>>(path: NHRoutes.webLogin, page: WebLoginPage),
-    AutoRoute(path: NHRoutes.webView, page: NhWebViewPage),
-    AutoRoute(path: NHRoutes.about, page: AboutPage),
-    AutoRoute(path: NHRoutes.license, page: LicensePage),
-  ],
 )
-class AppRouter extends _$AppRouter {}
+class AppRouter extends _$AppRouter {
+  @override
+  RouteType get defaultRouteType => const RouteType.material();
+  @override
+  final List<AutoRoute> routes = [
+    AutoRoute(path: NHRoutes.root, page: SplashRoute.page),
+    AutoRoute(path: NHRoutes.home, page: IndexRoute.page),
+    AutoRoute(path: NHRoutes.front, page: FrontRoute.page),
+    AutoRoute(path: NHRoutes.favorite, page: FavoriteRoute.page),
+    AutoRoute(path: NHRoutes.history, page: HistoryRoute.page),
+    AutoRoute(path: NHRoutes.search, page: SearchRoute.page),
+    AutoRoute(path: NHRoutes.more, page: MoreRoute.page),
+    AutoRoute(path: NHRoutes.gallery, page: GalleryRoute.page),
+    AutoRoute(path: NHRoutes.read, page: ReadRoute.page),
+    AutoRoute(path: NHRoutes.thumb, page: ThumbRoute.page),
+    AutoRoute(path: NHRoutes.comments, page: CommentsRoute.page),
+    AutoRoute(path: NHRoutes.settings, page: SettingsRoute.page),
+    AutoRoute(
+        path: NHRoutes.appearanceSetting, page: AppearanceSettingRoute.page),
+    AutoRoute(path: NHRoutes.generalSetting, page: GeneralSettingRoute.page),
+    AutoRoute(path: NHRoutes.readSetting, page: ReadSettingRoute.page),
+    AutoRoute(path: NHRoutes.advancedSetting, page: AdvancedSettingRoute.page),
+    AutoRoute(path: NHRoutes.login, page: LoginRoute.page),
+    AutoRoute(path: NHRoutes.webLogin, page: WebLoginRoute.page),
+    AutoRoute(path: NHRoutes.webView, page: NhWebViewRoute.page),
+    AutoRoute(path: NHRoutes.about, page: AboutRoute.page),
+    AutoRoute(path: NHRoutes.license, page: MyLicenseRoute.page),
+  ];
+}
 
 class RouteUtil {
   static Future<void> goRead(

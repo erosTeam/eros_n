@@ -95,8 +95,7 @@ class _$NhTagCWProxyImpl implements _$NhTagCWProxy {
           : type as String?,
       lastUseTime:
           lastUseTime == const $CopyWithPlaceholder() || lastUseTime == null
-              // ignore: unnecessary_non_null_assertion
-              ? _value.lastUseTime!
+              ? _value.lastUseTime
               // ignore: cast_nullable_to_non_nullable
               : lastUseTime as int,
       translateName: translateName == const $CopyWithPlaceholder()

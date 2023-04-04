@@ -78,13 +78,11 @@ class _$TagTranslateCWProxyImpl implements _$TagTranslateCWProxy {
   }) {
     return TagTranslate(
       namespace: namespace == const $CopyWithPlaceholder() || namespace == null
-          // ignore: unnecessary_non_null_assertion
-          ? _value.namespace!
+          ? _value.namespace
           // ignore: cast_nullable_to_non_nullable
           : namespace as String,
       name: name == const $CopyWithPlaceholder() || name == null
-          // ignore: unnecessary_non_null_assertion
-          ? _value.name!
+          ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
       translateName: translateName == const $CopyWithPlaceholder()
@@ -101,8 +99,7 @@ class _$TagTranslateCWProxyImpl implements _$TagTranslateCWProxy {
           : links as String?,
       lastUseTime:
           lastUseTime == const $CopyWithPlaceholder() || lastUseTime == null
-              // ignore: unnecessary_non_null_assertion
-              ? _value.lastUseTime!
+              ? _value.lastUseTime
               // ignore: cast_nullable_to_non_nullable
               : lastUseTime as int,
     );

@@ -47,13 +47,9 @@ class ItemGridCard extends HookConsumerWidget {
           foregroundDecoration: (gallery.languageCode == 'ja' ||
                   gallery.languageCode == null)
               ? null
-              : RotatedCornerDecoration(
+              : RotatedCornerDecoration.withColor(
                   color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                  geometry: const BadgeGeometry(
-                    width: 38,
-                    height: 28,
-                    alignment: BadgeAlignment.topRight,
-                  ),
+                  badgeSize: const Size(38, 28),
                   textSpan: TextSpan(
                     text: gallery.languageCode?.toUpperCase() ?? '',
                     style: const TextStyle(

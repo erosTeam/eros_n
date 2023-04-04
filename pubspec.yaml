@@ -2,7 +2,7 @@ name: eros_n
 description: An unofficial nhentai app.
 
 publish_to: 'none'
-version: 1.0.20+20
+version: 1.0.21+21
 
 environment:
   sdk: '>=2.17.0 <3.0.0'
@@ -42,7 +42,7 @@ dependencies:
   tuple: ^2.0.0
   waterfall_flow: ^3.0.2
   hooks_riverpod: ^2.0.2
-  auto_route: ^5.0.1
+  auto_route: ^6.0.5
   flutter_smart_dialog: ^4.5.5+2
   sliver_tools: ^0.2.6
   freezed_annotation: ^2.1.0
@@ -113,7 +113,7 @@ dev_dependencies:
   json_serializable: ^6.0.1
   copy_with_extension_gen: ^5.0.0
   isar_generator: ^3.0.0-dev.8
-  auto_route_generator: ^5.0.2
+  auto_route_generator: ^6.0.3
   index_generator: ^3.3.2
   flutter_test:
     sdk: flutter

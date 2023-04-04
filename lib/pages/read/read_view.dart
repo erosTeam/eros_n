@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
@@ -87,6 +88,7 @@ PhotoViewScaleState imageScaleStateCycle(PhotoViewScaleState actual) {
   return desc;
 }
 
+@RoutePage()
 class ReadPage extends HookConsumerWidget {
   const ReadPage({
     Key? key,

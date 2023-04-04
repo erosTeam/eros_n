@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+@RoutePage()
 class SplashPage extends StatefulHookConsumerWidget {
   const SplashPage({super.key});
 

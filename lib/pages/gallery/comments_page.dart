@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'dart:async';
 import 'dart:math';
 
@@ -16,6 +17,7 @@ import 'package:intl/intl.dart';
 import '../../network/app_dio/pdio.dart';
 import 'gallery_provider.dart';
 
+@RoutePage()
 class CommentsPage extends HookConsumerWidget {
   const CommentsPage({
     Key? key,
