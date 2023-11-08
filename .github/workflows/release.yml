@@ -16,13 +16,13 @@ jobs:
         include:
           - target: android
             os: ubuntu-latest
-            flutter_version: '3.7'
+            flutter_version: '3.13'
             flutter_channel: 'stable'
             artifact_name: release-apk
             artifact_path: build/app/outputs/apk/release/*.apk
           - target: ios
             os: macos-12
-            flutter_version: '3.7'
+            flutter_version: '3.13'
             flutter_channel: 'stable'
             artifact_name: release-ios
             artifact_path: build/**/*.ipa
@@ -128,14 +128,14 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
-          cache: gradle
+          java-version: '17'
+#          cache: gradle
 
       # 安装 Flutter
       - name: Flutter action
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ matrix.flutter_version }}
+#          flutter-version: ${{ matrix.flutter_version }}
           channel: ${{ matrix.flutter_channel }}
 
       - name: Build resolve Swift dependencies
@@ -252,13 +252,13 @@ jobs:
           artifactErrorsFailBuild: true
           replacesArtifacts: true
 
-      - name: Post release notes
-        run: |
-          changelog=$(cat changelog/v${{ env.app_version }}.md)
-          curl 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' \
-          --header 'Content-Type: application/x-www-form-urlencoded' \
-          -d parse_mode=markdown \
-          -d chat_id=${{ secrets.TELEGRAM_CHANNEL_ID }} \
-          --data-urlencode text="[Eros-N_${{ github.ref_name }}](https://github.com/honjow/eros_n/releases/tag/${{ github.ref_name }})
-          $changelog" \
-          -d disable_web_page_preview=true
+#      - name: Post release notes
+#        run: |
+#          changelog=$(cat changelog/v${{ env.app_version }}.md)
+#          curl 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' \
+#          --header 'Content-Type: application/x-www-form-urlencoded' \
+#          -d parse_mode=markdown \
+#          -d chat_id=${{ secrets.TELEGRAM_CHANNEL_ID }} \
+#          --data-urlencode text="[Eros-N_${{ github.ref_name }}](https://github.com/honjow/eros_n/releases/tag/${{ github.ref_name }})
+#          $changelog" \
+#          -d disable_web_page_preview=true
