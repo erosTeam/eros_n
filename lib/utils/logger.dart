@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:eros_n/utils/logger/pretty_printer.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
+
+import 'logger/pretty_printer.dart';
 
 const kSuffix = '.log';
 
@@ -12,19 +13,111 @@ String? logDirectory;
 
 String? logFileName;
 
-late Logger logger;
+final funcLog = () => Logger(
+      filter: EHLogFilter(),
+      // printer: SimplePrinter(),
+      printer: EhPrettyPrinter(
+        // lineLength: 100,
+        colors: false,
+        // printTime: true,
+      ),
+      output: _outPut,
+    );
 
-late Logger loggerTime;
+final funcLogTime = () => Logger(
+      filter: EHLogFilter(),
+      // printer: SimplePrinter(),
+      printer: EhPrettyPrinter(
+        // lineLength: 100,
+        colors: false,
+        printTime: true,
+      ),
+      output: _outPut,
+    );
 
-late Logger logger5;
+final funcLog5 = () => Logger(
+      filter: EHLogFilter(),
+      printer: EhPrettyPrinter(
+        // lineLength: 100,
+        methodCount: 5,
+        colors: false,
+      ),
+      output: _outPut,
+    );
 
-late Logger loggerNoStack;
+final funcLogNoStack = () => Logger(
+      filter: EHLogFilter(),
+      printer: EhPrettyPrinter(
+        // lineLength: 100,
+        methodCount: 0,
+        colors: false,
+      ),
+      output: _outPut,
+    );
 
-late Logger loggerNoStackTime;
+final funcLogNoStackTime = () => Logger(
+      filter: EHLogFilter(),
+      printer: EhPrettyPrinter(
+        // lineLength: 100,
+        methodCount: 0,
+        colors: false,
+        printTime: true,
+      ),
+      output: _outPut,
+    );
 
-late Logger loggerSimple;
+final funcLogSimple = () => Logger(
+      filter: EHLogFilter(),
+      printer: SimplePrinter(),
+      output: _outPut,
+    );
 
-late Logger loggerSimpleOnlyFile;
+final funcLogSimpleOnlyFile = () => Logger(
+      filter: EHLogFilter(),
+      printer: SimplePrinter(),
+      output: (logDirectory != null && logFileName != null)
+          ? _FileOutput(
+              file: File(
+                path.join(logDirectory!, logFileName),
+              ),
+            )
+          : null,
+    );
+
+Logger? _logger;
+set logger(Logger logger) => _logger = logger;
+Logger get logger => _logger ??= funcLog();
+
+// late Logger loggerTime;
+Logger? _loggerTime;
+set loggerTime(Logger logger) => _loggerTime = logger;
+Logger get loggerTime => _loggerTime ??= funcLogTime();
+
+// late Logger logger5;
+Logger? _logger5;
+set logger5(Logger logger) => _logger5 = logger;
+Logger get logger5 => _logger5 ??= funcLog5();
+
+// late Logger loggerNoStack;
+Logger? _loggerNoStack;
+set loggerNoStack(Logger logger) => _loggerNoStack = logger;
+Logger get loggerNoStack => _loggerNoStack ??= funcLogNoStack();
+
+// late Logger loggerNoStackTime;
+Logger? _loggerNoStackTime;
+set loggerNoStackTime(Logger logger) => _loggerNoStackTime = logger;
+Logger get loggerNoStackTime => _loggerNoStackTime ??= funcLogNoStackTime();
+
+// late Logger loggerSimple;
+Logger? _loggerSimple;
+set loggerSimple(Logger logger) => _loggerSimple = logger;
+Logger get loggerSimple => _loggerSimple ??= funcLogSimple();
+
+// late Logger loggerSimpleOnlyFile;
+Logger? _loggerSimpleOnlyFile;
+set loggerSimpleOnlyFile(Logger logger) => _loggerSimpleOnlyFile = logger;
+Logger get loggerSimpleOnlyFile =>
+    _loggerSimpleOnlyFile ??= funcLogSimpleOnlyFile();
 
 final LogOutput _outPut = MultiOutput([
   ConsoleOutput(),
@@ -36,7 +129,27 @@ final LogOutput _outPut = MultiOutput([
     ),
 ]);
 
+// void _initFile({String? directory, String? fileName}) {
+//   logDirectory = directory ??
+//       path.join(Platform.isAndroid ? Global.extStorePath : Global.appDocPath,
+//           'log');
+//   if (!Directory(logDirectory!).existsSync()) {
+//     Directory(logDirectory!).createSync(recursive: true);
+//   }
+//
+//   final DateTime _now = DateTime.now();
+//   final DateFormat formatter = DateFormat(kFilenameFormat);
+//   final String _fileName = formatter.format(_now);
+//   logFileName = fileName ?? '$_fileName$kSuffix';
+// }
+
 void initLogger({bool isolate = false, String? directory, String? fileName}) {
+  // if (!isolate) {
+  //   _initFile(
+  //     directory: directory,
+  //     fileName: fileName,
+  //   );
+  // }
   initLoggerValue();
 }
 
@@ -45,73 +158,13 @@ void resetLogLevel() {
 }
 
 void initLoggerValue() {
-  logger = Logger(
-    filter: EHLogFilter(),
-    // printer: SimplePrinter(),
-    printer: EhPrettyPrinter(
-      // lineLength: 100,
-      colors: false,
-      // printTime: true,
-    ),
-    output: _outPut,
-  );
-
-  loggerTime = Logger(
-    filter: EHLogFilter(),
-    // printer: SimplePrinter(),
-    printer: EhPrettyPrinter(
-      // lineLength: 100,
-      colors: false,
-      printTime: true,
-    ),
-    output: _outPut,
-  );
-
-  logger5 = Logger(
-    filter: EHLogFilter(),
-    printer: EhPrettyPrinter(
-      // lineLength: 100,
-      methodCount: 5,
-      colors: false,
-    ),
-    output: _outPut,
-  );
-
-  loggerNoStack = Logger(
-    filter: EHLogFilter(),
-    printer: EhPrettyPrinter(
-      // lineLength: 100,
-      methodCount: 0,
-      colors: false,
-    ),
-    output: _outPut,
-  );
-
-  loggerNoStackTime = Logger(
-    printer: EhPrettyPrinter(
-      methodCount: 0,
-      colors: false,
-      printTime: true,
-    ),
-  );
-
-  loggerSimple = Logger(
-    filter: EHLogFilter(),
-    printer: SimplePrinter(),
-    output: _outPut,
-  );
-
-  loggerSimpleOnlyFile = Logger(
-    filter: EHLogFilter(),
-    printer: SimplePrinter(),
-    output: (logDirectory != null && logFileName != null)
-        ? _FileOutput(
-            file: File(
-              path.join(logDirectory!, logFileName),
-            ),
-          )
-        : null,
-  );
+  logger = funcLog();
+  loggerTime = funcLogTime();
+  logger5 = funcLog5();
+  loggerNoStack = funcLogNoStack();
+  loggerNoStackTime = funcLogNoStackTime();
+  loggerSimple = funcLogSimple();
+  loggerSimpleOnlyFile = funcLogSimpleOnlyFile();
 }
 
 class EHLogFilter extends LogFilter {
@@ -143,7 +196,7 @@ class _FileOutput extends LogOutput {
   IOSink? _sink;
 
   @override
-  void init() {
+  Future<void> init() async {
     _sink = file.openWrite(
       mode: overrideExisting ? FileMode.writeOnly : FileMode.writeOnlyAppend,
       encoding: encoding,
@@ -183,7 +236,7 @@ class _FileOutput extends LogOutput {
   }
 
   @override
-  void destroy() async {
+  Future<void> destroy() async {
     await _sink?.flush();
     await _sink?.close();
   }

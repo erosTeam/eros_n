@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:logger/logger.dart';
 import 'package:logger/src/ansi_color.dart';
 import 'package:logger/src/log_printer.dart';
 import 'package:logger/src/logger.dart';
@@ -7,6 +8,28 @@ import 'package:logger/src/logger.dart';
 const kDiscardOwnStacktraceLineText = 'package:eros_n/utils/logger/';
 
 class EhPrettyPrinter extends LogPrinter {
+  EhPrettyPrinter({
+    this.stackTraceBeginIndex = 0,
+    this.methodCount = 2,
+    this.errorMethodCount = 8,
+    this.lineLength = 120,
+    this.colors = true,
+    this.printEmojis = true,
+    this.printTime = false,
+  }) {
+    _startTime ??= DateTime.now();
+
+    final doubleDividerLine = StringBuffer();
+    final singleDividerLine = StringBuffer();
+    for (var i = 0; i < lineLength - 1; i++) {
+      doubleDividerLine.write(doubleDivider);
+      singleDividerLine.write(singleDivider);
+    }
+
+    _topBorder = '$topLeftCorner$doubleDividerLine';
+    _middleBorder = '$middleCorner$singleDividerLine';
+    _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
+  }
   // static const topLeftCorner = '┌';
   // static const bottomLeftCorner = '└';
   // static const middleCorner = '├';
@@ -22,21 +45,21 @@ class EhPrettyPrinter extends LogPrinter {
   static const singleDivider = '┄';
 
   static final levelColors = {
-    Level.verbose: AnsiColor.fg(AnsiColor.grey(0.5)),
+    Level.trace: AnsiColor.fg(AnsiColor.grey(0.5)),
     Level.debug: AnsiColor.none(),
     Level.info: AnsiColor.fg(12),
     Level.warning: AnsiColor.fg(208),
     Level.error: AnsiColor.fg(196),
-    Level.wtf: AnsiColor.fg(199),
+    Level.fatal: AnsiColor.fg(199),
   };
 
   static final levelEmojis = {
-    Level.verbose: '',
+    Level.trace: '',
     Level.debug: '[D] ',
     Level.info: '[I] ',
     Level.warning: '[W] ',
     Level.error: '[E] ',
-    Level.wtf: '[WTF] ',
+    Level.fatal: '[WTF] ',
   };
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
@@ -75,29 +98,6 @@ class EhPrettyPrinter extends LogPrinter {
   String _topBorder = '*****';
   String _middleBorder = '**';
   String _bottomBorder = '*****';
-
-  EhPrettyPrinter({
-    this.stackTraceBeginIndex = 0,
-    this.methodCount = 2,
-    this.errorMethodCount = 8,
-    this.lineLength = 120,
-    this.colors = true,
-    this.printEmojis = true,
-    this.printTime = false,
-  }) {
-    _startTime ??= DateTime.now();
-
-    final doubleDividerLine = StringBuffer();
-    final singleDividerLine = StringBuffer();
-    for (var i = 0; i < lineLength - 1; i++) {
-      doubleDividerLine.write(doubleDivider);
-      singleDividerLine.write(singleDivider);
-    }
-
-    _topBorder = '$topLeftCorner$doubleDividerLine';
-    _middleBorder = '$middleCorner$singleDividerLine';
-    _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
-  }
 
   @override
   List<String> log(LogEvent event) {
