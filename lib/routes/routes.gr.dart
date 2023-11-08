@@ -10,7 +10,8 @@
 part of 'routes.dart';
 
 abstract class _$AppRouter extends RootStackRouter {
-  _$AppRouter([GlobalKey<NavigatorState>? navigatorKey]) : super(navigatorKey);
+  // ignore: unused_element
+  _$AppRouter({super.navigatorKey});
 
   @override
   final Map<String, PageFactory> pagesMap = {
@@ -134,6 +135,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AdvancedSettingPage(),
       );
     },
+    MyLicenseRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MyLicensePage(),
+      );
+    },
     GeneralSettingRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -162,12 +169,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ReadSettingPage(),
-      );
-    },
-    MyLicenseRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const MyLicensePage(),
       );
     },
   };
@@ -550,6 +551,20 @@ class AdvancedSettingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MyLicensePage]
+class MyLicenseRoute extends PageRouteInfo<void> {
+  const MyLicenseRoute({List<PageRouteInfo>? children})
+      : super(
+          MyLicenseRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MyLicenseRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [GeneralSettingPage]
 class GeneralSettingRoute extends PageRouteInfo<void> {
   const GeneralSettingRoute({List<PageRouteInfo>? children})
@@ -615,20 +630,6 @@ class ReadSettingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ReadSettingRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [MyLicensePage]
-class MyLicenseRoute extends PageRouteInfo<void> {
-  const MyLicenseRoute({List<PageRouteInfo>? children})
-      : super(
-          MyLicenseRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'MyLicenseRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

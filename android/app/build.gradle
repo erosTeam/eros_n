@@ -39,6 +39,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace 'com.honjow.eros_n'
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
@@ -107,6 +108,7 @@ android {
             shrinkResources true
         }
     }
+    namespace 'com.honjow.eros_n'
 }
 
 flutter {

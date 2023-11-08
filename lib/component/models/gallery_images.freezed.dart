@@ -155,11 +155,9 @@ class __$$_GalleryImagesCopyWithImpl<$Res>
 class _$_GalleryImages with DiagnosticableTreeMixin implements _GalleryImages {
   const _$_GalleryImages(
       {@JsonKey(name: 'pages')
-          final List<GalleryImage> pages = const <GalleryImage>[],
-      @JsonKey(name: 'cover')
-          this.cover = const GalleryImage(),
-      @JsonKey(name: 'thumbnail')
-          this.thumbnail = const GalleryImage()})
+      final List<GalleryImage> pages = const <GalleryImage>[],
+      @JsonKey(name: 'cover') this.cover = const GalleryImage(),
+      @JsonKey(name: 'thumbnail') this.thumbnail = const GalleryImage()})
       : _pages = pages;
 
   factory _$_GalleryImages.fromJson(Map<String, dynamic> json) =>
