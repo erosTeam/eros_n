@@ -5,21 +5,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-import 'gallery_image_platform_interface.dart' show ImageRenderMethodForWeb;
+import 'gallery_image_platform_interface.dart'
+    show ErrorListener, ImageRenderMethodForWeb;
 import 'gallery_image_platform_interface.dart'
     if (dart.library.io) '_image_loader.dart'
-    if (dart.library.html) 'cached_network_image_web.dart' show ImageLoader;
-import 'gallery_image_provider.dart' as image_provider;
+    if (dart.library.html) 'package:cached_network_image_web/cached_network_image_web.dart'
+    show ImageLoader;
 import 'multi_image_stream_completer.dart';
-
-/// Function which is called after loading the image failed.
-typedef ErrorListener = void Function();
 
 /// IO implementation of the CachedNetworkImageProvider; the ImageProvider to
 /// load network images using a cache.
 @immutable
-class GalleryImageProvider
-    extends ImageProvider<image_provider.GalleryImageProvider> {
+class GalleryImageProvider extends ImageProvider<GalleryImageProvider> {
   /// Creates an ImageProvider which loads an image from the [imagePageUrl], using the [scale].
   /// When the image fails to load [errorListener] is called.
   const GalleryImageProvider(
@@ -37,7 +34,7 @@ class GalleryImageProvider
   /// CacheManager from which the image files are loaded.
   final BaseCacheManager? cacheManager;
 
-  /// Web url of the image page to load
+  /// Web url of the image to load
   final String imagePageUrl;
 
   /// Cache key of the image to cache
@@ -47,7 +44,7 @@ class GalleryImageProvider
   final double scale;
 
   /// Listener to be called when images fails to load.
-  final image_provider.ErrorListener? errorListener;
+  final ErrorListener? errorListener;
 
   /// Set headers for the image provider, for example for authentication
   final Map<String, String>? headers;
@@ -65,13 +62,17 @@ class GalleryImageProvider
 
   @override
   Future<GalleryImageProvider> obtainKey(
-      ImageConfiguration configuration) {
+    ImageConfiguration configuration,
+  ) {
     return SynchronousFuture<GalleryImageProvider>(this);
   }
 
+  @Deprecated('loadBuffer is deprecated, use loadImage instead')
   @override
-  ImageStreamCompleter loadBuffer(image_provider.GalleryImageProvider key,
-      DecoderBufferCallback decode) {
+  ImageStreamCompleter loadBuffer(
+    GalleryImageProvider key,
+    DecoderBufferCallback decode,
+  ) {
     final chunkEvents = StreamController<ImageChunkEvent>();
     return MultiImageStreamCompleter(
       codec: _loadBufferAsync(key, chunkEvents, decode),
@@ -87,13 +88,55 @@ class GalleryImageProvider
     );
   }
 
+  @Deprecated('_loadBufferAsync is deprecated, use _loadImageAsync instead')
   Stream<ui.Codec> _loadBufferAsync(
-    image_provider.GalleryImageProvider key,
+    GalleryImageProvider key,
     StreamController<ImageChunkEvent> chunkEvents,
     DecoderBufferCallback decode,
   ) {
     assert(key == this);
     return ImageLoader().loadBufferAsync(
+      imagePageUrl,
+      cacheKey,
+      chunkEvents,
+      decode,
+      cacheManager ?? DefaultCacheManager(),
+      maxHeight,
+      maxWidth,
+      headers,
+      () => errorListener,
+      imageRenderMethodForWeb,
+      () => PaintingBinding.instance.imageCache.evict(key),
+    );
+  }
+
+  @override
+  ImageStreamCompleter loadImage(
+    GalleryImageProvider key,
+    ImageDecoderCallback decode,
+  ) {
+    final chunkEvents = StreamController<ImageChunkEvent>();
+    return MultiImageStreamCompleter(
+      codec: _loadImageAsync(key, chunkEvents, decode),
+      chunkEvents: chunkEvents.stream,
+      scale: key.scale,
+      informationCollector: () sync* {
+        yield DiagnosticsProperty<ImageProvider>(
+          'Image provider: $this \n Image key: $key',
+          this,
+          style: DiagnosticsTreeStyle.errorProperty,
+        );
+      },
+    );
+  }
+
+  Stream<ui.Codec> _loadImageAsync(
+    GalleryImageProvider key,
+    StreamController<ImageChunkEvent> chunkEvents,
+    ImageDecoderCallback decode,
+  ) {
+    assert(key == this);
+    return ImageLoader().loadImageAsync(
       imagePageUrl,
       cacheKey,
       chunkEvents,
@@ -109,9 +152,10 @@ class GalleryImageProvider
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (other is GalleryImageProvider) {
-      return ((cacheKey ?? imagePageUrl) == (other.cacheKey ?? other.imagePageUrl)) &&
+      return ((cacheKey ?? imagePageUrl) ==
+              (other.cacheKey ?? other.imagePageUrl)) &&
           scale == other.scale &&
           maxHeight == other.maxHeight &&
           maxWidth == other.maxWidth;
@@ -120,8 +164,10 @@ class GalleryImageProvider
   }
 
   @override
-  int get hashCode => Object.hash(cacheKey ?? imagePageUrl, scale, maxHeight, maxWidth);
+  int get hashCode =>
+      Object.hash(cacheKey ?? imagePageUrl, scale, maxHeight, maxWidth);
 
   @override
-  String toString() => '$runtimeType("$imagePageUrl", scale: $scale)';
+  String toString() =>
+      'CachedNetworkImageProvider("$imagePageUrl", scale: $scale)';
 }
