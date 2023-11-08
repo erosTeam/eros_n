@@ -24,36 +24,17 @@ class AboutPage extends StatelessWidget {
             ),
             ListTile(
               title: Text('Author'),
-              subtitle: Text('Honjow'),
+              subtitle: Text('erosTeam'),
               onTap: () => launchUrlString(
-                'https://github.com/honjow',
+                'ttps://github.com/erosTeam',
                 mode: LaunchMode.externalApplication,
               ),
-            ),
-            ListTile(
-              title: Text('Email'),
-              subtitle: Text('honjow311@gmail.com'),
-              onTap: () => launchUrlString('mailto:honjow311@gmail.com'),
             ),
             ListTile(
               title: Text('Github'),
               subtitle: Text('https://github.com/erosTeam/eros_n'),
               onTap: () => launchUrlString(
                 'https://github.com/erosTeam/eros_n',
-                mode: LaunchMode.externalApplication,
-              ),
-            ),
-            ListTile(
-              title: Text('Telegram'),
-              onTap: () => launchUrlString(
-                'https://t.me/joinchat/AEj27KMQe0JiMmUx',
-                mode: LaunchMode.externalApplication,
-              ),
-            ),
-            ListTile(
-              title: Text('Telegram Channel'),
-              onTap: () => launchUrlString(
-                'https://t.me/fehviewer',
                 mode: LaunchMode.externalApplication,
               ),
             ),

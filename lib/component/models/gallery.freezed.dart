@@ -355,38 +355,25 @@ class __$$_GalleryCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Gallery extends _Gallery {
   const _$_Gallery(
-      {@JsonKey(name: 'id')
-          this.gid = 0,
-      @JsonKey(name: 'media_id')
-          this.mediaId,
+      {@JsonKey(name: 'id') this.gid = 0,
+      @JsonKey(name: 'media_id') this.mediaId,
       this.title = const GalleryTitle(),
       this.images = const GalleryImages(),
       this.scanlator,
-      @JsonKey(name: 'upload_date')
-          this.uploadDate,
-      @JsonKey(name: 'num_pages')
-          this.numPages,
-      @JsonKey(name: 'num_favorites')
-          this.numFavorites,
+      @JsonKey(name: 'upload_date') this.uploadDate,
+      @JsonKey(name: 'num_pages') this.numPages,
+      @JsonKey(name: 'num_favorites') this.numFavorites,
       final List<Tag> tags = const <Tag>[],
+      @JsonKey(ignore: true) final List<Tag> simpleTags = const <Tag>[],
+      @JsonKey(ignore: true) this.languageCode,
+      @JsonKey(ignore: true) this.viewTime,
+      @JsonKey(ignore: true) final List<Comment> comments = const <Comment>[],
       @JsonKey(ignore: true)
-          final List<Tag> simpleTags = const <Tag>[],
-      @JsonKey(ignore: true)
-          this.languageCode,
-      @JsonKey(ignore: true)
-          this.viewTime,
-      @JsonKey(ignore: true)
-          final List<Comment> comments = const <Comment>[],
-      @JsonKey(ignore: true)
-          final List<Gallery> moreLikeGallerys = const <Gallery>[],
-      @JsonKey(ignore: true)
-          this.currentPageIndex = 0,
-      @JsonKey(ignore: true)
-          this.isFavorited,
-      @JsonKey(ignore: true)
-          this.uploadedDateTime,
-      @JsonKey(ignore: true)
-          this.csrfToken})
+      final List<Gallery> moreLikeGallerys = const <Gallery>[],
+      @JsonKey(ignore: true) this.currentPageIndex = 0,
+      @JsonKey(ignore: true) this.isFavorited,
+      @JsonKey(ignore: true) this.uploadedDateTime,
+      @JsonKey(ignore: true) this.csrfToken})
       : _tags = tags,
         _simpleTags = simpleTags,
         _comments = comments,

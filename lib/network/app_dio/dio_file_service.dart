@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:dio/dio.dart';
@@ -10,7 +11,6 @@ import 'package:clock/clock.dart';
 import '../../network/app_dio/http_response.dart';
 import '../../network/app_dio/http_transformer.dart';
 
-
 class DioFileService extends FileService {
   DioFileService();
 
@@ -19,15 +19,22 @@ class DioFileService extends FileService {
       {Map<String, String>? headers}) async {
     DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-    final req = await dioHttpClient.get(url,
-        options: Options(
-          headers: headers,
-          responseType: ResponseType.stream,
-        ), httpTransformer: HttpTransformerBuilder(
-              (response) {
-            return DioHttpResponse.success(response);
-          },
-        ));
+    final options = CacheOptions(
+      policy: CachePolicy.request,
+      store: MemCacheStore(),
+    ).toOptions()
+      ..headers = headers
+      ..responseType = ResponseType.stream;
+
+    final req = await dioHttpClient.get(
+      url,
+      options: options,
+      httpTransformer: HttpTransformerBuilder(
+        (response) {
+          return DioHttpResponse.success(response);
+        },
+      ),
+    );
 
     return DioGetResponse(req.data as Response);
   }
