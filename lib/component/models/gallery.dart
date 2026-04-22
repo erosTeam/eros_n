@@ -50,9 +50,20 @@ abstract class Gallery with _$Gallery {
       DateTime.tryParse(uploadedDateTime ?? '')?.toLocal();
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  String? get thumbUrl => mediaId != null
-      ? 'https://t.nhentai.net/galleries/$mediaId/thumb.${NHConst.extMap[images.thumbnail.type]}'
-      : null;
+  String? get thumbUrl {
+    // Prefer the exact URL we parsed off the listing page, since the
+    // filename can carry compound suffixes like `thumb.jpg.webp` that we
+    // can't reconstruct from `type` alone.
+    final parsed = images.thumbnail.imageUrl;
+    if (parsed != null && parsed.isNotEmpty) {
+      return parsed;
+    }
+    if (mediaId == null) {
+      return null;
+    }
+    final ext = NHConst.extMap[images.thumbnail.type] ?? 'webp';
+    return 'https://t.nhentai.net/galleries/$mediaId/thumb.$ext';
+  }
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? get coverUrl => mediaId != null
       ? 'https://t.nhentai.net/galleries/$mediaId/cover.${NHConst.extMap[images.cover.type]}'

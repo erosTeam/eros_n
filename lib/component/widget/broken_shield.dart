@@ -7,6 +7,7 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/widget/desktop.dart';
 import 'package:eros_n/component/widget/web_view.dart';
 import 'package:eros_n/network/app_dio/dio_http_cli.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 class BrokenShield extends StatefulWidget {
@@ -145,7 +146,16 @@ class _BrokenShieldState extends State<BrokenShield> {
 
   Future<void> injectionCookieAndUA(WebViewCookieInfo info) async {
     webViewCookieInfoChangeCtrl.sink.add(info);
-    if (info.cookies.any((e) => e.name == 'csrftoken')) {
+    // Cloudflare challenge is considered passed when `cf_clearance` cookie
+    // is issued. `csrftoken` alone is not enough — that one exists even
+    // before passing the challenge.
+    final hasClearance = info.cookies.any((e) => e.name == 'cf_clearance');
+    final hasCsrf = info.cookies.any((e) => e.name == 'csrftoken');
+    logger.d(
+      'injectionCookieAndUA cookies=[${info.cookies.map((e) => e.name).join(",")}], '
+      'hasClearance=$hasClearance, hasCsrf=$hasCsrf',
+    );
+    if (hasClearance && hasCsrf) {
       await Global.setUserAgent(info.userAgent);
       await Global.setCookies(NHConst.baseUrl, info.cookies);
       pendingConnections.clear();
@@ -189,6 +199,10 @@ class _BrokenShieldState extends State<BrokenShield> {
         key: webViewState,
         callback: injectionCookieAndUA,
         url: NHConst.baseUrl,
+        // Don't wipe existing cookies — they may already contain a valid
+        // cf_clearance from a previous session, and wiping makes Cloudflare
+        // re-issue a challenge unnecessarily.
+        deletedCookie: false,
       ),
     );
   }

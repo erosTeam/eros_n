@@ -25,4 +25,14 @@ final InAppWebViewSettings inAppWebViewSettings = InAppWebViewSettings(
   mediaPlaybackRequiresUserGesture: false,
   useHybridComposition: true,
   allowsInlineMediaPlayback: true,
+  // Required so the WebView accepts and persists Cloudflare's cookies
+  // and we can read them via CookieManager / document.cookie.
+  thirdPartyCookiesEnabled: true,
+  databaseEnabled: true,
+  domStorageEnabled: true,
+  javaScriptEnabled: true,
+  // Force a real network request so Cloudflare actually issues `cf_clearance`.
+  // Without this the SvelteKit Service Worker may render the page from the
+  // offline cache, no Set-Cookie ever happens, and we get an empty cookie jar.
+  cacheMode: CacheMode.LOAD_NO_CACHE,
 );

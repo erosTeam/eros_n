@@ -11,6 +11,7 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/network/app_dio/dio_user_agent.dart';
 import 'package:eros_n/network/app_dio/http_config.dart';
 import 'package:eros_n/network/app_dio/proxy.dart';
+import 'package:eros_n/network/app_dio/webview_proxy_interceptor.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:system_network_proxy/system_network_proxy.dart';
 import 'package:system_proxy/system_proxy.dart';
@@ -115,6 +116,11 @@ class AppDio with DioMixin implements Dio {
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);
     }
+
+    // Route Cloudflare-protected origins through the hidden WebView so the
+    // request inherits Chromium's TLS/HTTP fingerprints and is not challenged.
+    // Image CDNs and stream downloads are excluded by the interceptor itself.
+    interceptors.add(WebViewProxyInterceptor());
 
     httpClientAdapter = AppHttpAdapter(proxy: dioConfig?.proxy ?? '');
 

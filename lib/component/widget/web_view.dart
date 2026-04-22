@@ -31,6 +31,23 @@ class WebViewCookieInfo {
 
 typedef WebViewCallback = Function(WebViewCookieInfo);
 
+/// Host part of [NHConst.baseUrl] without scheme, used for cookie domain matching.
+final String _hostFromBase = WebUri(NHConst.baseUrl).host;
+
+/// Parse browser `document.cookie` string into a list of Cookies.
+List<Cookie> _parseDocumentCookie(String raw) {
+  final result = <Cookie>[];
+  for (final part in raw.split(';')) {
+    final eq = part.indexOf('=');
+    if (eq <= 0) continue;
+    final name = part.substring(0, eq).trim();
+    final value = part.substring(eq + 1).trim();
+    if (name.isEmpty) continue;
+    result.add(Cookie(name, value));
+  }
+  return result;
+}
+
 class MobileWebView extends StatefulWidget {
   const MobileWebView({
     super.key,
@@ -85,10 +102,85 @@ class _MobileWebViewState extends State<MobileWebView> {
     if (_controller == null) {
       return;
     }
-    final cookies = await cookieManager.getCookies(
-      url: WebUri(NHConst.baseUrl),
+    // First-pass: ask CookieManager for the target host's cookies.
+    // The url parameter actually filters by exact host/path match, so
+    // pass the trailing slash variant too just in case.
+    final List<dynamic> rawCookies = await cookieManager.getCookies(
+      url: WebUri('${NHConst.baseUrl}/'),
+      webViewController: _controller,
     );
-    final ioCookies = cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
+
+    // Fallback: if zero, also enumerate every cookie the WebView knows
+    // and filter by the target host (handles cases where the cookie
+    // is stored with a leading-dot domain that the host filter misses).
+    List<dynamic> filtered = rawCookies.toList();
+    String allCookieDump = '';
+    try {
+      final allDyn = await (cookieManager as dynamic).getAllCookies();
+      if (allDyn is List) {
+        allCookieDump = allDyn
+            .map((c) {
+              try {
+                return '${(c as dynamic).domain}|${(c as dynamic).name}';
+              } catch (_) {
+                return '?';
+              }
+            })
+            .join(',');
+        if (filtered.isEmpty) {
+          for (final c in allDyn) {
+            try {
+              final dom = (c as dynamic).domain as String?;
+              if (dom != null &&
+                  (dom.endsWith(_hostFromBase) ||
+                      _hostFromBase.endsWith(
+                        dom.startsWith('.') ? dom.substring(1) : dom,
+                      ))) {
+                filtered.add(c);
+              }
+            } catch (_) {}
+          }
+        }
+      }
+    } catch (_) {}
+    logger.d('allCookies=[$allCookieDump]');
+
+    var ioCookies = filtered
+        .map((e) => Cookie(e.name as String, '${(e as dynamic).value}'))
+        .toList();
+
+    // Always read `document.cookie` so we can merge any non-HttpOnly
+    // cookies the WebView received (some servers also set csrftoken via
+    // a JS Set-Cookie header that CookieManager fails to enumerate).
+    String jsCookie = '';
+    final raw = await _controller!.evaluateJavascript(
+      source: 'document.cookie',
+    );
+    if (raw is String) {
+      jsCookie = raw;
+      if (raw.isNotEmpty) {
+        final existing = ioCookies.map((e) => e.name).toSet();
+        for (final c in _parseDocumentCookie(raw)) {
+          if (!existing.contains(c.name)) {
+            ioCookies.add(c);
+          }
+        }
+      }
+    }
+    final currentUrl = await _controller!.getUrl();
+    final pageInfo = await _controller!.evaluateJavascript(
+      source:
+          '(function(){return JSON.stringify({title:document.title,bodyLen:(document.body&&document.body.innerText||"").length,readyState:document.readyState,hasCookie:document.cookie.length>0,docCookie:document.cookie});})()',
+    );
+    logger.d(
+      'callbackChallengeInfo url=$currentUrl, '
+      'nativeCount=${rawCookies.length}, '
+      'filteredCount=${filtered.length}, '
+      'finalCount=${ioCookies.length}, '
+      'jsCookieLen=${jsCookie.length}, '
+      'cookieNames=[${ioCookies.map((e) => e.name).join(",")}], '
+      'page=$pageInfo',
+    );
     final ua = await _controller!.evaluateJavascript(
       source: 'navigator.userAgent',
     );
@@ -98,8 +190,11 @@ class _MobileWebViewState extends State<MobileWebView> {
         url: NHConst.baseUrl,
         cookies: ioCookies,
         userAgent: userAgent,
+        // Only show the WebView UI when interaction is actually required
+        // (DOM has visible challenge widgets), or when JS challenge has been
+        // running for too long without resolving.
         manualRequired:
-            (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
+            (anomalyTimer?.tick ?? 0) >= 30 || await getManualRequired(),
         message: await getChallengeMessage(),
       ),
     );
@@ -107,9 +202,27 @@ class _MobileWebViewState extends State<MobileWebView> {
 
   Future<bool> getManualRequired() async {
     if (_controller != null) {
+      // Only return true when we're actually on a Cloudflare challenge page.
+      // Detect by document.title ("Just a moment..."), URL path
+      // (/cdn-cgi/challenge-platform/), or known challenge containers.
       final manualRequiredText = await _controller!.evaluateJavascript(
-        source:
-            '(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null',
+        source: '''
+          (function() {
+            var onChallengePage = document.title.indexOf('Just a moment') !== -1
+              || document.title.indexOf('Please Wait') !== -1
+              || document.querySelector('#challenge-form') != null
+              || document.querySelector('#challenge-stage') != null
+              || document.querySelector('#cf-challenge-running') != null;
+            if (!onChallengePage) return null;
+            // On challenge page, check whether interactive elements are
+            // present (managed challenge / Turnstile checkbox / captcha).
+            var needsClick = document.querySelector('#challenge-stage input[type=checkbox]') != null
+              || document.querySelector('.pow-button') != null
+              || document.querySelector('.captcha-prompt') != null
+              || document.querySelector('iframe[src*="challenges.cloudflare.com"]') != null;
+            return needsClick ? 'true' : null;
+          })()
+        ''',
       );
       return manualRequiredText == 'true';
     }
@@ -139,14 +252,103 @@ class _MobileWebViewState extends State<MobileWebView> {
   Widget build(BuildContext context) {
     if (initOk) {
       return InAppWebView(
-        initialUrlRequest: URLRequest(url: WebUri(widget.url)),
+        // Use the login path: it's outside the SvelteKit Service-Worker
+        // precache, so the request always hits the origin and Cloudflare
+        // can issue a fresh cf_clearance cookie.
+        initialUrlRequest: URLRequest(
+          url: WebUri(
+            widget.url.endsWith('/')
+                ? '${widget.url}login/'
+                : '${widget.url}/login/',
+          ),
+        ),
         initialSettings: inAppWebViewSettings,
+        onWebViewCreated: (controller) async {
+          _controller = controller;
+          try {
+            await InAppWebViewController.clearAllCache();
+          } catch (_) {}
+          if (Platform.isAndroid) {
+            try {
+              await ServiceWorkerController.instance().setServiceWorkerClient(
+                null,
+              );
+            } catch (_) {}
+          }
+        },
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           return NavigationActionPolicy.ALLOW;
         },
         onTitleChanged: (controller, title) async {
           _controller = controller;
-          logger.d('onTitleChanged: $title');
+          callbackChallengeInfo();
+        },
+        onLoadStop: (controller, uri) async {
+          _controller = controller;
+          // Aggressively kill any Service Worker that may be intercepting
+          // requests so subsequent reloads always hit the network.
+          try {
+            await controller.evaluateJavascript(
+              source: '''
+                (async function() {
+                  try {
+                    if (navigator.serviceWorker) {
+                      const rs = await navigator.serviceWorker.getRegistrations();
+                      for (const r of rs) { await r.unregister(); }
+                    }
+                    if (window.caches) {
+                      const ks = await caches.keys();
+                      for (const k of ks) { await caches.delete(k); }
+                    }
+                  } catch(e) {}
+                })();
+              ''',
+            );
+          } catch (_) {}
+          // Probe whether the WebView actually has a working cf_clearance
+          // by hitting a real API that requires it. If status is non-403/503
+          // the cookie is alive even if document.cookie can't see it.
+          try {
+            final probe = await controller.callAsyncJavaScript(
+              functionBody: '''
+                try {
+                  const r = await fetch('/api/galleries/all?page=1', {credentials:'include'});
+                  return JSON.stringify({status:r.status});
+                } catch(e) { return 'err:'+e.toString(); }
+              ''',
+            );
+            logger.d('cfProbe=${probe?.value}, err=${probe?.error}');
+          } catch (e) {
+            logger.e('cfProbe threw: $e');
+          }
+          // Try to fish out cf_clearance via a few URL/path variants.
+          for (final u in [
+            'https://nhentai.net/',
+            'https://nhentai.net',
+            'http://nhentai.net/',
+            'https://.nhentai.net/',
+            'https://www.nhentai.net/',
+          ]) {
+            try {
+              final c = await CookieManager.instance().getCookie(
+                url: WebUri(u),
+                name: 'cf_clearance',
+                webViewController: controller,
+              );
+              logger.d('cfClearance@$u => ${c?.value != null ? "FOUND len=${c!.value.toString().length}" : "null"}');
+              if (c != null) break;
+            } catch (e) {
+              logger.d('cfClearance@$u failed: $e');
+            }
+          }
+          // Force a sync from native CookieManager → make sure newly-issued
+          // Set-Cookie headers from the page load are visible.
+          try {
+            await CookieManager.instance().getCookies(
+              url: WebUri('${NHConst.baseUrl}/'),
+              webViewController: controller,
+            );
+          } catch (_) {}
           callbackChallengeInfo();
         },
         // onLoadStop: (InAppWebViewController controller, Uri? uri) async {
@@ -210,9 +412,21 @@ class _WindowsWebViewState extends State<WindowsWebView> {
 
   Future<bool> getManualRequired() async {
     if (_controller.value.isInitialized) {
-      final manualRequiredText = await _controller.executeScript(
-        '(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null',
-      );
+      final manualRequiredText = await _controller.executeScript('''
+        (function() {
+          var onChallengePage = document.title.indexOf('Just a moment') !== -1
+            || document.title.indexOf('Please Wait') !== -1
+            || document.querySelector('#challenge-form') != null
+            || document.querySelector('#challenge-stage') != null
+            || document.querySelector('#cf-challenge-running') != null;
+          if (!onChallengePage) return null;
+          var needsClick = document.querySelector('#challenge-stage input[type=checkbox]') != null
+            || document.querySelector('.pow-button') != null
+            || document.querySelector('.captcha-prompt') != null
+            || document.querySelector('iframe[src*="challenges.cloudflare.com"]') != null;
+          return needsClick ? 'true' : null;
+        })()
+      ''');
       return manualRequiredText == 'true';
     }
     return false;
@@ -265,7 +479,7 @@ class _WindowsWebViewState extends State<WindowsWebView> {
           cookies: await getCookies(),
           userAgent: await getUserAgent(),
           manualRequired:
-              (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
+              (anomalyTimer?.tick ?? 0) >= 30 || await getManualRequired(),
           message: await getChallengeMessage(),
         ),
       );
