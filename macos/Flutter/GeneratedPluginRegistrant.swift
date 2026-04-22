@@ -5,24 +5,30 @@
 import FlutterMacOS
 import Foundation
 
-import bitsdojo_window_macos
 import dynamic_color
-import isar_flutter_libs
+import flutter_inappwebview_macos
+import objectbox_flutter_libs
 import package_info_plus
-import path_provider_foundation
-import sqflite
+import screen_retriever_macos
+import share_plus
+import sqflite_darwin
+import system_network_proxy_macos
 import url_launcher_macos
-import wakelock_macos
-import window_size
+import wakelock_plus
+import webview_flutter_wkwebview
+import window_manager
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  BitsdojoWindowPlugin.register(with: registry.registrar(forPlugin: "BitsdojoWindowPlugin"))
   DynamicColorPlugin.register(with: registry.registrar(forPlugin: "DynamicColorPlugin"))
-  IsarFlutterLibsPlugin.register(with: registry.registrar(forPlugin: "IsarFlutterLibsPlugin"))
+  InAppWebViewFlutterPlugin.register(with: registry.registrar(forPlugin: "InAppWebViewFlutterPlugin"))
+  ObjectboxFlutterLibsPlugin.register(with: registry.registrar(forPlugin: "ObjectboxFlutterLibsPlugin"))
   FPPPackageInfoPlusPlugin.register(with: registry.registrar(forPlugin: "FPPPackageInfoPlusPlugin"))
-  PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
+  ScreenRetrieverMacosPlugin.register(with: registry.registrar(forPlugin: "ScreenRetrieverMacosPlugin"))
+  SharePlusMacosPlugin.register(with: registry.registrar(forPlugin: "SharePlusMacosPlugin"))
   SqflitePlugin.register(with: registry.registrar(forPlugin: "SqflitePlugin"))
+  none.register(with: registry.registrar(forPlugin: "none"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
-  WakelockMacosPlugin.register(with: registry.registrar(forPlugin: "WakelockMacosPlugin"))
-  WindowSizePlugin.register(with: registry.registrar(forPlugin: "WindowSizePlugin"))
+  WakelockPlusMacosPlugin.register(with: registry.registrar(forPlugin: "WakelockPlusMacosPlugin"))
+  WebViewFlutterPlugin.register(with: registry.registrar(forPlugin: "WebViewFlutterPlugin"))
+  WindowManagerPlugin.register(with: registry.registrar(forPlugin: "WindowManagerPlugin"))
 }

@@ -14,7 +14,6 @@ enum TagLayoutOnItem {
   singleLine,
 
   // row,
-
   wrap,
 }
 
@@ -29,12 +28,7 @@ enum ReadModel {
   defaultModel,
 }
 
-enum ListModel {
-  list,
-  grid,
-  waterfall,
-  waterfallCompact,
-}
+enum ListModel { list, grid, waterfall, waterfallCompact }
 
 enum SearchSort {
   popularMonth('popular-month'),

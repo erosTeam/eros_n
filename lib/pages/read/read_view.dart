@@ -7,6 +7,7 @@ import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/preload_photo_view_gallery.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
+import 'package:eros_n/pages/read/read_widget.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-
-import 'read_widget.dart';
 
 // 底栏控制栏按钮高度
 const double kBottomBarButtonHeight = 54.0;
@@ -55,8 +54,6 @@ PhotoViewScaleState customChildScaleStateCycle(PhotoViewScaleState actual) {
     case PhotoViewScaleState.zoomedOut:
       desc = PhotoViewScaleState.initial;
       break;
-    default:
-      desc = PhotoViewScaleState.initial;
   }
 
   logger.d('actual $actual to $desc');
@@ -80,28 +77,22 @@ PhotoViewScaleState imageScaleStateCycle(PhotoViewScaleState actual) {
     case PhotoViewScaleState.zoomedOut:
       desc = PhotoViewScaleState.initial;
       break;
-    default:
-      desc = PhotoViewScaleState.initial;
   }
 
-  logger.v('actual $actual to $desc');
+  logger.t('actual $actual to $desc');
   return desc;
 }
 
 @RoutePage()
 class ReadPage extends HookConsumerWidget {
-  const ReadPage({
-    Key? key,
-    this.index,
-    this.colorScheme,
-  }) : super(key: key);
+  const ReadPage({super.key, this.index, this.colorScheme});
   final int? index;
   final ColorScheme? colorScheme;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gid = currentGalleryGid;
-    logger.v('ReadPage build $gid');
+    logger.t('ReadPage build $gid');
     final ReadNotifier readNotifier = ref.watch(readProvider.notifier);
 
     useEffect(() {
@@ -117,11 +108,9 @@ class ReadPage extends HookConsumerWidget {
       // });
 
       return () {
-        logger.v('ReadPage dispose');
+        logger.t('ReadPage dispose');
         // 恢复状态栏显示
-        SystemChrome.setEnabledSystemUIMode(
-          SystemUiMode.edgeToEdge,
-        );
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
         readNotifier.closeVolumeKeydownListen();
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -131,7 +120,7 @@ class ReadPage extends HookConsumerWidget {
     });
 
     final readModel = ref.watch(settingsProvider.select((s) => s.readModel));
-    logger.v('readModel $readModel');
+    logger.t('readModel $readModel');
 
     late Widget readView;
 
@@ -185,9 +174,7 @@ class ReadPage extends HookConsumerWidget {
 
     readView = Theme(
       data: Theme.of(context).copyWith(colorScheme: colorScheme),
-      child: Scaffold(
-        body: readView,
-      ),
+      child: Scaffold(body: readView),
     );
 
     return readView;
@@ -195,7 +182,7 @@ class ReadPage extends HookConsumerWidget {
 }
 
 class ReadListView extends StatefulHookConsumerWidget {
-  const ReadListView({Key? key, this.separator = true}) : super(key: key);
+  const ReadListView({super.key, this.separator = true});
   final bool separator;
 
   @override
@@ -213,8 +200,9 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
     final ReadNotifier readNotifier = ref.read(readProvider.notifier);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       logger.d('ReadListView addPostFrameCallback');
-      readNotifier.itemScrollController
-          .jumpTo(index: ref.read(galleryProvider(gid)).currentPageIndex);
+      readNotifier.itemScrollController.jumpTo(
+        index: ref.read(galleryProvider(gid)).currentPageIndex,
+      );
     });
     // list视图滚动监听
     readNotifier.itemPositionsListener.itemPositions.addListener(() {
@@ -224,8 +212,9 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
         positions,
         onChanged: (index) {
           // read currentPageIndex, 避免每次翻页都rebuild
-          final currentPageIndex =
-              ref.read(galleryProvider(gid).select((g) => g.currentPageIndex));
+          final currentPageIndex = ref.read(
+            galleryProvider(gid).select((g) => g.currentPageIndex),
+          );
           if (currentPageIndex != index) {
             ref.read(galleryProvider(gid).notifier).onPageChanged(index);
           }
@@ -241,7 +230,8 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
       onLoadCompleted: () {
         if (index != null) {
           logger.d(
-              'onLoadCompleted $imageUrl ${ref.read(readProvider).loadCompleteIndexSet}');
+            'onLoadCompleted $imageUrl ${ref.read(readProvider).loadCompleteIndexSet}',
+          );
           WidgetsBinding.instance.addPostFrameCallback((_) {
             // ref.read(readProvider.notifier).addLoadCompleteIndexSet(index);
             ref.read(readProvider.notifier).getCompleter(index)?.complete();
@@ -284,7 +274,10 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
       itemBuilder: (context, index) {
         final GalleryImage page = pages[index];
         final imageUrl = getGalleryImageUrl(
-            mediaId ?? '', index, NHConst.extMap[page.type] ?? '');
+          mediaId ?? '',
+          index,
+          NHConst.extMap[page.type] ?? '',
+        );
 
         ref.read(readProvider.notifier).getCompleter(index);
 
@@ -306,44 +299,17 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
       },
     );
 
-    return GestureZoomBox(
-      child: listView,
-    );
-
-    // return Container(
-    //   child: Zoom(
-    //     initScale: 1.0,
-    //     maxZoomHeight: 1.0,
-    //     maxZoomWidth: 1.0,
-    //     child: listView,
-    //   ),
-    // );
-
-    // listView =  PhotoViewGallery.builder(
-    //   itemCount: 1,
-    //   customSize: context.mediaQuerySize,
-    //   builder: (BuildContext context, int index) {
-    //     return PhotoViewGalleryPageOptions.customChild(
-    //       child: listView,
-    //       initialScale: PhotoViewComputedScale.contained,
-    //       minScale: PhotoViewComputedScale.contained,
-    //       maxScale: PhotoViewComputedScale.covered * 4,
-    //       childSize: context.mediaQuerySize * _kMaxScale,
-    //     );
-    //   },
-    // );
-
-    return listView;
+    return GestureZoomBox(child: listView);
   }
 }
 
 /// 翻页模式
 class ReadPageView extends HookConsumerWidget {
   const ReadPageView({
-    Key? key,
+    super.key,
     this.reverse = false,
     this.scrollDirection = Axis.horizontal,
-  }) : super(key: key);
+  });
   final bool reverse;
   final Axis scrollDirection;
 
@@ -355,30 +321,35 @@ class ReadPageView extends HookConsumerWidget {
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        readNotifier.preloadPageController
-            .jumpToPage(ref.read(galleryProvider(gid)).currentPageIndex);
+        readNotifier.preloadPageController.jumpToPage(
+          ref.read(galleryProvider(gid)).currentPageIndex,
+        );
       });
       return () {};
     });
 
     return Consumer(
       builder: (context, ref, child) {
-        logger.v('ReadPageView Consumer build');
+        logger.t('ReadPageView Consumer build');
         void onPageChanged(int index) {
           ref.read(galleryProvider(gid).notifier).onPageChanged(index);
         }
 
-        final pages =
-            ref.watch(galleryProvider(gid).select((g) => g.images.pages));
-        final mediaId =
-            ref.watch(galleryProvider(gid).select((g) => g.mediaId));
+        final pages = ref.watch(
+          galleryProvider(gid).select((g) => g.images.pages),
+        );
+        final mediaId = ref.watch(
+          galleryProvider(gid).select((g) => g.mediaId),
+        );
 
-        final preloadPagesCount =
-            ref.watch(settingsProvider.select((s) => s.preloadPagesCount));
+        final preloadPagesCount = ref.watch(
+          settingsProvider.select((s) => s.preloadPagesCount),
+        );
 
         // 用于控制hero动画
         final currentIndex = ref.watch(
-            galleryProvider(gid).select((gallery) => gallery.currentPageIndex));
+          galleryProvider(gid).select((gallery) => gallery.currentPageIndex),
+        );
 
         final thumbHeroTagPrefix = ref.watch(thumbHeroTagPrefixProvider);
 
@@ -387,27 +358,31 @@ class ReadPageView extends HookConsumerWidget {
           wantKeepAlive: false,
           builder: (BuildContext context, int index) {
             final imageUrl = getGalleryImageUrl(
-                mediaId ?? '', index, NHConst.extMap[pages[index].type] ?? '');
+              mediaId ?? '',
+              index,
+              NHConst.extMap[pages[index].type] ?? '',
+            );
 
-            final completer =
-                ref.read(readProvider.notifier).getCompleter(index);
+            final completer = ref
+                .read(readProvider.notifier)
+                .getCompleter(index);
 
             final imageProvider = getErosImageProvider(imageUrl);
 
-            imageProvider.resolve(const ImageConfiguration()).addListener(
-              ImageStreamListener(
-                (ImageInfo imageInfo, _) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    // ref
-                    //     .read(readProvider.notifier)
-                    //     .addLoadCompleteIndexSet(index);
-                    if (completer?.isCompleted == false) {
-                      completer?.complete();
-                    }
-                  });
-                },
-              ),
-            );
+            imageProvider
+                .resolve(const ImageConfiguration())
+                .addListener(
+                  ImageStreamListener((ImageInfo imageInfo, _) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      // ref
+                      //     .read(readProvider.notifier)
+                      //     .addLoadCompleteIndexSet(index);
+                      if (completer?.isCompleted == false) {
+                        completer?.complete();
+                      }
+                    });
+                  }),
+                );
 
             return PhotoViewGalleryPageOptions(
               imageProvider: imageProvider,
@@ -418,7 +393,8 @@ class ReadPageView extends HookConsumerWidget {
               maxScale: PhotoViewComputedScale.contained * 2,
               heroAttributes: currentIndex == index
                   ? PhotoViewHeroAttributes(
-                      tag: '$thumbHeroTagPrefix${gid}_$index')
+                      tag: '$thumbHeroTagPrefix${gid}_$index',
+                    )
                   : null,
             );
           },
@@ -431,7 +407,7 @@ class ReadPageView extends HookConsumerWidget {
               value: event == null
                   ? null
                   : event.cumulativeBytesLoaded /
-                      (event.expectedTotalBytes ?? 1),
+                        (event.expectedTotalBytes ?? 1),
             ),
           ),
           pageController: readNotifier.preloadPageController,

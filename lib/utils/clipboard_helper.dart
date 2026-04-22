@@ -16,8 +16,9 @@ class ClipboardHelper {
   }
 
   Future<void> chkClipboardLink(BuildContext context, WidgetRef ref) async {
-    final clipboardDetection =
-        ref.read(settingsProvider.select((s) => s.clipboardDetection));
+    final clipboardDetection = ref.read(
+      settingsProvider.select((s) => s.clipboardDetection),
+    );
     if (!clipboardDetection) {
       return;
     }
@@ -32,7 +33,8 @@ class ClipboardHelper {
     final RegExp regGalleryPageUrl = RegExp(r'https://nhentai.net/g/(\d+)/\d+');
     final RegExp regGalleryUrl = RegExp(r'https?://nhentai.net/g/(\d+)/?');
 
-    final url = regGalleryPageUrl.firstMatch(text)?.group(0) ??
+    final url =
+        regGalleryPageUrl.firstMatch(text)?.group(0) ??
         regGalleryUrl.firstMatch(text)?.group(0) ??
         '';
 

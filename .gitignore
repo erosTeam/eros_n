@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -44,6 +46,8 @@ app.*.map.json
 /android/app/release
 
 GPUCache/
-.fvm/flutter_sdk
 
 .local-chromium/
+
+# FVM Version Cache
+.fvm/

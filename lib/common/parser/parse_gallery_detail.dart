@@ -23,40 +23,44 @@ Future<Gallery> parseGalleryDetail(String html) async {
   final titleElms = document.querySelectorAll('#info > .title');
   final title = titleElms.firstOrNull?.text ?? '';
   final jpnTitle = titleElms.lastOrNull?.text ?? '';
-  logger.v('title: $title, jpnTitle: $jpnTitle');
+  logger.t('title: $title, jpnTitle: $jpnTitle');
 
   const selectorButtons = '#info > div.buttons';
   final buttonsElms = document.querySelector(selectorButtons);
   final favoriteButtonElm = buttonsElms?.children.first;
 
   final favoriteText = favoriteButtonElm?.text.trim() ?? '';
-  logger.v('favoriteText: $favoriteText');
+  logger.t('favoriteText: $favoriteText');
   final favNum = RegExp(r'\d+').firstMatch(favoriteText)?.group(0) ?? '';
 
   final favText = favoriteButtonElm?.querySelector('.text')?.text.trim() ?? '';
-  logger.v('favText: $favText');
+  logger.t('favText: $favText');
   final isFav = favText.contains('Un');
 
-  logger.v('favNum: $favNum isFav: $isFav');
+  logger.t('favNum: $favNum isFav: $isFav');
 
   final downloadButtonElm = buttonsElms?.children[1];
   final torrentUrl = downloadButtonElm?.attributes['href'] ?? '';
-  logger.v('torrentUrl: $torrentUrl');
+  logger.t('torrentUrl: $torrentUrl');
 
   const selectorMoreLikeGalleryList = '#related-container';
   const selectorGallery = '.gallery:not(.blacklisted)';
-  final moreLikeGalleryElmList = document
+  final moreLikeGalleryElmList =
+      document
           .querySelector(selectorMoreLikeGalleryList)
           ?.querySelectorAll(selectorGallery) ??
       [];
-  final moreLikeGalleryList =
-      await parseGalleryListElm(moreLikeGalleryElmList, []);
+  final moreLikeGalleryList = await parseGalleryListElm(
+    moreLikeGalleryElmList,
+    [],
+  );
 
   const selectorThumb = '.gallerythumb';
 
-  final List<Element> galleryThumbsElm =
-      document.querySelectorAll(selectorThumb);
-  logger.v('galleryThumbsElm ${galleryThumbsElm.length}');
+  final List<Element> galleryThumbsElm = document.querySelectorAll(
+    selectorThumb,
+  );
+  logger.t('galleryThumbsElm ${galleryThumbsElm.length}');
 
   String? mediaId;
 
@@ -76,12 +80,14 @@ Future<Gallery> parseGalleryDetail(String html) async {
     final type = ext.substring(0, 1);
 
     // logger.d('thumbUrl: $thumbUrl');
-    galleryImagePages.add(GalleryImage(
-      href: href,
-      type: type,
-      imgHeight: int.parse(imgHeight ?? '0'),
-      imgWidth: int.parse(imgWidth ?? '0'),
-    ));
+    galleryImagePages.add(
+      GalleryImage(
+        href: href,
+        type: type,
+        imgHeight: int.parse(imgHeight ?? '0'),
+        imgWidth: int.parse(imgWidth ?? '0'),
+      ),
+    );
   }
 
   final thumbImage = GalleryImage(
@@ -95,29 +101,23 @@ Future<Gallery> parseGalleryDetail(String html) async {
   final uploadedDateTime = tuple.item2;
 
   final List<Future<Tag>> tagsTranslatedFutures = tags.map((tag) async {
-    final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
-        tag.name ?? '',
-        namespace: getTagNamespace(tag.type ?? ''));
+    final TagTranslate? translated = await objectBoxHelper
+        .findTagTranslateAsync(
+          tag.name ?? '',
+          namespace: getTagNamespace(tag.type ?? ''),
+        );
     final translatedName = translated?.translateNameNotMD ?? tag.name ?? '';
-    return tag.copyWith(
-      translatedName: translatedName,
-    );
+    return tag.copyWith(translatedName: translatedName);
   }).toList();
 
   final tagsTranslated = await Future.wait(tagsTranslatedFutures);
 
-  logger.v('tags: $tags');
-  logger.v('uploadedDateTime: $uploadedDateTime');
+  logger.t('tags: $tags');
+  logger.t('uploadedDateTime: $uploadedDateTime');
 
   return Gallery(
-    title: GalleryTitle(
-      englishTitle: title,
-      japaneseTitle: jpnTitle,
-    ),
-    images: GalleryImages(
-      pages: galleryImagePages,
-      thumbnail: thumbImage,
-    ),
+    title: GalleryTitle(englishTitle: title, japaneseTitle: jpnTitle),
+    images: GalleryImages(pages: galleryImagePages, thumbnail: thumbImage),
     mediaId: mediaId,
     isFavorited: isFav,
     numFavorites: int.tryParse(favNum) ?? 0,
@@ -136,8 +136,10 @@ Tuple2<List<Tag>, String> parseGalleryTags(Document document) {
   final tagGroupsElm = document.querySelectorAll(selectorTagGroups);
   final tags = <Tag>[];
   for (final groupElm in tagGroupsElm) {
-    final tagType =
-        (groupElm.nodes.first.text?.trim() ?? '').replaceFirst(':', '');
+    final tagType = (groupElm.nodes.first.text?.trim() ?? '').replaceFirst(
+      ':',
+      '',
+    );
     // logger.d('tagType: $tagType');
     if (tagType == 'Uploaded') {
       uploadedDateTime =
@@ -155,13 +157,15 @@ Tuple2<List<Tag>, String> parseGalleryTags(Document document) {
       final tagName = tagElm.querySelector('.name')?.text.trim() ?? '';
       final tagCount = tagElm.querySelector('.count')?.text.trim() ?? '';
       final tagUrl = tagElm.attributes['href'] ?? '';
-      tags.add(Tag(
-        id: int.tryParse(tagId) ?? 0,
-        name: tagName,
-        url: tagUrl,
-        type: tagType,
-        count: int.tryParse(tagCount) ?? 0,
-      ));
+      tags.add(
+        Tag(
+          id: int.tryParse(tagId) ?? 0,
+          name: tagName,
+          url: tagUrl,
+          type: tagType,
+          count: int.tryParse(tagCount) ?? 0,
+        ),
+      );
     }
   }
   return Tuple2(tags, uploadedDateTime);

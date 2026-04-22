@@ -1,27 +1,23 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/network/app_dio/app_dio.dart';
 import 'package:eros_n/routes/routes.dart';
-import 'package:eros_n/store/db/isar_helper.dart';
+import 'package:eros_n/store/db/objectbox_helper.dart';
 import 'package:eros_n/store/kv/hive.dart';
 import 'package:eros_n/utils/clipboard_helper.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart' as iaw;
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-import 'const/const.dart';
 
 DioHttpConfig globalDioConfig = nhDioConfig;
 
 final HiveHelper hiveHelper = HiveHelper();
-final IsarHelper isarHelper = IsarHelper();
+final ObjectBoxHelper objectBoxHelper = ObjectBoxHelper();
 final ClipboardHelper clipboardHelper = ClipboardHelper();
 final erosRouter = AppRouter();
 
@@ -52,8 +48,10 @@ class Global {
   }
 
   static Future<void> setCookies(String url, List<Cookie> cookies) async {
-    await Global.cookieJar
-        .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+    await Global.cookieJar.saveFromResponse(
+      Uri.parse(NHConst.baseUrl),
+      cookies,
+    );
   }
 
   static late PackageInfo packageInfo;
@@ -87,19 +85,17 @@ class Global {
     initLogger();
 
     if (Platform.isAndroid) {
-      await iaw.AndroidInAppWebViewController.setWebContentsDebuggingEnabled(
-        true,
+      await iaw.InAppWebViewController.setWebContentsDebuggingEnabled(true);
+
+      final swAvailable = await iaw.WebViewFeature.isFeatureSupported(
+        iaw.WebViewFeature.SERVICE_WORKER_BASIC_USAGE,
+      );
+      final swInterceptAvailable = await iaw.WebViewFeature.isFeatureSupported(
+        iaw.WebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST,
       );
 
-      final swAvailable = await iaw.AndroidWebViewFeature.isFeatureSupported(
-          iaw.AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
-      final swInterceptAvailable =
-          await iaw.AndroidWebViewFeature.isFeatureSupported(iaw
-              .AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
-
       if (swAvailable && swInterceptAvailable) {
-        iaw.AndroidServiceWorkerController serviceWorkerController =
-            iaw.AndroidServiceWorkerController.instance();
+        iaw.ServiceWorkerController.instance();
 
         // await serviceWorkerController
         //     .setServiceWorkerClient(iaw.AndroidServiceWorkerClient(
@@ -114,7 +110,7 @@ class Global {
     packageInfo = await PackageInfo.fromPlatform();
 
     await HiveHelper.init();
-    await isarHelper.initIsar();
+    await objectBoxHelper.init();
 
     userAgent = hiveHelper.getUserAgent();
     userAgent ??= NHConst.userAgent;

@@ -1,39 +1,39 @@
 import 'dart:io';
+
+import 'package:clock/clock.dart';
+import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/network/app_dio/dio_http_cli.dart';
+import 'package:eros_n/network/app_dio/http_response.dart';
+import 'package:eros_n/network/app_dio/http_transformer.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_cache_manager/src/web/mime_converter.dart';
-
-import '../../network/app_dio/dio_http_cli.dart';
-import 'package:clock/clock.dart';
-
-import '../../network/app_dio/http_response.dart';
-import '../../network/app_dio/http_transformer.dart';
 
 class DioFileService extends FileService {
   DioFileService();
 
   @override
-  Future<FileServiceResponse> get(String url,
-      {Map<String, String>? headers}) async {
+  Future<FileServiceResponse> get(
+    String url, {
+    Map<String, String>? headers,
+  }) async {
     DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-    final options = CacheOptions(
-      policy: CachePolicy.request,
-      store: MemCacheStore(),
-    ).toOptions()
-      ..headers = headers
-      ..responseType = ResponseType.stream;
+    final options =
+        CacheOptions(
+            policy: CachePolicy.request,
+            store: MemCacheStore(),
+          ).toOptions()
+          ..headers = headers
+          ..responseType = ResponseType.stream;
 
     final req = await dioHttpClient.get(
       url,
       options: options,
-      httpTransformer: HttpTransformerBuilder(
-        (response) {
-          return DioHttpResponse.success(response);
-        },
-      ),
+      httpTransformer: HttpTransformerBuilder((response) {
+        return DioHttpResponse.success(response);
+      }),
     );
 
     return DioGetResponse(req.data as Response);

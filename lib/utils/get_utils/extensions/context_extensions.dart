@@ -1,14 +1,9 @@
+import 'package:eros_n/utils/get_utils/platform/platform.dart';
 import 'package:flutter/material.dart';
-
-import '../platform/platform.dart';
 
 extension ContextExtensionss on BuildContext {
   void showSnackBar(String message) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
+    ScaffoldMessenger.of(this).showSnackBar(SnackBar(content: Text(message)));
   }
 
   /// The same of [MediaQuery.of(context).size]
@@ -67,7 +62,7 @@ extension ContextExtensionss on BuildContext {
   ThemeData get theme => Theme.of(this);
 
   /// Check if dark mode theme is enable
-  bool get isDarkMode => (theme.brightness == Brightness.dark);
+  bool get isDarkMode => theme.brightness == Brightness.dark;
 
   /// give access to Theme.of(context).iconTheme.color
   Color? get iconColor => theme.iconTheme.color;
@@ -99,23 +94,23 @@ extension ContextExtensionss on BuildContext {
   /// similar to [MediaQuery.of(this).devicePixelRatio]
   double get devicePixelRatio => MediaQuery.of(this).devicePixelRatio;
 
-  /// similar to [MediaQuery.of(this).textScaleFactor]
-  double get textScaleFactor => MediaQuery.of(this).textScaleFactor;
+  /// similar to [MediaQuery.of(this).textScaler]
+  TextScaler get textScaler => MediaQuery.of(this).textScaler;
 
   /// get the shortestSide from screen
   double get mediaQueryShortestSide => mediaQuerySize.shortestSide;
 
   /// True if width be larger than 800
-  bool get showNavbar => (width > 800);
+  bool get showNavbar => width > 800;
 
   /// True if the shortestSide is smaller than 600p
-  bool get isPhone => (mediaQueryShortestSide < 600);
+  bool get isPhone => mediaQueryShortestSide < 600;
 
   /// True if the shortestSide is largest than 600p
-  bool get isSmallTablet => (mediaQueryShortestSide >= 600);
+  bool get isSmallTablet => mediaQueryShortestSide >= 600;
 
   /// True if the shortestSide is largest than 720p
-  bool get isLargeTablet => (mediaQueryShortestSide >= 720);
+  bool get isLargeTablet => mediaQueryShortestSide >= 720;
 
   /// True if the current device is Tablet
   bool get isTablet => isSmallTablet || isLargeTablet;
@@ -126,12 +121,7 @@ extension ContextExtensionss on BuildContext {
   /// and less than 1200 return [tablet] value.
   /// if the device width is less than 300  return [watch] value.
   /// in other cases return [mobile] value.
-  T responsiveValue<T>({
-    T? mobile,
-    T? tablet,
-    T? desktop,
-    T? watch,
-  }) {
+  T responsiveValue<T>({T? mobile, T? tablet, T? desktop, T? watch}) {
     var deviceWidth = mediaQuerySize.shortestSide;
     if (GetPlatform.isDesktop) {
       deviceWidth = mediaQuerySize.width;

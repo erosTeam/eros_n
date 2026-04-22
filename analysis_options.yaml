@@ -30,13 +30,6 @@ analyzer:
     missing_return: warning
     # allow having TODOs in the code
     todo: ignore
-    # allow self-reference to deprecated members (we do this because otherwise we have
-    # to annotate every member in every test, assert, etc, when we deprecate something)
-    deprecated_member_use_from_same_package: ignore
-    # Ignore analyzer hints for updating pubspecs when using Future or
-    # Stream and not importing dart:async
-    # Please see https://github.com/flutter/flutter/pull/24528 for details.
-    sdk_version_async_exported_from_core: ignore
     invalid_annotation_target: ignore
   exclude:
     - "bin/cache/**"
@@ -80,6 +73,7 @@ linter:
     # - avoid_print # not yet tested
     # - avoid_private_typedef_functions # we prefer having typedef (discussion in https://github.com/flutter/flutter/pull/16356)
     # - avoid_redundant_argument_values # not yet tested
+    - always_use_package_imports
     - avoid_relative_lib_imports
     - avoid_renaming_method_parameters
     - avoid_return_types_on_setters
@@ -117,12 +111,8 @@ linter:
     - hash_and_equals
     - implementation_imports
     # - invariant_booleans # too many false positives: https://github.com/dart-lang/linter/issues/811
-    - iterable_contains_unrelated_type
-    # - join_return_with_assignment # not yet tested
-    - library_names
-    - library_prefixes
-    # - lines_longer_than_80_chars # not yet tested
-    - list_remove_unrelated_type
+    # - iterable_contains_unrelated_type # removed in Dart 3.3
+    # - list_remove_unrelated_type # removed in Dart 3.3
     # - literal_only_boolean_expressions # too many false positives: https://github.com/dart-lang/sdk/issues/34181
     # - missing_whitespace_between_adjacent_strings # not yet tested
     - no_adjacent_strings_in_list
@@ -135,7 +125,7 @@ linter:
     # - one_member_abstracts # too many false positives
     # - only_throw_errors # https://github.com/flutter/flutter/issues/5792
     - overridden_fields
-    - package_api_docs
+    # - package_api_docs # removed in Dart 3.7
     - package_names
     - package_prefixed_library_names
     # - parameter_assignments # we do this commonly
@@ -151,7 +141,7 @@ linter:
     # - prefer_constructors_over_static_methods # not yet tested
     - prefer_contains
     # - prefer_double_quotes # opposite of prefer_single_quotes
-    - prefer_equal_for_default_values
+    # - prefer_equal_for_default_values # removed in Dart 3.0
     # - prefer_expression_function_bodies # conflicts with https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#consider-using--for-short-functions-and-methods
     - prefer_final_fields
     - prefer_final_in_for_each

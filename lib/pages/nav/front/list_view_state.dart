@@ -1,12 +1,11 @@
+import 'package:eros_n/pages/enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../enum.dart';
 
 part 'list_view_state.freezed.dart';
 part 'list_view_state.g.dart';
 
 @freezed
-class ListViewState with _$ListViewState {
+abstract class ListViewState with _$ListViewState {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory ListViewState({
     @Default(LoadStatus.none) LoadStatus status,

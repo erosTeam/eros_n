@@ -7,6 +7,7 @@ import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
+import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
@@ -18,8 +19,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keframe/keframe.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-import 'front_provider.dart';
 
 @RoutePage()
 class FrontPage extends StatefulHookConsumerWidget {
@@ -71,11 +70,11 @@ class _FrontPageState extends ConsumerState<FrontPage>
 
   @override
   Widget build(BuildContext context) {
-    logger.v('FrontPage build');
+    logger.t('FrontPage build');
 
     super.build(context);
-    logger.v('${MediaQuery.of(context).padding.top}');
-    logger.v('${context.width}');
+    logger.t('${MediaQuery.of(context).padding.top}');
+    logger.t('${context.width}');
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
@@ -99,12 +98,12 @@ class _FrontPageState extends ConsumerState<FrontPage>
               ),
               const PopularListView(),
               SliverGalleryListView(scrollController: scrollController),
-              Consumer(builder: (context, ref, _) {
-                final state = ref.watch(frontProvider);
-                return EndIndicator(
-                  loadStatus: state.status,
-                );
-              }),
+              Consumer(
+                builder: (context, ref, _) {
+                  final state = ref.watch(frontProvider);
+                  return EndIndicator(loadStatus: state.status);
+                },
+              ),
             ],
           ),
         ),
@@ -123,10 +122,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
 }
 
 class SliverGalleryListView extends HookConsumerWidget {
-  const SliverGalleryListView({
-    super.key,
-    required this.scrollController,
-  });
+  const SliverGalleryListView({super.key, required this.scrollController});
 
   final ScrollController scrollController;
 
@@ -146,69 +142,77 @@ class SliverGalleryListView extends HookConsumerWidget {
       sliver: MultiSliver(
         pushPinnedChildren: true,
         children: [
-          Consumer(builder: (context, ref, child) {
-            final searchSortOnFrontPage = ref
-                .watch(settingsProvider.select((s) => s.searchSortOnFrontPage));
-            final frontLanguagesFilter = ref
-                .watch(settingsProvider.select((s) => s.frontLanguagesFilter));
-            return SliverPinnedHeader(
-              child: GestureDetector(
-                onTap: () {
-                  scrollController.animateTo(0,
+          Consumer(
+            builder: (context, ref, child) {
+              final searchSortOnFrontPage = ref.watch(
+                settingsProvider.select((s) => s.searchSortOnFrontPage),
+              );
+              final frontLanguagesFilter = ref.watch(
+                settingsProvider.select((s) => s.frontLanguagesFilter),
+              );
+              return SliverPinnedHeader(
+                child: GestureDetector(
+                  onTap: () {
+                    scrollController.animateTo(
+                      0,
                       duration: const Duration(milliseconds: 300),
-                      curve: Curves.ease);
-                },
-                child: Container(
-                  height: kToolbarHeight,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            sortMap[searchSortOnFrontPage] ??
-                                L10n.of(context).recent,
-                            style: Theme.of(context).textTheme.titleLarge,
+                      curve: Curves.ease,
+                    );
+                  },
+                  child: Container(
+                    height: kToolbarHeight,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              sortMap[searchSortOnFrontPage] ??
+                                  L10n.of(context).recent,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
                           ),
                         ),
-                      ),
-                      LanguagesFilterPopupButton(
-                        onSelected: (LanguagesFilter value) async {
-                          if (value ==
-                              ref.read(settingsProvider).frontLanguagesFilter) {
-                            return;
-                          }
-                          ref
-                              .read(settingsProvider.notifier)
-                              .setFrontLanguagesFilter(value);
-                          await ref.read(frontProvider.notifier).reloadData();
-                        },
-                        initValue: frontLanguagesFilter,
-                      ),
-                      SortPopupButton(
-                        onSelected: (value) async {
-                          // if not change, do nothing
-                          if (value == searchSortOnFrontPage) {
-                            return;
-                          }
-                          ref
-                              .read(settingsProvider.notifier)
-                              .setSearchSortOnFrontPage(value);
+                        LanguagesFilterPopupButton(
+                          onSelected: (LanguagesFilter value) async {
+                            if (value ==
+                                ref
+                                    .read(settingsProvider)
+                                    .frontLanguagesFilter) {
+                              return;
+                            }
+                            ref
+                                .read(settingsProvider.notifier)
+                                .setFrontLanguagesFilter(value);
+                            await ref.read(frontProvider.notifier).reloadData();
+                          },
+                          initValue: frontLanguagesFilter,
+                        ),
+                        SortPopupButton(
+                          onSelected: (value) async {
+                            // if not change, do nothing
+                            if (value == searchSortOnFrontPage) {
+                              return;
+                            }
+                            ref
+                                .read(settingsProvider.notifier)
+                                .setSearchSortOnFrontPage(value);
 
-                          // reload
-                          await ref.read(frontProvider.notifier).reloadData();
-                        },
-                        initValue: searchSortOnFrontPage,
-                      ),
-                    ],
+                            // reload
+                            await ref.read(frontProvider.notifier).reloadData();
+                          },
+                          initValue: searchSortOnFrontPage,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            },
+          ),
           const GalleryListView(),
         ],
       ),
@@ -217,9 +221,7 @@ class SliverGalleryListView extends HookConsumerWidget {
 }
 
 class PopularListView extends ConsumerWidget {
-  const PopularListView({
-    Key? key,
-  }) : super(key: key);
+  const PopularListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -256,14 +258,14 @@ class PopularListView extends ConsumerWidget {
                     child: Card(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       child: Container(
-                        foregroundDecoration: (gallery.languageCode == 'ja' ||
+                        foregroundDecoration:
+                            (gallery.languageCode == 'ja' ||
                                 gallery.languageCode == null)
                             ? null
                             : RotatedCornerDecoration.withColor(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.8),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.8),
                                 badgeSize: const Size(38, 28),
                                 // geometry:
                                 //     const BadgeGeometry(width: 38, height: 28),
@@ -271,8 +273,9 @@ class PopularListView extends ConsumerWidget {
                                   text:
                                       gallery.languageCode?.toUpperCase() ?? '',
                                   style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                         child: Stack(
@@ -282,16 +285,21 @@ class PopularListView extends ConsumerWidget {
                             ShaderMask(
                               shaderCallback: (Rect bounds) {
                                 return const LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                      Colors.black54,
-                                    ]).createShader(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.black54,
+                                  ],
+                                ).createShader(
                                   Rect.fromLTRB(
-                                      0, 0, bounds.width, bounds.height),
+                                    0,
+                                    0,
+                                    bounds.width,
+                                    bounds.height,
+                                  ),
                                 );
                               },
                               blendMode: BlendMode.darken,
@@ -305,19 +313,19 @@ class PopularListView extends ConsumerWidget {
                               alignment: Alignment.bottomCenter,
                               child: Text(
                                 (gallery.title.englishTitle ?? '').prettyTitle,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
+                                style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black.withOpacity(0.8),
-                                      offset: const Offset(0, 0),
-                                      blurRadius: 2,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black.withValues(
+                                            alpha: 0.8,
+                                          ),
+                                          offset: const Offset(0, 0),
+                                          blurRadius: 2,
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -352,19 +360,17 @@ class PopularListView extends ConsumerWidget {
 }
 
 class GalleryListView extends HookConsumerWidget {
-  const GalleryListView({Key? key}) : super(key: key);
+  const GalleryListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.v('GalleryListView build');
+    logger.t('GalleryListView build');
     final List<Gallery> galleryList = ref.watch(gallerysProvider);
     final state = ref.watch(frontProvider);
 
     if (state.isLoading) {
       return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
     return GallerySliverList(

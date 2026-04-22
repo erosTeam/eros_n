@@ -27,17 +27,14 @@ void showActionToast(String msg, {IconData? icon, VoidCallback? onPressed}) {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Text(
                     msg,
-                    textScaleFactor: 1.0,
+                    textScaler: TextScaler.noScaling,
                     style: Theme.of(context).textTheme.bodySmall,
                     softWrap: true,
                   ),
                 ),
               ),
               IconButton(
-                icon: Icon(
-                  icon,
-                  size: 18,
-                ),
+                icon: Icon(icon, size: 18),
                 padding: const EdgeInsets.only(left: 28),
                 onPressed: () {
                   SmartDialog.dismiss();

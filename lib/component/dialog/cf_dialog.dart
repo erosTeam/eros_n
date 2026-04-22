@@ -1,18 +1,6 @@
 import 'dart:async';
-import 'dart:io' as io;
-
-import 'package:eros_n/common/const/const.dart';
-import 'package:eros_n/common/global.dart';
-import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/pages/webview/webview.dart';
-import 'package:eros_n/utils/logger.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 const kDialogTag = 'InAppWebViewDialog';
-bool _canShowDialog = true;
 
 // 使用请求nh主页，获取cookie更新到cookieJar
 @Deprecated('已弃用')
@@ -20,9 +8,7 @@ Future<void> showInAppWebViewDialog({
   int? statusCode,
   FutureOr Function()? onComplete,
 }) async {
-  // if (!_canShowDialog) {
-  //   return;
-  // }
+  // guard removed: was using _canShowDialog flag
   /*
   final isPlatformPhone =
       io.Platform.isAndroid || io.Platform.isIOS || io.Platform.isFuchsia;
@@ -141,7 +127,7 @@ Future<void> showInAppWebViewDialog({
             Container(
               alignment: Alignment.center,
               color: showWebview
-                  ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                  ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.5)
                   : Theme.of(context).colorScheme.surface,
               child: const CircularProgressIndicator(),
             ),

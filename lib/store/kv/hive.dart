@@ -22,14 +22,14 @@ class HiveHelper {
     await Hive.openBox<String>(
       configBox,
       compactionStrategy: (int entries, int deletedEntries) {
-        logger.v('entries $entries');
+        logger.t('entries $entries');
         return entries > 2;
       },
     );
     await Hive.openBox<String>(
       userKey,
       compactionStrategy: (int entries, int deletedEntries) {
-        logger.v('entries $entries');
+        logger.t('entries $entries');
         return true;
       },
     );
@@ -83,13 +83,16 @@ class HiveHelper {
         _configBox.get(tagTranslateInfoKey, defaultValue: '{}') ?? '{}';
     if (tagTranslateInfo.isNotEmpty) {
       return TagTranslateInfo.fromJson(
-          jsonDecode(tagTranslateInfo) as Map<String, dynamic>);
+        jsonDecode(tagTranslateInfo) as Map<String, dynamic>,
+      );
     }
     return const TagTranslateInfo();
   }
 
   Future<void> setTagTranslateInfo(TagTranslateInfo tagTranslateInfo) async {
     await _configBox.put(
-        tagTranslateInfoKey, jsonEncode(tagTranslateInfo.toJson()));
+      tagTranslateInfoKey,
+      jsonEncode(tagTranslateInfo.toJson()),
+    );
   }
 }

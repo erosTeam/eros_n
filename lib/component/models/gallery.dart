@@ -1,17 +1,15 @@
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/component/models/comment.dart';
+import 'package:eros_n/component/models/gallery_images.dart';
+import 'package:eros_n/component/models/gallery_title.dart';
+import 'package:eros_n/component/models/tag.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'comment.dart';
-import 'gallery_images.dart';
-import 'gallery_title.dart';
-import 'tag.dart';
-
 part 'gallery.freezed.dart';
-
 part 'gallery.g.dart';
 
 @freezed
-class Gallery with _$Gallery {
+abstract class Gallery with _$Gallery {
   const factory Gallery({
     @JsonKey(name: 'id') @Default(0) int gid,
     @JsonKey(name: 'media_id') String? mediaId,
@@ -22,15 +20,24 @@ class Gallery with _$Gallery {
     @JsonKey(name: 'num_pages') int? numPages,
     @JsonKey(name: 'num_favorites') int? numFavorites,
     @Default(<Tag>[]) List<Tag> tags,
-    @JsonKey(ignore: true) @Default(<Tag>[]) List<Tag> simpleTags,
-    @JsonKey(ignore: true) String? languageCode,
-    @JsonKey(ignore: true) int? viewTime,
-    @JsonKey(ignore: true) @Default(<Comment>[]) List<Comment> comments,
-    @JsonKey(ignore: true) @Default(<Gallery>[]) List<Gallery> moreLikeGallerys,
-    @JsonKey(ignore: true) @Default(0) int currentPageIndex,
-    @JsonKey(ignore: true) bool? isFavorited,
-    @JsonKey(ignore: true) String? uploadedDateTime,
-    @JsonKey(ignore: true) String? csrfToken,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(<Tag>[])
+    List<Tag> simpleTags,
+    @JsonKey(includeFromJson: false, includeToJson: false) String? languageCode,
+    @JsonKey(includeFromJson: false, includeToJson: false) int? viewTime,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(<Comment>[])
+    List<Comment> comments,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(<Gallery>[])
+    List<Gallery> moreLikeGallerys,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default(0)
+    int currentPageIndex,
+    @JsonKey(includeFromJson: false, includeToJson: false) bool? isFavorited,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    String? uploadedDateTime,
+    @JsonKey(includeFromJson: false, includeToJson: false) String? csrfToken,
   }) = _Gallery;
 
   const Gallery._();
@@ -38,18 +45,18 @@ class Gallery with _$Gallery {
   factory Gallery.fromJson(Map<String, Object?> json) =>
       _$GalleryFromJson(json);
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DateTime? get uploadedDate =>
       DateTime.tryParse(uploadedDateTime ?? '')?.toLocal();
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get thumbUrl => mediaId != null
       ? 'https://t.nhentai.net/galleries/$mediaId/thumb.${NHConst.extMap[images.thumbnail.type]}'
       : null;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get coverUrl => mediaId != null
       ? 'https://t.nhentai.net/galleries/$mediaId/cover.${NHConst.extMap[images.cover.type]}'
       : null;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String get url => 'https://nhentai.net/g/$gid/';
 }

@@ -1,6 +1,6 @@
-import 'package:auto_route/auto_route.dart';
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
@@ -40,8 +40,9 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
     scrollController.addListener(_scrollListener);
 
     final keyboardVisibilityController = KeyboardVisibilityController();
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((
+      bool visible,
+    ) {
       if (!visible) {
         // unfocus
         FocusScope.of(context).unfocus();
@@ -91,99 +92,102 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
           controller: scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            Consumer(builder: (context, ref, child) {
-              final appBarSearch =
-                  ref.watch(historyProvider.select((s) => s.appBarSearch));
-              return SliverAppBar(
-                title: appBarSearch
-                    ? TextField(
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          hintText: L10n.of(context).search,
-                          border: InputBorder.none,
-                        ),
-                        textInputAction: TextInputAction.search,
-                        // onSubmitted: (value) {
-                        //   logger.d('onSubmitted $value');
-                        // },
-                        onChanged: (value) {
-                          ref
-                              .read(searchKeyProvider.notifier)
-                              .update((state) => state = value);
-                        },
-                      )
-                    : Row(
-                        children: [
-                          Text(L10n.of(context).history),
-                        ],
-                      ),
-                leadingWidth: appBarSearch ? 60 : 0,
-                leading: appBarSearch
-                    ? IconButton(
-                        onPressed: () {
-                          ref
-                              .read(historyProvider.notifier)
-                              .setAppBarSearch(false);
-                        },
-                        icon: const Icon(Icons.arrow_back))
-                    : nil,
-                floating: true,
-                pinned: true,
-                bottom: const PreferredSize(
-                  preferredSize: Size.fromHeight(0),
-                  child: SizedBox(height: 0),
-                ),
-                actions: appBarSearch
-                    ? null
-                    : [
-                        IconButton(
-                          icon: const Icon(Icons.search),
+            Consumer(
+              builder: (context, ref, child) {
+                final appBarSearch = ref.watch(
+                  historyProvider.select((s) => s.appBarSearch),
+                );
+                return SliverAppBar(
+                  title: appBarSearch
+                      ? TextField(
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            hintText: L10n.of(context).search,
+                            border: InputBorder.none,
+                          ),
+                          textInputAction: TextInputAction.search,
+                          // onSubmitted: (value) {
+                          //   logger.d('onSubmitted $value');
+                          // },
+                          onChanged: (value) {
+                            ref
+                                .read(searchKeyProvider.notifier)
+                                .update((state) => state = value);
+                          },
+                        )
+                      : Row(children: [Text(L10n.of(context).history)]),
+                  leadingWidth: appBarSearch ? 60 : 0,
+                  leading: appBarSearch
+                      ? IconButton(
                           onPressed: () {
                             ref
                                 .read(historyProvider.notifier)
-                                .setAppBarSearch(true);
+                                .setAppBarSearch(false);
                           },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: IconButton(
-                            icon: const Icon(Icons.delete_sweep_outlined),
+                          icon: const Icon(Icons.arrow_back),
+                        )
+                      : nil,
+                  floating: true,
+                  pinned: true,
+                  bottom: const PreferredSize(
+                    preferredSize: Size.fromHeight(0),
+                    child: SizedBox(height: 0),
+                  ),
+                  actions: appBarSearch
+                      ? null
+                      : [
+                          IconButton(
+                            icon: const Icon(Icons.search),
                             onPressed: () {
-                              // dialog show
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(L10n.of(context).clear_history),
-                                    content: Text(
-                                        L10n.of(context).clear_history_tip),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(L10n.of(context).cancel),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          ref
-                                              .read(historyProvider.notifier)
-                                              .clearHistory();
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(L10n.of(context).ok),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              ref
+                                  .read(historyProvider.notifier)
+                                  .setAppBarSearch(true);
                             },
                           ),
-                        ),
-                        //search
-                      ],
-              );
-            }),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: IconButton(
+                              icon: const Icon(Icons.delete_sweep_outlined),
+                              onPressed: () {
+                                // dialog show
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        L10n.of(context).clear_history,
+                                      ),
+                                      content: Text(
+                                        L10n.of(context).clear_history_tip,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(L10n.of(context).cancel),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            ref
+                                                .read(historyProvider.notifier)
+                                                .clearHistory();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(L10n.of(context).ok),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          //search
+                        ],
+                );
+              },
+            ),
             Consumer(
               builder: (context, ref, child) {
                 // final historys = ref.watch(historyGallerysProvider);
@@ -193,15 +197,14 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                   top: false,
                   bottom: false,
                   sliver: MultiSliver(
-                      children: historysGroupByDate.entries.map(
-                    (e) {
+                    children: historysGroupByDate.entries.map((e) {
                       final DateTime date = e.key;
                       // if date is today
                       final String dateStr = date.isToday()
                           ? L10n.of(context).today
                           : date.isYesterday()
-                              ? L10n.of(context).yesterday
-                              : date.toLocal().toString().split(' ')[0];
+                          ? L10n.of(context).yesterday
+                          : date.toLocal().toString().split(' ')[0];
                       final historysInDate = e.value;
                       return MultiSliver(
                         pushPinnedChildren: true,
@@ -210,26 +213,28 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                             child: Container(
                               color: Theme.of(context).scaffoldBackgroundColor,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
                               child: Text(
                                 dateStr,
-                                style: Theme.of(context).textTheme.subtitle1,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ),
                           ),
                           SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final history = historysInDate[index];
-                                return HistoryItem(history: history);
-                              },
-                              childCount: historysInDate.length,
-                            ),
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              final history = historysInDate[index];
+                              return HistoryItem(history: history);
+                            }, childCount: historysInDate.length),
                           ),
                         ],
                       );
-                    },
-                  ).toList()),
+                    }).toList(),
+                  ),
                 );
               },
             ),
@@ -244,20 +249,21 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
 }
 
 class HistoryItem extends HookConsumerWidget {
-  const HistoryItem({
-    Key? key,
-    required this.history,
-  }) : super(key: key);
+  const HistoryItem({super.key, required this.history});
 
   final GalleryHistory history;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // last view hour and minute
-    final lastReadTime =
-        DateTime.fromMillisecondsSinceEpoch(history.lastReadTime ?? 0);
-    final String lastReadTimeStr =
-        lastReadTime.toLocal().toString().split(' ')[1].substring(0, 5);
+    final lastReadTime = DateTime.fromMillisecondsSinceEpoch(
+      history.lastReadTime ?? 0,
+    );
+    final String lastReadTimeStr = lastReadTime
+        .toLocal()
+        .toString()
+        .split(' ')[1]
+        .substring(0, 5);
 
     return InkWell(
       onTap: () {
@@ -290,9 +296,8 @@ class HistoryItem extends HookConsumerWidget {
                   borderRadius: BorderRadius.circular(6),
                   child: ErosCachedNetworkImage(
                     imageUrl: history.thumbUrl ?? '',
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[200],
-                    ),
+                    placeholder: (context, url) =>
+                        Container(color: Colors.grey[200]),
                   ),
                 ),
               ),
@@ -314,19 +319,18 @@ class HistoryItem extends HookConsumerWidget {
                     // time
                     child: Text(
                       lastReadTimeStr,
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                 ],
               ),
             ),
             IconButton(
-                onPressed: () {
-                  ref.read(historyProvider.notifier).removeHistory(history.gid);
-                },
-                icon: const Icon(
-                  Icons.delete_outline_rounded,
-                )),
+              onPressed: () {
+                ref.read(historyProvider.notifier).removeHistory(history.gid);
+              },
+              icon: const Icon(Icons.delete_outline_rounded),
+            ),
           ],
         ),
       ),

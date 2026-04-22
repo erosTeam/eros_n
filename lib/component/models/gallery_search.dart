@@ -1,14 +1,12 @@
+import 'package:eros_n/component/models/gallery.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'gallery.dart';
-
 part 'gallery_search.freezed.dart';
-
 part 'gallery_search.g.dart';
 
 @freezed
-class GallerySearch with _$GallerySearch {
+abstract class GallerySearch with _$GallerySearch {
   // @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory GallerySearch({
     @JsonKey(name: 'result') @Default(<Gallery>[]) List<Gallery> result,

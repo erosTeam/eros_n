@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/gallery/comments_page.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
+import 'package:eros_n/pages/gallery/gallery_view.dart';
 import 'package:eros_n/pages/gallery/thumb_page.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
@@ -27,8 +26,6 @@ import 'package:eros_n/pages/user/web_login_page.dart';
 import 'package:eros_n/pages/webview/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../pages/gallery/gallery_view.dart';
 
 part 'routes.gr.dart';
 
@@ -61,14 +58,12 @@ class AppRouteObserver extends AutoRouterObserver {
   void didPush(Route route, Route? previousRoute) {}
 }
 
-@AutoRouterConfig(
-  replaceInRouteName: 'Page,Route',
-)
-class AppRouter extends _$AppRouter {
+@AutoRouterConfig(replaceInRouteName: 'Page,Route')
+class AppRouter extends RootStackRouter {
   @override
   RouteType get defaultRouteType => const RouteType.material();
   @override
-  final List<AutoRoute> routes = [
+  List<AutoRoute> get routes => [
     AutoRoute(path: NHRoutes.root, page: SplashRoute.page),
     AutoRoute(path: NHRoutes.home, page: IndexRoute.page),
     AutoRoute(path: NHRoutes.front, page: FrontRoute.page),
@@ -82,7 +77,9 @@ class AppRouter extends _$AppRouter {
     AutoRoute(path: NHRoutes.comments, page: CommentsRoute.page),
     AutoRoute(path: NHRoutes.settings, page: SettingsRoute.page),
     AutoRoute(
-        path: NHRoutes.appearanceSetting, page: AppearanceSettingRoute.page),
+      path: NHRoutes.appearanceSetting,
+      page: AppearanceSettingRoute.page,
+    ),
     AutoRoute(path: NHRoutes.generalSetting, page: GeneralSettingRoute.page),
     AutoRoute(path: NHRoutes.readSetting, page: ReadSettingRoute.page),
     AutoRoute(path: NHRoutes.advancedSetting, page: AdvancedSettingRoute.page),
@@ -111,10 +108,9 @@ class RouteUtil {
         .update((state) => heroTagPrefix ?? '');
 
     // erosRouter.push(ReadRoute(index: index));
-    await context.router.push(ReadRoute(
-      index: index,
-      colorScheme: Theme.of(context).colorScheme,
-    ));
+    await context.router.push(
+      ReadRoute(index: index, colorScheme: Theme.of(context).colorScheme),
+    );
   }
 
   static Future<void> goGallery(
@@ -170,10 +166,7 @@ class RouteUtil {
     return true;
   }
 
-  static Future<void> goSearch({
-    Tag? tag,
-    String? keyword,
-  }) async {
+  static Future<void> goSearch({Tag? tag, String? keyword}) async {
     String query = (tag?.name ?? '').trim();
     if (query.contains(' ')) {
       query = '"$query"';

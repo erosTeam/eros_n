@@ -1,41 +1,34 @@
-import 'package:auto_route/auto_route.dart';
 import 'dart:io' as io;
 
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/widget/web_view.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/pages/webview/webview.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-@RoutePage<List<Cookie>>()
+@RoutePage()
 class WebLoginPage extends StatelessWidget {
-  const WebLoginPage({
-    Key? key,
-  }) : super(key: key);
+  const WebLoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(L10n.of(context).login),
-      ),
+      appBar: AppBar(title: Text(L10n.of(context).login)),
       body: GetCookieWebView(
-          url: NHConst.loginUrl,
-          deletedCookie: false,
-          callback: (info) async {
-            final cookies = info.cookies;
-            logger.d('cookies: $cookies');
-            if (cookies.any((element) => element.name == 'sessionid')) {
-              await Global.setUserAgent(info.userAgent);
-              await Global.setCookies(NHConst.baseUrl, info.cookies);
-              erosRouter.pop<List<io.Cookie>>(cookies);
-            }
-          }),
+        url: NHConst.loginUrl,
+        deletedCookie: false,
+        callback: (info) async {
+          final cookies = info.cookies;
+          logger.d('cookies: $cookies');
+          if (cookies.any((element) => element.name == 'sessionid')) {
+            await Global.setUserAgent(info.userAgent);
+            await Global.setCookies(NHConst.baseUrl, info.cookies);
+            erosRouter.pop<List<io.Cookie>>(cookies);
+          }
+        },
+      ),
     );
   }
 }

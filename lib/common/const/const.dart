@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 
 class NHConst {
@@ -44,29 +42,13 @@ class NHConst {
 
   static const Map<String, String> localeMap = {
     'en_': 'English',
-    'zh_CN': '简体中文'
+    'zh_CN': '简体中文',
   };
 
   static List<NhTag> internalNhTags = [
-    NhTag(
-      id: 6346,
-      name: 'japanese',
-      type: 'language',
-    ),
-    NhTag(
-      id: 12227,
-      name: 'english',
-      type: 'language',
-    ),
-    NhTag(
-      id: 29963,
-      name: 'chinese',
-      type: 'language',
-    ),
-    NhTag(
-      id: 17249,
-      name: 'translated',
-      type: 'language',
-    ),
+    NhTag(id: 6346, name: 'japanese', type: 'language'),
+    NhTag(id: 12227, name: 'english', type: 'language'),
+    NhTag(id: 29963, name: 'chinese', type: 'language'),
+    NhTag(id: 17249, name: 'translated', type: 'language'),
   ];
 }

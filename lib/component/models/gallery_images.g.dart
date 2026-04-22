@@ -6,9 +6,10 @@ part of 'gallery_images.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_GalleryImages _$$_GalleryImagesFromJson(Map<String, dynamic> json) =>
-    _$_GalleryImages(
-      pages: (json['pages'] as List<dynamic>?)
+_GalleryImages _$GalleryImagesFromJson(Map<String, dynamic> json) =>
+    _GalleryImages(
+      pages:
+          (json['pages'] as List<dynamic>?)
               ?.map((e) => GalleryImage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <GalleryImage>[],
@@ -20,7 +21,7 @@ _$_GalleryImages _$$_GalleryImagesFromJson(Map<String, dynamic> json) =>
           : GalleryImage.fromJson(json['thumbnail'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_GalleryImagesToJson(_$_GalleryImages instance) =>
+Map<String, dynamic> _$GalleryImagesToJson(_GalleryImages instance) =>
     <String, dynamic>{
       'pages': instance.pages.map((e) => e.toJson()).toList(),
       'cover': instance.cover.toJson(),

@@ -10,7 +10,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 class PreloadPhotoViewGallery extends StatefulWidget {
   /// Construct a gallery with static items through a list of [PhotoViewGalleryPageOptions].
   const PreloadPhotoViewGallery({
-    Key? key,
+    super.key,
     required this.pageOptions,
     this.loadingBuilder,
     this.backgroundDecoration,
@@ -26,15 +26,14 @@ class PreloadPhotoViewGallery extends StatefulWidget {
     this.customSize,
     this.allowImplicitScrolling = false,
     this.preloadPagesCount = 1,
-  })  : itemCount = null,
-        builder = null,
-        super(key: key);
+  }) : itemCount = null,
+       builder = null;
 
   /// Construct a gallery with dynamic items.
   ///
   /// The builder must return a [PhotoViewGalleryPageOptions].
   const PreloadPhotoViewGallery.builder({
-    Key? key,
+    super.key,
     required this.itemCount,
     required this.builder,
     this.loadingBuilder,
@@ -51,10 +50,9 @@ class PreloadPhotoViewGallery extends StatefulWidget {
     this.customSize,
     this.allowImplicitScrolling = false,
     this.preloadPagesCount = 1,
-  })  : pageOptions = null,
-        assert(itemCount != null),
-        assert(builder != null),
-        super(key: key);
+  }) : pageOptions = null,
+       assert(itemCount != null),
+       assert(builder != null);
 
   /// A list of options to describe the items in the gallery
   final List<PhotoViewGalleryPageOptions>? pageOptions;
@@ -212,13 +210,13 @@ class _PreloadPhotoViewGalleryState extends State<PreloadPhotoViewGallery> {
             errorBuilder: pageOption.errorBuilder,
           );
 
-    return ClipRect(
-      child: photoView,
-    );
+    return ClipRect(child: photoView);
   }
 
   PhotoViewGalleryPageOptions _buildPageOption(
-      BuildContext context, int index) {
+    BuildContext context,
+    int index,
+  ) {
     if (widget._isBuilder) {
       return widget.builder!(context, index);
     }

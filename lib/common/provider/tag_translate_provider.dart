@@ -96,31 +96,32 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
         final intro = (value['intro'] ?? '') as String;
         final links = (value['links'] ?? '') as String;
 
-        tagTranslates.add(TagTranslate(
+        tagTranslates.add(
+          TagTranslate(
             namespace: namespace,
             name: name as String,
             translateName: translateName,
             intro: intro,
-            links: links));
+            links: links,
+          ),
+        );
       });
     }
 
     // log len
     logger.d('tagTranslates len: ${tagTranslates.length}');
-    // await isarHelper.putAllTagTranslate(tagTranslates);
+    // await objectBoxHelper.putAllTagTranslate(tagTranslates);
 
     tagTranslates.chunked(chunkSize).forEach((element) async {
-      await isarHelper.putAllTagTranslate(element);
+      await objectBoxHelper.putAllTagTranslate(element);
     });
 
-    state = state.copyWith(
-      version: state.remoteVersion,
-    );
+    state = state.copyWith(version: state.remoteVersion);
     hiveHelper.setTagTranslateInfo(state);
   }
 
   Future<List?> _fetchLastVersionData({bool force = false}) async {
-    logger.v('_fetchData start');
+    logger.t('_fetchData start');
     if (state.remoteVersion == null ||
         (!force && state.remoteVersion == state.version) ||
         state.lastReleaseUrl == null) {
@@ -130,7 +131,7 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
     final gzFilePath = path.join(Global.appDocPath, 'db.raw.json.gz');
     await nhDownload(url: state.lastReleaseUrl!, savePath: gzFilePath);
     List<int> bytes = File(gzFilePath).readAsBytesSync();
-    List<int> data = GZipDecoder().decodeBytes(bytes);
+    List<int> data = const GZipDecoder().decodeBytes(bytes);
     final String dbJson = utf8.decode(data);
 
     final dataMap = jsonDecode(dbJson);
@@ -150,24 +151,27 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
       await transAndPutNhTag(nhTags);
     }
 
-    ref.refresh(allNhTagProvider);
+    ref.invalidate(allNhTagProvider);
   }
 
   Future<void> transAndPutNhTag(List<NhTag> tags) async {
     final List<Future<NhTag>> tagFutureList = tags.map((tag) async {
-      final TagTranslate? translated = await isarHelper.findTagTranslateAsync(
-          tag.name ?? '',
-          namespace: getTagNamespace(tag.type ?? ''));
+      final TagTranslate? translated = await objectBoxHelper
+          .findTagTranslateAsync(
+            tag.name ?? '',
+            namespace: getTagNamespace(tag.type ?? ''),
+          );
       return tag.copyWith(translateName: translated?.translateName);
     }).toList();
 
     // 每 [chunkSize] 分块
-    final List<List<Future<NhTag>>> chunked =
-        tagFutureList.chunked(chunkSize).toList();
+    final List<List<Future<NhTag>>> chunked = tagFutureList
+        .chunked(chunkSize)
+        .toList();
 
     for (final chunk in chunked) {
       final List<NhTag> tags = await Future.wait(chunk);
-      await isarHelper.putAllNhTag(tags);
+      await objectBoxHelper.putAllNhTag(tags);
     }
   }
 
@@ -184,12 +188,14 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
     final List<dynamic> list = dataMap as List<dynamic>;
     final List<NhTag> tags = [];
     for (final dynamic item in list) {
-      tags.add(NhTag(
-        id: item['id'] as int,
-        name: item['name'] as String,
-        count: item['count'] as int,
-        type: category.value,
-      ));
+      tags.add(
+        NhTag(
+          id: item['id'] as int,
+          name: item['name'] as String,
+          count: item['count'] as int,
+          type: category.value,
+        ),
+      );
     }
     return tags;
   }
@@ -197,11 +203,11 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
 
 final tagTranslateProvider =
     StateNotifierProvider<TagTranslateNotifier, TagTranslateInfo>((ref) {
-  return TagTranslateNotifier(ref);
-});
+      return TagTranslateNotifier(ref);
+    });
 
 final allNhTagProvider = FutureProvider<List<NhTag>>((ref) async {
   await 500.milliseconds.delay();
-  final nhTags = await isarHelper.getAllNhTag();
+  final nhTags = await objectBoxHelper.getAllNhTag();
   return nhTags;
 });

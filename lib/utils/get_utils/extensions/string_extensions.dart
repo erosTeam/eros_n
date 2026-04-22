@@ -1,4 +1,4 @@
-import '../get_utils/get_utils.dart';
+import 'package:eros_n/utils/get_utils/get_utils/get_utils.dart';
 
 extension GetStringUtils on String {
   bool get isNum => GetUtils.isNum(this);

@@ -1,8 +1,7 @@
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-
-import '../../utils/logger.dart';
 
 typedef AsyncValueChanged<T> = Future<void> Function(T value);
 
@@ -34,7 +33,7 @@ class _SortPopupButtonState extends State<SortPopupButton> {
       SearchSort.popular: L10n.of(context).popular,
     };
 
-    logger.v('loading $loading');
+    logger.t('loading $loading');
 
     final indicatorSize =
         (widget.iconSize ?? Theme.of(context).iconTheme.size ?? 24.0) * 0.8;
@@ -67,12 +66,8 @@ class _SortPopupButtonState extends State<SortPopupButton> {
       initialValue: widget.initValue,
       itemBuilder: (context) => sortMap.entries
           .map(
-            (e) => PopupMenuItem<SearchSort>(
-              value: e.key,
-              child: Text(
-                e.value,
-              ),
-            ),
+            (e) =>
+                PopupMenuItem<SearchSort>(value: e.key, child: Text(e.value)),
           )
           .toList(),
     );
@@ -142,9 +137,7 @@ class _LanguagesFilterPopupButtonState
           .map(
             (e) => PopupMenuItem<LanguagesFilter>(
               value: e.key,
-              child: Text(
-                e.value,
-              ),
+              child: Text(e.value),
             ),
           )
           .toList(),

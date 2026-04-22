@@ -31,17 +31,17 @@ class HistoryNotifier extends StateNotifier<ListViewState> {
       ..lastReadTime = DateTime.now().millisecondsSinceEpoch;
 
     historyGalleryNotifier.insertGallery(galleryHistory);
-    await isarHelper.addHistory(galleryHistory);
+    await objectBoxHelper.addHistory(galleryHistory);
   }
 
   Future<void> removeHistory(int? gid) async {
     historyGalleryNotifier.deleteGallerys(gid);
-    await isarHelper.removeHistory(gid);
+    await objectBoxHelper.removeHistory(gid);
   }
 
   void clearHistory() {
     historyGalleryNotifier.clearGallerys();
-    isarHelper.clearHistory();
+    objectBoxHelper.clearHistory();
   }
 }
 
@@ -72,8 +72,8 @@ class HistoryGalleryNotifier extends StateNotifier<List<GalleryHistory>> {
 
 final historyGallerysProvider =
     StateNotifierProvider<HistoryGalleryNotifier, List<GalleryHistory>>((ref) {
-  return HistoryGalleryNotifier(isarHelper.getAllHistory());
-});
+      return HistoryGalleryNotifier(objectBoxHelper.getAllHistory());
+    });
 
 final filteredHistoryGallerysProvider = Provider<List<GalleryHistory>>((ref) {
   final historyGallerys = ref.watch(historyGallerysProvider);
@@ -83,15 +83,16 @@ final filteredHistoryGallerysProvider = Provider<List<GalleryHistory>>((ref) {
   }
   return historyGallerys.where((GalleryHistory his) {
     return (his.title ?? '').toLowerCase().contains(searchKey.toLowerCase()) ||
-        (his.japaneseTitle ?? '')
-            .toLowerCase()
-            .contains(searchKey.toLowerCase());
+        (his.japaneseTitle ?? '').toLowerCase().contains(
+          searchKey.toLowerCase(),
+        );
   }).toList();
 });
 
 final searchKeyProvider = StateProvider<String>((ref) => '');
 
-final historyProvider =
-    StateNotifierProvider<HistoryNotifier, ListViewState>((ref) {
+final historyProvider = StateNotifierProvider<HistoryNotifier, ListViewState>((
+  ref,
+) {
   return HistoryNotifier(ref);
 });

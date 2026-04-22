@@ -14,12 +14,12 @@ const kCoverWidth = 120.0;
 
 class ItemListCard extends HookConsumerWidget {
   const ItemListCard({
-    Key? key,
+    super.key,
     required this.gallery,
     this.index,
     this.page,
     this.tabTag,
-  }) : super(key: key);
+  });
 
   final Gallery gallery;
   final int? index;
@@ -30,7 +30,8 @@ class ItemListCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
 
-    final aspectRatio = (gallery.images.thumbnail.imgWidth ?? 300) /
+    final aspectRatio =
+        (gallery.images.thumbnail.imgWidth ?? 300) /
         (gallery.images.thumbnail.imgHeight ?? 400);
 
     final isBoxFitCover = aspectRatio < 1.2 && aspectRatio > 1 / 2;
@@ -46,18 +47,21 @@ class ItemListCard extends HookConsumerWidget {
           clipBehavior: Clip.antiAlias,
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: Container(
-            foregroundDecoration: (gallery.languageCode == 'ja' ||
-                    gallery.languageCode == null)
+            foregroundDecoration:
+                (gallery.languageCode == 'ja' || gallery.languageCode == null)
                 ? null
                 : RotatedCornerDecoration.withColor(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.8),
                     badgeSize: const Size(38, 28),
                     badgePosition: BadgePosition.topStart,
                     textSpan: TextSpan(
                       text: gallery.languageCode?.toUpperCase() ?? '',
                       style: const TextStyle(
-                          fontSize: 10, fontWeight: FontWeight.bold),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
             child: Row(
@@ -72,9 +76,8 @@ class ItemListCard extends HookConsumerWidget {
                       width: gallery.images.thumbnail.imgWidth?.toDouble(),
                       fit: isBoxFitCover ? BoxFit.cover : BoxFit.contain,
                       // fit: BoxFit.contain,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
                     ),
                   ),
                 ),

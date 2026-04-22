@@ -1,17 +1,16 @@
 import 'dart:async' show Future, StreamController;
 import 'dart:ui' as ui show Codec;
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-
-import 'gallery_image_platform_interface.dart'
-    show ErrorListener, ImageRenderMethodForWeb;
-import 'gallery_image_platform_interface.dart'
+import 'package:eros_n/component/widget/gallery_image_provider/gallery_image_platform_interface.dart'
     if (dart.library.io) '_image_loader.dart'
     if (dart.library.html) 'package:cached_network_image_web/cached_network_image_web.dart'
     show ImageLoader;
-import 'multi_image_stream_completer.dart';
+import 'package:eros_n/component/widget/gallery_image_provider/gallery_image_platform_interface.dart'
+    show ErrorListener, ImageRenderMethodForWeb;
+import 'package:eros_n/component/widget/gallery_image_provider/multi_image_stream_completer.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 /// IO implementation of the CachedNetworkImageProvider; the ImageProvider to
 /// load network images using a cache.
@@ -61,53 +60,8 @@ class GalleryImageProvider extends ImageProvider<GalleryImageProvider> {
   final ImageRenderMethodForWeb imageRenderMethodForWeb;
 
   @override
-  Future<GalleryImageProvider> obtainKey(
-    ImageConfiguration configuration,
-  ) {
+  Future<GalleryImageProvider> obtainKey(ImageConfiguration configuration) {
     return SynchronousFuture<GalleryImageProvider>(this);
-  }
-
-  @Deprecated('loadBuffer is deprecated, use loadImage instead')
-  @override
-  ImageStreamCompleter loadBuffer(
-    GalleryImageProvider key,
-    DecoderBufferCallback decode,
-  ) {
-    final chunkEvents = StreamController<ImageChunkEvent>();
-    return MultiImageStreamCompleter(
-      codec: _loadBufferAsync(key, chunkEvents, decode),
-      chunkEvents: chunkEvents.stream,
-      scale: key.scale,
-      informationCollector: () sync* {
-        yield DiagnosticsProperty<ImageProvider>(
-          'Image provider: $this \n Image key: $key',
-          this,
-          style: DiagnosticsTreeStyle.errorProperty,
-        );
-      },
-    );
-  }
-
-  @Deprecated('_loadBufferAsync is deprecated, use _loadImageAsync instead')
-  Stream<ui.Codec> _loadBufferAsync(
-    GalleryImageProvider key,
-    StreamController<ImageChunkEvent> chunkEvents,
-    DecoderBufferCallback decode,
-  ) {
-    assert(key == this);
-    return ImageLoader().loadBufferAsync(
-      imagePageUrl,
-      cacheKey,
-      chunkEvents,
-      decode,
-      cacheManager ?? DefaultCacheManager(),
-      maxHeight,
-      maxWidth,
-      headers,
-      () => errorListener,
-      imageRenderMethodForWeb,
-      () => PaintingBinding.instance.imageCache.evict(key),
-    );
   }
 
   @override

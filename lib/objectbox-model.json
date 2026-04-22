@@ -1,0 +1,178 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:8148422562123602304",
+      "lastPropertyId": "10:7705130199042705259",
+      "name": "GalleryHistory",
+      "properties": [
+        {
+          "id": "1:7698275708904361871",
+          "name": "gid",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:2154694698420025041",
+          "name": "mediaId",
+          "type": 9
+        },
+        {
+          "id": "3:8365371974194161140",
+          "name": "csrfToken",
+          "type": 9
+        },
+        {
+          "id": "4:4898070901466572546",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "5:5374478938713432179",
+          "name": "japaneseTitle",
+          "type": 9
+        },
+        {
+          "id": "6:4049799484638807601",
+          "name": "url",
+          "type": 9
+        },
+        {
+          "id": "7:1030964036804902811",
+          "name": "thumbUrl",
+          "type": 9
+        },
+        {
+          "id": "8:5495483508217161989",
+          "name": "coverImgHeight",
+          "type": 6
+        },
+        {
+          "id": "9:5602857501507058751",
+          "name": "coverImgWidth",
+          "type": 6
+        },
+        {
+          "id": "10:7705130199042705259",
+          "name": "lastReadTime",
+          "indexId": "1:6591030224407181517",
+          "type": 6,
+          "flags": 8
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5347704772409439203",
+      "lastPropertyId": "6:7151685249640325339",
+      "name": "NhTag",
+      "properties": [
+        {
+          "id": "1:5812677314512905427",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:5044136010578704901",
+          "name": "type",
+          "indexId": "2:360083855985954000",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "3:6620928045959323518",
+          "name": "name",
+          "indexId": "3:6816027783753901673",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "4:6145422200010693371",
+          "name": "translateName",
+          "indexId": "4:3221120701071853860",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "5:3740966359783841500",
+          "name": "count",
+          "type": 6
+        },
+        {
+          "id": "6:7151685249640325339",
+          "name": "lastUseTime",
+          "indexId": "5:6250311997086369052",
+          "type": 6,
+          "flags": 8
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:4614819919768626068",
+      "lastPropertyId": "7:5935329526227981884",
+      "name": "TagTranslate",
+      "properties": [
+        {
+          "id": "1:4796013884339722270",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5709710560560102678",
+          "name": "namespace",
+          "indexId": "6:5273092115694794574",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "3:1803132018018336105",
+          "name": "name",
+          "indexId": "7:8423340687474749211",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "4:433530849273239227",
+          "name": "translateName",
+          "indexId": "8:6644567957832918634",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "5:1723847528773238890",
+          "name": "intro",
+          "type": 9
+        },
+        {
+          "id": "6:1013948185672778140",
+          "name": "links",
+          "type": 9
+        },
+        {
+          "id": "7:5935329526227981884",
+          "name": "lastUseTime",
+          "indexId": "9:6175019048317779675",
+          "type": 6,
+          "flags": 8
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:4614819919768626068",
+  "lastIndexId": "9:6175019048317779675",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

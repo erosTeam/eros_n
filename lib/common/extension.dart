@@ -16,16 +16,27 @@ extension ExtString on String {
   String get prettyTitle =>
       replaceAll(RegExp(r'(\[.*?\]|\(.*?\))|{.*?}'), '').trim();
 
-  String get processApi => replaceAllMapped(
-          RegExp(r'"id":\s*"(\d+)",'), (match) => '"id":${match.group(1)},')
-      .replaceAllMapped(RegExp(r'"media_id":\s+(\d+),'),
-          (match) => '"id": "${match.group(1)}",')
-      .replaceAllMapped(
-          RegExp(r'"w":\s*"(\d+)",'), (match) => '"w":${match.group(1)},')
-      .replaceAllMapped(
-          RegExp(r'"h":\s*"(\d+)",'), (match) => '"h":${match.group(1)},')
-      .replaceAllMapped(RegExp(r'"count":\s*"(\d+)",'),
-          (match) => '"count":${match.group(1)},');
+  String get processApi =>
+      replaceAllMapped(
+            RegExp(r'"id":\s*"(\d+)",'),
+            (match) => '"id":${match.group(1)},',
+          )
+          .replaceAllMapped(
+            RegExp(r'"media_id":\s+(\d+),'),
+            (match) => '"id": "${match.group(1)}",',
+          )
+          .replaceAllMapped(
+            RegExp(r'"w":\s*"(\d+)",'),
+            (match) => '"w":${match.group(1)},',
+          )
+          .replaceAllMapped(
+            RegExp(r'"h":\s*"(\d+)",'),
+            (match) => '"h":${match.group(1)},',
+          )
+          .replaceAllMapped(
+            RegExp(r'"count":\s*"(\d+)",'),
+            (match) => '"count":${match.group(1)},',
+          );
 }
 
 extension IterableExtensions<E> on Iterable<E> {
@@ -39,7 +50,9 @@ extension IterableExtensions<E> on Iterable<E> {
       final chunk = this.skip(skip).take(chunkSize);
       yield chunk.toList(growable: false);
       skip += chunkSize;
-      if (chunk.length < chunkSize) return;
+      if (chunk.length < chunkSize) {
+        return;
+      }
     }
   }
 }

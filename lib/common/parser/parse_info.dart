@@ -15,9 +15,5 @@ User? parseInfo(String html) {
   final href = hrefElem?.attributes['href'];
   final userId = RegExp(r'\d+').firstMatch(href ?? '')?.group(0);
 
-  return User(
-    userName: username,
-    userId: userId,
-    userUrl: href,
-  );
+  return User(userName: username, userId: userId, userUrl: href);
 }

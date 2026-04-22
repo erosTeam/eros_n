@@ -3,9 +3,9 @@ import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/list_view/item/item_grid_card.dart';
 import 'package:eros_n/pages/list_view/item/item_list_card.dart';
 import 'package:eros_n/pages/list_view/item/item_waterfall_flow_card.dart';
-import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -14,18 +14,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keframe/keframe.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
-import 'item/item_grid_card.dart';
-
 class GallerySliverList extends HookConsumerWidget {
   const GallerySliverList({
-    Key? key,
+    super.key,
     required this.gallerys,
     this.tabTag,
     this.lastComplete,
     this.keepPosition = false,
     this.maxPage = 1,
     this.currentPage = 1,
-  }) : super(key: key);
+  });
 
   final List<Gallery> gallerys;
   final String? tabTag;
@@ -67,7 +65,6 @@ class GallerySliverList extends HookConsumerWidget {
           currentPage: currentPage,
         );
       case ListModel.list:
-      default:
         return GalleryCardSliverListView(
           gallerys: gallerys,
           tabTag: tabTag,
@@ -82,14 +79,14 @@ class GallerySliverList extends HookConsumerWidget {
 
 class GalleryCardSliverGridView extends StatelessWidget {
   const GalleryCardSliverGridView({
-    Key? key,
+    super.key,
     required this.gallerys,
     this.tabTag,
     this.lastComplete,
     this.keepPosition = false,
     this.maxPage = 1,
     this.currentPage = 1,
-  }) : super(key: key);
+  });
 
   final List<Gallery> gallerys;
   final String? tabTag;
@@ -105,17 +102,14 @@ class GalleryCardSliverGridView extends StatelessWidget {
 
     if (index == gallerys.length - 1 && currentPage < maxPage) {
       // 加载完成最后一项的回调
-      SchedulerBinding.instance
-          .addPostFrameCallback((_) => lastComplete?.call());
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) => lastComplete?.call(),
+      );
     }
 
     final Gallery gallery = gallerys[index];
 
-    return ItemGridCard(
-      gallery: gallery,
-      index: index,
-      tabTag: tabTag,
-    );
+    return ItemGridCard(gallery: gallery, index: index, tabTag: tabTag);
   }
 
   @override
@@ -140,14 +134,14 @@ class GalleryCardSliverGridView extends StatelessWidget {
 
 class GalleryCardSliverListView extends StatelessWidget {
   const GalleryCardSliverListView({
-    Key? key,
+    super.key,
     required this.gallerys,
     this.tabTag,
     this.lastComplete,
     this.keepPosition = false,
     this.maxPage = 1,
     this.currentPage = 1,
-  }) : super(key: key);
+  });
 
   final List<Gallery> gallerys;
   final String? tabTag;
@@ -163,17 +157,14 @@ class GalleryCardSliverListView extends StatelessWidget {
 
     if (index == gallerys.length - 1 && currentPage < maxPage) {
       // 加载完成最后一项的回调
-      SchedulerBinding.instance
-          .addPostFrameCallback((_) => lastComplete?.call());
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) => lastComplete?.call(),
+      );
     }
 
     final Gallery gallery = gallerys[index];
 
-    return ItemListCard(
-      gallery: gallery,
-      index: index,
-      tabTag: tabTag,
-    );
+    return ItemListCard(gallery: gallery, index: index, tabTag: tabTag);
   }
 
   @override
@@ -193,7 +184,7 @@ class GalleryCardSliverListView extends StatelessWidget {
 
 class GalleryWaterfallFlowView extends StatelessWidget {
   const GalleryWaterfallFlowView({
-    Key? key,
+    super.key,
     required this.gallerys,
     this.tabTag,
     this.lastComplete,
@@ -201,7 +192,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     this.maxPage = 1,
     this.currentPage = 1,
     this.compact = false,
-  }) : super(key: key);
+  });
 
   final List<Gallery> gallerys;
   final String? tabTag;
@@ -218,8 +209,9 @@ class GalleryWaterfallFlowView extends StatelessWidget {
 
     if (index == gallerys.length - 1 && currentPage < maxPage) {
       // 加载完成最后一项的回调
-      SchedulerBinding.instance
-          .addPostFrameCallback((_) => lastComplete?.call());
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) => lastComplete?.call(),
+      );
     }
 
     final Gallery gallery = gallerys[index];
@@ -232,10 +224,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     );
 
     if (!GetPlatform.isDesktop) {
-      item = FrameSeparateWidget(
-        index: index,
-        child: item,
-      );
+      item = FrameSeparateWidget(index: index, child: item);
     }
 
     return item;
@@ -267,8 +256,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
 }
 
 class EndIndicator extends StatelessWidget {
-  const EndIndicator({Key? key, required this.loadStatus, this.loadDataMore})
-      : super(key: key);
+  const EndIndicator({super.key, required this.loadStatus, this.loadDataMore});
 
   final LoadStatus loadStatus;
   final VoidCallback? loadDataMore;
@@ -277,38 +265,33 @@ class EndIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.only(
-              top: 50, bottom: 100.0 + context.mediaQueryPadding.bottom),
-          child: () {
-            switch (loadStatus) {
-              case LoadStatus.none:
-              case LoadStatus.success:
-                return Container();
-              case LoadStatus.loadingMore:
-                return const CircularProgressIndicator();
-              case LoadStatus.error:
-                return GestureDetector(
-                  onTap: loadDataMore,
-                  child: Column(
-                    children: const <Widget>[
-                      Icon(
-                        Icons.error,
-                        size: 60,
-                      ),
-                      Text(
-                        'Load more fail',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              default:
-                return Container();
-            }
-          }()),
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(
+          top: 50,
+          bottom: 100.0 + context.mediaQueryPadding.bottom,
+        ),
+        child: () {
+          switch (loadStatus) {
+            case LoadStatus.none:
+            case LoadStatus.success:
+              return Container();
+            case LoadStatus.loadingMore:
+              return const CircularProgressIndicator();
+            case LoadStatus.error:
+              return GestureDetector(
+                onTap: loadDataMore,
+                child: const Column(
+                  children: <Widget>[
+                    Icon(Icons.error, size: 60),
+                    Text('Load more fail', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              );
+            default:
+              return Container();
+          }
+        }(),
+      ),
     );
   }
 }

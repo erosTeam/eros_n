@@ -12,20 +12,21 @@ Future<GallerySet> parseGalleryList(String html) async {
   final scriptElm = document.querySelector(selectorScript);
   final scriptText = scriptElm?.text ?? '';
 
-  final blacklistTags = RegExp(r'blacklisted_tags:\s+\[(.*)\],')
-          .firstMatch(scriptText)
-          ?.group(1) ??
+  final blacklistTags =
+      RegExp(
+        r'blacklisted_tags:\s+\[(.*)\],',
+      ).firstMatch(scriptText)?.group(1) ??
       '';
   final blacklistTagsList = blacklistTags
       .split(',')
       .map((e) => e.trim().replaceAll("'", ''))
       .toList();
-  logger.v('blacklistTagsList: $blacklistTagsList');
+  logger.t('blacklistTagsList: $blacklistTagsList');
 
   const usernameSelector = '.username';
   final usernameElm = document.querySelector(usernameSelector);
   final username = usernameElm?.text;
-  logger.v('username: $username');
+  logger.t('username: $username');
 
   const selectorPopular =
       '#content > div.container.index-container.index-popular';
@@ -52,22 +53,31 @@ Future<GallerySet> parseGalleryList(String html) async {
   final List<Element> favoriteGalleryElmList =
       favoriteListElm?.querySelectorAll(selectorFavoriteGallery) ?? [];
 
-  logger.v('favoriteGalleryElmList.len ${favoriteGalleryElmList.length}');
+  logger.t('favoriteGalleryElmList.len ${favoriteGalleryElmList.length}');
 
-  final maxPage = RegExp(r'\d+')
+  final maxPage =
+      RegExp(r'\d+')
           .firstMatch(
-              document.querySelector(selectorMaxPage)?.attributes['href'] ?? '')
+            document.querySelector(selectorMaxPage)?.attributes['href'] ?? '',
+          )
           ?.group(0) ??
       '1';
 
-  final galleryListFuture =
-      parseGalleryListElm(galleryElmList, blacklistTagsList);
-  final popularListFuture =
-      parseGalleryListElm(galleryElmListOfPopular, blacklistTagsList);
+  final galleryListFuture = parseGalleryListElm(
+    galleryElmList,
+    blacklistTagsList,
+  );
+  final popularListFuture = parseGalleryListElm(
+    galleryElmListOfPopular,
+    blacklistTagsList,
+  );
   final favoriteListFuture = parseGalleryListElm(favoriteGalleryElmList, []);
 
-  final result = await Future.wait(
-      [galleryListFuture, popularListFuture, favoriteListFuture]);
+  final result = await Future.wait([
+    galleryListFuture,
+    popularListFuture,
+    favoriteListFuture,
+  ]);
 
   final galleryList = result[0];
   final popularList = result[1];
@@ -84,7 +94,9 @@ Future<GallerySet> parseGalleryList(String html) async {
 }
 
 Future<List<Gallery>> parseGalleryListElm(
-    List<Element> galleryElmList, List<String> blacklistTagsList) async {
+  List<Element> galleryElmList,
+  List<String> blacklistTagsList,
+) async {
   final List<Gallery> galleryList = [];
   for (final Element elm in galleryElmList) {
     // logger.d('elm: ${elm.outerHtml}');
@@ -107,10 +119,11 @@ Future<List<Gallery>> parseGalleryListElm(
     final ext = RegExp(r'\.(\w+)$').firstMatch(thumbUrl)?.group(1) ?? '';
     final type = ext.substring(0, 1);
 
-    final dataTags =
-        (elm.attributes['data-tags'] ?? '').split(RegExp(r'\s+')).toList();
+    final dataTags = (elm.attributes['data-tags'] ?? '')
+        .split(RegExp(r'\s+'))
+        .toList();
     if (dataTags.any((e) => blacklistTagsList.contains(e))) {
-      logger.v('$gid $title is blacklisted');
+      logger.t('$gid $title is blacklisted');
       continue;
     }
 
@@ -145,9 +158,11 @@ Future<List<Tag>> getTags(List<String> dataTags) async {
   final List<Tag> tags = [];
   for (final String tag in dataTags) {
     final id = int.tryParse(tag) ?? 0;
-    final nhTag = isarHelper.findNhTag(id);
-    final translated = await isarHelper.findTagTranslateAsync(nhTag?.name ?? '',
-        namespace: getTagNamespace(nhTag?.type ?? ''));
+    final nhTag = objectBoxHelper.findNhTag(id);
+    final translated = await objectBoxHelper.findTagTranslateAsync(
+      nhTag?.name ?? '',
+      namespace: getTagNamespace(nhTag?.type ?? ''),
+    );
     final Tag t = Tag(
       id: id,
       name: nhTag?.name,

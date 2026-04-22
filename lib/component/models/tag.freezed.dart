@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,256 +9,296 @@ part of 'tag.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+/// @nodoc
+mixin _$Tag implements DiagnosticableTreeMixin {
 
-Tag _$TagFromJson(Map<String, dynamic> json) {
-  return _Tag.fromJson(json);
+ int? get id; String? get type; String? get name; String? get url; int? get count;@JsonKey(ignore: true) String? get translatedName;
+/// Create a copy of Tag
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TagCopyWith<Tag> get copyWith => _$TagCopyWithImpl<Tag>(this as Tag, _$identity);
+
+  /// Serializes this Tag to a JSON map.
+  Map<String, dynamic> toJson();
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'Tag'))
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('type', type))..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('url', url))..add(DiagnosticsProperty('count', count))..add(DiagnosticsProperty('translatedName', translatedName));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Tag&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.count, count) || other.count == count)&&(identical(other.translatedName, translatedName) || other.translatedName == translatedName));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,type,name,url,count,translatedName);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'Tag(id: $id, type: $type, name: $name, url: $url, count: $count, translatedName: $translatedName)';
+}
+
+
 }
 
 /// @nodoc
-mixin _$Tag {
-  int? get id => throw _privateConstructorUsedError;
-  String? get type => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
-  String? get url => throw _privateConstructorUsedError;
-  int? get count => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  String? get translatedName => throw _privateConstructorUsedError;
+abstract mixin class $TagCopyWith<$Res>  {
+  factory $TagCopyWith(Tag value, $Res Function(Tag) _then) = _$TagCopyWithImpl;
+@useResult
+$Res call({
+ int? id, String? type, String? name, String? url, int? count,@JsonKey(ignore: true) String? translatedName
+});
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TagCopyWith<Tag> get copyWith => throw _privateConstructorUsedError;
+
+
+
+}
+/// @nodoc
+class _$TagCopyWithImpl<$Res>
+    implements $TagCopyWith<$Res> {
+  _$TagCopyWithImpl(this._self, this._then);
+
+  final Tag _self;
+  final $Res Function(Tag) _then;
+
+/// Create a copy of Tag
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? type = freezed,Object? name = freezed,Object? url = freezed,Object? count = freezed,Object? translatedName = freezed,}) {
+  return _then(_self.copyWith(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String?,count: freezed == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int?,translatedName: freezed == translatedName ? _self.translatedName : translatedName // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class $TagCopyWith<$Res> {
-  factory $TagCopyWith(Tag value, $Res Function(Tag) then) =
-      _$TagCopyWithImpl<$Res, Tag>;
-  @useResult
-  $Res call(
-      {int? id,
-      String? type,
-      String? name,
-      String? url,
-      int? count,
-      @JsonKey(ignore: true) String? translatedName});
 }
 
-/// @nodoc
-class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
-  _$TagCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [Tag].
+extension TagPatterns on Tag {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = freezed,
-    Object? type = freezed,
-    Object? name = freezed,
-    Object? url = freezed,
-    Object? count = freezed,
-    Object? translatedName = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      url: freezed == url
-          ? _value.url
-          : url // ignore: cast_nullable_to_non_nullable
-              as String?,
-      count: freezed == count
-          ? _value.count
-          : count // ignore: cast_nullable_to_non_nullable
-              as int?,
-      translatedName: freezed == translatedName
-          ? _value.translatedName
-          : translatedName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Tag value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Tag() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Tag value)  $default,){
+final _that = this;
+switch (_that) {
+case _Tag():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Tag value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Tag() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(ignore: true)  String? translatedName)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Tag() when $default != null:
+return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.translatedName);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(ignore: true)  String? translatedName)  $default,) {final _that = this;
+switch (_that) {
+case _Tag():
+return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.translatedName);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(ignore: true)  String? translatedName)?  $default,) {final _that = this;
+switch (_that) {
+case _Tag() when $default != null:
+return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.translatedName);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
-  factory _$$_TagCopyWith(_$_Tag value, $Res Function(_$_Tag) then) =
-      __$$_TagCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {int? id,
-      String? type,
-      String? name,
-      String? url,
-      int? count,
-      @JsonKey(ignore: true) String? translatedName});
-}
-
-/// @nodoc
-class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
-    implements _$$_TagCopyWith<$Res> {
-  __$$_TagCopyWithImpl(_$_Tag _value, $Res Function(_$_Tag) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = freezed,
-    Object? type = freezed,
-    Object? name = freezed,
-    Object? url = freezed,
-    Object? count = freezed,
-    Object? translatedName = freezed,
-  }) {
-    return _then(_$_Tag(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      url: freezed == url
-          ? _value.url
-          : url // ignore: cast_nullable_to_non_nullable
-              as String?,
-      count: freezed == count
-          ? _value.count
-          : count // ignore: cast_nullable_to_non_nullable
-              as int?,
-      translatedName: freezed == translatedName
-          ? _value.translatedName
-          : translatedName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
 }
 
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_Tag with DiagnosticableTreeMixin implements _Tag {
-  const _$_Tag(
-      {this.id,
-      this.type,
-      this.name,
-      this.url,
-      this.count,
-      @JsonKey(ignore: true) this.translatedName});
+class _Tag with DiagnosticableTreeMixin implements Tag {
+  const _Tag({this.id, this.type, this.name, this.url, this.count, @JsonKey(ignore: true) this.translatedName});
+  factory _Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
-  factory _$_Tag.fromJson(Map<String, dynamic> json) => _$$_TagFromJson(json);
+@override final  int? id;
+@override final  String? type;
+@override final  String? name;
+@override final  String? url;
+@override final  int? count;
+@override@JsonKey(ignore: true) final  String? translatedName;
 
-  @override
-  final int? id;
-  @override
-  final String? type;
-  @override
-  final String? name;
-  @override
-  final String? url;
-  @override
-  final int? count;
-  @override
-  @JsonKey(ignore: true)
-  final String? translatedName;
+/// Create a copy of Tag
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TagCopyWith<_Tag> get copyWith => __$TagCopyWithImpl<_Tag>(this, _$identity);
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Tag(id: $id, type: $type, name: $name, url: $url, count: $count, translatedName: $translatedName)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'Tag'))
-      ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('type', type))
-      ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('url', url))
-      ..add(DiagnosticsProperty('count', count))
-      ..add(DiagnosticsProperty('translatedName', translatedName));
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_Tag &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.url, url) || other.url == url) &&
-            (identical(other.count, count) || other.count == count) &&
-            (identical(other.translatedName, translatedName) ||
-                other.translatedName == translatedName));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, type, name, url, count, translatedName);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_TagCopyWith<_$_Tag> get copyWith =>
-      __$$_TagCopyWithImpl<_$_Tag>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_TagToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$TagToJson(this, );
+}
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'Tag'))
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('type', type))..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('url', url))..add(DiagnosticsProperty('count', count))..add(DiagnosticsProperty('translatedName', translatedName));
 }
 
-abstract class _Tag implements Tag {
-  const factory _Tag(
-      {final int? id,
-      final String? type,
-      final String? name,
-      final String? url,
-      final int? count,
-      @JsonKey(ignore: true) final String? translatedName}) = _$_Tag;
-
-  factory _Tag.fromJson(Map<String, dynamic> json) = _$_Tag.fromJson;
-
-  @override
-  int? get id;
-  @override
-  String? get type;
-  @override
-  String? get name;
-  @override
-  String? get url;
-  @override
-  int? get count;
-  @override
-  @JsonKey(ignore: true)
-  String? get translatedName;
-  @override
-  @JsonKey(ignore: true)
-  _$$_TagCopyWith<_$_Tag> get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Tag&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.count, count) || other.count == count)&&(identical(other.translatedName, translatedName) || other.translatedName == translatedName));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,type,name,url,count,translatedName);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'Tag(id: $id, type: $type, name: $name, url: $url, count: $count, translatedName: $translatedName)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TagCopyWith<$Res> implements $TagCopyWith<$Res> {
+  factory _$TagCopyWith(_Tag value, $Res Function(_Tag) _then) = __$TagCopyWithImpl;
+@override @useResult
+$Res call({
+ int? id, String? type, String? name, String? url, int? count,@JsonKey(ignore: true) String? translatedName
+});
+
+
+
+
+}
+/// @nodoc
+class __$TagCopyWithImpl<$Res>
+    implements _$TagCopyWith<$Res> {
+  __$TagCopyWithImpl(this._self, this._then);
+
+  final _Tag _self;
+  final $Res Function(_Tag) _then;
+
+/// Create a copy of Tag
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? type = freezed,Object? name = freezed,Object? url = freezed,Object? count = freezed,Object? translatedName = freezed,}) {
+  return _then(_Tag(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String?,count: freezed == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int?,translatedName: freezed == translatedName ? _self.translatedName : translatedName // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

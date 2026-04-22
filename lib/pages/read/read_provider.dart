@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
@@ -8,22 +7,23 @@ import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_state.dart';
 import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:wakelock/wakelock.dart';
-
-import '../../utils/logger.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class ReadNotifier extends StateNotifier<ReadState> {
   ReadNotifier(super.state, this.ref)
-      : preloadPageController = PreloadPageController(
-            initialPage:
-                ref.read(galleryProvider(currentGalleryGid)).currentPageIndex,
-            keepPage: true);
+    : preloadPageController = PreloadPageController(
+        initialPage: ref
+            .read(galleryProvider(currentGalleryGid))
+            .currentPageIndex,
+        keepPage: true,
+      );
   final Ref ref;
 
   final PreloadPageController preloadPageController;
@@ -63,24 +63,30 @@ class ReadNotifier extends StateNotifier<ReadState> {
   void toPrev() {
     if (isPageView) {
       preloadPageController.previousPage(
-          duration: const Duration(milliseconds: 200), curve: Curves.ease);
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.ease,
+      );
     } else {
       itemScrollController.scrollTo(
-          index: max(0, currentPageIndex - 1),
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.ease);
+        index: max(0, currentPageIndex - 1),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.ease,
+      );
     }
   }
 
   Future<void> toNext() async {
     if (isPageView) {
       preloadPageController.nextPage(
-          duration: const Duration(milliseconds: 200), curve: Curves.ease);
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.ease,
+      );
     } else {
       itemScrollController.scrollTo(
-          index: min(totPageCount - 1, currentPageIndex + 1),
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.ease);
+        index: min(totPageCount - 1, currentPageIndex + 1),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.ease,
+      );
     }
   }
 
@@ -109,7 +115,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   Future<void> handOnTapCenter(BuildContext context) async {
-    logger.v('handOnTapCenter');
+    logger.t('handOnTapCenter');
 
     if (state.showAppBar) {
       hideAppBar();
@@ -123,14 +129,18 @@ class ReadNotifier extends StateNotifier<ReadState> {
 
   //
   void calculateBar(BuildContext context) {
-    final bottomBarHeight = (!context.isTablet ? kBottomBarHeight : 0) +
+    final bottomBarHeight =
+        (!context.isTablet ? kBottomBarHeight : 0) +
         kSliderBarHeight +
         (state.showThumbList ? kThumbListViewHeight : 0) +
         context.mediaQueryPadding.bottom;
 
-    offsetTopHide = -kTopBarHeight -
-        max(MediaQueryData.fromWindow(window).padding.top,
-            context.mediaQueryPadding.top);
+    offsetTopHide =
+        -kTopBarHeight -
+        max(
+          MediaQueryData.fromView(View.of(context)).padding.top,
+          context.mediaQueryPadding.top,
+        );
 
     state = state.copyWith(
       paddingBottom: context.mediaQueryPadding.bottom,
@@ -140,7 +150,8 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void resetBottomBarHeight(BuildContext context) {
-    final bottomBarHeight = (!context.isTablet ? kBottomBarHeight : 0) +
+    final bottomBarHeight =
+        (!context.isTablet ? kBottomBarHeight : 0) +
         kSliderBarHeight +
         (state.showThumbList ? kThumbListViewHeight : 0) +
         context.mediaQueryPadding.bottom;
@@ -170,21 +181,18 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void setFullscreen() {
-    final fullScreenReader =
-        ref.watch(settingsProvider.select((s) => s.fullScreenReader));
+    final fullScreenReader = ref.watch(
+      settingsProvider.select((s) => s.fullScreenReader),
+    );
     if (fullScreenReader) {
       400.milliseconds.delay(() {
-        SystemChrome.setEnabledSystemUIMode(
-          SystemUiMode.immersiveSticky,
-        );
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       });
     }
   }
 
   Future<void> unFullscreen() async {
-    await SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-    );
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     await 100.milliseconds.delay();
   }
 
@@ -206,16 +214,22 @@ class ReadNotifier extends StateNotifier<ReadState> {
       // item whose trailing edge in visible in the viewport.
       min = positions
           .where((ItemPosition position) => position.itemTrailingEdge > 0)
-          .reduce((ItemPosition min, ItemPosition position) =>
-              position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+          .reduce(
+            (ItemPosition min, ItemPosition position) =>
+                position.itemTrailingEdge < min.itemTrailingEdge
+                ? position
+                : min,
+          )
           .index;
       // Determine the last visible item by finding the item with the
       // greatest leading edge that is less than 1.  i.e. the last
       // item whose leading edge in visible in the viewport.
       max = positions
           .where((ItemPosition position) => position.itemLeadingEdge < 1)
-          .reduce((ItemPosition max, ItemPosition position) =>
-              position.itemLeadingEdge > max.itemLeadingEdge ? position : max)
+          .reduce(
+            (ItemPosition max, ItemPosition position) =>
+                position.itemLeadingEdge > max.itemLeadingEdge ? position : max,
+          )
           .index;
 
       tempIndex = (min + max) ~/ 2;
@@ -231,12 +245,14 @@ class ReadNotifier extends StateNotifier<ReadState> {
   StreamSubscription? _volumeKeyDownSubscription;
 
   void addVolumeKeydownListen() {
-    logger.v('addVolumeKeydownListen');
-    final volumeKeyTurnPage =
-        ref.read(settingsProvider.select((s) => s.volumeKeyTurnPage));
+    logger.t('addVolumeKeydownListen');
+    final volumeKeyTurnPage = ref.read(
+      settingsProvider.select((s) => s.volumeKeyTurnPage),
+    );
     if (volumeKeyTurnPage) {
-      _volumeKeyDownSubscription =
-          FlutterAndroidVolumeKeydown.stream.listen((event) {
+      _volumeKeyDownSubscription = FlutterAndroidVolumeKeydown.stream.listen((
+        event,
+      ) {
         if (event == HardwareButton.volume_down) {
           toNext();
         } else if (event == HardwareButton.volume_up) {
@@ -247,7 +263,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void closeVolumeKeydownListen() {
-    logger.v('closeVolumeKeydownListen');
+    logger.t('closeVolumeKeydownListen');
     _volumeKeyDownSubscription?.cancel();
   }
 
@@ -262,12 +278,12 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   void stopAutoRead() {
-    logger.v('stopAutoRead');
+    logger.t('stopAutoRead');
     state = state.copyWith(autoRead: false);
     _autoReadTimer?.cancel();
     _autoReadTimer = null;
 
-    Wakelock.disable();
+    WakelockPlus.disable();
   }
 
   void startAutoRead() {
@@ -275,24 +291,23 @@ class ReadNotifier extends StateNotifier<ReadState> {
     _autoReadTimer?.cancel();
     _autoReadTimer = null;
 
-    final autoReadInterval =
-        ref.read(settingsProvider.select((s) => s.autoReadInterval));
-    final autoReadDuration =
-        Duration(milliseconds: (autoReadInterval * 1000).round());
-
-    Wakelock.enable();
-
-    _autoReadTimer = Timer.periodic(
-      autoReadDuration,
-      (timer) async {
-        if (state.autoRead && mounted) {
-          // toNext();
-          waitAutoRead();
-        } else {
-          timer.cancel();
-        }
-      },
+    final autoReadInterval = ref.read(
+      settingsProvider.select((s) => s.autoReadInterval),
     );
+    final autoReadDuration = Duration(
+      milliseconds: (autoReadInterval * 1000).round(),
+    );
+
+    WakelockPlus.enable();
+
+    _autoReadTimer = Timer.periodic(autoReadDuration, (timer) async {
+      if (state.autoRead && mounted) {
+        // toNext();
+        waitAutoRead();
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
   Future<void> waitAutoRead() async {
@@ -302,7 +317,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
               .getCompleter(currentPageIndex)
               ?.isCompleted ??
           false) {
-        logger.v('waitAutoRead toNext');
+        logger.t('waitAutoRead toNext');
         toNext();
       } else {
         logger.d('waitAutoRead delay');
@@ -340,21 +355,23 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 }
 
-final readProvider =
-    StateNotifierProvider.autoDispose<ReadNotifier, ReadState>((ref) {
-  ref.onDispose(() {
-    logger.d('readProvider dispose');
-  });
+final readProvider = StateNotifierProvider.autoDispose<ReadNotifier, ReadState>(
+  (ref) {
+    ref.onDispose(() {
+      logger.d('readProvider dispose');
+    });
 
-  const bottomBarHeight =
-      kBottomBarHeight + kSliderBarHeight + kThumbListViewHeight;
+    const bottomBarHeight =
+        kBottomBarHeight + kSliderBarHeight + kThumbListViewHeight;
 
-  return ReadNotifier(
+    return ReadNotifier(
       const ReadState(
         showAppBar: false,
         bottomBarOffset: -bottomBarHeight,
         topBarOffset: -300,
         bottomBarHeight: bottomBarHeight,
       ),
-      ref);
-});
+      ref,
+    );
+  },
+);

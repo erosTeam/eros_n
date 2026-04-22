@@ -12,6 +12,8 @@ import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/gallery/gallery_provider.dart';
+import 'package:eros_n/pages/gallery/thumb_page.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
@@ -26,19 +28,12 @@ import 'package:nil/nil.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-import 'gallery_provider.dart';
-import 'thumb_page.dart';
 
 @RoutePage()
 class GalleryPage extends StatefulHookConsumerWidget {
-  const GalleryPage({
-    Key? key,
-    required this.gid,
-    this.heroTag,
-  }) : super(key: key);
+  const GalleryPage({super.key, required this.gid, this.heroTag});
 
   final int gid;
   final String? heroTag;
@@ -76,13 +71,16 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final useGalleryTint =
-        ref.watch(settingsProvider.select((s) => s.useGalleryTint));
-    final thumbUrl =
-        ref.watch(galleryProvider(widget.gid).select((g) => g.thumbUrl));
+    final useGalleryTint = ref.watch(
+      settingsProvider.select((s) => s.useGalleryTint),
+    );
+    final thumbUrl = ref.watch(
+      galleryProvider(widget.gid).select((g) => g.thumbUrl),
+    );
     if (useGalleryTint) {
-      final paletteGenerator =
-          ref.watch(paletteGeneratorProvider(thumbUrl ?? ''));
+      final paletteGenerator = ref.watch(
+        paletteGeneratorProvider(thumbUrl ?? ''),
+      );
       paletteGenerator.whenData((palette) {
         // logger.d(palette);
         final seedColor = getSeedColors(palette);
@@ -91,7 +89,7 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
         }
         final hslColor = HSLColor.fromColor(seedColor);
         final hsvColor = HSVColor.fromColor(seedColor);
-        logger.v('$seedColor, $hslColor, $hsvColor');
+        logger.t('$seedColor, $hslColor, $hsvColor');
         if (hsvColor.hue < 0.1) {
           return;
         }
@@ -113,10 +111,7 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
     }
 
     return AnimatedTheme(
-      data: ThemeData.from(
-        colorScheme: colorScheme,
-        useMaterial3: true,
-      ),
+      data: ThemeData.from(colorScheme: colorScheme, useMaterial3: true),
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeInOut,
       child: GalleryPageBody(gid: widget.gid, heroTag: widget.heroTag),
@@ -125,11 +120,7 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
 }
 
 class GalleryPageBody extends HookConsumerWidget {
-  const GalleryPageBody({
-    super.key,
-    required this.gid,
-    this.heroTag,
-  });
+  const GalleryPageBody({super.key, required this.gid, this.heroTag});
 
   final int gid;
   final String? heroTag;
@@ -137,13 +128,12 @@ class GalleryPageBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final gallery = ref.read(galleryProvider(gid));
-    // logger.v('build gallery $gid ${gallery.title}');
+    // logger.t('build gallery $gid ${gallery.title}');
 
     final thumbUrl = ref.watch(galleryProvider(gid).select((g) => g.thumbUrl));
     final title = ref.watch(galleryProvider(gid).select((g) => g.title));
     final url = ref.watch(galleryProvider(gid).select((g) => g.url));
     final images = ref.watch(galleryProvider(gid).select((g) => g.images));
-    final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
 
     final ScrollController scrollController = useScrollController();
     final ScrollController thumbScrollController = useScrollController();
@@ -152,8 +142,8 @@ class GalleryPageBody extends HookConsumerWidget {
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
-        backgroundColor: MaterialStateColor.resolveWith((states) {
-          if (states.contains(MaterialState.scrolledUnder)) {
+        backgroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.scrolledUnder)) {
             return Theme.of(context).colorScheme.surface;
           }
           return Colors.transparent;
@@ -186,13 +176,10 @@ class GalleryPageBody extends HookConsumerWidget {
             onPressed: () {
               final shareText = 'title:${title.englishTitle}\n$url';
               logger.d(shareText);
-              Share.share(shareText);
+              SharePlus.instance.share(ShareParams(text: shareText));
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
         ],
       ),
       floatingActionButton: ScrollingFab(
@@ -200,70 +187,74 @@ class GalleryPageBody extends HookConsumerWidget {
           RouteUtil.goRead(context, ref);
         },
         scrollController: scrollController,
-        label: Consumer(builder: (context, ref, child) {
-          final currentPageIndex =
-              ref.watch(galleryProvider(gid).select((g) => g.currentPageIndex));
-          final label = currentPageIndex == 0
-              ? L10n.of(context).read
-              : '${L10n.of(context).resume} ${currentPageIndex + 1}';
-          return Text(label);
-        }),
+        label: Consumer(
+          builder: (context, ref, child) {
+            final currentPageIndex = ref.watch(
+              galleryProvider(gid).select((g) => g.currentPageIndex),
+            );
+            final label = currentPageIndex == 0
+                ? L10n.of(context).read
+                : '${L10n.of(context).resume} ${currentPageIndex + 1}';
+            return Text(label);
+          },
+        ),
         icon: const Icon(Icons.play_arrow),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        final maxWidth = constraints.maxWidth;
-        final large = context.isTablet;
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final maxWidth = constraints.maxWidth;
+          final large = context.isTablet;
 
-        const kMinWidget = 386.0;
+          const kMinWidget = 386.0;
 
-        final widget =
-            maxWidth / 2 - kMinWidget > 50 ? kMinWidget : maxWidth / 2;
+          final widget = maxWidth / 2 - kMinWidget > 50
+              ? kMinWidget
+              : maxWidth / 2;
 
-        return Row(
-          children: [
-            AnimatedContainer(
-              width: large ? widget : maxWidth,
-              duration: const Duration(milliseconds: 400),
-              child: GalleryDetailBody(
-                gid: gid,
-                scrollController: scrollController,
-                title: title,
-                heroTag: heroTag,
-                thumbUrl: thumbUrl,
-                images: images,
-                backGround: _BackGround(thumbUrl: thumbUrl),
-                large: large,
-              ),
-            ),
-            if (large)
-              Expanded(
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      height: context.isTablet ? 420 : 460,
-                      child: _BackGround(thumbUrl: thumbUrl),
-                    ),
-                    SafeArea(
-                      bottom: false,
-                      child: ThumbBody(
-                        gid: gid,
-                        scrollController: thumbScrollController,
-                      ),
-                    ),
-                  ],
+          return Row(
+            children: [
+              AnimatedContainer(
+                width: large ? widget : maxWidth,
+                duration: const Duration(milliseconds: 400),
+                child: GalleryDetailBody(
+                  gid: gid,
+                  scrollController: scrollController,
+                  title: title,
+                  heroTag: heroTag,
+                  thumbUrl: thumbUrl,
+                  images: images,
+                  backGround: _BackGround(thumbUrl: thumbUrl),
+                  large: large,
                 ),
               ),
-          ],
-        );
-      }),
+              if (large)
+                Expanded(
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: context.isTablet ? 420 : 460,
+                        child: _BackGround(thumbUrl: thumbUrl),
+                      ),
+                      SafeArea(
+                        bottom: false,
+                        child: ThumbBody(
+                          gid: gid,
+                          scrollController: thumbScrollController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
 class _BackGround extends StatelessWidget {
-  const _BackGround({
-    required this.thumbUrl,
-  });
+  const _BackGround({required this.thumbUrl});
 
   final String? thumbUrl;
 
@@ -272,23 +263,22 @@ class _BackGround extends StatelessWidget {
     return ShaderMask(
       shaderCallback: (Rect bounds) {
         return LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              // Theme.of(context).canvasColor,
-              // Colors.black,
-              Colors.transparent,
-              Theme.of(context).canvasColor,
-              // Colors.white,
-            ]).createShader(
-          Rect.fromLTRB(0, 0, bounds.width, bounds.height - 0),
-        );
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            // Theme.of(context).canvasColor,
+            // Colors.black,
+            Colors.transparent,
+            Theme.of(context).canvasColor,
+            // Colors.white,
+          ],
+        ).createShader(Rect.fromLTRB(0, 0, bounds.width, bounds.height - 0));
       },
       blendMode: BlendMode.dstOut,
       child: ClipRect(
         child: BlurImage(
           sigma: 4,
-          color: Theme.of(context).canvasColor.withOpacity(0.5),
+          color: Theme.of(context).canvasColor.withValues(alpha: 0.5),
           child: thumbUrl != null
               ? ErosCachedNetworkImage(
                   imageUrl: thumbUrl,
@@ -374,8 +364,8 @@ class GalleryDetailBody extends HookConsumerWidget {
                                     margin: const EdgeInsets.all(0),
                                     clipBehavior: Clip.antiAlias,
                                     child: AspectRatio(
-                                      aspectRatio: (images.thumbnail.imgWidth ??
-                                              300) /
+                                      aspectRatio:
+                                          (images.thumbnail.imgWidth ?? 300) /
                                           (images.thumbnail.imgHeight ?? 400),
                                       child: thumbUrl == null
                                           ? nil
@@ -402,10 +392,7 @@ class GalleryDetailBody extends HookConsumerWidget {
             ),
           ),
           // ThumbsView(gid: gid),
-          DetailView(
-            gid: gid,
-            showThumbs: !large,
-          ),
+          DetailView(gid: gid, showThumbs: !large),
         ],
       ),
     );
@@ -413,11 +400,7 @@ class GalleryDetailBody extends HookConsumerWidget {
 }
 
 class HeadInfoView extends StatelessWidget {
-  const HeadInfoView({
-    super.key,
-    required this.gid,
-    required this.context,
-  });
+  const HeadInfoView({super.key, required this.gid, required this.context});
 
   final int gid;
   final BuildContext context;
@@ -433,8 +416,10 @@ class HeadInfoView extends StatelessWidget {
           // 副标题
           Consumer(
             builder: (context, ref, child) {
-              final japaneseTitle =
-                  ref.watch(galleryProvider(gid)).title.japaneseTitle;
+              final japaneseTitle = ref
+                  .watch(galleryProvider(gid))
+                  .title
+                  .japaneseTitle;
               return SelectableText(
                 japaneseTitle ?? '',
                 style: Theme.of(context).textTheme.bodySmall,
@@ -463,92 +448,106 @@ class HeadInfoView extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 4),
-                  Consumer(builder: (context, ref, child) {
-                    final numFavorites =
-                        ref.watch(galleryProvider(gid)).numFavorites;
-                    return Text(
-                      '${numFavorites ?? '··'}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                      textAlign: TextAlign.start,
-                    );
-                  }),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final numFavorites = ref
+                          .watch(galleryProvider(gid))
+                          .numFavorites;
+                      return Text(
+                        '${numFavorites ?? '··'}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                        textAlign: TextAlign.start,
+                      );
+                    },
+                  ),
                 ],
               ),
-              Consumer(builder: (context, ref, child) {
-                final uploadedDate =
-                    ref.watch(galleryProvider(gid)).uploadedDate;
-                final uploadedDateStr = uploadedDate != null
-                    ? DateFormat('yyyy-MM-dd').format(uploadedDate)
-                    : '··';
-                return Text(
-                  uploadedDateStr,
-                  style: Theme.of(context).textTheme.bodySmall,
-                  textAlign: TextAlign.start,
-                );
-              }),
+              Consumer(
+                builder: (context, ref, child) {
+                  final uploadedDate = ref
+                      .watch(galleryProvider(gid))
+                      .uploadedDate;
+                  final uploadedDateStr = uploadedDate != null
+                      ? DateFormat('yyyy-MM-dd').format(uploadedDate)
+                      : '··';
+                  return Text(
+                    uploadedDateStr,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.start,
+                  );
+                },
+              ),
             ],
           ),
           const SizedBox(height: 8),
           // 作者
           Expanded(
             child: SingleChildScrollView(
-              child: Consumer(builder: (context, ref, child) {
-                final isTagTranslate = ref.watch(
-                    settingsProvider.select((value) => value.isTagTranslate));
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final isTagTranslate = ref.watch(
+                    settingsProvider.select((value) => value.isTagTranslate),
+                  );
 
-                final artistTags = ref
-                    .watch(galleryProvider(gid))
-                    .tags
-                    .where((e) => e.type == 'Artists')
-                    .toList();
+                  final artistTags = ref
+                      .watch(galleryProvider(gid))
+                      .tags
+                      .where((e) => e.type == 'Artists')
+                      .toList();
 
-                final textStyle = Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: Theme.of(context).colorScheme.primary);
+                  final textStyle = Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary);
 
-                final artistTagsWidgets = artistTags
-                    .map((tag) => TextButton(
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 0),
-                          minimumSize: const Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                  final artistTagsWidgets = artistTags
+                      .map(
+                        (tag) => TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 0),
+                            minimumSize: const Size(0, 0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
                           ),
+                          onPressed: () {
+                            RouteUtil.goSearch(tag: tag);
+                          },
+                          child: isTagTranslate
+                              ? Text(
+                                  tag.translatedName ?? tag.name ?? '',
+                                  style: textStyle,
+                                )
+                              : Text(tag.name ?? '', style: textStyle),
                         ),
-                        onPressed: () {
-                          RouteUtil.goSearch(tag: tag);
-                        },
-                        child: isTagTranslate
-                            ? Text(
-                                tag.translatedName ?? tag.name ?? '',
-                                style: textStyle,
-                              )
-                            : Text(tag.name ?? '', style: textStyle)))
-                    .toList();
+                      )
+                      .toList();
 
-                // with separator
-                final artistTagsWidgetsWithSeparator = artistTagsWidgets
-                    .expand((element) => [
+                  // with separator
+                  final artistTagsWidgetsWithSeparator = artistTagsWidgets
+                      .expand(
+                        (element) => [
                           element,
-                          Text('/',
-                              style: Theme.of(context).textTheme.bodySmall)
-                        ])
-                    .toList();
+                          Text(
+                            '/',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      )
+                      .toList();
 
-                // remove last separator
-                if (artistTagsWidgetsWithSeparator.isNotEmpty) {
-                  artistTagsWidgetsWithSeparator.removeLast();
-                }
+                  // remove last separator
+                  if (artistTagsWidgetsWithSeparator.isNotEmpty) {
+                    artistTagsWidgetsWithSeparator.removeLast();
+                  }
 
-                return Wrap(
-                  spacing: 0,
-                  runSpacing: 0,
-                  runAlignment: WrapAlignment.center,
-                  children: artistTagsWidgetsWithSeparator,
-                );
-              }),
+                  return Wrap(
+                    spacing: 0,
+                    runSpacing: 0,
+                    runAlignment: WrapAlignment.center,
+                    children: artistTagsWidgetsWithSeparator,
+                  );
+                },
+              ),
             ),
           ),
 
@@ -560,220 +559,199 @@ class HeadInfoView extends StatelessWidget {
 }
 
 class DetailView extends HookConsumerWidget {
-  const DetailView({
-    Key? key,
-    required this.gid,
-    this.showThumbs = true,
-  }) : super(key: key);
+  const DetailView({super.key, required this.gid, this.showThumbs = true});
 
   final int gid;
   final bool showThumbs;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pageStatus =
-        ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
-    logger.v('DetailView build $pageStatus');
+    final pageStatus = ref.watch(
+      pageStateProvider(gid).select((state) => state.pageStatus),
+    );
+    logger.t('DetailView build $pageStatus');
     if (pageStatus == PageStatus.loading) {
       return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     } else {
       return SliverSafeArea(
         top: false,
         bottom: false,
-        sliver: MultiSliver(children: [
-          TagsView(gid: gid),
-          if (kDebugMode) PaletteGeneratorWidget(gid: gid),
-          if (showThumbs) const SizedBox(height: 8),
-          if (showThumbs) ThumbListView(gid: gid),
-          const SizedBox(height: 8),
-          MoreLikeListView(gid: gid),
-          const SizedBox(height: 8),
-          CommentsListView(gid: gid),
-          const SizedBox(height: 150),
-        ]),
+        sliver: MultiSliver(
+          children: [
+            TagsView(gid: gid),
+            if (kDebugMode) PaletteGeneratorWidget(gid: gid),
+            if (showThumbs) const SizedBox(height: 8),
+            if (showThumbs) ThumbListView(gid: gid),
+            const SizedBox(height: 8),
+            MoreLikeListView(gid: gid),
+            const SizedBox(height: 8),
+            CommentsListView(gid: gid),
+            const SizedBox(height: 150),
+          ],
+        ),
       );
     }
   }
 }
 
 class PaletteGeneratorWidget extends HookConsumerWidget {
-  const PaletteGeneratorWidget({
-    Key? key,
-    required this.gid,
-  }) : super(key: key);
+  const PaletteGeneratorWidget({super.key, required this.gid});
   final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final thumbUrl = ref.watch(galleryProvider(gid).select((g) => g.thumbUrl));
-    final paletteGenerator =
-        ref.watch(paletteGeneratorProvider(thumbUrl ?? ''));
-    return MultiSliver(children: [
-      ListTile(
-        title: const Text('PaletteGenerator (debug)'),
-        subtitle: SizedBox(
-          height: 100,
-          child: paletteGenerator.when(
+    final paletteGenerator = ref.watch(
+      paletteGeneratorProvider(thumbUrl ?? ''),
+    );
+    return MultiSliver(
+      children: [
+        ListTile(
+          title: const Text('PaletteGenerator (debug)'),
+          subtitle: SizedBox(
+            height: 100,
+            child: paletteGenerator.when(
               data: (pg) => Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: pg.dominantColor?.color,
-                              ),
-                            ),
-                            Text(
-                              'dm',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              '${pg.dominantColor?.population}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(color: pg.dominantColor?.color),
                         ),
-                      ),
-                      // vibrantColor
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: pg.vibrantColor?.color,
-                              ),
-                            ),
-                            Text(
-                              'vibrant',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              '${pg.vibrantColor?.population}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                        Text(
+                          'dm',
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
-                      ),
-                      // lightVibrantColor
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: pg.lightVibrantColor?.color,
-                              ),
-                            ),
-                            Text(
-                              'lightV',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              '${pg.lightVibrantColor?.population}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                        Text(
+                          '${pg.dominantColor?.population}',
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
-                      ),
-                      // darkVibrantColor
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: pg.darkVibrantColor?.color,
-                              ),
-                            ),
-                            Text(
-                              'darkV',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              '${pg.darkVibrantColor?.population}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      // mutedColor
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: pg.mutedColor?.color,
-                              ),
-                            ),
-                            Text(
-                              'muted',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              '${pg.mutedColor?.population}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      // lightMutedColor
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: pg.lightMutedColor?.color,
-                              ),
-                            ),
-                            Text(
-                              'lightM',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              '${pg.lightMutedColor?.population}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      // darkMutedColor
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: pg.darkMutedColor?.color,
-                              ),
-                            ),
-                            Text(
-                              'darkM',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Text(
-                              '${pg.darkMutedColor?.population}',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-              error: (_, __) => nil,
-              loading: () => nil),
+                  // vibrantColor
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(color: pg.vibrantColor?.color),
+                        ),
+                        Text(
+                          'vibrant',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${pg.vibrantColor?.population}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // lightVibrantColor
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(color: pg.lightVibrantColor?.color),
+                        ),
+                        Text(
+                          'lightV',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${pg.lightVibrantColor?.population}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // darkVibrantColor
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(color: pg.darkVibrantColor?.color),
+                        ),
+                        Text(
+                          'darkV',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${pg.darkVibrantColor?.population}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // mutedColor
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(child: Container(color: pg.mutedColor?.color)),
+                        Text(
+                          'muted',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${pg.mutedColor?.population}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // lightMutedColor
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(color: pg.lightMutedColor?.color),
+                        ),
+                        Text(
+                          'lightM',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${pg.lightMutedColor?.population}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // darkMutedColor
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(color: pg.darkMutedColor?.color),
+                        ),
+                        Text(
+                          'darkM',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${pg.darkMutedColor?.population}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              error: (_, _) => nil,
+              loading: () => nil,
+            ),
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
 
 class TagsView extends HookConsumerWidget {
-  const TagsView({
-    Key? key,
-    required this.gid,
-  }) : super(key: key);
+  const TagsView({super.key, required this.gid});
 
   final int gid;
 
@@ -814,10 +792,12 @@ class TagsView extends HookConsumerWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primaryContainer,
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onPrimaryContainer,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
+                  foregroundColor: Theme.of(
+                    context,
+                  ).colorScheme.onPrimaryContainer,
                   side: BorderSide(
                     color: Theme.of(context).colorScheme.primaryContainer,
                   ),
@@ -842,15 +822,20 @@ class TagsView extends HookConsumerWidget {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: Consumer(builder: (context, ref, child) {
-                        final isTagTranslate = ref.watch(settingsProvider
-                            .select((value) => value.isTagTranslate));
-                        return Text(
-                          isTagTranslate
-                              ? tag.translatedName ?? ''
-                              : tag.name ?? '',
-                        );
-                      }),
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final isTagTranslate = ref.watch(
+                            settingsProvider.select(
+                              (value) => value.isTagTranslate,
+                            ),
+                          );
+                          return Text(
+                            isTagTranslate
+                                ? tag.translatedName ?? ''
+                                : tag.name ?? '',
+                          );
+                        },
+                      ),
                       onPressed: () {
                         RouteUtil.goSearch(tag: tag);
                       },
@@ -888,36 +873,33 @@ String _getTagTypeTranslate(BuildContext context, String tagType) {
 }
 
 class ThumbListView extends HookConsumerWidget {
-  const ThumbListView({
-    Key? key,
-    required this.gid,
-  }) : super(key: key);
+  const ThumbListView({super.key, required this.gid});
 
   final int gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.v('ThumbListView build');
-    final pages = ref
-        .watch(galleryProvider(gid).select((gallery) => gallery.images.pages));
-    final mediaId =
-        ref.watch(galleryProvider(gid).select((gallery) => gallery.mediaId));
+    logger.t('ThumbListView build');
+    final pages = ref.watch(
+      galleryProvider(gid).select((gallery) => gallery.images.pages),
+    );
+    final mediaId = ref.watch(
+      galleryProvider(gid).select((gallery) => gallery.mediaId),
+    );
     return MultiSliver(
       children: [
         ListTile(
           title: Text(L10n.of(context).thumbs),
           trailing: Text(
             '${L10n.of(context).more} ${pages.length}',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           onTap: () {
-            erosRouter.push(ThumbRoute(
-              gid: gid,
-              colorScheme: Theme.of(context).colorScheme,
-            ));
+            erosRouter.push(
+              ThumbRoute(gid: gid, colorScheme: Theme.of(context).colorScheme),
+            );
           },
         ),
         SizedBox(
@@ -930,37 +912,33 @@ class ThumbListView extends HookConsumerWidget {
             itemBuilder: (context, index) {
               final GalleryImage image = pages[index];
               return Consumer(
-                  child: GestureDetector(
-                    onTap: () async {
-                      RouteUtil.goRead(context, ref, index: index);
-                    },
-                    child: Center(
-                      child: AspectRatio(
-                        aspectRatio: image.imgWidth! / image.imgHeight!,
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          child: Hero(
-                            tag: '${gid}_$index',
-                            child: mediaId == null
-                                ? nil
-                                : ErosCachedNetworkImage(
-                                    imageUrl:
-                                        'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
+                child: GestureDetector(
+                  onTap: () async {
+                    RouteUtil.goRead(context, ref, index: index);
+                  },
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: image.imgWidth! / image.imgHeight!,
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: Hero(
+                          tag: '${gid}_$index',
+                          child: mediaId == null
+                              ? nil
+                              : ErosCachedNetworkImage(
+                                  imageUrl:
+                                      'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                     ),
                   ),
-                  builder: (context, ref, child) {
-                    final currentIndex = ref.watch(galleryProvider(gid)
-                        .select((gallery) => gallery.currentPageIndex));
-                    return HeroMode(
-                      enabled: true,
-                      child: child!,
-                    );
-                  });
+                ),
+                builder: (context, ref, child) {
+                  return HeroMode(enabled: true, child: child!);
+                },
+              );
             },
           ),
         ),
@@ -970,10 +948,7 @@ class ThumbListView extends HookConsumerWidget {
 }
 
 class MoreLikeListView extends HookConsumerWidget {
-  const MoreLikeListView({
-    Key? key,
-    required this.gid,
-  }) : super(key: key);
+  const MoreLikeListView({super.key, required this.gid});
 
   final int gid;
 
@@ -993,7 +968,8 @@ class MoreLikeListView extends HookConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
               final likeGallery = moreLikeGallerys[index];
-              final aspectRatio = likeGallery.images.thumbnail.imgWidth! /
+              final aspectRatio =
+                  likeGallery.images.thumbnail.imgWidth! /
                   likeGallery.images.thumbnail.imgHeight!;
               return GestureDetector(
                 onTap: () {
@@ -1012,25 +988,27 @@ class MoreLikeListView extends HookConsumerWidget {
                               child: Container(
                                 foregroundDecoration:
                                     (likeGallery.languageCode == 'ja' ||
-                                            likeGallery.languageCode == null)
-                                        ? null
-                                        : RotatedCornerDecoration.withColor(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary
-                                                .withOpacity(0.8),
-                                      badgeSize: const Size(38, 28),
-                                            // geometry: const BadgeGeometry(
-                                            //     width: 38, height: 28),
-                                            textSpan: TextSpan(
-                                              text: likeGallery.languageCode
-                                                      ?.toUpperCase() ??
-                                                  '',
-                                              style: const TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
+                                        likeGallery.languageCode == null)
+                                    ? null
+                                    : RotatedCornerDecoration.withColor(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withValues(alpha: 0.8),
+                                        badgeSize: const Size(38, 28),
+                                        // geometry: const BadgeGeometry(
+                                        //     width: 38, height: 28),
+                                        textSpan: TextSpan(
+                                          text:
+                                              likeGallery.languageCode
+                                                  ?.toUpperCase() ??
+                                              '',
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
                                           ),
+                                        ),
+                                      ),
                                 child: ErosCachedNetworkImage(
                                   imageUrl: likeGallery.thumbUrl ?? '',
                                   fit: BoxFit.cover,
@@ -1046,7 +1024,7 @@ class MoreLikeListView extends HookConsumerWidget {
                       width: aspectRatio * 200,
                       child: Text(
                         likeGallery.title.englishTitle ?? '',
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
@@ -1064,10 +1042,7 @@ class MoreLikeListView extends HookConsumerWidget {
 }
 
 class CommentsListView extends HookConsumerWidget {
-  const CommentsListView({
-    Key? key,
-    required this.gid,
-  }) : super(key: key);
+  const CommentsListView({super.key, required this.gid});
 
   final int gid;
 
@@ -1081,16 +1056,17 @@ class CommentsListView extends HookConsumerWidget {
           title: Text(L10n.of(context).comments),
           trailing: Text(
             '${L10n.of(context).more} ${comments.length}',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           onTap: () {
-            erosRouter.push(CommentsRoute(
-              gid: gid,
-              colorScheme: Theme.of(context).colorScheme,
-            ));
+            erosRouter.push(
+              CommentsRoute(
+                gid: gid,
+                colorScheme: Theme.of(context).colorScheme,
+              ),
+            );
           },
         ),
         if (comments.isEmpty)
@@ -1106,18 +1082,23 @@ class CommentsListView extends HookConsumerWidget {
               itemBuilder: (context, index) {
                 final Comment comment = comments[index];
                 final date = DateTime.fromMillisecondsSinceEpoch(
-                    (comment.postDate ?? 0) * 1000);
-                final dateFormatted =
-                    DateFormat('yyyy-MM-dd HH:mm').format(date.toLocal());
+                  (comment.postDate ?? 0) * 1000,
+                );
+                final dateFormatted = DateFormat(
+                  'yyyy-MM-dd HH:mm',
+                ).format(date.toLocal());
                 return SizedBox(
                   width: 280,
                   child: Card(
                     clipBehavior: Clip.antiAlias,
                     child: InkWell(
                       onTap: () {
-                        erosRouter.push(CommentsRoute(
+                        erosRouter.push(
+                          CommentsRoute(
                             gid: gid,
-                            colorScheme: Theme.of(context).colorScheme));
+                            colorScheme: Theme.of(context).colorScheme,
+                          ),
+                        );
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -1128,16 +1109,21 @@ class CommentsListView extends HookConsumerWidget {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.surface,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surface,
                                     borderRadius: BorderRadius.circular(24),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
+                                        color: Colors.grey.withValues(
+                                          alpha: 0.2,
+                                        ),
                                         spreadRadius: 1,
                                         blurRadius: 7,
                                         offset: const Offset(
-                                            0, 2), // changes position of shadow
+                                          0,
+                                          2,
+                                        ), // changes position of shadow
                                       ),
                                     ],
                                   ),
@@ -1149,10 +1135,10 @@ class CommentsListView extends HookConsumerWidget {
                                         imageUrl:
                                             'https://i.${NHConst.baseHost}/${comment.poster?.avatarUrl ?? ''}',
                                         fit: BoxFit.cover,
-                                        placeholder: (_, __) => Container(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                        placeholder: (_, _) => Container(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
                                         ),
                                       ),
                                     ),
@@ -1162,8 +1148,9 @@ class CommentsListView extends HookConsumerWidget {
                                 Expanded(
                                   child: Text(
                                     comment.poster?.username ?? '',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleSmall,
                                     maxLines: 2,
                                   ),
                                 ),
@@ -1172,15 +1159,18 @@ class CommentsListView extends HookConsumerWidget {
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 12, right: 8, top: 12),
+                                  left: 12,
+                                  right: 8,
+                                  top: 12,
+                                ),
                                 child: Text(
                                   comment.commentText ?? '',
-                                  style: Theme.of(context).textTheme.bodyText2,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                   // textAlign: TextAlign.start,
                                   softWrap: true,
                                   maxLines: 4,
                                   overflow: TextOverflow.ellipsis,
-                                  textScaleFactor: 0.9,
+                                  textScaler: const TextScaler.linear(0.9),
                                 ),
                               ),
                             ),
@@ -1188,7 +1178,7 @@ class CommentsListView extends HookConsumerWidget {
                               padding: const EdgeInsets.only(left: 12),
                               child: Text(
                                 dateFormatted,
-                                style: Theme.of(context).textTheme.caption,
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ),
                           ],
@@ -1206,7 +1196,7 @@ class CommentsListView extends HookConsumerWidget {
 }
 
 class ToolBarView extends HookConsumerWidget {
-  const ToolBarView({Key? key, required this.gid}) : super(key: key);
+  const ToolBarView({super.key, required this.gid});
 
   final int gid;
 
@@ -1233,8 +1223,10 @@ class ToolBarView extends HookConsumerWidget {
             onPressed: () {},
           ),
           IconButton(
-            icon:
-                const Icon(Icons.energy_savings_leaf_outlined, size: iconSize),
+            icon: const Icon(
+              Icons.energy_savings_leaf_outlined,
+              size: iconSize,
+            ),
             color: Theme.of(context).colorScheme.primary,
             // color: Colors.green
             //     .harmonizeWith(Theme.of(context).colorScheme.primary),
@@ -1249,27 +1241,33 @@ class ToolBarView extends HookConsumerWidget {
                     late String savePath;
 
                     await nhDownload(
-                        url: '/g/${gallery.gid}/download',
-                        savePath: (Headers headers) {
-                          logger.d(headers);
-                          final contentDisposition =
-                              headers.value('content-disposition');
-                          final filename = contentDisposition
-                                  ?.split(RegExp(r"filename(=|\*=UTF-8'')"))
-                                  .last ??
-                              '';
-                          final fileNameDecode =
-                              Uri.decodeFull(filename).replaceAll('/', '_');
-                          logger.d(fileNameDecode);
-                          savePath = path.joinAll([
-                            Global.tempPath,
-                            'torrent',
-                            '${gallery.gid}',
-                            fileNameDecode
-                          ]);
-                          return savePath;
-                        });
-                    Share.shareFiles([savePath]);
+                      url: '/g/${gallery.gid}/download',
+                      savePath: (Headers headers) {
+                        logger.d(headers);
+                        final contentDisposition = headers.value(
+                          'content-disposition',
+                        );
+                        final filename =
+                            contentDisposition
+                                ?.split(RegExp(r"filename(=|\*=UTF-8'')"))
+                                .last ??
+                            '';
+                        final fileNameDecode = Uri.decodeFull(
+                          filename,
+                        ).replaceAll('/', '_');
+                        logger.d(fileNameDecode);
+                        savePath = path.joinAll([
+                          Global.tempPath,
+                          'torrent',
+                          '${gallery.gid}',
+                          fileNameDecode,
+                        ]);
+                        return savePath;
+                      },
+                    );
+                    SharePlus.instance.share(
+                      ShareParams(files: [XFile(savePath)]),
+                    );
                   }
                 : null,
           ),

@@ -31,13 +31,15 @@ class PopularNotifier extends GallerysNotifier {
   PopularNotifier() : super([]);
 }
 
-final gallerysProvider =
-    StateNotifierProvider<GallerysNotifier, List<Gallery>>((ref) {
-  return GallerysNotifier([]);
-});
+final gallerysProvider = StateNotifierProvider<GallerysNotifier, List<Gallery>>(
+  (ref) {
+    return GallerysNotifier([]);
+  },
+);
 
-final popularProvider =
-    StateNotifierProvider<PopularNotifier, List<Gallery>>((ref) {
+final popularProvider = StateNotifierProvider<PopularNotifier, List<Gallery>>((
+  ref,
+) {
   return PopularNotifier();
 });
 
@@ -66,11 +68,12 @@ class FrontNotifier extends StateNotifier<ListViewState> {
       return false;
     }
 
-    logger.v('page: $page, next: $next, prev: $prev, first: $first');
+    logger.t('page: $page, next: $next, prev: $prev, first: $first');
 
-    final rCookies =
-        await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    logger.v('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
+    final rCookies = await Global.cookieJar.loadForRequest(
+      Uri.parse(NHConst.baseUrl),
+    );
+    logger.t('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
 
     if (next) {
       if (state.curPage == state.maxPage) {
@@ -87,14 +90,13 @@ class FrontNotifier extends StateNotifier<ListViewState> {
 
     final toPage =
         page ?? (next ? state.curPage + 1 : (prev ? state.curPage - 1 : 1));
-    logger.v('toPage: $toPage');
+    logger.t('toPage: $toPage');
 
     try {
       if (page == 1 || refresh || first) {
-        getGalleryList(
-          refresh: refresh || next || prev,
-          page: page,
-        ).then((gallerySetPopular) {
+        getGalleryList(refresh: refresh || next || prev, page: page).then((
+          gallerySetPopular,
+        ) {
           final populars = gallerySetPopular.populars ?? [];
 
           popularNoti.clearGallerys();
@@ -172,7 +174,8 @@ class FrontNotifier extends StateNotifier<ListViewState> {
   }
 }
 
-final frontProvider =
-    StateNotifierProvider<FrontNotifier, ListViewState>((ref) {
+final frontProvider = StateNotifierProvider<FrontNotifier, ListViewState>((
+  ref,
+) {
   return FrontNotifier(ref);
 });

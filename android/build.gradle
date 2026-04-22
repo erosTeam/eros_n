@@ -1,29 +1,42 @@
-buildscript {
-    ext.kotlin_version = '1.7.10'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
+
+    // Patch for plugins that don't set namespace (required by AGP 8+)
+    subprojects {
+        afterEvaluate { project ->
+            if (project.hasProperty('android') && project.android.getClass().name.contains('LibraryExtension')) {
+                if (!project.android.namespace) {
+                    def manifest = new XmlParser().parse(project.android.sourceSets.main.manifest.srcFile)
+                    def packageName = manifest.@package
+                    if (packageName) {
+                        project.android.namespace packageName
+                    }
+                }
+            }
+
+            // Fix JVM-target mismatch: align Kotlin jvmTarget to the project's Java sourceCompatibility
+            project.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                if (project.hasProperty('android') && project.android.hasProperty('compileOptions')) {
+                    def javaSrc = project.android.compileOptions.sourceCompatibility
+                    if (javaSrc) {
+                        def jvmTarget = javaSrc.toString().replace('VERSION_', '').replace('_', '.').replace('1.17', '17')
+                        kotlinOptions.jvmTarget = jvmTarget
+                    }
+                }
+            }
+        }
+    }
 }
 
-rootProject.buildDir = '../build'
+rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(':app')
+    project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {

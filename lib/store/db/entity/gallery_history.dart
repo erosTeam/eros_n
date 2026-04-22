@@ -1,11 +1,22 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'gallery_history.g.dart';
-
-@Collection()
+@Entity()
 class GalleryHistory {
-  @Index(unique: true, replace: true)
-  Id gid = 0;
+  GalleryHistory({
+    this.gid = 0,
+    this.mediaId,
+    this.csrfToken,
+    this.title,
+    this.japaneseTitle,
+    this.url,
+    this.thumbUrl,
+    this.coverImgHeight,
+    this.coverImgWidth,
+    this.lastReadTime,
+  });
+  @Id(assignable: true)
+  int gid;
+
   String? mediaId;
   String? csrfToken;
   String? title;
@@ -14,6 +25,7 @@ class GalleryHistory {
   String? thumbUrl;
   int? coverImgHeight;
   int? coverImgWidth;
+
   @Index()
   int? lastReadTime;
 }

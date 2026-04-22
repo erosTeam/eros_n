@@ -8,12 +8,14 @@ class DioUserAgentInterceptor extends Interceptor {
   FutureOr<String?> Function(RequestOptions) getUserAgent;
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final ua = await getUserAgent(options);
-    if(ua != null) {
+    if (ua != null) {
       options.headers[HttpHeaders.userAgentHeader] = ua;
     }
     handler.next(options);
   }
-
 }

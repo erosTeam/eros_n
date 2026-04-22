@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
@@ -129,7 +127,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
   }
 }
 
-final settingsProvider =
-    StateNotifierProvider<SettingsNotifier, Settings>((ref) {
+final settingsProvider = StateNotifierProvider<SettingsNotifier, Settings>((
+  ref,
+) {
   return SettingsNotifier(hiveHelper.getSettings() ?? const Settings(), ref);
 });

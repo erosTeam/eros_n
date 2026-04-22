@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
+import 'package:eros_n/pages/nav/favorite/favorite_provider.dart';
+import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -11,14 +13,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keframe/keframe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-import '../index/index_provider.dart';
-import 'favorite_provider.dart';
-
 @RoutePage()
 class FavoritePage extends StatefulHookConsumerWidget {
-  const FavoritePage({
-    Key? key,
-  }) : super(key: key);
+  const FavoritePage({super.key});
 
   @override
   ConsumerState<FavoritePage> createState() => _FavoritePageState();
@@ -66,8 +63,9 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
 
   @override
   Widget build(BuildContext context) {
-    final isUserLoggedIn =
-        ref.watch(userProvider.select((user) => user.isLogin));
+    final isUserLoggedIn = ref.watch(
+      userProvider.select((user) => user.isLogin),
+    );
     super.build(context);
     return Scaffold(
       body: RefreshIndicator(
@@ -83,15 +81,13 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
               SliverAppBar(
                 title: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  child: Row(
-                    children: [
-                      Text(L10n.of(context).favorites),
-                    ],
-                  ),
+                  child: Row(children: [Text(L10n.of(context).favorites)]),
                   onTap: () {
-                    scrollController.animateTo(0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease);
+                    scrollController.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
                   },
                 ),
                 floating: true,
@@ -108,12 +104,12 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
                   sliver: MultiSliver(
                     children: [
                       const FavoriteListView(),
-                      Consumer(builder: (context, ref, _) {
-                        final state = ref.watch(favoriteProvider);
-                        return EndIndicator(
-                          loadStatus: state.status,
-                        );
-                      }),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final state = ref.watch(favoriteProvider);
+                          return EndIndicator(loadStatus: state.status);
+                        },
+                      ),
                     ],
                   ),
                 )
@@ -122,7 +118,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
                   child: Center(
                     child: Text(
                       L10n.of(context).please_login_first,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                 ),
@@ -138,20 +134,19 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
 }
 
 class FavoriteListView extends HookConsumerWidget {
-  const FavoriteListView({Key? key}) : super(key: key);
+  const FavoriteListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Gallery> galleryList = ref.watch(favoriteGallerysProvider);
     final state = ref.watch(favoriteProvider);
-    logger
-        .v('FavoriteListView build ,galleryList.length: ${galleryList.length}');
+    logger.t(
+      'FavoriteListView build ,galleryList.length: ${galleryList.length}',
+    );
 
     if (state.isLoading) {
       return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
     return GallerySliverList(

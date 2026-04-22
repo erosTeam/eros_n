@@ -1,19 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/receive_sharing_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
 import 'package:eros_n/pages/nav/history/history_view.dart';
+import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/pages/nav/more/more_view.dart';
 import 'package:eros_n/pages/nav/search/search_view.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../../utils/logger.dart';
-import 'index_provider.dart';
 
 @RoutePage()
 class IndexPage extends StatefulHookConsumerWidget {
@@ -62,8 +60,9 @@ class _IndexPageState extends ConsumerState<IndexPage> {
       bottomNavigationBar: AnimatedContainer(
         // height:
         //     state.hideNavigationBar ? 0 : 64 + context.mediaQueryPadding.bottom,
-        height:
-            state.hideNavigationBar ? 0 : 80 + context.mediaQueryPadding.bottom,
+        height: state.hideNavigationBar
+            ? 0
+            : 80 + context.mediaQueryPadding.bottom,
         duration: 300.milliseconds,
         curve: Curves.ease,
         child: NavigationBar(

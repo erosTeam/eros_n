@@ -3,12 +3,11 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../front/front_provider.dart';
 
 class FavoriteNotifier extends StateNotifier<ListViewState> {
   FavoriteNotifier(this.ref) : super(const ListViewState());
@@ -33,8 +32,9 @@ class FavoriteNotifier extends StateNotifier<ListViewState> {
       return false;
     }
 
-    final rCookies =
-        await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
+    final rCookies = await Global.cookieJar.loadForRequest(
+      Uri.parse(NHConst.baseUrl),
+    );
     logger.d('bf rCookies \n${rCookies.map((e) => e.toString()).join('\n')}');
 
     if (next) {
@@ -59,7 +59,7 @@ class FavoriteNotifier extends StateNotifier<ListViewState> {
         page: toPage,
       );
       final favorites = gallerySet.favorites ?? [];
-      logger.v('favorites.length ${favorites.length}');
+      logger.t('favorites.length ${favorites.length}');
 
       if (next) {
         favoriteGalleryNotifier.addGallerys(favorites);
@@ -118,10 +118,11 @@ class FavoriteGalleryNotifier extends GallerysNotifier {
 
 final favoriteGallerysProvider =
     StateNotifierProvider<FavoriteGalleryNotifier, List<Gallery>>((ref) {
-  return FavoriteGalleryNotifier();
-});
+      return FavoriteGalleryNotifier();
+    });
 
-final favoriteProvider =
-    StateNotifierProvider<FavoriteNotifier, ListViewState>((ref) {
-  return FavoriteNotifier(ref);
-});
+final favoriteProvider = StateNotifierProvider<FavoriteNotifier, ListViewState>(
+  (ref) {
+    return FavoriteNotifier(ref);
+  },
+);

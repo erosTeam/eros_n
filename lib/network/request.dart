@@ -8,18 +8,15 @@ import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/network/api.dart';
+import 'package:eros_n/network/app_dio/pdio.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 
-import '../utils/logger.dart';
-import 'api.dart';
-import 'app_dio/pdio.dart';
-
 Options getOptions({bool forceRefresh = false}) {
   final options = Api.cacheOption
-      .copyWith(
-        policy: forceRefresh ? CachePolicy.refreshForceCache : null,
-      )
+      .copyWith(policy: forceRefresh ? CachePolicy.refreshForceCache : null)
       .toOptions();
 
   return options;
@@ -40,21 +37,20 @@ Future<GallerySearch> searchGalleryByApi({
 
   const url = '/api/galleries/search';
   final params = <String, dynamic>{
-    if (page != null) 'page': page,
+    'page': ?page,
     if (sort != null) 'sort': sort.value,
     'query': query ?? '',
   };
 
-  final httpTransformer = HttpTransformerBuilder(
-    (response) {
-      logger.d('statusCode ${response.statusCode}');
-      final data = jsonEncode(response.data).processApi;
-      final result =
-          GallerySearch.fromJson(jsonDecode(data) as Map<String, dynamic>);
-      logger.v('result $result');
-      return DioHttpResponse<GallerySearch>.success(result);
-    },
-  );
+  final httpTransformer = HttpTransformerBuilder((response) {
+    logger.d('statusCode ${response.statusCode}');
+    final data = jsonEncode(response.data).processApi;
+    final result = GallerySearch.fromJson(
+      jsonDecode(data) as Map<String, dynamic>,
+    );
+    logger.t('result $result');
+    return DioHttpResponse<GallerySearch>.success(result);
+  });
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,
@@ -83,7 +79,7 @@ Future<GallerySet> searchGallery({
 
   const url = '/search/';
   final params = <String, dynamic>{
-    if (page != null) 'page': page,
+    'page': ?page,
     if (sort != null && sort.value.isNotEmpty) 'sort': sort.value,
     'q': query ?? '',
   };
@@ -91,14 +87,12 @@ Future<GallerySet> searchGallery({
   logger.d('searchGallery params $params');
 
   int? statusCode;
-  final httpTransformer = HttpTransformerBuilder(
-    (response) async {
-      logger.v('statusCode ${response.statusCode}');
-      statusCode = response.statusCode;
-      final list = await parseGalleryList(response.data as String);
-      return DioHttpResponse<GallerySet>.success(list);
-    },
-  );
+  final httpTransformer = HttpTransformerBuilder((response) async {
+    logger.t('statusCode ${response.statusCode}');
+    statusCode = response.statusCode;
+    final list = await parseGalleryList(response.data as String);
+    return DioHttpResponse<GallerySet>.success(list);
+  });
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,
@@ -128,20 +122,16 @@ Future<GallerySet> getGalleryList({
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final params = <String, dynamic>{
-    if (page != null) 'page': page,
-  };
+  final params = <String, dynamic>{'page': ?page};
 
   int? statusCode;
 
-  final httpTransformer = HttpTransformerBuilder(
-    (response) async {
-      logger.v('statusCode ${response.statusCode}');
-      statusCode = response.statusCode;
-      final list = await parseGalleryList(response.data as String);
-      return DioHttpResponse<GallerySet>.success(list);
-    },
-  );
+  final httpTransformer = HttpTransformerBuilder((response) async {
+    logger.t('statusCode ${response.statusCode}');
+    statusCode = response.statusCode;
+    final list = await parseGalleryList(response.data as String);
+    return DioHttpResponse<GallerySet>.success(list);
+  });
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     '/',
@@ -154,7 +144,7 @@ Future<GallerySet> getGalleryList({
   if (httpResponse.ok && httpResponse.data is GallerySet) {
     GallerySet data = httpResponse.data as GallerySet;
     if (statusCode == 304) {
-      logger.v('fromCache');
+      logger.t('fromCache');
       data = data.copyWith(fromCache: true);
     }
     return data;
@@ -172,20 +162,16 @@ Future<GallerySet> getFavoriteList({
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final params = <String, dynamic>{
-    if (page != null && page > 1) 'page': page,
-  };
+  final params = <String, dynamic>{if (page != null && page > 1) 'page': page};
 
   int? statusCode;
 
-  final httpTransformer = HttpTransformerBuilder(
-    (response) async {
-      logger.v('statusCode ${response.statusCode}');
-      statusCode = response.statusCode;
-      final list = await parseGalleryList(response.data as String);
-      return DioHttpResponse<GallerySet>.success(list);
-    },
-  );
+  final httpTransformer = HttpTransformerBuilder((response) async {
+    logger.t('statusCode ${response.statusCode}');
+    statusCode = response.statusCode;
+    final list = await parseGalleryList(response.data as String);
+    return DioHttpResponse<GallerySet>.success(list);
+  });
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     '/favorites/',
@@ -216,13 +202,11 @@ Future<Gallery> getGalleryDetail({
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,
-    httpTransformer: HttpTransformerBuilder(
-      (response) async {
-        logger.v('statusCode ${response.statusCode}');
-        final gallery = await parseGalleryDetail(response.data as String);
-        return DioHttpResponse<Gallery>.success(gallery);
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) async {
+      logger.t('statusCode ${response.statusCode}');
+      final gallery = await parseGalleryDetail(response.data as String);
+      return DioHttpResponse<Gallery>.success(gallery);
+    }),
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
   );
@@ -244,13 +228,11 @@ Future<GalleryImage> getGalleryImage({
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        logger.d('statusCode ${response.statusCode}');
-        final galleryThumb = parseGalleryImage(response.data as String);
-        return DioHttpResponse<GalleryImage>.success(galleryThumb);
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) {
+      logger.d('statusCode ${response.statusCode}');
+      final galleryThumb = parseGalleryImage(response.data as String);
+      return DioHttpResponse<GalleryImage>.success(galleryThumb);
+    }),
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
   );
@@ -276,19 +258,17 @@ Future<List<Comment>> getGalleryComments({
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
     url,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        final comments = <Comment>[];
-        if (response.data is List) {
-          for (final item in response.data as List) {
-            if (item is Map) {
-              comments.add(Comment.fromJson(item as Map<String, dynamic>));
-            }
+    httpTransformer: HttpTransformerBuilder((response) {
+      final comments = <Comment>[];
+      if (response.data is List) {
+        for (final item in response.data as List) {
+          if (item is Map) {
+            comments.add(Comment.fromJson(item as Map<String, dynamic>));
           }
         }
-        return DioHttpResponse<List<Comment>>.success(comments);
-      },
-    ),
+      }
+      return DioHttpResponse<List<Comment>>.success(comments);
+    }),
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
   );
@@ -304,22 +284,16 @@ Future<List<Comment>> getGalleryComments({
 Future<String?> getLoginToken() async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final params = <String, dynamic>{
-    'next': '/',
-  };
-
   DioHttpResponse httpResponse = await dioHttpClient.get(
     NHConst.loginUrl,
-    // queryParameters: params,
+    // queryParameters: {'next': '/'},
     options: getOptions(forceRefresh: true),
     // cancelToken: cancelToken,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        logger.d('statusCode ${response.statusCode}');
-        final token = parseLoginPage(response.data as String);
-        return DioHttpResponse<String>.success(token);
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) {
+      logger.d('statusCode ${response.statusCode}');
+      final token = parseLoginPage(response.data as String);
+      return DioHttpResponse<String>.success(token);
+    }),
   );
 
   if (httpResponse.ok && httpResponse.data is String) {
@@ -340,12 +314,10 @@ Future<User> getInfoFromIndex({
     NHConst.infoUrl,
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        final user = parseInfo(response.data as String);
-        return DioHttpResponse<User>.success(user);
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) {
+      final user = parseInfo(response.data as String);
+      return DioHttpResponse<User>.success(user);
+    }),
   );
 
   if (httpResponse.ok && httpResponse.data is User) {
@@ -367,12 +339,10 @@ Future<User> getInfoFromUserPage({
     url,
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        final user = parseUserPage(response.data as String);
-        return DioHttpResponse<User>.success(user);
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) {
+      final user = parseUserPage(response.data as String);
+      return DioHttpResponse<User>.success(user);
+    }),
   );
 
   if (httpResponse.ok && httpResponse.data is User) {
@@ -402,16 +372,15 @@ Future<Tuple2<bool?, int?>> setFavorite({
     options: getOptions(forceRefresh: refresh)
       ..headers = {'x-csrftoken': csrfToken},
     cancelToken: cancelToken,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        final result = response.data;
-        final favNums = result['num_favorites'] as List<dynamic>?;
-        final favNum = favNums?.first as int?;
-        final favorited = result['favorited'] as bool?;
-        return DioHttpResponse<Tuple2<bool?, int?>>.success(
-            Tuple2(favorited, favNum));
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) {
+      final result = response.data;
+      final favNums = result['num_favorites'] as List<dynamic>?;
+      final favNum = favNums?.first as int?;
+      final favorited = result['favorited'] as bool?;
+      return DioHttpResponse<Tuple2<bool?, int?>>.success(
+        Tuple2(favorited, favNum),
+      );
+    }),
   );
 
   if (httpResponse.ok && httpResponse.data is Tuple2<bool?, int?>) {
@@ -433,11 +402,7 @@ Future<bool> loginNhentai({
   final dataMap = <String, dynamic>{
     'username_or_email': username,
     'password': password,
-    'csrfmiddlewaretoken': csrfToken
-  };
-
-  final params = <String, dynamic>{
-    'next': '/',
+    'csrfmiddlewaretoken': csrfToken,
   };
 
   final dataForm = FormData.fromMap(dataMap);
@@ -449,17 +414,15 @@ Future<bool> loginNhentai({
     options: getOptions(forceRefresh: true)
       ..followRedirects = false
       ..validateStatus = (status) => status! < 500,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        logger.d('statusCode ${response.statusCode}');
-        logger.d('response ${response.headers}');
-        if (response.statusCode == 302) {
-          return DioHttpResponse<bool>.success(true);
-        } else {
-          return DioHttpResponse<bool>.success(false);
-        }
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) {
+      logger.d('statusCode ${response.statusCode}');
+      logger.d('response ${response.headers}');
+      if (response.statusCode == 302) {
+        return DioHttpResponse<bool>.success(true);
+      } else {
+        return DioHttpResponse<bool>.success(false);
+      }
+    }),
     cancelToken: cancelToken,
   );
 
@@ -487,9 +450,9 @@ Future<void> nhDownload({
   } else {
     downloadUrl = url;
   }
-  logger.v('downloadUrl $downloadUrl');
+  logger.t('downloadUrl $downloadUrl');
   try {
-    final response = await dioHttpClient.download(
+    await dioHttpClient.download(
       downloadUrl,
       savePath,
       deleteOnError: deleteOnError,
@@ -504,17 +467,19 @@ Future<void> nhDownload({
 
     // logger.d('response.runtimeType ${response.runtimeType}');
     // logger.d('response.statusCode ${response.headers}');
-  } on CancelException catch (e) {
+  } on CancelException {
     logger.d('cancel');
-  } on Exception catch (e) {
+  } on Exception {
     rethrow;
   }
 }
 
 Future<Map> getGithubApi(String url) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
-  DioHttpResponse httpResponse =
-      await dioHttpClient.get(url, options: getOptions(forceRefresh: true));
+  DioHttpResponse httpResponse = await dioHttpClient.get(
+    url,
+    options: getOptions(forceRefresh: true),
+  );
   if (httpResponse.ok && httpResponse.data is Map) {
     return httpResponse.data as Map;
   } else {
@@ -530,9 +495,7 @@ Future<Tuple2<bool, Comment?>> postComment({
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final dataMap = <String, dynamic>{
-    'body': comment,
-  };
+  final dataMap = <String, dynamic>{'body': comment};
 
   final url = '/api/gallery/$gid/comments/submit';
 
@@ -545,30 +508,29 @@ Future<Tuple2<bool, Comment?>> postComment({
       ..followRedirects = false
       ..headers = {'x-csrftoken': csrfToken}
       ..validateStatus = (status) => status! < 500,
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        logger.d('statusCode ${response.statusCode}');
-        logger.d('response ${response.data}');
-        final success = response.data['success'] as bool?;
-        final comment = response.data['comment'] as Map?;
-        final error = response.data['error'] as String?;
-        if (error != null) {
-          return DioHttpResponse<Tuple2<bool, Comment?>>.failure(
-            errorMsg: error,
-          );
-        }
+    httpTransformer: HttpTransformerBuilder((response) {
+      logger.d('statusCode ${response.statusCode}');
+      logger.d('response ${response.data}');
+      final success = response.data['success'] as bool?;
+      final comment = response.data['comment'] as Map?;
+      final error = response.data['error'] as String?;
+      if (error != null) {
+        return DioHttpResponse<Tuple2<bool, Comment?>>.failure(errorMsg: error);
+      }
 
-        if (success == true && comment != null) {
-          final Comment commentObj =
-              Comment.fromJson(comment as Map<String, dynamic>);
-          return DioHttpResponse<Tuple2<bool, Comment?>>.success(
-              Tuple2(true, commentObj));
-        } else {
-          return DioHttpResponse<Tuple2<bool, Comment?>>.success(
-              const Tuple2(false, null));
-        }
-      },
-    ),
+      if (success == true && comment != null) {
+        final Comment commentObj = Comment.fromJson(
+          comment as Map<String, dynamic>,
+        );
+        return DioHttpResponse<Tuple2<bool, Comment?>>.success(
+          Tuple2(true, commentObj),
+        );
+      } else {
+        return DioHttpResponse<Tuple2<bool, Comment?>>.success(
+          const Tuple2(false, null),
+        );
+      }
+    }),
     cancelToken: cancelToken,
   );
 
@@ -587,10 +549,7 @@ Future<List<Tag>> nhAutocomplete({
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final dataMap = <String, dynamic>{
-    'name': name,
-    'type': type?.value,
-  };
+  final dataMap = <String, dynamic>{'name': name, 'type': type?.value};
 
   const url = '/api/autocomplete';
   final dataForm = FormData.fromMap(dataMap);
@@ -599,17 +558,15 @@ Future<List<Tag>> nhAutocomplete({
     url,
     data: dataForm,
     options: getOptions(forceRefresh: true),
-    httpTransformer: HttpTransformerBuilder(
-      (response) {
-        logger.d('statusCode ${response.statusCode}');
-        logger.d('response ${response.data}');
-        final List<dynamic> tags = response.data['result'] as List<dynamic>;
-        final List<Tag> tagList = tags
-            .map((e) => Tag.fromJson(e as Map<String, dynamic>))
-            .toList(growable: false);
-        return DioHttpResponse<List<Tag>>.success(tagList);
-      },
-    ),
+    httpTransformer: HttpTransformerBuilder((response) {
+      logger.d('statusCode ${response.statusCode}');
+      logger.d('response ${response.data}');
+      final List<dynamic> tags = response.data['result'] as List<dynamic>;
+      final List<Tag> tagList = tags
+          .map((e) => Tag.fromJson(e as Map<String, dynamic>))
+          .toList(growable: false);
+      return DioHttpResponse<List<Tag>>.success(tagList);
+    }),
     cancelToken: cancelToken,
   );
 

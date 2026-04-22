@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:eros_n/network/app_dio/exception.dart';
+import 'package:eros_n/network/app_dio/http_transformer.dart';
 import 'package:eros_n/utils/logger.dart';
 
-import 'exception.dart';
-import 'http_transformer.dart';
-
 class DioHttpResponse<T> {
+  // ignore: unused_element
   DioHttpResponse._internal({this.ok = false});
 
   DioHttpResponse.success(this.data) {
@@ -49,7 +49,8 @@ FutureOr<DioHttpResponse> handleResponse(
   // token失效
   if (_isTokenTimeout(response.statusCode)) {
     return DioHttpResponse.failureFromError(
-        UnauthorisedException(message: '没有权限', code: response.statusCode));
+      UnauthorisedException(message: '没有权限', code: response.statusCode),
+    );
   }
   // 接口调用成功
   if ((validateStatus ?? _isRequestSuccess)(response.statusCode)) {
@@ -58,7 +59,9 @@ FutureOr<DioHttpResponse> handleResponse(
     // 接口调用失败
     logger.d('接口调用失败');
     return DioHttpResponse.failure(
-        errorMsg: response.statusMessage, errorCode: response.statusCode);
+      errorMsg: response.statusMessage,
+      errorCode: response.statusCode,
+    );
   }
 }
 
@@ -94,16 +97,27 @@ HttpException _parseException(Exception error, {dynamic data}) {
           switch (errCode) {
             case 400:
               return BadRequestException(
-                  message: '400', code: errCode, data: data);
+                message: '400',
+                code: errCode,
+                data: data,
+              );
             case 401:
               return UnauthorisedException(
-                  message: '401 Unauthorised', code: errCode);
+                message: '401 Unauthorised',
+                code: errCode,
+              );
             case 403:
               return BadRequestException(
-                  message: '403 Error', code: errCode, data: data);
+                message: '403 Error',
+                code: errCode,
+                data: data,
+              );
             case 404:
               return BadRequestException(
-                  message: '404 Not Found', code: errCode, data: data);
+                message: '404 Not Found',
+                code: errCode,
+                data: data,
+              );
             case 405:
               return BadRequestException(message: '405', code: errCode);
             case 500:

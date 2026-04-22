@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,225 +9,290 @@ part of 'tag_translate_info.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+/// @nodoc
+mixin _$TagTranslateInfo implements DiagnosticableTreeMixin {
 
-TagTranslateInfo _$TagTranslateInfoFromJson(Map<String, dynamic> json) {
-  return _TagTranslateInfo.fromJson(json);
+ String? get version; String? get remoteVersion; String? get lastReleaseUrl; String? get nhTagVersion;
+/// Create a copy of TagTranslateInfo
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TagTranslateInfoCopyWith<TagTranslateInfo> get copyWith => _$TagTranslateInfoCopyWithImpl<TagTranslateInfo>(this as TagTranslateInfo, _$identity);
+
+  /// Serializes this TagTranslateInfo to a JSON map.
+  Map<String, dynamic> toJson();
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'TagTranslateInfo'))
+    ..add(DiagnosticsProperty('version', version))..add(DiagnosticsProperty('remoteVersion', remoteVersion))..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))..add(DiagnosticsProperty('nhTagVersion', nhTagVersion));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagTranslateInfo&&(identical(other.version, version) || other.version == version)&&(identical(other.remoteVersion, remoteVersion) || other.remoteVersion == remoteVersion)&&(identical(other.lastReleaseUrl, lastReleaseUrl) || other.lastReleaseUrl == lastReleaseUrl)&&(identical(other.nhTagVersion, nhTagVersion) || other.nhTagVersion == nhTagVersion));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,version,remoteVersion,lastReleaseUrl,nhTagVersion);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion)';
+}
+
+
 }
 
 /// @nodoc
-mixin _$TagTranslateInfo {
-  String? get version => throw _privateConstructorUsedError;
-  String? get remoteVersion => throw _privateConstructorUsedError;
-  String? get lastReleaseUrl => throw _privateConstructorUsedError;
-  String? get nhTagVersion => throw _privateConstructorUsedError;
+abstract mixin class $TagTranslateInfoCopyWith<$Res>  {
+  factory $TagTranslateInfoCopyWith(TagTranslateInfo value, $Res Function(TagTranslateInfo) _then) = _$TagTranslateInfoCopyWithImpl;
+@useResult
+$Res call({
+ String? version, String? remoteVersion, String? lastReleaseUrl, String? nhTagVersion
+});
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TagTranslateInfoCopyWith<TagTranslateInfo> get copyWith =>
-      throw _privateConstructorUsedError;
+
+
+
 }
-
 /// @nodoc
-abstract class $TagTranslateInfoCopyWith<$Res> {
-  factory $TagTranslateInfoCopyWith(
-          TagTranslateInfo value, $Res Function(TagTranslateInfo) then) =
-      _$TagTranslateInfoCopyWithImpl<$Res, TagTranslateInfo>;
-  @useResult
-  $Res call(
-      {String? version,
-      String? remoteVersion,
-      String? lastReleaseUrl,
-      String? nhTagVersion});
-}
-
-/// @nodoc
-class _$TagTranslateInfoCopyWithImpl<$Res, $Val extends TagTranslateInfo>
+class _$TagTranslateInfoCopyWithImpl<$Res>
     implements $TagTranslateInfoCopyWith<$Res> {
-  _$TagTranslateInfoCopyWithImpl(this._value, this._then);
+  _$TagTranslateInfoCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TagTranslateInfo _self;
+  final $Res Function(TagTranslateInfo) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? version = freezed,
-    Object? remoteVersion = freezed,
-    Object? lastReleaseUrl = freezed,
-    Object? nhTagVersion = freezed,
-  }) {
-    return _then(_value.copyWith(
-      version: freezed == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String?,
-      remoteVersion: freezed == remoteVersion
-          ? _value.remoteVersion
-          : remoteVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lastReleaseUrl: freezed == lastReleaseUrl
-          ? _value.lastReleaseUrl
-          : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nhTagVersion: freezed == nhTagVersion
-          ? _value.nhTagVersion
-          : nhTagVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
+/// Create a copy of TagTranslateInfo
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? version = freezed,Object? remoteVersion = freezed,Object? lastReleaseUrl = freezed,Object? nhTagVersion = freezed,}) {
+  return _then(_self.copyWith(
+version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String?,remoteVersion: freezed == remoteVersion ? _self.remoteVersion : remoteVersion // ignore: cast_nullable_to_non_nullable
+as String?,lastReleaseUrl: freezed == lastReleaseUrl ? _self.lastReleaseUrl : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
+as String?,nhTagVersion: freezed == nhTagVersion ? _self.nhTagVersion : nhTagVersion // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$_TagTranslateInfoCopyWith<$Res>
-    implements $TagTranslateInfoCopyWith<$Res> {
-  factory _$$_TagTranslateInfoCopyWith(
-          _$_TagTranslateInfo value, $Res Function(_$_TagTranslateInfo) then) =
-      __$$_TagTranslateInfoCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String? version,
-      String? remoteVersion,
-      String? lastReleaseUrl,
-      String? nhTagVersion});
 }
 
-/// @nodoc
-class __$$_TagTranslateInfoCopyWithImpl<$Res>
-    extends _$TagTranslateInfoCopyWithImpl<$Res, _$_TagTranslateInfo>
-    implements _$$_TagTranslateInfoCopyWith<$Res> {
-  __$$_TagTranslateInfoCopyWithImpl(
-      _$_TagTranslateInfo _value, $Res Function(_$_TagTranslateInfo) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? version = freezed,
-    Object? remoteVersion = freezed,
-    Object? lastReleaseUrl = freezed,
-    Object? nhTagVersion = freezed,
-  }) {
-    return _then(_$_TagTranslateInfo(
-      version: freezed == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String?,
-      remoteVersion: freezed == remoteVersion
-          ? _value.remoteVersion
-          : remoteVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lastReleaseUrl: freezed == lastReleaseUrl
-          ? _value.lastReleaseUrl
-          : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nhTagVersion: freezed == nhTagVersion
-          ? _value.nhTagVersion
-          : nhTagVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [TagTranslateInfo].
+extension TagTranslateInfoPatterns on TagTranslateInfo {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TagTranslateInfo value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TagTranslateInfo() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TagTranslateInfo value)  $default,){
+final _that = this;
+switch (_that) {
+case _TagTranslateInfo():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TagTranslateInfo value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TagTranslateInfo() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TagTranslateInfo() when $default != null:
+return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion)  $default,) {final _that = this;
+switch (_that) {
+case _TagTranslateInfo():
+return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion)?  $default,) {final _that = this;
+switch (_that) {
+case _TagTranslateInfo() when $default != null:
+return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_TagTranslateInfo
-    with DiagnosticableTreeMixin
-    implements _TagTranslateInfo {
-  const _$_TagTranslateInfo(
-      {this.version,
-      this.remoteVersion,
-      this.lastReleaseUrl,
-      this.nhTagVersion});
+class _TagTranslateInfo with DiagnosticableTreeMixin implements TagTranslateInfo {
+  const _TagTranslateInfo({this.version, this.remoteVersion, this.lastReleaseUrl, this.nhTagVersion});
+  factory _TagTranslateInfo.fromJson(Map<String, dynamic> json) => _$TagTranslateInfoFromJson(json);
 
-  factory _$_TagTranslateInfo.fromJson(Map<String, dynamic> json) =>
-      _$$_TagTranslateInfoFromJson(json);
+@override final  String? version;
+@override final  String? remoteVersion;
+@override final  String? lastReleaseUrl;
+@override final  String? nhTagVersion;
 
-  @override
-  final String? version;
-  @override
-  final String? remoteVersion;
-  @override
-  final String? lastReleaseUrl;
-  @override
-  final String? nhTagVersion;
+/// Create a copy of TagTranslateInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TagTranslateInfoCopyWith<_TagTranslateInfo> get copyWith => __$TagTranslateInfoCopyWithImpl<_TagTranslateInfo>(this, _$identity);
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'TagTranslateInfo'))
-      ..add(DiagnosticsProperty('version', version))
-      ..add(DiagnosticsProperty('remoteVersion', remoteVersion))
-      ..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))
-      ..add(DiagnosticsProperty('nhTagVersion', nhTagVersion));
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_TagTranslateInfo &&
-            (identical(other.version, version) || other.version == version) &&
-            (identical(other.remoteVersion, remoteVersion) ||
-                other.remoteVersion == remoteVersion) &&
-            (identical(other.lastReleaseUrl, lastReleaseUrl) ||
-                other.lastReleaseUrl == lastReleaseUrl) &&
-            (identical(other.nhTagVersion, nhTagVersion) ||
-                other.nhTagVersion == nhTagVersion));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, version, remoteVersion, lastReleaseUrl, nhTagVersion);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_TagTranslateInfoCopyWith<_$_TagTranslateInfo> get copyWith =>
-      __$$_TagTranslateInfoCopyWithImpl<_$_TagTranslateInfo>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_TagTranslateInfoToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$TagTranslateInfoToJson(this, );
+}
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'TagTranslateInfo'))
+    ..add(DiagnosticsProperty('version', version))..add(DiagnosticsProperty('remoteVersion', remoteVersion))..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))..add(DiagnosticsProperty('nhTagVersion', nhTagVersion));
 }
 
-abstract class _TagTranslateInfo implements TagTranslateInfo {
-  const factory _TagTranslateInfo(
-      {final String? version,
-      final String? remoteVersion,
-      final String? lastReleaseUrl,
-      final String? nhTagVersion}) = _$_TagTranslateInfo;
-
-  factory _TagTranslateInfo.fromJson(Map<String, dynamic> json) =
-      _$_TagTranslateInfo.fromJson;
-
-  @override
-  String? get version;
-  @override
-  String? get remoteVersion;
-  @override
-  String? get lastReleaseUrl;
-  @override
-  String? get nhTagVersion;
-  @override
-  @JsonKey(ignore: true)
-  _$$_TagTranslateInfoCopyWith<_$_TagTranslateInfo> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagTranslateInfo&&(identical(other.version, version) || other.version == version)&&(identical(other.remoteVersion, remoteVersion) || other.remoteVersion == remoteVersion)&&(identical(other.lastReleaseUrl, lastReleaseUrl) || other.lastReleaseUrl == lastReleaseUrl)&&(identical(other.nhTagVersion, nhTagVersion) || other.nhTagVersion == nhTagVersion));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,version,remoteVersion,lastReleaseUrl,nhTagVersion);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TagTranslateInfoCopyWith<$Res> implements $TagTranslateInfoCopyWith<$Res> {
+  factory _$TagTranslateInfoCopyWith(_TagTranslateInfo value, $Res Function(_TagTranslateInfo) _then) = __$TagTranslateInfoCopyWithImpl;
+@override @useResult
+$Res call({
+ String? version, String? remoteVersion, String? lastReleaseUrl, String? nhTagVersion
+});
+
+
+
+
+}
+/// @nodoc
+class __$TagTranslateInfoCopyWithImpl<$Res>
+    implements _$TagTranslateInfoCopyWith<$Res> {
+  __$TagTranslateInfoCopyWithImpl(this._self, this._then);
+
+  final _TagTranslateInfo _self;
+  final $Res Function(_TagTranslateInfo) _then;
+
+/// Create a copy of TagTranslateInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? version = freezed,Object? remoteVersion = freezed,Object? lastReleaseUrl = freezed,Object? nhTagVersion = freezed,}) {
+  return _then(_TagTranslateInfo(
+version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String?,remoteVersion: freezed == remoteVersion ? _self.remoteVersion : remoteVersion // ignore: cast_nullable_to_non_nullable
+as String?,lastReleaseUrl: freezed == lastReleaseUrl ? _self.lastReleaseUrl : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
+as String?,nhTagVersion: freezed == nhTagVersion ? _self.nhTagVersion : nhTagVersion // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

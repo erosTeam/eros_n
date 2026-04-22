@@ -3,16 +3,14 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
+import 'package:eros_n/pages/gallery/gallery_page_state.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
-import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
 import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tuple/tuple.dart';
-
-import 'gallery_page_state.dart';
 
 class GalleryNotifier extends StateNotifier<Gallery> {
   GalleryNotifier(super.state, this.ref);
@@ -42,12 +40,11 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   void initFromGid(int gid) {
     logger.d('init $gid');
 
-    state = state.copyWith(
-      gid: gid,
-    );
+    state = state.copyWith(gid: gid);
 
-    loadData()
-        .then((value) => ref.read(historyProvider.notifier).addHistory(state));
+    loadData().then(
+      (value) => ref.read(historyProvider.notifier).addHistory(state),
+    );
   }
 
   void setInitialPage(int page) {
@@ -66,16 +63,13 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     logger.d('url ${state.url}');
     // 获取画廊数据
     try {
-      final gallery = await getGalleryDetail(
-        url: state.url,
-        refresh: refresh,
-      );
+      final gallery = await getGalleryDetail(url: state.url, refresh: refresh);
       state = gallery.copyWith(
         mediaId: gallery.mediaId ?? state.mediaId,
         currentPageIndex: state.currentPageIndex,
         gid: state.gid,
       );
-    } on HttpException catch (e) {
+    } on HttpException {
       rethrow;
     } finally {
       ref
@@ -91,7 +85,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
         refresh: refresh,
       );
       state = state.copyWith(comments: comments);
-    } on HttpException catch (e) {
+    } on HttpException {
       rethrow;
     } finally {
       ref
@@ -112,10 +106,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       );
     } else {
       logger.d('收藏');
-      result = await setFavorite(
-        gid: state.gid,
-        csrfToken: state.csrfToken,
-      );
+      result = await setFavorite(gid: state.gid, csrfToken: state.csrfToken);
     }
     final int? numFavorite = result.item2;
     final bool? isFavorite = result.item1;
@@ -134,9 +125,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   }
 
   void onPageChanged(int index) {
-    state = state.copyWith(
-      currentPageIndex: index,
-    );
+    state = state.copyWith(currentPageIndex: index);
   }
 
   /// 评论
@@ -154,43 +143,38 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     final Comment? commentData = result.item2;
     if (success) {
       commentEditingController.clear();
-      state = state.copyWith(
-        comments: [
-          commentData!,
-          ...state.comments,
-        ],
-      );
+      state = state.copyWith(comments: [commentData!, ...state.comments]);
       loadData(refresh: true);
     }
   }
 }
 
-final galleryProvider =
-    StateNotifierProvider.autoDispose.family<GalleryNotifier, Gallery, int>(
-  (ref, gid) {
-    logger.d('galleryProvider gid $gid');
+final galleryProvider = StateNotifierProvider.autoDispose
+    .family<GalleryNotifier, Gallery, int>((ref, gid) {
+      logger.d('galleryProvider gid $gid');
 
-    ref.onDispose(() {
-      logger.d('galleryProvider $gid onDispose');
+      ref.onDispose(() {
+        logger.d('galleryProvider $gid onDispose');
+      });
+      return GalleryNotifier(Gallery(gid: gid), ref);
     });
-    return GalleryNotifier(Gallery(gid: gid), ref);
-  },
-);
 
-final pageStateProvider =
-    StateProvider.family<GalleryViewState, int>((ref, gid) {
+final pageStateProvider = StateProvider.family<GalleryViewState, int>((
+  ref,
+  gid,
+) {
   return const GalleryViewState(pageStatus: PageStatus.none);
 });
 
 final _gidList = <int>[];
 void pushGalleryPage(int gid) {
   _gidList.add(gid);
-  logger.v('pushGalleryPage $_gidList');
+  logger.t('pushGalleryPage $_gidList');
 }
 
 void popGalleryPage() {
   _gidList.removeLast();
-  logger.v('popGalleryPage $_gidList');
+  logger.t('popGalleryPage $_gidList');
 }
 
 int get currentGalleryGid {
@@ -198,9 +182,8 @@ int get currentGalleryGid {
 }
 
 String getGalleryImageUrl(String imageKey, int index, String ext) {
-  final subDomain = radomList(['', '3', '5', '7']);
   return 'https://i.nhentai.net/galleries/$imageKey/${index + 1}.$ext';
-  // return 'https://i$subDomain.nhentai.net/galleries/$imageKey/${index + 1}.jpg';
+  // return 'https://i${radomList(['', '3', '5', '7'])}.nhentai.net/galleries/$imageKey/${index + 1}.jpg';
 }
 
 final thumbHeroTagPrefixProvider = StateProvider<String>((ref) {

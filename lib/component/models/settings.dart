@@ -7,7 +7,7 @@ part 'settings.freezed.dart';
 part 'settings.g.dart';
 
 @freezed
-class Settings with _$Settings {
+abstract class Settings with _$Settings {
   const factory Settings({
     @Default(false) bool isCoverBlur,
     @Default(false) bool isTagTranslate,
@@ -38,7 +38,7 @@ class Settings with _$Settings {
   factory Settings.fromJson(Map<String, Object?> json) =>
       _$SettingsFromJson(json);
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool get readModelPageView =>
       readModel == ReadModel.leftToRight ||
       readModel == ReadModel.rightToLeft ||

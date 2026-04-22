@@ -8,14 +8,12 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:eros_n/common/global.dart';
-
+import 'package:eros_n/network/app_dio/dio_user_agent.dart';
+import 'package:eros_n/network/app_dio/http_config.dart';
+import 'package:eros_n/network/app_dio/proxy.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:system_network_proxy/system_network_proxy.dart';
 import 'package:system_proxy/system_proxy.dart';
-
-import 'dio_user_agent.dart';
-import 'http_config.dart';
-import 'proxy.dart';
 
 export 'http_config.dart';
 
@@ -43,10 +41,10 @@ class AppDio with DioMixin implements Dio {
     );
     this.options = options;
 
-    logger.v('dioConfig ${dioConfig?.toString()}');
+    logger.t('dioConfig ${dioConfig?.toString()}');
 
     if (dioConfig?.userAgent?.isNotEmpty ?? false) {
-      logger.v('set userAgent from dioConfig');
+      logger.t('set userAgent from dioConfig');
       this.options.headers['User-Agent'] = dioConfig?.userAgent;
     }
 
@@ -92,8 +90,11 @@ class AppDio with DioMixin implements Dio {
 
     // Cookie管理
     if (dioConfig?.cookiesPath?.isNotEmpty ?? false) {
-      interceptors.add(CookieManager(
-          PersistCookieJar(storage: FileStorage(dioConfig!.cookiesPath))));
+      interceptors.add(
+        CookieManager(
+          PersistCookieJar(storage: FileStorage(dioConfig!.cookiesPath)),
+        ),
+      );
     } else {
       interceptors.add(CookieManager(Global.cookieJar));
     }
@@ -115,9 +116,7 @@ class AppDio with DioMixin implements Dio {
       interceptors.addAll(interceptors);
     }
 
-    httpClientAdapter = AppHttpAdapter(
-      proxy: dioConfig?.proxy ?? '',
-    );
+    httpClientAdapter = AppHttpAdapter(proxy: dioConfig?.proxy ?? '');
 
     // httpClientAdapter = IOHttpClientAdapter();
 
@@ -162,7 +161,7 @@ class AppDio with DioMixin implements Dio {
       SystemNetworkProxy.init();
       final proxyEnable = await SystemNetworkProxy.getProxyEnable();
       final proxyServer = await SystemNetworkProxy.getProxyServer();
-      print('proxyEnable: $proxyEnable; proxyServer: $proxyServer');
+      logger.d('proxyEnable: $proxyEnable; proxyServer: $proxyServer');
       if (proxyEnable && proxyServer.isNotEmpty) {
         return 'PROXY $proxyServer';
       }
@@ -182,12 +181,14 @@ class AppDio with DioMixin implements Dio {
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     bool deleteOnError = true,
+    FileAccessMode fileAccessMode = FileAccessMode.write,
     String lengthHeader = Headers.contentLengthHeader,
     Object? data,
     Options? options,
   }) async {
     // We set the `responseType` to [ResponseType.STREAM] to retrieve the
     // response stream.
+    // ignore: invalid_use_of_internal_member
     options ??= DioMixin.checkOptions('GET', options);
 
     // Receive data with stream.
@@ -279,23 +280,27 @@ class AppDio with DioMixin implements Dio {
       (data) {
         subscription.pause();
         // Write file asynchronously
-        asyncWrite = raf.writeFrom(data).then((result) {
-          // Notify progress
-          received += data.length;
-          onReceiveProgress?.call(received, total);
-          raf = result;
-          if (cancelToken == null || !cancelToken.isCancelled) {
-            subscription.resume();
-          }
-        }).catchError((Object e) async {
-          try {
-            await subscription.cancel();
-          } finally {
-            completer.completeError(
-              DioMixin.assureDioException(e, response.requestOptions),
-            );
-          }
-        });
+        asyncWrite = raf
+            .writeFrom(data)
+            .then((result) {
+              // Notify progress
+              received += data.length;
+              onReceiveProgress?.call(received, total);
+              raf = result;
+              if (cancelToken == null || !cancelToken.isCancelled) {
+                subscription.resume();
+              }
+            })
+            .catchError((Object e) async {
+              try {
+                await subscription.cancel();
+              } finally {
+                completer.completeError(
+                  // ignore: invalid_use_of_internal_member
+                  DioMixin.assureDioException(e, response.requestOptions),
+                );
+              }
+            });
       },
       onDone: () async {
         try {
@@ -305,6 +310,7 @@ class AppDio with DioMixin implements Dio {
           completer.complete(response);
         } catch (e) {
           completer.completeError(
+            // ignore: invalid_use_of_internal_member
             DioMixin.assureDioException(e, response.requestOptions),
           );
         }
@@ -314,6 +320,7 @@ class AppDio with DioMixin implements Dio {
           await closeAndDelete();
         } finally {
           completer.completeError(
+            // ignore: invalid_use_of_internal_member
             DioMixin.assureDioException(e as Object, response.requestOptions),
           );
         }
@@ -327,22 +334,24 @@ class AppDio with DioMixin implements Dio {
 
     final timeout = response.requestOptions.receiveTimeout;
     if (timeout != null) {
-      future = future.timeout(timeout).catchError(
-        (dynamic e, StackTrace s) async {
-          await subscription.cancel();
-          await closeAndDelete();
-          if (e is TimeoutException) {
-            throw DioException.receiveTimeout(
-              timeout: timeout,
-              requestOptions: response.requestOptions,
-              error: e,
-            );
-          } else {
-            throw e as Object;
-          }
-        },
-      );
+      future = future.timeout(timeout).catchError((
+        dynamic e,
+        StackTrace s,
+      ) async {
+        await subscription.cancel();
+        await closeAndDelete();
+        if (e is TimeoutException) {
+          throw DioException.receiveTimeout(
+            timeout: timeout,
+            requestOptions: response.requestOptions,
+            error: e,
+          );
+        } else {
+          throw e as Object;
+        }
+      });
     }
+    // ignore: invalid_use_of_internal_member
     return DioMixin.listenCancelForAsyncTask(cancelToken, future);
   }
 
@@ -353,6 +362,7 @@ class AppDio with DioMixin implements Dio {
     ProgressCallback? onReceiveProgress,
     CancelToken? cancelToken,
     bool deleteOnError = true,
+    FileAccessMode fileAccessMode = FileAccessMode.write,
     lengthHeader = Headers.contentLengthHeader,
     data,
     Options? options,
@@ -361,6 +371,7 @@ class AppDio with DioMixin implements Dio {
       uri.toString(),
       savePath,
       onReceiveProgress: onReceiveProgress,
+      fileAccessMode: fileAccessMode,
       lengthHeader: lengthHeader,
       deleteOnError: deleteOnError,
       cancelToken: cancelToken,

@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,259 +9,293 @@ part of 'image.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+/// @nodoc
+mixin _$GalleryImage implements DiagnosticableTreeMixin {
 
-GalleryImage _$GalleryImageFromJson(Map<String, dynamic> json) {
-  return _GalleryImage.fromJson(json);
+@JsonKey(name: 't') String get type;@JsonKey(name: 'h') int? get imgHeight;@JsonKey(name: 'w') int? get imgWidth;@JsonKey(ignore: true) String? get imageUrl;@JsonKey(ignore: true) String? get href;
+/// Create a copy of GalleryImage
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$GalleryImageCopyWith<GalleryImage> get copyWith => _$GalleryImageCopyWithImpl<GalleryImage>(this as GalleryImage, _$identity);
+
+  /// Serializes this GalleryImage to a JSON map.
+  Map<String, dynamic> toJson();
+
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'GalleryImage'))
+    ..add(DiagnosticsProperty('type', type))..add(DiagnosticsProperty('imgHeight', imgHeight))..add(DiagnosticsProperty('imgWidth', imgWidth))..add(DiagnosticsProperty('imageUrl', imageUrl))..add(DiagnosticsProperty('href', href));
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GalleryImage&&(identical(other.type, type) || other.type == type)&&(identical(other.imgHeight, imgHeight) || other.imgHeight == imgHeight)&&(identical(other.imgWidth, imgWidth) || other.imgWidth == imgWidth)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.href, href) || other.href == href));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,imgHeight,imgWidth,imageUrl,href);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'GalleryImage(type: $type, imgHeight: $imgHeight, imgWidth: $imgWidth, imageUrl: $imageUrl, href: $href)';
+}
+
+
 }
 
 /// @nodoc
-mixin _$GalleryImage {
-  @JsonKey(name: 't')
-  String get type => throw _privateConstructorUsedError;
-  @JsonKey(name: 'h')
-  int? get imgHeight => throw _privateConstructorUsedError;
-  @JsonKey(name: 'w')
-  int? get imgWidth => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  String? get imageUrl => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  String? get href => throw _privateConstructorUsedError;
+abstract mixin class $GalleryImageCopyWith<$Res>  {
+  factory $GalleryImageCopyWith(GalleryImage value, $Res Function(GalleryImage) _then) = _$GalleryImageCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 't') String type,@JsonKey(name: 'h') int? imgHeight,@JsonKey(name: 'w') int? imgWidth,@JsonKey(ignore: true) String? imageUrl,@JsonKey(ignore: true) String? href
+});
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $GalleryImageCopyWith<GalleryImage> get copyWith =>
-      throw _privateConstructorUsedError;
+
+
+
 }
-
 /// @nodoc
-abstract class $GalleryImageCopyWith<$Res> {
-  factory $GalleryImageCopyWith(
-          GalleryImage value, $Res Function(GalleryImage) then) =
-      _$GalleryImageCopyWithImpl<$Res, GalleryImage>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 't') String type,
-      @JsonKey(name: 'h') int? imgHeight,
-      @JsonKey(name: 'w') int? imgWidth,
-      @JsonKey(ignore: true) String? imageUrl,
-      @JsonKey(ignore: true) String? href});
-}
-
-/// @nodoc
-class _$GalleryImageCopyWithImpl<$Res, $Val extends GalleryImage>
+class _$GalleryImageCopyWithImpl<$Res>
     implements $GalleryImageCopyWith<$Res> {
-  _$GalleryImageCopyWithImpl(this._value, this._then);
+  _$GalleryImageCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final GalleryImage _self;
+  final $Res Function(GalleryImage) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? imgHeight = freezed,
-    Object? imgWidth = freezed,
-    Object? imageUrl = freezed,
-    Object? href = freezed,
-  }) {
-    return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      imgHeight: freezed == imgHeight
-          ? _value.imgHeight
-          : imgHeight // ignore: cast_nullable_to_non_nullable
-              as int?,
-      imgWidth: freezed == imgWidth
-          ? _value.imgWidth
-          : imgWidth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      href: freezed == href
-          ? _value.href
-          : href // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
+/// Create a copy of GalleryImage
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? imgHeight = freezed,Object? imgWidth = freezed,Object? imageUrl = freezed,Object? href = freezed,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,imgHeight: freezed == imgHeight ? _self.imgHeight : imgHeight // ignore: cast_nullable_to_non_nullable
+as int?,imgWidth: freezed == imgWidth ? _self.imgWidth : imgWidth // ignore: cast_nullable_to_non_nullable
+as int?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,href: freezed == href ? _self.href : href // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$_GalleryImageCopyWith<$Res>
-    implements $GalleryImageCopyWith<$Res> {
-  factory _$$_GalleryImageCopyWith(
-          _$_GalleryImage value, $Res Function(_$_GalleryImage) then) =
-      __$$_GalleryImageCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 't') String type,
-      @JsonKey(name: 'h') int? imgHeight,
-      @JsonKey(name: 'w') int? imgWidth,
-      @JsonKey(ignore: true) String? imageUrl,
-      @JsonKey(ignore: true) String? href});
 }
 
-/// @nodoc
-class __$$_GalleryImageCopyWithImpl<$Res>
-    extends _$GalleryImageCopyWithImpl<$Res, _$_GalleryImage>
-    implements _$$_GalleryImageCopyWith<$Res> {
-  __$$_GalleryImageCopyWithImpl(
-      _$_GalleryImage _value, $Res Function(_$_GalleryImage) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? imgHeight = freezed,
-    Object? imgWidth = freezed,
-    Object? imageUrl = freezed,
-    Object? href = freezed,
-  }) {
-    return _then(_$_GalleryImage(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      imgHeight: freezed == imgHeight
-          ? _value.imgHeight
-          : imgHeight // ignore: cast_nullable_to_non_nullable
-              as int?,
-      imgWidth: freezed == imgWidth
-          ? _value.imgWidth
-          : imgWidth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      href: freezed == href
-          ? _value.href
-          : href // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [GalleryImage].
+extension GalleryImagePatterns on GalleryImage {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GalleryImage value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _GalleryImage() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GalleryImage value)  $default,){
+final _that = this;
+switch (_that) {
+case _GalleryImage():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GalleryImage value)?  $default,){
+final _that = this;
+switch (_that) {
+case _GalleryImage() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(ignore: true)  String? imageUrl, @JsonKey(ignore: true)  String? href)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _GalleryImage() when $default != null:
+return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.href);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(ignore: true)  String? imageUrl, @JsonKey(ignore: true)  String? href)  $default,) {final _that = this;
+switch (_that) {
+case _GalleryImage():
+return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.href);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(ignore: true)  String? imageUrl, @JsonKey(ignore: true)  String? href)?  $default,) {final _that = this;
+switch (_that) {
+case _GalleryImage() when $default != null:
+return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.href);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_GalleryImage with DiagnosticableTreeMixin implements _GalleryImage {
-  const _$_GalleryImage(
-      {@JsonKey(name: 't') this.type = 'j',
-      @JsonKey(name: 'h') this.imgHeight,
-      @JsonKey(name: 'w') this.imgWidth,
-      @JsonKey(ignore: true) this.imageUrl,
-      @JsonKey(ignore: true) this.href});
+class _GalleryImage with DiagnosticableTreeMixin implements GalleryImage {
+  const _GalleryImage({@JsonKey(name: 't') this.type = 'j', @JsonKey(name: 'h') this.imgHeight, @JsonKey(name: 'w') this.imgWidth, @JsonKey(ignore: true) this.imageUrl, @JsonKey(ignore: true) this.href});
+  factory _GalleryImage.fromJson(Map<String, dynamic> json) => _$GalleryImageFromJson(json);
 
-  factory _$_GalleryImage.fromJson(Map<String, dynamic> json) =>
-      _$$_GalleryImageFromJson(json);
+@override@JsonKey(name: 't') final  String type;
+@override@JsonKey(name: 'h') final  int? imgHeight;
+@override@JsonKey(name: 'w') final  int? imgWidth;
+@override@JsonKey(ignore: true) final  String? imageUrl;
+@override@JsonKey(ignore: true) final  String? href;
 
-  @override
-  @JsonKey(name: 't')
-  final String type;
-  @override
-  @JsonKey(name: 'h')
-  final int? imgHeight;
-  @override
-  @JsonKey(name: 'w')
-  final int? imgWidth;
-  @override
-  @JsonKey(ignore: true)
-  final String? imageUrl;
-  @override
-  @JsonKey(ignore: true)
-  final String? href;
+/// Create a copy of GalleryImage
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$GalleryImageCopyWith<_GalleryImage> get copyWith => __$GalleryImageCopyWithImpl<_GalleryImage>(this, _$identity);
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'GalleryImage(type: $type, imgHeight: $imgHeight, imgWidth: $imgWidth, imageUrl: $imageUrl, href: $href)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'GalleryImage'))
-      ..add(DiagnosticsProperty('type', type))
-      ..add(DiagnosticsProperty('imgHeight', imgHeight))
-      ..add(DiagnosticsProperty('imgWidth', imgWidth))
-      ..add(DiagnosticsProperty('imageUrl', imageUrl))
-      ..add(DiagnosticsProperty('href', href));
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_GalleryImage &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.imgHeight, imgHeight) ||
-                other.imgHeight == imgHeight) &&
-            (identical(other.imgWidth, imgWidth) ||
-                other.imgWidth == imgWidth) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl) &&
-            (identical(other.href, href) || other.href == href));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, type, imgHeight, imgWidth, imageUrl, href);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_GalleryImageCopyWith<_$_GalleryImage> get copyWith =>
-      __$$_GalleryImageCopyWithImpl<_$_GalleryImage>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_GalleryImageToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$GalleryImageToJson(this, );
+}
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'GalleryImage'))
+    ..add(DiagnosticsProperty('type', type))..add(DiagnosticsProperty('imgHeight', imgHeight))..add(DiagnosticsProperty('imgWidth', imgWidth))..add(DiagnosticsProperty('imageUrl', imageUrl))..add(DiagnosticsProperty('href', href));
 }
 
-abstract class _GalleryImage implements GalleryImage {
-  const factory _GalleryImage(
-      {@JsonKey(name: 't') final String type,
-      @JsonKey(name: 'h') final int? imgHeight,
-      @JsonKey(name: 'w') final int? imgWidth,
-      @JsonKey(ignore: true) final String? imageUrl,
-      @JsonKey(ignore: true) final String? href}) = _$_GalleryImage;
-
-  factory _GalleryImage.fromJson(Map<String, dynamic> json) =
-      _$_GalleryImage.fromJson;
-
-  @override
-  @JsonKey(name: 't')
-  String get type;
-  @override
-  @JsonKey(name: 'h')
-  int? get imgHeight;
-  @override
-  @JsonKey(name: 'w')
-  int? get imgWidth;
-  @override
-  @JsonKey(ignore: true)
-  String? get imageUrl;
-  @override
-  @JsonKey(ignore: true)
-  String? get href;
-  @override
-  @JsonKey(ignore: true)
-  _$$_GalleryImageCopyWith<_$_GalleryImage> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GalleryImage&&(identical(other.type, type) || other.type == type)&&(identical(other.imgHeight, imgHeight) || other.imgHeight == imgHeight)&&(identical(other.imgWidth, imgWidth) || other.imgWidth == imgWidth)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.href, href) || other.href == href));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,imgHeight,imgWidth,imageUrl,href);
+
+@override
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'GalleryImage(type: $type, imgHeight: $imgHeight, imgWidth: $imgWidth, imageUrl: $imageUrl, href: $href)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$GalleryImageCopyWith<$Res> implements $GalleryImageCopyWith<$Res> {
+  factory _$GalleryImageCopyWith(_GalleryImage value, $Res Function(_GalleryImage) _then) = __$GalleryImageCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 't') String type,@JsonKey(name: 'h') int? imgHeight,@JsonKey(name: 'w') int? imgWidth,@JsonKey(ignore: true) String? imageUrl,@JsonKey(ignore: true) String? href
+});
+
+
+
+
+}
+/// @nodoc
+class __$GalleryImageCopyWithImpl<$Res>
+    implements _$GalleryImageCopyWith<$Res> {
+  __$GalleryImageCopyWithImpl(this._self, this._then);
+
+  final _GalleryImage _self;
+  final $Res Function(_GalleryImage) _then;
+
+/// Create a copy of GalleryImage
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? imgHeight = freezed,Object? imgWidth = freezed,Object? imageUrl = freezed,Object? href = freezed,}) {
+  return _then(_GalleryImage(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,imgHeight: freezed == imgHeight ? _self.imgHeight : imgHeight // ignore: cast_nullable_to_non_nullable
+as int?,imgWidth: freezed == imgWidth ? _self.imgWidth : imgWidth // ignore: cast_nullable_to_non_nullable
+as int?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,href: freezed == href ? _self.href : href // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

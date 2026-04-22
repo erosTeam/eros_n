@@ -3,18 +3,17 @@ import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
-import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CoverImg extends StatelessWidget {
   const CoverImg({
-    Key? key,
+    super.key,
     required this.imgUrl,
     this.height,
     this.width,
     this.fit = BoxFit.contain,
-  }) : super(key: key);
+  });
 
   final String imgUrl;
   final double? height;
@@ -39,13 +38,10 @@ class CoverImg extends StatelessWidget {
 
     return Consumer(
       builder: (context, ref, child) {
-        final isCoverBlur = ref
-            .watch(settingsProvider.select((settings) => settings.isCoverBlur));
-        return BlurImage(
-          blur: isCoverBlur,
-          sigma: 8,
-          child: child!,
+        final isCoverBlur = ref.watch(
+          settingsProvider.select((settings) => settings.isCoverBlur),
         );
+        return BlurImage(blur: isCoverBlur, sigma: 8, child: child!);
       },
       child: image(),
     );
@@ -54,13 +50,13 @@ class CoverImg extends StatelessWidget {
 
 class SimpleTagsView extends HookConsumerWidget {
   const SimpleTagsView({
-    Key? key,
+    super.key,
     required this.simpleTags,
     this.padding = const EdgeInsets.symmetric(horizontal: 6),
     this.tagLayoutOnItem,
     this.color,
     this.borderColor,
-  }) : super(key: key);
+  });
 
   final List<Tag> simpleTags;
   final EdgeInsetsGeometry? padding;
@@ -71,8 +67,9 @@ class SimpleTagsView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
-    final tagLayoutOnItem =
-        ref.watch(settingsProvider.select((s) => s.tagLayoutOnItem));
+    final tagLayoutOnItem = ref.watch(
+      settingsProvider.select((s) => s.tagLayoutOnItem),
+    );
 
     if (!showTags || simpleTags.isEmpty) {
       return const SizedBox();
@@ -115,8 +112,11 @@ class SimpleTagsView extends HookConsumerWidget {
               return Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(right: 4),
-                child:
-                    SimpleTag(tag: tag, color: color, borderColor: borderColor),
+                child: SimpleTag(
+                  tag: tag,
+                  color: color,
+                  borderColor: borderColor,
+                ),
               );
             },
             itemCount: tags.length,
@@ -130,8 +130,13 @@ class SimpleTagsView extends HookConsumerWidget {
             runSpacing: 4,
             children: tags
                 .where((tag) => tag.name != null)
-                .map((tag) =>
-                    SimpleTag(tag: tag, color: color, borderColor: borderColor))
+                .map(
+                  (tag) => SimpleTag(
+                    tag: tag,
+                    color: color,
+                    borderColor: borderColor,
+                  ),
+                )
                 .toList(),
           ),
         );
@@ -140,20 +145,16 @@ class SimpleTagsView extends HookConsumerWidget {
 }
 
 class SimpleTag extends HookConsumerWidget {
-  const SimpleTag({
-    Key? key,
-    required this.tag,
-    this.color,
-    this.borderColor,
-  }) : super(key: key);
+  const SimpleTag({super.key, required this.tag, this.color, this.borderColor});
   final Tag tag;
   final Color? color;
   final Color? borderColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isTagTranslate =
-        ref.watch(settingsProvider.select((value) => value.isTagTranslate));
+    final isTagTranslate = ref.watch(
+      settingsProvider.select((value) => value.isTagTranslate),
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1.5),

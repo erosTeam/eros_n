@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/logger.dart';
-
 class SGDelegatePack {
   SGDelegatePack(this.gridDelegate, this.size);
   SliverGridDelegateWithFixedCrossAxisCount gridDelegate;
@@ -9,12 +7,15 @@ class SGDelegatePack {
 }
 
 SGDelegatePack sliverGridDelegateWithMaxToCount(
-    double width, SliverGridDelegateWithMaxCrossAxisExtent sliverGridDelegate,
-    [double extendHeight = 0]) {
-  int crossAxisCount = ((width + sliverGridDelegate.crossAxisSpacing) /
-          (sliverGridDelegate.maxCrossAxisExtent +
-              sliverGridDelegate.crossAxisSpacing))
-      .ceil();
+  double width,
+  SliverGridDelegateWithMaxCrossAxisExtent sliverGridDelegate, [
+  double extendHeight = 0,
+]) {
+  int crossAxisCount =
+      ((width + sliverGridDelegate.crossAxisSpacing) /
+              (sliverGridDelegate.maxCrossAxisExtent +
+                  sliverGridDelegate.crossAxisSpacing))
+          .ceil();
 
   final double usableCrossAxisExtent =
       width - sliverGridDelegate.crossAxisSpacing * (crossAxisCount - 1);
@@ -27,11 +28,12 @@ SGDelegatePack sliverGridDelegateWithMaxToCount(
   childMainAxisExtent += extendHeight;
   final childAspectRatio = childCrossAxisExtent / childMainAxisExtent;
   return SGDelegatePack(
-      SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        mainAxisSpacing: sliverGridDelegate.mainAxisSpacing,
-        crossAxisSpacing: sliverGridDelegate.crossAxisSpacing,
-        childAspectRatio: childAspectRatio,
-      ),
-      Size(childCrossAxisExtent, childMainAxisExtent));
+    SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: crossAxisCount,
+      mainAxisSpacing: sliverGridDelegate.mainAxisSpacing,
+      crossAxisSpacing: sliverGridDelegate.crossAxisSpacing,
+      childAspectRatio: childAspectRatio,
+    ),
+    Size(childCrossAxisExtent, childMainAxisExtent),
+  );
 }
