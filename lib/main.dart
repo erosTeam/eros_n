@@ -6,13 +6,15 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/theme/theme.dart';
-import 'package:eros_n/component/widget/broken_shield.dart';
 import 'package:eros_n/component/widget/desktop.dart';
 import 'package:eros_n/component/widget/system_ui_overlay.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,6 +25,11 @@ Future<void> main() async {
 
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     await windowManager.ensureInitialized();
+  }
+
+  // Enable WebView remote debugging on Android (chrome://inspect/#devices)
+  if (kDebugMode && Platform.isAndroid) {
+    await InAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
 
   await Global.init();
@@ -175,7 +182,8 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
                 }
                 return child;
               },
-              builder: BrokenShield.init(),
+              builder: (context, child) =>
+                  HiddenWebViewProxyHost(child: child ?? const SizedBox()),
             ),
           ),
           // builder: (BuildContext context, Widget? child) {

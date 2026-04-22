@@ -93,7 +93,11 @@ HttpException _parseException(Exception error, {dynamic data}) {
       case DioExceptionType.badResponse:
         try {
           int? errCode = error.response?.statusCode;
-          logger.e('errCode $errCode');
+          logger.e(
+            'errCode $errCode url=${error.requestOptions.uri} '
+            'method=${error.requestOptions.method} '
+            'rt=${error.requestOptions.responseType}',
+          );
           switch (errCode) {
             case 400:
               return BadRequestException(

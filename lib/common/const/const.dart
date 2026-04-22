@@ -33,11 +33,13 @@ class NHConst {
   static const double gridMaxCrossAxisExtent = 150.0;
   static const double gridChildAspectRatio = 1 / 1.8;
 
-  // 扩展名map
+  // image format shorthand → file extension. The nhentai frontend now serves
+  // thumbnails as webp by default, with `w` as the type code.
   static const Map<String, String> extMap = {
     'j': 'jpg',
     'p': 'png',
     'g': 'gif',
+    'w': 'webp',
   };
 
   static const Map<String, String> localeMap = {

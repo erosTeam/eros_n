@@ -28,11 +28,16 @@ Future<GallerySet> parseGalleryList(String html) async {
   final username = usernameElm?.text;
   logger.t('username: $username');
 
+  // The new SvelteKit nhentai frontend wraps search results in
+  // `.gallery-grid` while the homepage still uses the legacy
+  // `.index-container` markup. Try both, in priority order.
   const selectorPopular =
       '#content > div.container.index-container.index-popular';
 
-  const selectorGalleryList =
+  const selectorGalleryListLegacy =
       '#content > div.container.index-container:not(.index-popular)';
+
+  const selectorGalleryListSvelte = '.gallery-grid';
 
   const selectorFavoriteList = '#favcontainer';
 
@@ -41,7 +46,9 @@ Future<GallerySet> parseGalleryList(String html) async {
   const selectorMaxPage = '.last';
 
   final Element? popularElm = document.querySelector(selectorPopular);
-  final Element? galleryListElm = document.querySelector(selectorGalleryList);
+  final Element? galleryListElm =
+      document.querySelector(selectorGalleryListLegacy) ??
+          document.querySelector(selectorGalleryListSvelte);
   final Element? favoriteListElm = document.querySelector(selectorFavoriteList);
 
   final List<Element> galleryElmListOfPopular =
@@ -55,13 +62,14 @@ Future<GallerySet> parseGalleryList(String html) async {
 
   logger.t('favoriteGalleryElmList.len ${favoriteGalleryElmList.length}');
 
+  // The href can contain other digits (e.g. inside the `q=` UUID), so anchor
+  // the match on the explicit `page=` query parameter.
+  final lastHref =
+      document.querySelector(selectorMaxPage)?.attributes['href'] ?? '';
   final maxPage =
-      RegExp(r'\d+')
-          .firstMatch(
-            document.querySelector(selectorMaxPage)?.attributes['href'] ?? '',
-          )
-          ?.group(0) ??
-      '1';
+      RegExp(r'[?&]page=(\d+)').firstMatch(lastHref)?.group(1) ??
+          RegExp(r'\d+').firstMatch(lastHref)?.group(0) ??
+          '1';
 
   final galleryListFuture = parseGalleryListElm(
     galleryElmList,
@@ -105,29 +113,47 @@ Future<List<Gallery>> parseGalleryListElm(
 
     final title = captionElm?.text ?? '';
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
-    final thumbUrl =
-        elm.querySelector('.lazyload')?.attributes['data-src'] ?? '';
-    final imageHeight =
-        elm.querySelector('.lazyload')?.attributes['height'] ?? '';
-    final imageWidth =
-        elm.querySelector('.lazyload')?.attributes['width'] ?? '';
+    // The current nhentai frontend uses native lazy loading: thumbnail URLs
+    // live on `src`, with `data-src` no longer emitted. Fall back to `src`
+    // when `data-src` is missing.
+    final lazyloadElm = elm.querySelector('.lazyload');
+    final thumbUrl = lazyloadElm?.attributes['data-src'] ??
+        lazyloadElm?.attributes['src'] ??
+        '';
+    final imageHeight = int.tryParse(
+      lazyloadElm?.attributes['height'] ?? '',
+    );
+    final imageWidth = int.tryParse(
+      lazyloadElm?.attributes['width'] ?? '',
+    );
+
+    if (url.isEmpty) {
+      continue;
+    }
 
     final gid = RegExp(r'/(\d+)/').firstMatch(url)?.group(1) ?? '';
     final mediaId = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
 
-    // 扩展名
     final ext = RegExp(r'\.(\w+)$').firstMatch(thumbUrl)?.group(1) ?? '';
-    final type = ext.substring(0, 1);
+    // type is a single-letter shorthand (`j`, `p`, `g`, `w`); default to `j`
+    // when the URL has no extension we can read.
+    final type = ext.isNotEmpty ? ext.substring(0, 1) : 'j';
 
+    // The new SvelteKit frontend no longer emits `data-tags` on gallery
+    // elements, so the inline blacklist filter degrades to a no-op here.
     final dataTags = (elm.attributes['data-tags'] ?? '')
         .split(RegExp(r'\s+'))
+        .where((e) => e.isNotEmpty)
         .toList();
-    if (dataTags.any((e) => blacklistTagsList.contains(e))) {
+    if (dataTags.isNotEmpty &&
+        dataTags.any((e) => blacklistTagsList.contains(e))) {
       logger.t('$gid $title is blacklisted');
       continue;
     }
 
-    // logger.d('dataTags $dataTags');
+    if (gid.isEmpty) {
+      continue;
+    }
 
     final Gallery gallery = Gallery(
       gid: int.parse(gid),
@@ -136,19 +162,17 @@ Future<List<Gallery>> parseGalleryListElm(
       simpleTags: await getTags(dataTags),
       title: GalleryTitle(englishTitle: title),
       images: GalleryImages(
-        // cover: GalleryImage(
-        //   type: type,
-        //   imgHeight: int.parse(imageHeight),
-        //   imgWidth: int.parse(imageWidth),
-        // ),
         thumbnail: GalleryImage(
           type: type,
-          imgHeight: int.parse(imageHeight),
-          imgWidth: int.parse(imageWidth),
+          imgHeight: imageHeight,
+          imgWidth: imageWidth,
+          // Preserve the exact thumbnail URL from the page so we don't have
+          // to guess the filename suffix (now `thumb.jpg.webp`, `thumb.webp`,
+          // etc., depending on the source format).
+          imageUrl: thumbUrl.isNotEmpty ? thumbUrl : null,
         ),
       ),
     );
-    // logger.d('gallery ${gallery.toJson()}');
     galleryList.add(gallery);
   }
   return galleryList;

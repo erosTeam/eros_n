@@ -95,16 +95,23 @@ class ErosCachedNetworkImage extends StatelessWidget {
       errorBuilder: _octoErrorBuilder,
       progressIndicatorBuilder: _octoProgressIndicatorBuilder,
       filterQuality: filterQuality,
+      // Smooth out the placeholder -> image transition (otherwise the image
+      // pops in instantly once decoded).
+      fadeInDuration: const Duration(milliseconds: 240),
+      fadeInCurve: Curves.easeOut,
+      fadeOutDuration: const Duration(milliseconds: 160),
+      fadeOutCurve: Curves.easeIn,
     );
   }
 
-  OctoPlaceholderBuilder? get _octoPlaceholderBuilder {
-    if (placeholder == null) {
-      return null;
+  /// OctoImage only animates the fade-in when a placeholder builder is
+  /// provided. Fall back to a neutral coloured square so callers that don't
+  /// pass a custom placeholder still get the smoother transition.
+  OctoPlaceholderBuilder get _octoPlaceholderBuilder {
+    if (placeholder != null) {
+      return (context) => placeholder!(context, imageUrl ?? '');
     }
-    return (context) {
-      return placeholder!(context, imageUrl ?? '');
-    };
+    return (context) => const _DefaultImagePlaceholder();
   }
 
   OctoProgressIndicatorBuilder? get _octoProgressIndicatorBuilder {
@@ -140,4 +147,19 @@ ImageProvider getErosImageProvider(String url, {Map<String, String>? headers}) {
     cacheManager: imageCacheManager,
     cacheKey: buildImageCacheKey(url),
   );
+}
+
+/// Subtle, theme-aware placeholder that fills the image's intrinsic slot
+/// while the real bitmap is decoding. Kept lightweight so it can sit behind
+/// every cover/thumbnail without introducing rebuild churn.
+class _DefaultImagePlaceholder extends StatelessWidget {
+  const _DefaultImagePlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return ColoredBox(
+      color: scheme.surfaceContainerHighest.withValues(alpha: 0.4),
+    );
+  }
 }
