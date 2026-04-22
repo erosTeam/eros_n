@@ -1,16 +1,7 @@
-enum NhErrorType {
-  def,
-
-  loginCaptcha,
-
-  loginInvalid,
-}
+enum NhErrorType { def, loginCaptcha, loginInvalid }
 
 class NhError implements Exception {
-  NhError({
-    this.type = NhErrorType.def,
-    this.error,
-  });
+  NhError({this.type = NhErrorType.def, this.error});
 
   NhErrorType type;
 

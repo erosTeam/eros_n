@@ -21,7 +21,7 @@ class HttpException implements Exception {
 /// 客户端请求错误
 class BadRequestException extends HttpException {
   BadRequestException({String? message, int? code, dynamic data})
-      : super(message, code, data);
+    : super(message, code, data);
 }
 
 /// 服务端响应错误
@@ -30,15 +30,15 @@ class BadServiceException extends HttpException {
 }
 
 class UnknownException extends HttpException {
-  UnknownException([String? message]) : super(message);
+  UnknownException([super.message]);
 }
 
 class CancelException extends HttpException {
-  CancelException([String? message]) : super(message);
+  CancelException([super.message]);
 }
 
 class Image509Exception extends HttpException {
-  Image509Exception([String? message]) : super(message);
+  Image509Exception([super.message]);
 }
 
 class NetworkException extends HttpException {
@@ -48,24 +48,25 @@ class NetworkException extends HttpException {
 /// 401
 class UnauthorisedException extends HttpException {
   UnauthorisedException({String? message, int? code = 401})
-      : super(message, code);
+    : super(message, code);
 }
 
 class BadResponseException extends HttpException {
   BadResponseException([this.data]) : super();
 
+  @override
   dynamic data;
 }
 
 /// 列表样式
 class ListDisplayModeException extends HttpException {
   ListDisplayModeException({String? message, int? code, this.params})
-      : super(message, code);
+    : super(message, code);
   Map<String, dynamic>? params;
 }
 
 class FavOrderException extends HttpException {
   FavOrderException({String? message, int? code, this.order})
-      : super(message, code);
+    : super(message, code);
   String? order;
 }

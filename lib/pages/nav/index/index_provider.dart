@@ -1,10 +1,9 @@
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/pages/nav/index/index_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import 'index_state.dart';
 
 class IndexNotifier extends StateNotifier<IndexState> {
   IndexNotifier(this.ref) : super(IndexState());
@@ -14,16 +13,22 @@ class IndexNotifier extends StateNotifier<IndexState> {
 
   final Ref ref;
 
-  Future<void> setIndex(int index,
-      {required BuildContext context, bool jumpToPage = false}) async {
+  Future<void> setIndex(
+    int index, {
+    required BuildContext context,
+    bool jumpToPage = false,
+  }) async {
     if (index == state.selectedIndex) {
       // logger.d('state.scrollControllerMap len ${scrollControllerMap.length}');
       await doubleTapBar(
         duration: const Duration(milliseconds: 800),
         awaitComplete: false,
         onTap: () {
-          scrollControllerMap[state.selectedIndex]
-              ?.animateTo(0, duration: 300.milliseconds, curve: Curves.ease);
+          scrollControllerMap[state.selectedIndex]?.animateTo(
+            0,
+            duration: 300.milliseconds,
+            curve: Curves.ease,
+          );
         },
       );
     }
@@ -35,8 +40,11 @@ class IndexNotifier extends StateNotifier<IndexState> {
   }
 
   void hideNavigationBar() {
-    final hideBottomNavigationOnScroll = ref.read(settingsProvider
-        .select((settings) => settings.hideBottomNavigationOnScroll));
+    final hideBottomNavigationOnScroll = ref.read(
+      settingsProvider.select(
+        (settings) => settings.hideBottomNavigationOnScroll,
+      ),
+    );
     if (!state.hideNavigationBar && hideBottomNavigationOnScroll) {
       state = state.copyWith(hideNavigationBar: true);
     }
@@ -50,7 +58,7 @@ class IndexNotifier extends StateNotifier<IndexState> {
 
   void addScrollController(ScrollController scrollController) {
     scrollControllerMap[state.selectedIndex] = scrollController;
-    logger.v('state.scrollControllerMap len ${scrollControllerMap.length}');
+    logger.t('state.scrollControllerMap len ${scrollControllerMap.length}');
   }
 
   /// 双击bar的处理
@@ -66,7 +74,7 @@ class IndexNotifier extends StateNotifier<IndexState> {
       if (awaitComplete) {
         await Future<void>.delayed(duration);
         if (tapAwait) {
-//        loggerNoStack.v('等待结束 执行单击事件');
+          //        loggerNoStack.v('等待结束 执行单击事件');
           tapAwait = false;
           onTap();
         }

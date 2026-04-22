@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 @RoutePage()
 class MyLicensePage extends StatelessWidget {
-  const MyLicensePage({Key? key}) : super(key: key);
+  const MyLicensePage({super.key});
 
   @override
   Widget build(BuildContext context) {

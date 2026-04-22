@@ -32,53 +32,48 @@ class _MorePageState extends ConsumerState<MorePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(L10n.of(context).more),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: Row(children: [Text(L10n.of(context).more)])),
       body: SingleChildScrollView(
         controller: scrollController,
         child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Consumer(builder: (context, ref, child) {
-                final user = ref.watch(userProvider);
-                if (!user.isLogin) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      child: Icon(
-                        Icons.person,
-                        color: Theme.of(context).colorScheme.onPrimary,
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final user = ref.watch(userProvider);
+                  if (!user.isLogin) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        child: Icon(
+                          Icons.person,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
-                    ),
-                    title: Text(L10n.of(context).login),
-                    onTap: () {
-                      erosRouter.pushNamed(NHRoutes.login);
-                    },
-                  );
-                } else {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      backgroundImage: user.avatarUrl != null
-                          ? CachedNetworkImageProvider(user.avatarUrl ?? '')
-                          : null,
-                    ),
-                    title: Text(user.userName ?? '...'),
-                    onTap: () {
-                      // dialog to logout
-                      showDialog(
+                      title: Text(L10n.of(context).login),
+                      onTap: () {
+                        erosRouter.push(const LoginRoute());
+                      },
+                    );
+                  } else {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundImage: user.avatarUrl != null
+                            ? CachedNetworkImageProvider(user.avatarUrl ?? '')
+                            : null,
+                      ),
+                      title: Text(user.userName ?? '...'),
+                      onTap: () {
+                        // dialog to logout
+                        showDialog(
                           context: context,
                           builder: (context) {
                             logger.d('logout $user');
                             return AlertDialog(
                               title: Text(L10n.of(context).logout),
-                              content: Text('Are you sure to logout?'),
+                              content: const Text('Are you sure to logout?'),
                               actions: <Widget>[
                                 TextButton(
                                   child: Text(L10n.of(context).cancel),
@@ -95,11 +90,13 @@ class _MorePageState extends ConsumerState<MorePage>
                                 ),
                               ],
                             );
-                          });
-                    },
-                  );
-                }
-              }),
+                          },
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
             const Divider(height: 1.0),
             ListTile(
@@ -110,22 +107,24 @@ class _MorePageState extends ConsumerState<MorePage>
                 // Navigator.pushNamed(context, '/download');
                 // showDialog
                 showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(L10n.of(context).download),
-                        content: Text(
-                            'Feature in development, currently unavailable'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text(L10n.of(context).ok),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    });
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text(L10n.of(context).download),
+                      content: const Text(
+                        'Feature in development, currently unavailable',
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text(L10n.of(context).ok),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
             const Divider(height: 1.0),
@@ -134,7 +133,7 @@ class _MorePageState extends ConsumerState<MorePage>
               iconColor: Theme.of(context).colorScheme.primary,
               title: Text(L10n.of(context).settings),
               onTap: () {
-                erosRouter.pushNamed(NHRoutes.settings);
+                erosRouter.push(const SettingsRoute());
               },
             ),
             ListTile(
@@ -142,7 +141,7 @@ class _MorePageState extends ConsumerState<MorePage>
               iconColor: Theme.of(context).colorScheme.primary,
               title: Text(L10n.of(context).about),
               onTap: () {
-                erosRouter.pushNamed(NHRoutes.about);
+                erosRouter.push(const AboutRoute());
               },
             ),
           ],

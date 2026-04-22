@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,259 +9,284 @@ part of 'list_view_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-ListViewState _$ListViewStateFromJson(Map<String, dynamic> json) {
-  return _ListViewState.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ListViewState {
-  LoadStatus get status => throw _privateConstructorUsedError;
-  int get curPage => throw _privateConstructorUsedError;
-  int get maxPage => throw _privateConstructorUsedError;
-  bool get floatingAppBar => throw _privateConstructorUsedError;
-  String? get errorMessage => throw _privateConstructorUsedError;
-  bool get appBarSearch => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ListViewStateCopyWith<ListViewState> get copyWith =>
-      throw _privateConstructorUsedError;
+ LoadStatus get status; int get curPage; int get maxPage; bool get floatingAppBar; String? get errorMessage; bool get appBarSearch;
+/// Create a copy of ListViewState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ListViewStateCopyWith<ListViewState> get copyWith => _$ListViewStateCopyWithImpl<ListViewState>(this as ListViewState, _$identity);
+
+  /// Serializes this ListViewState to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ListViewState&&(identical(other.status, status) || other.status == status)&&(identical(other.curPage, curPage) || other.curPage == curPage)&&(identical(other.maxPage, maxPage) || other.maxPage == maxPage)&&(identical(other.floatingAppBar, floatingAppBar) || other.floatingAppBar == floatingAppBar)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.appBarSearch, appBarSearch) || other.appBarSearch == appBarSearch));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,status,curPage,maxPage,floatingAppBar,errorMessage,appBarSearch);
+
+@override
+String toString() {
+  return 'ListViewState(status: $status, curPage: $curPage, maxPage: $maxPage, floatingAppBar: $floatingAppBar, errorMessage: $errorMessage, appBarSearch: $appBarSearch)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ListViewStateCopyWith<$Res> {
-  factory $ListViewStateCopyWith(
-          ListViewState value, $Res Function(ListViewState) then) =
-      _$ListViewStateCopyWithImpl<$Res, ListViewState>;
-  @useResult
-  $Res call(
-      {LoadStatus status,
-      int curPage,
-      int maxPage,
-      bool floatingAppBar,
-      String? errorMessage,
-      bool appBarSearch});
-}
+abstract mixin class $ListViewStateCopyWith<$Res>  {
+  factory $ListViewStateCopyWith(ListViewState value, $Res Function(ListViewState) _then) = _$ListViewStateCopyWithImpl;
+@useResult
+$Res call({
+ LoadStatus status, int curPage, int maxPage, bool floatingAppBar, String? errorMessage, bool appBarSearch
+});
 
+
+
+
+}
 /// @nodoc
-class _$ListViewStateCopyWithImpl<$Res, $Val extends ListViewState>
+class _$ListViewStateCopyWithImpl<$Res>
     implements $ListViewStateCopyWith<$Res> {
-  _$ListViewStateCopyWithImpl(this._value, this._then);
+  _$ListViewStateCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ListViewState _self;
+  final $Res Function(ListViewState) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? status = null,
-    Object? curPage = null,
-    Object? maxPage = null,
-    Object? floatingAppBar = null,
-    Object? errorMessage = freezed,
-    Object? appBarSearch = null,
-  }) {
-    return _then(_value.copyWith(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as LoadStatus,
-      curPage: null == curPage
-          ? _value.curPage
-          : curPage // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxPage: null == maxPage
-          ? _value.maxPage
-          : maxPage // ignore: cast_nullable_to_non_nullable
-              as int,
-      floatingAppBar: null == floatingAppBar
-          ? _value.floatingAppBar
-          : floatingAppBar // ignore: cast_nullable_to_non_nullable
-              as bool,
-      errorMessage: freezed == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appBarSearch: null == appBarSearch
-          ? _value.appBarSearch
-          : appBarSearch // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of ListViewState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? curPage = null,Object? maxPage = null,Object? floatingAppBar = null,Object? errorMessage = freezed,Object? appBarSearch = null,}) {
+  return _then(_self.copyWith(
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as LoadStatus,curPage: null == curPage ? _self.curPage : curPage // ignore: cast_nullable_to_non_nullable
+as int,maxPage: null == maxPage ? _self.maxPage : maxPage // ignore: cast_nullable_to_non_nullable
+as int,floatingAppBar: null == floatingAppBar ? _self.floatingAppBar : floatingAppBar // ignore: cast_nullable_to_non_nullable
+as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,appBarSearch: null == appBarSearch ? _self.appBarSearch : appBarSearch // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$_ListViewStateCopyWith<$Res>
-    implements $ListViewStateCopyWith<$Res> {
-  factory _$$_ListViewStateCopyWith(
-          _$_ListViewState value, $Res Function(_$_ListViewState) then) =
-      __$$_ListViewStateCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {LoadStatus status,
-      int curPage,
-      int maxPage,
-      bool floatingAppBar,
-      String? errorMessage,
-      bool appBarSearch});
 }
 
-/// @nodoc
-class __$$_ListViewStateCopyWithImpl<$Res>
-    extends _$ListViewStateCopyWithImpl<$Res, _$_ListViewState>
-    implements _$$_ListViewStateCopyWith<$Res> {
-  __$$_ListViewStateCopyWithImpl(
-      _$_ListViewState _value, $Res Function(_$_ListViewState) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? status = null,
-    Object? curPage = null,
-    Object? maxPage = null,
-    Object? floatingAppBar = null,
-    Object? errorMessage = freezed,
-    Object? appBarSearch = null,
-  }) {
-    return _then(_$_ListViewState(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as LoadStatus,
-      curPage: null == curPage
-          ? _value.curPage
-          : curPage // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxPage: null == maxPage
-          ? _value.maxPage
-          : maxPage // ignore: cast_nullable_to_non_nullable
-              as int,
-      floatingAppBar: null == floatingAppBar
-          ? _value.floatingAppBar
-          : floatingAppBar // ignore: cast_nullable_to_non_nullable
-              as bool,
-      errorMessage: freezed == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appBarSearch: null == appBarSearch
-          ? _value.appBarSearch
-          : appBarSearch // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [ListViewState].
+extension ListViewStatePatterns on ListViewState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ListViewState value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ListViewState() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ListViewState value)  $default,){
+final _that = this;
+switch (_that) {
+case _ListViewState():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ListViewState value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ListViewState() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LoadStatus status,  int curPage,  int maxPage,  bool floatingAppBar,  String? errorMessage,  bool appBarSearch)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ListViewState() when $default != null:
+return $default(_that.status,_that.curPage,_that.maxPage,_that.floatingAppBar,_that.errorMessage,_that.appBarSearch);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LoadStatus status,  int curPage,  int maxPage,  bool floatingAppBar,  String? errorMessage,  bool appBarSearch)  $default,) {final _that = this;
+switch (_that) {
+case _ListViewState():
+return $default(_that.status,_that.curPage,_that.maxPage,_that.floatingAppBar,_that.errorMessage,_that.appBarSearch);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LoadStatus status,  int curPage,  int maxPage,  bool floatingAppBar,  String? errorMessage,  bool appBarSearch)?  $default,) {final _that = this;
+switch (_that) {
+case _ListViewState() when $default != null:
+return $default(_that.status,_that.curPage,_that.maxPage,_that.floatingAppBar,_that.errorMessage,_that.appBarSearch);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class _$_ListViewState extends _ListViewState {
-  const _$_ListViewState(
-      {this.status = LoadStatus.none,
-      this.curPage = 1,
-      this.maxPage = 1,
-      this.floatingAppBar = true,
-      this.errorMessage,
-      this.appBarSearch = false})
-      : super._();
+class _ListViewState extends ListViewState {
+  const _ListViewState({this.status = LoadStatus.none, this.curPage = 1, this.maxPage = 1, this.floatingAppBar = true, this.errorMessage, this.appBarSearch = false}): super._();
+  factory _ListViewState.fromJson(Map<String, dynamic> json) => _$ListViewStateFromJson(json);
 
-  factory _$_ListViewState.fromJson(Map<String, dynamic> json) =>
-      _$$_ListViewStateFromJson(json);
+@override@JsonKey() final  LoadStatus status;
+@override@JsonKey() final  int curPage;
+@override@JsonKey() final  int maxPage;
+@override@JsonKey() final  bool floatingAppBar;
+@override final  String? errorMessage;
+@override@JsonKey() final  bool appBarSearch;
 
-  @override
-  @JsonKey()
-  final LoadStatus status;
-  @override
-  @JsonKey()
-  final int curPage;
-  @override
-  @JsonKey()
-  final int maxPage;
-  @override
-  @JsonKey()
-  final bool floatingAppBar;
-  @override
-  final String? errorMessage;
-  @override
-  @JsonKey()
-  final bool appBarSearch;
+/// Create a copy of ListViewState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ListViewStateCopyWith<_ListViewState> get copyWith => __$ListViewStateCopyWithImpl<_ListViewState>(this, _$identity);
 
-  @override
-  String toString() {
-    return 'ListViewState(status: $status, curPage: $curPage, maxPage: $maxPage, floatingAppBar: $floatingAppBar, errorMessage: $errorMessage, appBarSearch: $appBarSearch)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_ListViewState &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.curPage, curPage) || other.curPage == curPage) &&
-            (identical(other.maxPage, maxPage) || other.maxPage == maxPage) &&
-            (identical(other.floatingAppBar, floatingAppBar) ||
-                other.floatingAppBar == floatingAppBar) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage) &&
-            (identical(other.appBarSearch, appBarSearch) ||
-                other.appBarSearch == appBarSearch));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, status, curPage, maxPage,
-      floatingAppBar, errorMessage, appBarSearch);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_ListViewStateCopyWith<_$_ListViewState> get copyWith =>
-      __$$_ListViewStateCopyWithImpl<_$_ListViewState>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_ListViewStateToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ListViewStateToJson(this, );
 }
 
-abstract class _ListViewState extends ListViewState {
-  const factory _ListViewState(
-      {final LoadStatus status,
-      final int curPage,
-      final int maxPage,
-      final bool floatingAppBar,
-      final String? errorMessage,
-      final bool appBarSearch}) = _$_ListViewState;
-  const _ListViewState._() : super._();
-
-  factory _ListViewState.fromJson(Map<String, dynamic> json) =
-      _$_ListViewState.fromJson;
-
-  @override
-  LoadStatus get status;
-  @override
-  int get curPage;
-  @override
-  int get maxPage;
-  @override
-  bool get floatingAppBar;
-  @override
-  String? get errorMessage;
-  @override
-  bool get appBarSearch;
-  @override
-  @JsonKey(ignore: true)
-  _$$_ListViewStateCopyWith<_$_ListViewState> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ListViewState&&(identical(other.status, status) || other.status == status)&&(identical(other.curPage, curPage) || other.curPage == curPage)&&(identical(other.maxPage, maxPage) || other.maxPage == maxPage)&&(identical(other.floatingAppBar, floatingAppBar) || other.floatingAppBar == floatingAppBar)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.appBarSearch, appBarSearch) || other.appBarSearch == appBarSearch));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,status,curPage,maxPage,floatingAppBar,errorMessage,appBarSearch);
+
+@override
+String toString() {
+  return 'ListViewState(status: $status, curPage: $curPage, maxPage: $maxPage, floatingAppBar: $floatingAppBar, errorMessage: $errorMessage, appBarSearch: $appBarSearch)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ListViewStateCopyWith<$Res> implements $ListViewStateCopyWith<$Res> {
+  factory _$ListViewStateCopyWith(_ListViewState value, $Res Function(_ListViewState) _then) = __$ListViewStateCopyWithImpl;
+@override @useResult
+$Res call({
+ LoadStatus status, int curPage, int maxPage, bool floatingAppBar, String? errorMessage, bool appBarSearch
+});
+
+
+
+
+}
+/// @nodoc
+class __$ListViewStateCopyWithImpl<$Res>
+    implements _$ListViewStateCopyWith<$Res> {
+  __$ListViewStateCopyWithImpl(this._self, this._then);
+
+  final _ListViewState _self;
+  final $Res Function(_ListViewState) _then;
+
+/// Create a copy of ListViewState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? curPage = null,Object? maxPage = null,Object? floatingAppBar = null,Object? errorMessage = freezed,Object? appBarSearch = null,}) {
+  return _then(_ListViewState(
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as LoadStatus,curPage: null == curPage ? _self.curPage : curPage // ignore: cast_nullable_to_non_nullable
+as int,maxPage: null == maxPage ? _self.maxPage : maxPage // ignore: cast_nullable_to_non_nullable
+as int,floatingAppBar: null == floatingAppBar ? _self.floatingAppBar : floatingAppBar // ignore: cast_nullable_to_non_nullable
+as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,appBarSearch: null == appBarSearch ? _self.appBarSearch : appBarSearch // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+// dart format on

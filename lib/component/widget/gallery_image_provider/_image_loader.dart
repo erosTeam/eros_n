@@ -3,47 +3,15 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
+import 'package:eros_n/component/widget/gallery_image_provider/gallery_image_platform_interface.dart'
+    as platform
+    show ImageLoader;
+import 'package:eros_n/component/widget/gallery_image_provider/gallery_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-import 'gallery_image_platform_interface.dart';
-import 'gallery_image_platform_interface.dart' as platform show ImageLoader;
-
 /// ImageLoader class to load images on IO platforms.
 class ImageLoader implements platform.ImageLoader {
-  @Deprecated('Use loadImageAsync instead')
-  @override
-  Stream<ui.Codec> loadBufferAsync(
-    String imagePageUrl,
-    String? cacheKey,
-    StreamController<ImageChunkEvent> chunkEvents,
-    DecoderBufferCallback decode,
-    BaseCacheManager cacheManager,
-    int? maxHeight,
-    int? maxWidth,
-    Map<String, String>? headers,
-    VoidCallback? errorListener,
-    ImageRenderMethodForWeb imageRenderMethodForWeb,
-    VoidCallback evictImage,
-  ) {
-    return _load(
-      imagePageUrl,
-      cacheKey,
-      chunkEvents,
-      (bytes) async {
-        final buffer = await ImmutableBuffer.fromUint8List(bytes);
-        return decode(buffer);
-      },
-      cacheManager,
-      maxHeight,
-      maxWidth,
-      headers,
-      (_) => errorListener?.call(),
-      imageRenderMethodForWeb,
-      evictImage,
-    );
-  }
-
   @override
   Stream<ui.Codec> loadImageAsync(
     String imagePageUrl,
@@ -91,11 +59,12 @@ class ImageLoader implements platform.ImageLoader {
   ) async* {
     try {
       assert(
-          cacheManager is ImageCacheManager ||
-              (maxWidth == null && maxHeight == null),
-          'To resize the image with a CacheManager the '
-          'CacheManager needs to be an ImageCacheManager. maxWidth and '
-          'maxHeight will be ignored when a normal CacheManager is used.');
+        cacheManager is ImageCacheManager ||
+            (maxWidth == null && maxHeight == null),
+        'To resize the image with a CacheManager the '
+        'CacheManager needs to be an ImageCacheManager. maxWidth and '
+        'maxHeight will be ignored when a normal CacheManager is used.',
+      );
 
       final stream = cacheManager is ImageCacheManager
           ? cacheManager.getImageFile(

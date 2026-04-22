@@ -4,7 +4,7 @@ part 'read_state.freezed.dart';
 part 'read_state.g.dart';
 
 @freezed
-class ReadState with _$ReadState {
+abstract class ReadState with _$ReadState {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory ReadState({
     @Default(false) bool showAppBar,

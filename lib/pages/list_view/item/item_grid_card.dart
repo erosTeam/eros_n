@@ -1,5 +1,4 @@
 import 'package:eros_n/common/extension.dart';
-import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/routes/routes.dart';
@@ -15,12 +14,12 @@ const double gridChildAspectRatio = 1 / 1.68;
 
 class ItemGridCard extends HookConsumerWidget {
   const ItemGridCard({
-    Key? key,
+    super.key,
     required this.gallery,
     this.index,
     this.page,
     this.tabTag,
-  }) : super(key: key);
+  });
 
   final Gallery gallery;
   final int? index;
@@ -31,7 +30,8 @@ class ItemGridCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
 
-    final aspectRatio = (gallery.images.thumbnail.imgWidth ?? 300) /
+    final aspectRatio =
+        (gallery.images.thumbnail.imgWidth ?? 300) /
         (gallery.images.thumbnail.imgHeight ?? 400);
 
     final isBoxFitCover = aspectRatio < 1.2 && aspectRatio > 1 / 2;
@@ -44,16 +44,20 @@ class ItemGridCard extends HookConsumerWidget {
         clipBehavior: Clip.antiAlias,
         // margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         child: Container(
-          foregroundDecoration: (gallery.languageCode == 'ja' ||
-                  gallery.languageCode == null)
+          foregroundDecoration:
+              (gallery.languageCode == 'ja' || gallery.languageCode == null)
               ? null
               : RotatedCornerDecoration.withColor(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.8),
                   badgeSize: const Size(38, 28),
                   textSpan: TextSpan(
                     text: gallery.languageCode?.toUpperCase() ?? '',
                     style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.bold),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
           child: Column(
@@ -78,8 +82,10 @@ class ItemGridCard extends HookConsumerWidget {
               ),
               Expanded(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 4,
+                    horizontal: 4,
+                  ),
                   alignment: Alignment.center,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

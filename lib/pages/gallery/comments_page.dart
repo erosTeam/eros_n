@@ -1,11 +1,13 @@
-import 'package:auto_route/auto_route.dart';
 import 'dart:async';
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/component/models/comment.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/network/app_dio/pdio.dart';
+import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -14,16 +16,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../network/app_dio/pdio.dart';
-import 'gallery_provider.dart';
-
 @RoutePage()
 class CommentsPage extends HookConsumerWidget {
-  const CommentsPage({
-    Key? key,
-    required this.gid,
-    this.colorScheme,
-  }) : super(key: key);
+  const CommentsPage({super.key, required this.gid, this.colorScheme});
   final int gid;
   final ColorScheme? colorScheme;
 
@@ -31,8 +26,9 @@ class CommentsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final comments = ref.watch(galleryProvider(gid).select((g) => g.comments));
 
-    final galleryNotifier =
-        useMemoized(() => ref.read(galleryProvider(gid).notifier));
+    final galleryNotifier = useMemoized(
+      () => ref.read(galleryProvider(gid).notifier),
+    );
 
     String? errorText;
     bool isSending = false;
@@ -40,8 +36,9 @@ class CommentsPage extends HookConsumerWidget {
     late StreamSubscription<bool> keyboardSubscription;
     useEffect(() {
       final keyboardVisibilityController = KeyboardVisibilityController();
-      keyboardSubscription =
-          keyboardVisibilityController.onChange.listen((visible) {
+      keyboardSubscription = keyboardVisibilityController.onChange.listen((
+        visible,
+      ) {
         if (!visible) {
           FocusScope.of(context).requestFocus(FocusNode());
         }
@@ -53,97 +50,105 @@ class CommentsPage extends HookConsumerWidget {
 
     return Theme(
       data: Theme.of(context).copyWith(colorScheme: colorScheme),
-      child: Builder(builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('评论'),
-          ),
-          body: Column(
-            children: [
-              Expanded(child: CommentsListView(comments: comments)),
-              Container(
-                color: Theme.of(context).colorScheme.surfaceVariant,
-                padding: EdgeInsets.only(
-                  left: max(16, context.mediaQueryPadding.left),
-                  right: max(8, context.mediaQueryPadding.right),
-                  bottom: context.mediaQueryPadding.bottom,
-                ),
-                child: StatefulBuilder(builder: (context, setState) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          enabled: !isSending,
-                          controller: galleryNotifier.commentEditingController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            errorText: errorText,
-                            errorMaxLines: 10,
-                            // border: OutlineInputBorder(),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 4, vertical: 8),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('评论')),
+            body: Column(
+              children: [
+                Expanded(child: CommentsListView(comments: comments)),
+                Container(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  padding: EdgeInsets.only(
+                    left: max(16, context.mediaQueryPadding.left),
+                    right: max(8, context.mediaQueryPadding.right),
+                    bottom: context.mediaQueryPadding.bottom,
+                  ),
+                  child: StatefulBuilder(
+                    builder: (context, setState) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              enabled: !isSending,
+                              controller:
+                                  galleryNotifier.commentEditingController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                errorText: errorText,
+                                errorMaxLines: 10,
+                                // border: OutlineInputBorder(),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 8,
+                                ),
+                              ),
+                              maxLines: null,
+                              onChanged: (value) {
+                                setState(() {
+                                  errorText = null;
+                                });
+                              },
+                            ),
                           ),
-                          maxLines: null,
-                          onChanged: (value) {
-                            setState(() {
-                              errorText = null;
-                            });
-                          },
-                        ),
-                      ),
-                      IconButton(
-                          onPressed: isSending
-                              ? null
-                              : () async {
-                                  if (galleryNotifier
-                                          .commentEditingController.text
-                                          .trim()
-                                          .length >
-                                      10) {
-                                    try {
+                          IconButton(
+                            onPressed: isSending
+                                ? null
+                                : () async {
+                                    if (galleryNotifier
+                                            .commentEditingController
+                                            .text
+                                            .trim()
+                                            .length >
+                                        10) {
+                                      try {
+                                        setState(() {
+                                          isSending = true;
+                                        });
+                                        await galleryNotifier.comment();
+                                      } on HttpException catch (e) {
+                                        logger.e(
+                                          '${e.runtimeType} ${e.message}',
+                                        );
+                                        setState(() {
+                                          errorText = e.message;
+                                        });
+                                      } finally {
+                                        setState(() {
+                                          isSending = false;
+                                        });
+                                      }
+                                    } else {
                                       setState(() {
-                                        isSending = true;
-                                      });
-                                      await galleryNotifier.comment();
-                                    } on HttpException catch (e) {
-                                      logger.e('${e.runtimeType} ${e.message}');
-                                      setState(() {
-                                        errorText = e.message;
-                                      });
-                                    } finally {
-                                      setState(() {
-                                        isSending = false;
+                                        errorText = L10n.of(
+                                          context,
+                                        ).comment_length_error;
                                       });
                                     }
-                                  } else {
-                                    setState(() {
-                                      errorText =
-                                          L10n.of(context).comment_length_error;
-                                    });
-                                  }
-                                },
-                          icon: Icon(
-                            isSending ? Icons.send : Icons.send_outlined,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          )),
-                    ],
-                  );
-                }),
-              ),
-            ],
-          ),
-        );
-      }),
+                                  },
+                            icon: Icon(
+                              isSending ? Icons.send : Icons.send_outlined,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
 
 class CommentsListView extends StatelessWidget {
-  const CommentsListView({
-    super.key,
-    required this.comments,
-  });
+  const CommentsListView({super.key, required this.comments});
 
   final List<Comment> comments;
 
@@ -153,10 +158,12 @@ class CommentsListView extends StatelessWidget {
       itemCount: comments.length,
       itemBuilder: (context, index) {
         final comment = comments[index];
-        final date =
-            DateTime.fromMillisecondsSinceEpoch((comment.postDate ?? 0) * 1000);
-        final dateFormatted =
-            DateFormat('yyyy-MM-dd HH:mm').format(date.toLocal());
+        final date = DateTime.fromMillisecondsSinceEpoch(
+          (comment.postDate ?? 0) * 1000,
+        );
+        final dateFormatted = DateFormat(
+          'yyyy-MM-dd HH:mm',
+        ).format(date.toLocal());
         return ListTile(
           leading: Container(
             //shadow
@@ -165,7 +172,7 @@ class CommentsListView extends StatelessWidget {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.grey.withValues(alpha: 0.2),
                   spreadRadius: 1,
                   blurRadius: 7,
                   offset: const Offset(0, 2), // changes position of shadow
@@ -180,9 +187,8 @@ class CommentsListView extends StatelessWidget {
                   imageUrl:
                       'https://i.${NHConst.baseHost}/${comment.poster?.avatarUrl ?? ''}',
                   fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  placeholder: (_, _) =>
+                      Container(color: Theme.of(context).colorScheme.primary),
                 ),
               ),
             ),
@@ -192,22 +198,21 @@ class CommentsListView extends StatelessWidget {
               Expanded(
                 child: Text(
                   comment.poster?.username ?? '',
-                  textScaleFactor: 0.9,
-                  maxLines: 2,
+                  textScaler: const TextScaler.linear(0.9),
                 ),
               ),
               const SizedBox(width: 8),
               Text(
                 dateFormatted,
-                textScaleFactor: 0.94,
-                style: Theme.of(context).textTheme.caption,
+                textScaler: const TextScaler.linear(0.94),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),
           subtitle: Text(
             comment.commentText ?? '',
-            style: Theme.of(context).textTheme.bodyText2,
-            textScaleFactor: 0.94,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textScaler: const TextScaler.linear(0.94),
           ),
         );
       },

@@ -16,11 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
 class ThumbPage extends HookConsumerWidget {
-  const ThumbPage({
-    Key? key,
-    required this.gid,
-    this.colorScheme,
-  }) : super(key: key);
+  const ThumbPage({super.key, required this.gid, this.colorScheme});
   final int gid;
   final ColorScheme? colorScheme;
 
@@ -30,35 +26,32 @@ class ThumbPage extends HookConsumerWidget {
 
     return Theme(
       data: Theme.of(context).copyWith(colorScheme: colorScheme),
-      child: Builder(builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(L10n.of(context).thumbs),
-          ),
-          floatingActionButton: ScrollingFab(
-            onPressed: () {
-              RouteUtil.goRead(
-                context,
-                ref,
-              );
-            },
-            scrollController: scrollController,
-            label: Consumer(builder: (context, ref, child) {
-              final currentPageIndex = ref.watch(
-                  galleryProvider(gid).select((g) => g.currentPageIndex));
-              final label = currentPageIndex == 0
-                  ? L10n.of(context).read
-                  : '${L10n.of(context).resume} ${currentPageIndex + 1}';
-              return Text(label);
-            }),
-            icon: const Icon(Icons.play_arrow),
-          ),
-          body: ThumbBody(
-            scrollController: scrollController,
-            gid: gid,
-          ),
-        );
-      }),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(title: Text(L10n.of(context).thumbs)),
+            floatingActionButton: ScrollingFab(
+              onPressed: () {
+                RouteUtil.goRead(context, ref);
+              },
+              scrollController: scrollController,
+              label: Consumer(
+                builder: (context, ref, child) {
+                  final currentPageIndex = ref.watch(
+                    galleryProvider(gid).select((g) => g.currentPageIndex),
+                  );
+                  final label = currentPageIndex == 0
+                      ? L10n.of(context).read
+                      : '${L10n.of(context).resume} ${currentPageIndex + 1}';
+                  return Text(label);
+                },
+              ),
+              icon: const Icon(Icons.play_arrow),
+            ),
+            body: ThumbBody(scrollController: scrollController, gid: gid),
+          );
+        },
+      ),
     );
   }
 }
@@ -79,16 +72,12 @@ class ThumbBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (backGround != null) backGround!,
+        ?backGround,
         Scrollbar(
           controller: scrollController,
           child: CustomScrollView(
             controller: scrollController,
-            slivers: [
-              ThumbsView(
-                gid: gid,
-              ),
-            ],
+            slivers: [ThumbsView(gid: gid)],
           ),
         ),
       ],
@@ -97,33 +86,29 @@ class ThumbBody extends StatelessWidget {
 }
 
 class ThumbsView extends HookConsumerWidget {
-  const ThumbsView({
-    Key? key,
-    required this.gid,
-    this.enableHero = false,
-  }) : super(key: key);
+  const ThumbsView({super.key, required this.gid, this.enableHero = false});
 
   final int gid;
   final bool enableHero;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.v('build thumbs $gid');
+    logger.t('build thumbs $gid');
     // final pages = ref.watch(galleryProvider(gid).select((g) => g.pages));
 
     const kHeroTagPrefix = 'thumb_';
 
-    final List<GalleryImage> pages =
-        ref.watch(galleryProvider(gid).select((g) => g.images.pages));
+    final List<GalleryImage> pages = ref.watch(
+      galleryProvider(gid).select((g) => g.images.pages),
+    );
     final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
-    final pageStatus =
-        ref.watch(pageStateProvider(gid).select((state) => state.pageStatus));
+    final pageStatus = ref.watch(
+      pageStateProvider(gid).select((state) => state.pageStatus),
+    );
 
     if (pageStatus == PageStatus.loading || pages.isEmpty) {
       return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -138,48 +123,50 @@ class ThumbsView extends HookConsumerWidget {
         right: 8,
       ),
       sliver: SliverGrid(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final thumb = pages[index];
-              final imageUrl =
-                  'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[thumb.type]}';
-              return GestureDetector(
-                onTap: () {
-                  RouteUtil.goRead(context, ref,
-                      index: index, heroTagPrefix: kHeroTagPrefix);
-                },
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: AspectRatio(
-                          aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            child: Hero(
-                              tag: '$kHeroTagPrefix${gid}_$index',
-                              child: ErosCachedNetworkImage(
-                                imageUrl: imageUrl,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final thumb = pages[index];
+          final imageUrl =
+              'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[thumb.type]}';
+          return GestureDetector(
+            onTap: () {
+              RouteUtil.goRead(
+                context,
+                ref,
+                index: index,
+                heroTagPrefix: kHeroTagPrefix,
+              );
+            },
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: Hero(
+                          tag: '$kHeroTagPrefix${gid}_$index',
+                          child: ErosCachedNetworkImage(
+                            imageUrl: imageUrl,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
                     ),
-                    Text('${index + 1}'),
-                  ],
+                  ),
                 ),
-              );
-            },
-            childCount: pages.length,
-          ),
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 150.0,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 4,
-            childAspectRatio: minRatio - 0.2,
-          )),
+                Text('${index + 1}'),
+              ],
+            ),
+          );
+        }, childCount: pages.length),
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 150.0,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 4,
+          childAspectRatio: minRatio - 0.2,
+        ),
+      ),
     );
   }
 }

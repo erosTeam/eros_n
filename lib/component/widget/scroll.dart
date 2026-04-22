@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomScrollPhysics extends BouncingScrollPhysics {
-  const CustomScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
+  const CustomScrollPhysics({super.parent});
 
   @override
   CustomScrollPhysics applyTo(ScrollPhysics? ancestor) {
@@ -10,8 +10,8 @@ class CustomScrollPhysics extends BouncingScrollPhysics {
 
   @override
   SpringDescription get spring => SpringDescription.withDampingRatio(
-        mass: 0.5,
-        stiffness: 300.0, // Increase this value as you wish.
-        ratio: 1.1,
-      );
+    mass: 0.5,
+    stiffness: 300.0, // Increase this value as you wish.
+    ratio: 1.1,
+  );
 }

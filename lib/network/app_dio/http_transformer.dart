@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import 'http_response.dart';
+import 'package:eros_n/network/app_dio/http_response.dart';
 
-typedef HttpTransformerBuilderCallback = FutureOr<DioHttpResponse> Function(
-    Response response);
+typedef HttpTransformerBuilderCallback =
+    FutureOr<DioHttpResponse> Function(Response response);
 
 /// Response 解析
 abstract class HttpTransformer {
@@ -13,12 +13,12 @@ abstract class HttpTransformer {
 }
 
 class DefaultHttpTransformer extends HttpTransformer {
-// 假设接口返回类型
-//   {
-//     "code": 100,
-//     "data": {},
-//     "message": "success"
-// }
+  // 假设接口返回类型
+  //   {
+  //     "code": 100,
+  //     "data": {},
+  //     "message": "success"
+  // }
   /// 内部构造方法，可避免外部暴露构造函数，进行实例化
   DefaultHttpTransformer._internal();
 

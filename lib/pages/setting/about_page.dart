@@ -6,42 +6,41 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 @RoutePage()
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key? key}) : super(key: key);
+  const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('About'),
-      ),
+      appBar: AppBar(title: const Text('About')),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             ListTile(
-              title: Text('Version'),
+              title: const Text('Version'),
               subtitle: Text(
-                  '${Global.packageInfo.version} (${Global.packageInfo.buildNumber})'),
+                '${Global.packageInfo.version} (${Global.packageInfo.buildNumber})',
+              ),
             ),
             ListTile(
-              title: Text('Author'),
-              subtitle: Text('erosTeam'),
+              title: const Text('Author'),
+              subtitle: const Text('erosTeam'),
               onTap: () => launchUrlString(
                 'ttps://github.com/erosTeam',
                 mode: LaunchMode.externalApplication,
               ),
             ),
             ListTile(
-              title: Text('Github'),
-              subtitle: Text('https://github.com/erosTeam/eros_n'),
+              title: const Text('Github'),
+              subtitle: const Text('https://github.com/erosTeam/eros_n'),
               onTap: () => launchUrlString(
                 'https://github.com/erosTeam/eros_n',
                 mode: LaunchMode.externalApplication,
               ),
             ),
             ListTile(
-              title: Text('License'),
+              title: const Text('License'),
               onTap: () {
-                erosRouter.pushNamed(NHRoutes.license);
+                erosRouter.push(const MyLicenseRoute());
               },
             ),
           ],

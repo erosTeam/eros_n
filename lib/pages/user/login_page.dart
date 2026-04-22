@@ -1,6 +1,6 @@
-import 'package:auto_route/auto_route.dart';
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/exception/error.dart';
@@ -16,9 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
 class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({
-    Key? key,
-  }) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   ConsumerState createState() => _LoginPageState();
@@ -66,7 +64,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     try {
-      final result = await ref.read(userProvider.notifier).login(
+      final result = await ref
+          .read(userProvider.notifier)
+          .login(
             username: _usernameController.text.trim(),
             password: _passwordController.text.trim(),
           );
@@ -79,20 +79,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         // log in with captcha
         logger.e('login need captcha');
         showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-                  title: Text(L10n.of(context).login_need_captcha),
-                  content: Text(L10n.of(context).please_login_web),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        erosRouter.pop();
-                        _loginWithWebView();
-                      },
-                      child: Text(L10n.of(context).ok),
-                    ),
-                  ],
-                ));
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text(L10n.of(context).login_need_captcha),
+            content: Text(L10n.of(context).please_login_web),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  erosRouter.pop();
+                  _loginWithWebView();
+                },
+                child: Text(L10n.of(context).ok),
+              ),
+            ],
+          ),
+        );
       } else if (e.type == NhErrorType.loginInvalid) {
         // log invalid
         logger.e('login invalid');
@@ -112,13 +113,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   Future<void> _loginWithWebView() async {
-    final cookies = await erosRouter.pushNamed<List<Cookie>>(NHRoutes.webLogin);
+    final cookies = await erosRouter.push<List<Cookie>>(const WebLoginRoute());
     logger.d('==>> cookies: $cookies');
     if (cookies != null) {
       erosRouter.pop();
       await Global.cookieJar.delete(Uri.parse(NHConst.baseUrl));
-      await Global.cookieJar
-          .saveFromResponse(Uri.parse(NHConst.baseUrl), cookies);
+      await Global.cookieJar.saveFromResponse(
+        Uri.parse(NHConst.baseUrl),
+        cookies,
+      );
       await ref.read(userProvider.notifier).loginGetMore();
     }
   }
@@ -126,9 +129,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(L10n.of(context).login),
-      ),
+      appBar: AppBar(title: Text(L10n.of(context).login)),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -164,14 +165,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   suffixIcon: Container(
                     padding: const EdgeInsets.only(right: 8),
                     child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                        icon: _obscurePassword
-                            ? const Icon(Icons.visibility)
-                            : const Icon(Icons.visibility_off)),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      icon: _obscurePassword
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off),
+                    ),
                   ),
                 ),
                 obscureText: _obscurePassword,
@@ -187,8 +189,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     backgroundColor: Theme.of(context).colorScheme.primary,
-                    disabledBackgroundColor:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                    disabledBackgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.8),
                   ),
                   onPressed: _logining
                       ? null
@@ -210,51 +213,61 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                      onPressed: _loginWithWebView,
-                      child: Text(
-                        L10n.of(context).login_by_web,
-                        style: const TextStyle(
-                            decoration: TextDecoration.underline),
-                      )),
+                    onPressed: _loginWithWebView,
+                    child: Text(
+                      L10n.of(context).login_by_web,
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
                   TextButton(
-                      onPressed: () {
-                        erosRouter.push(NhWebViewRoute(
+                    onPressed: () {
+                      erosRouter.push(
+                        NhWebViewRoute(
                           initialUrl: NHConst.registerUrl,
                           title: L10n.of(context).register,
-                        ));
-                      },
-                      child: Text(
-                        L10n.of(context).register,
-                        style: const TextStyle(
-                            decoration: TextDecoration.underline),
-                      )),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      L10n.of(context).register,
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               if (kDebugMode)
                 TextButton(
-                    onPressed: () async {
-                      final u = await getInfoFromIndex(refresh: true);
-                      logger.d('==>> u: $u');
-                    },
-                    child: const Text(
-                      'Get info from Index',
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    )),
+                  onPressed: () async {
+                    final u = await getInfoFromIndex(refresh: true);
+                    logger.d('==>> u: $u');
+                  },
+                  child: const Text(
+                    'Get info from Index',
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
+                ),
               if (kDebugMode)
                 TextButton(
-                    onPressed: () async {
-                      final userUrl = ref.read(userProvider).userUrl ?? '';
-                      logger.d('==>> userUrl: $userUrl');
-                      if (userUrl.isNotEmpty) {
-                        final u = await getInfoFromUserPage(
-                            url: userUrl, refresh: true);
-                        logger.d('==>> u: $u');
-                      }
-                    },
-                    child: const Text(
-                      'Get info from user page',
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    )),
+                  onPressed: () async {
+                    final userUrl = ref.read(userProvider).userUrl ?? '';
+                    logger.d('==>> userUrl: $userUrl');
+                    if (userUrl.isNotEmpty) {
+                      final u = await getInfoFromUserPage(
+                        url: userUrl,
+                        refresh: true,
+                      );
+                      logger.d('==>> u: $u');
+                    }
+                  },
+                  child: const Text(
+                    'Get info from user page',
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
+                ),
             ],
           ),
         ),

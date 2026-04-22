@@ -1,10 +1,10 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
 part 'tag_translate.g.dart';
 
 @CopyWith()
-@Collection()
+@Entity()
 class TagTranslate {
   TagTranslate({
     required this.namespace,
@@ -13,26 +13,35 @@ class TagTranslate {
     this.intro,
     this.links,
     this.lastUseTime = 0,
-  }) : id = Isar.autoIncrement;
-  Id id;
+    this.id = 0,
+  });
+
+  @Id()
+  int id;
+
   @Index()
   final String namespace;
-  @Index(composite: [CompositeIndex('namespace')], unique: true, replace: true)
+
   @Index()
   final String name;
+
   @Index()
   final String? translateName;
   final String? intro;
   final String? links;
+
   @Index()
   final int lastUseTime;
 
+  @Transient()
   String? get translateNameNotMD {
     final reg = RegExp(r'!\[(\S+)?\]\(.+?\)(\S+)');
     final match = reg.allMatches(translateName ?? '');
     if (match.isNotEmpty) {
       return translateName?.replaceAllMapped(
-              reg, (match) => match.group(2) ?? '') ??
+            reg,
+            (match) => match.group(2) ?? '',
+          ) ??
           translateName;
     } else {
       return translateName;

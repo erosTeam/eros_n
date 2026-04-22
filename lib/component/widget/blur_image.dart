@@ -27,13 +27,8 @@ class BlurImage extends StatelessWidget {
         Container(child: child),
         if (blur)
           BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: sigma,
-              sigmaY: sigma,
-            ),
-            child: ColoredBox(
-              color: color,
-            ),
+            filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+            child: ColoredBox(color: color),
           ),
       ],
     );

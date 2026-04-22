@@ -20,8 +20,8 @@ class MultiImageStreamCompleter extends ImageStreamCompleter {
     required double scale,
     Stream<ImageChunkEvent>? chunkEvents,
     InformationCollector? informationCollector,
-  })  : _informationCollector = informationCollector,
-        _scale = scale {
+  }) : _informationCollector = informationCollector,
+       _scale = scale {
     codec.listen(
       (event) {
         if (_timer != null) {
@@ -99,7 +99,9 @@ class MultiImageStreamCompleter extends ImageStreamCompleter {
 
   void _handleAppFrame(Duration timestamp) {
     _frameCallbackScheduled = false;
-    if (!hasListeners) return;
+    if (!hasListeners) {
+      return;
+    }
     if (_isFirstFrame() || _hasFrameDurationPassed(timestamp)) {
       _emitFrame(ImageInfo(image: _nextFrame!.image, scale: _scale));
       _shownTimestamp = timestamp;
@@ -173,7 +175,9 @@ class MultiImageStreamCompleter extends ImageStreamCompleter {
   @override
   void addListener(ImageStreamListener listener) {
     __hadAtLeastOneListener = true;
-    if (!hasListeners && _codec != null) _decodeNextFrameAndSchedule();
+    if (!hasListeners && _codec != null) {
+      _decodeNextFrameAndSchedule();
+    }
     super.addListener(listener);
   }
 

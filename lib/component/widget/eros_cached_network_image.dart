@@ -75,13 +75,13 @@ class ErosCachedNetworkImage extends StatelessWidget {
         image ?? getErosImageProvider(imageUrl!, headers: httpHeaders);
 
     if (onLoadCompleted != null) {
-      imageProvider.resolve(const ImageConfiguration()).addListener(
-        ImageStreamListener(
-          (ImageInfo imageInfo, _) {
-            onLoadCompleted?.call();
-          },
-        ),
-      );
+      imageProvider
+          .resolve(const ImageConfiguration())
+          .addListener(
+            ImageStreamListener((ImageInfo imageInfo, _) {
+              onLoadCompleted?.call();
+            }),
+          );
     }
 
     return OctoImage(
@@ -113,13 +113,14 @@ class ErosCachedNetworkImage extends StatelessWidget {
     }
     return (context, progress) {
       return progressIndicatorBuilder!(
-          context,
+        context,
+        imageUrl ?? '',
+        DownloadProgress(
           imageUrl ?? '',
-          DownloadProgress(
-            imageUrl ?? '',
-            progress?.expectedTotalBytes,
-            progress?.cumulativeBytesLoaded ?? 0,
-          ));
+          progress?.expectedTotalBytes,
+          progress?.cumulativeBytesLoaded ?? 0,
+        ),
+      );
     };
   }
 

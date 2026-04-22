@@ -1,4 +1,5 @@
-import 'platform_web.dart' if (dart.library.io) 'platform_io.dart';
+import 'package:eros_n/utils/get_utils/platform/platform_web.dart'
+    if (dart.library.io) 'platform_io.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class GetPlatform {

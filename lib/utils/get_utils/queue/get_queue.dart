@@ -34,7 +34,7 @@ class GetQueue {
     _queue.clear();
   }
 
-  void _check() async {
+  Future<void> _check() async {
     if (!_active && _queue.isNotEmpty) {
       _active = true;
       var item = _queue.removeAt(0);
@@ -50,8 +50,7 @@ class GetQueue {
 }
 
 class _Item {
+  _Item(this.completer, this.job);
   final dynamic completer;
   final dynamic job;
-
-  _Item(this.completer, this.job);
 }

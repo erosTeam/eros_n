@@ -11,13 +11,13 @@ import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 
 class ItemWaterfallFlowCard extends HookConsumerWidget {
   const ItemWaterfallFlowCard({
-    Key? key,
+    super.key,
     required this.gallery,
     this.index,
     this.page,
     this.tabTag,
     this.compact = false,
-  }) : super(key: key);
+  });
 
   final Gallery gallery;
   final int? index;
@@ -42,10 +42,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
       item = Card(
         // clipBehavior: Clip.antiAlias,
         margin: const EdgeInsets.all(0),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          child: item,
-        ),
+        child: Container(margin: const EdgeInsets.only(bottom: 8), child: item),
       );
     }
 
@@ -60,22 +57,23 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
 
   Widget buildCoverImage(BuildContext context, bool compact, bool showTags) {
     Widget coverImage = Container(
-      foregroundDecoration: (gallery.languageCode == 'ja' ||
-              gallery.languageCode == null)
+      foregroundDecoration:
+          (gallery.languageCode == 'ja' || gallery.languageCode == null)
           ? null
           : RotatedCornerDecoration.withColor(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+              color: Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: 0.8),
               badgeSize: const Size(38, 28),
               textSpan: TextSpan(
                 text: gallery.languageCode?.toUpperCase() ?? '',
-                style:
-                    const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-      child: CoverImg(
-        imgUrl: gallery.thumbUrl ?? '',
-        fit: BoxFit.contain,
-      ),
+      child: CoverImg(imgUrl: gallery.thumbUrl ?? '', fit: BoxFit.contain),
     );
 
     if (compact) {
@@ -92,11 +90,11 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                   Colors.transparent,
                   Colors.transparent,
                   // Colors.transparent,
-                  if (showTags) Colors.black.withOpacity(0.5),
+                  if (showTags) Colors.black.withValues(alpha: 0.5),
                   if (showTags)
-                    Colors.black.withOpacity(0.7)
+                    Colors.black.withValues(alpha: 0.7)
                   else
-                    Colors.black.withOpacity(0.55),
+                    Colors.black.withValues(alpha: 0.55),
                 ],
               ).createShader(rect);
             },
@@ -125,7 +123,7 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
                     color: Colors.white,
                     shadows: [
                       Shadow(
-                        color: Colors.black.withOpacity(0.8),
+                        color: Colors.black.withValues(alpha: 0.8),
                         offset: const Offset(0, 0),
                         blurRadius: 2,
                       ),
@@ -144,7 +142,8 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
     return Hero(
       tag: '${tabTag ?? ''}_${gallery.thumbUrl}',
       child: AspectRatio(
-        aspectRatio: (gallery.images.thumbnail.imgWidth ?? 300) /
+        aspectRatio:
+            (gallery.images.thumbnail.imgWidth ?? 300) /
             (gallery.images.thumbnail.imgHeight ?? 400),
         child: Card(
           margin: const EdgeInsets.all(0),
@@ -167,8 +166,8 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-                // fontWeight: FontWeight.w500,
-                ),
+              // fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

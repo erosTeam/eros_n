@@ -6,26 +6,28 @@ import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
+import 'package:eros_n/pages/read/read_view.dart';
+import 'package:eros_n/pages/setting/read_setting_page.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../setting/read_setting_page.dart';
-import 'read_view.dart';
-
 class ViewTopBar extends HookConsumerWidget {
-  const ViewTopBar({Key? key}) : super(key: key);
+  const ViewTopBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: context.mediaQueryPadding.top + kTopBarHeight,
       width: context.mediaQuery.size.width,
-      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.9),
+      color: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: context.mediaQueryPadding.horizontal / 2),
+          horizontal: context.mediaQueryPadding.horizontal / 2,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -40,31 +42,35 @@ class ViewTopBar extends HookConsumerWidget {
                       onPressed: () {
                         context.router.pop();
                       },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                      ),
+                      icon: const Icon(Icons.arrow_back),
                     ),
                     if (context.isTablet)
-                      const ControllerButtonBar(
-                        mainAxisSize: MainAxisSize.min,
-                      ),
+                      const ControllerButtonBar(mainAxisSize: MainAxisSize.min),
                   ],
                 ),
-                Consumer(builder: (context, ref, child) {
-                  final gid = currentGalleryGid;
-                  final currentItemIndex = ref.watch(galleryProvider(gid)
-                      .select((val) => val.currentPageIndex));
-                  final totalItem = ref.watch(galleryProvider(gid)
-                      .select((val) => val.images.pages.length));
-                  return Container(
-                    alignment: Alignment.center,
-                    height: kTopBarButtonHeight,
-                    child: Text(
-                      '${currentItemIndex + 1} / $totalItem',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  );
-                }),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final gid = currentGalleryGid;
+                    final currentItemIndex = ref.watch(
+                      galleryProvider(
+                        gid,
+                      ).select((val) => val.currentPageIndex),
+                    );
+                    final totalItem = ref.watch(
+                      galleryProvider(
+                        gid,
+                      ).select((val) => val.images.pages.length),
+                    );
+                    return Container(
+                      alignment: Alignment.center,
+                      height: kTopBarButtonHeight,
+                      child: Text(
+                        '${currentItemIndex + 1} / $totalItem',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ],
@@ -75,17 +81,21 @@ class ViewTopBar extends HookConsumerWidget {
 }
 
 class ViewBottomBar extends HookConsumerWidget {
-  const ViewBottomBar({Key? key}) : super(key: key);
+  const ViewBottomBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarHeight =
-        ref.watch(readProvider.select((val) => val.bottomBarHeight));
-    final showThumbList =
-        ref.watch(readProvider.select((val) => val.showThumbList));
+    final bottomBarHeight = ref.watch(
+      readProvider.select((val) => val.bottomBarHeight),
+    );
+    final showThumbList = ref.watch(
+      readProvider.select((val) => val.showThumbList),
+    );
 
     return AnimatedContainer(
-      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.9),
+      color: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
       height: bottomBarHeight,
       width: context.mediaQuery.size.width,
       duration: const Duration(milliseconds: 300),
@@ -108,22 +118,23 @@ class ViewBottomBar extends HookConsumerWidget {
 }
 
 class BottomBarControlWidget extends HookConsumerWidget {
-  const BottomBarControlWidget({
-    Key? key,
-  }) : super(key: key);
+  const BottomBarControlWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gid = currentGalleryGid;
-    final currentItemIndex =
-        ref.watch(galleryProvider(gid).select((val) => val.currentPageIndex));
-    final totNum = ref
-        .watch(galleryProvider(gid).select((val) => val.images.pages.length));
+    final currentItemIndex = ref.watch(
+      galleryProvider(gid).select((val) => val.currentPageIndex),
+    );
+    final totNum = ref.watch(
+      galleryProvider(gid).select((val) => val.images.pages.length),
+    );
     final readNotifier = ref.read(readProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: context.mediaQueryPadding.horizontal / 2 + 10),
+        horizontal: context.mediaQueryPadding.horizontal / 2 + 10,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -135,7 +146,9 @@ class BottomBarControlWidget extends HookConsumerWidget {
               key: ValueKey('ViewPageSlider_$currentItemIndex'),
               max: math.max(0, totNum - 1.0),
               initValue: math.max(
-                  0, math.min(currentItemIndex.roundToDouble(), totNum - 1.0)),
+                0,
+                math.min(currentItemIndex.roundToDouble(), totNum - 1.0),
+              ),
               onChangedEnd: (val) {
                 logger.d('onChangedEnd ${val + 1}');
                 readNotifier.jumpToPage(val.round());
@@ -158,13 +171,13 @@ class BottomBarControlWidget extends HookConsumerWidget {
 /// 页面滑条
 class ViewPageSlider extends StatefulWidget {
   const ViewPageSlider({
-    Key? key,
+    super.key,
     required this.max,
     required this.initValue,
     required this.onChangedEnd,
     required this.onChanged,
     this.reverse = false,
-  }) : super(key: key);
+  });
 
   final double max;
   final double initValue;
@@ -238,11 +251,11 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
 // 阅读控制按钮栏
 class ControllerButtonBar extends HookConsumerWidget {
   const ControllerButtonBar({
-    Key? key,
+    super.key,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.mainAxisSize = MainAxisSize.max,
     this.showLabel = true,
-  }) : super(key: key);
+  });
 
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
@@ -272,8 +285,9 @@ class ControllerButtonBar extends HookConsumerWidget {
             // );
 
             // now auto read
-            final nowAutoRead =
-                ref.read(readProvider.select((s) => s.autoRead));
+            final nowAutoRead = ref.read(
+              readProvider.select((s) => s.autoRead),
+            );
 
             // stop auto read
             if (nowAutoRead) {
@@ -312,9 +326,7 @@ class ControllerButtonBar extends HookConsumerWidget {
 }
 
 class AutoReadButton extends HookConsumerWidget {
-  const AutoReadButton({
-    Key? key,
-  }) : super(key: key);
+  const AutoReadButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -332,9 +344,7 @@ class AutoReadButton extends HookConsumerWidget {
 
 // 阅读模式按钮
 class ReadModelButton extends HookConsumerWidget {
-  const ReadModelButton({
-    Key? key,
-  }) : super(key: key);
+  const ReadModelButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -349,26 +359,30 @@ class ReadModelButton extends HookConsumerWidget {
     final readModelIconMap = <ReadModel, Widget>{
       ReadModel.leftToRight: const Icon(Icons.send_to_mobile_outlined),
       ReadModel.rightToLeft: Transform.rotate(
-          angle: math.pi, child: const Icon(Icons.send_to_mobile_outlined)),
+        angle: math.pi,
+        child: const Icon(Icons.send_to_mobile_outlined),
+      ),
       ReadModel.webtoon: const Icon(Icons.system_update_outlined),
       ReadModel.vertical: Transform.rotate(
-          angle: math.pi / 2, child: const Icon(Icons.send_to_mobile_outlined)),
+        angle: math.pi / 2,
+        child: const Icon(Icons.send_to_mobile_outlined),
+      ),
       ReadModel.curlVertical: const Icon(Icons.system_security_update_outlined),
     };
 
     final items = itemMap.entries.map((e) {
-      return PopupMenuItem<ReadModel>(
-        value: e.key,
-        child: e.value,
-      );
+      return PopupMenuItem<ReadModel>(value: e.key, child: e.value);
     }).toList();
 
     return PopupMenuButton<ReadModel>(
-      icon: Consumer(builder: (context, ref, child) {
-        final readModel =
-            ref.watch(settingsProvider.select((setting) => setting.readModel));
-        return readModelIconMap[readModel]!;
-      }),
+      icon: Consumer(
+        builder: (context, ref, child) {
+          final readModel = ref.watch(
+            settingsProvider.select((setting) => setting.readModel),
+          );
+          return readModelIconMap[readModel]!;
+        },
+      ),
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       elevation: 2,
       onSelected: (val) {
@@ -385,9 +399,7 @@ class ReadModelButton extends HookConsumerWidget {
 
 // 阅读设置
 class ReadSettings extends StatefulHookConsumerWidget {
-  const ReadSettings({
-    Key? key,
-  }) : super(key: key);
+  const ReadSettings({super.key});
 
   @override
   ConsumerState<ReadSettings> createState() => _BottomSheetWidgetState();
@@ -406,12 +418,12 @@ class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SizedBox(
+    return const SizedBox(
       height: 400,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
+        children: [
           FullScreenListTile(onReadView: true),
           // switch volumeKeyTurnPage
           VolumeKeyTurnPageListTile(onReadView: true),
@@ -424,36 +436,28 @@ class _BottomSheetWidgetState extends ConsumerState<ReadSettings>
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   bool get wantKeepAlive => true;
 }
 
 class ThumbnailListView extends HookConsumerWidget {
-  const ThumbnailListView({Key? key}) : super(key: key);
+  const ThumbnailListView({super.key});
 
   static const kBorderWidth = 2.0;
   static const kRadius = 4.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      height: kThumbListViewHeight,
-      child: SizedBox(),
-    );
+    return const SizedBox(height: kThumbListViewHeight, child: SizedBox());
   }
 }
 
 class ReadScaffold extends HookConsumerWidget {
   const ReadScaffold({
-    Key? key,
+    super.key,
     required this.child,
     required this.topBar,
     required this.bottomBar,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final Widget topBar;
@@ -468,31 +472,36 @@ class ReadScaffold extends HookConsumerWidget {
     return Stack(
       children: [
         child,
-        Consumer(builder: (context, ref, child) {
-          final topBarOffset =
-              ref.watch(readProvider.select((state) => state.topBarOffset));
-          final bottomBarOffset =
-              ref.watch(readProvider.select((state) => state.bottomBarOffset));
-          logger.v(
-              'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset');
+        Consumer(
+          builder: (context, ref, child) {
+            final topBarOffset = ref.watch(
+              readProvider.select((state) => state.topBarOffset),
+            );
+            final bottomBarOffset = ref.watch(
+              readProvider.select((state) => state.bottomBarOffset),
+            );
+            logger.t(
+              'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset',
+            );
 
-          return Stack(
-            children: [
-              AnimatedPositioned(
-                curve: Curves.fastOutSlowIn,
-                duration: const Duration(milliseconds: 300),
-                top: topBarOffset,
-                child: topBar,
-              ),
-              AnimatedPositioned(
-                curve: Curves.fastOutSlowIn,
-                duration: const Duration(milliseconds: 300),
-                bottom: bottomBarOffset,
-                child: bottomBar,
-              ),
-            ],
-          );
-        }),
+            return Stack(
+              children: [
+                AnimatedPositioned(
+                  curve: Curves.fastOutSlowIn,
+                  duration: const Duration(milliseconds: 300),
+                  top: topBarOffset,
+                  child: topBar,
+                ),
+                AnimatedPositioned(
+                  curve: Curves.fastOutSlowIn,
+                  duration: const Duration(milliseconds: 300),
+                  bottom: bottomBarOffset,
+                  child: bottomBar,
+                ),
+              ],
+            );
+          },
+        ),
       ],
     );
   }
@@ -500,10 +509,7 @@ class ReadScaffold extends HookConsumerWidget {
 
 /// 控制触摸手势事件
 class ImageGestureDetector extends HookConsumerWidget {
-  const ImageGestureDetector({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
+  const ImageGestureDetector({super.key, required this.child});
   final Widget child;
 
   static const lrRatio = 1 / 3;

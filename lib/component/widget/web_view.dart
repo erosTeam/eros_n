@@ -1,21 +1,21 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/pages/webview/webview.dart' show inAppWebViewSettings;
 import 'package:eros_n/utils/logger.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart' hide Cookie;
 import 'package:webview_windows/webview_windows.dart';
-import '../../common/const/const.dart';
-import '../../pages/webview/webview.dart';
 
 class WebViewCookieInfo {
-  const WebViewCookieInfo(
-      {required this.url,
-      required this.cookies,
-      required this.userAgent,
-      this.manualRequired = false,
-      this.message});
+  const WebViewCookieInfo({
+    required this.url,
+    required this.cookies,
+    required this.userAgent,
+    this.manualRequired = false,
+    this.message,
+  });
 
   @override
   String toString() {
@@ -32,11 +32,12 @@ class WebViewCookieInfo {
 typedef WebViewCallback = Function(WebViewCookieInfo);
 
 class MobileWebView extends StatefulWidget {
-  const MobileWebView(
-      {super.key,
-      required this.url,
-      this.callback,
-      this.deletedCookie = false});
+  const MobileWebView({
+    super.key,
+    required this.url,
+    this.callback,
+    this.deletedCookie = false,
+  });
 
   final WebViewCallback? callback;
   final String url;
@@ -56,13 +57,13 @@ class _MobileWebViewState extends State<MobileWebView> {
   void initState() {
     initWebView();
     super.initState();
-    if(widget.callback != null) {
+    if (widget.callback != null) {
       anomalyTimer = Timer.periodic(const Duration(seconds: 1), anomalyMonitor);
     }
   }
 
   Future<void> anomalyMonitor(Timer timer) async {
-    if(mounted && initOk && _controller != null) {
+    if (mounted && initOk && _controller != null) {
       callbackChallengeInfo();
     }
   }
@@ -81,37 +82,48 @@ class _MobileWebViewState extends State<MobileWebView> {
   }
 
   Future callbackChallengeInfo() async {
-    if(_controller == null) {
+    if (_controller == null) {
       return;
     }
-    final cookies =
-    await cookieManager.getCookies(url: Uri.parse(NHConst.baseUrl));
-    final ioCookies =
-    cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
+    final cookies = await cookieManager.getCookies(
+      url: WebUri(NHConst.baseUrl),
+    );
+    final ioCookies = cookies.map((e) => Cookie(e.name, '${e.value}')).toList();
     final ua = await _controller!.evaluateJavascript(
-        source: 'navigator.userAgent');
+      source: 'navigator.userAgent',
+    );
     final userAgent = ua is String ? ua : '';
-    widget.callback?.call(WebViewCookieInfo(
+    widget.callback?.call(
+      WebViewCookieInfo(
         url: NHConst.baseUrl,
         cookies: ioCookies,
         userAgent: userAgent,
-        manualRequired: (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
-        message: await getChallengeMessage()
-    ));
+        manualRequired:
+            (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
+        message: await getChallengeMessage(),
+      ),
+    );
   }
 
   Future<bool> getManualRequired() async {
-    if(_controller != null) {
+    if (_controller != null) {
       final manualRequiredText = await _controller!.evaluateJavascript(
-          source:'(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null');
+        source:
+            '(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null',
+      );
       return manualRequiredText == 'true';
     }
     return false;
   }
 
   Future<String?> getChallengeMessage() async {
-    if(_controller != null) {
-      final String msg = await _controller!.evaluateJavascript(source: '(document.querySelector("#challenge-body-text") != null) ? document.querySelector("#challenge-body-text").textContent : ""') as String;
+    if (_controller != null) {
+      final String msg =
+          await _controller!.evaluateJavascript(
+                source:
+                    '(document.querySelector("#challenge-body-text") != null) ? document.querySelector("#challenge-body-text").textContent : ""',
+              )
+              as String;
       return msg.trim();
     }
     return null;
@@ -127,10 +139,8 @@ class _MobileWebViewState extends State<MobileWebView> {
   Widget build(BuildContext context) {
     if (initOk) {
       return InAppWebView(
-        initialUrlRequest: URLRequest(
-          url: Uri.parse(widget.url),
-        ),
-        initialOptions: inAppWebViewOptions,
+        initialUrlRequest: URLRequest(url: WebUri(widget.url)),
+        initialSettings: inAppWebViewSettings,
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           return NavigationActionPolicy.ALLOW;
         },
@@ -186,39 +196,42 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   void initState() {
     super.initState();
     initPlatformState();
-    if(widget.callback != null) {
+    if (widget.callback != null) {
       anomalyTimer = Timer.periodic(const Duration(seconds: 1), anomalyMonitor);
     }
   }
 
   Future<void> anomalyMonitor(Timer timer) async {
-
-    if ( !mounted || !_controller.value.isInitialized ) {
+    if (!mounted || !_controller.value.isInitialized) {
       return;
     }
     callbackChallengeInfo();
   }
 
   Future<bool> getManualRequired() async {
-    if(_controller.value.isInitialized) {
+    if (_controller.value.isInitialized) {
       final manualRequiredText = await _controller.executeScript(
-          '(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null');
+        '(document.querySelector(".pow-button") != null  || document.querySelector(".captcha-prompt")) ? "true" : null',
+      );
       return manualRequiredText == 'true';
     }
     return false;
   }
 
   Future<String?> getChallengeMessage() async {
-    if(_controller.value.isInitialized) {
-      final String msg = await _controller.executeScript(
-          '(document.querySelector("#challenge-body-text") != null) ? document.querySelector("#challenge-body-text").textContent : ""') as String;;
+    if (_controller.value.isInitialized) {
+      final String msg =
+          await _controller.executeScript(
+                '(document.querySelector("#challenge-body-text") != null) ? document.querySelector("#challenge-body-text").textContent : ""',
+              )
+              as String;
       return msg.trim();
     }
     return null;
   }
 
   Future<String> getUserAgent() async {
-    if(_controller.value.isInitialized) {
+    if (_controller.value.isInitialized) {
       final value = await _controller.executeScript('navigator.userAgent');
       return value is String ? value : '';
     }
@@ -226,7 +239,7 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   }
 
   Future<List<Cookie>> getCookies() async {
-    if(_controller.value.isInitialized) {
+    if (_controller.value.isInitialized) {
       return await _controller.getCookies([Uri.parse(widget.url)]) ?? [];
     }
     return [];
@@ -245,44 +258,55 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   String url = '';
 
   Future callbackChallengeInfo() async {
-
-    if(_controller.value.isInitialized) {
-      widget.callback?.call(WebViewCookieInfo(
+    if (_controller.value.isInitialized) {
+      widget.callback?.call(
+        WebViewCookieInfo(
           url: NHConst.baseUrl,
           cookies: await getCookies(),
           userAgent: await getUserAgent(),
-          manualRequired: (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
-          message: await getChallengeMessage()
-      ));
+          manualRequired:
+              (anomalyTimer?.tick ?? 0) >= 10 || await getManualRequired(),
+          message: await getChallengeMessage(),
+        ),
+      );
     }
   }
 
   Future<void> initPlatformState() async {
     url = widget.url;
     await _controller.initialize();
-    _subscriptions.add(_controller.url.listen((url) {
-      this.url = url;
-    }));
-    _subscriptions.add(_controller.loadingState.listen((state) async {
-      if (state == LoadingState.navigationCompleted ||
-          state == LoadingState.loading) {
-        if (widget.callback != null) {
-          callbackChallengeInfo();
+    _subscriptions.add(
+      _controller.url.listen((url) {
+        this.url = url;
+      }),
+    );
+    _subscriptions.add(
+      _controller.loadingState.listen((state) async {
+        if (state == LoadingState.navigationCompleted ||
+            state == LoadingState.loading) {
+          if (widget.callback != null) {
+            callbackChallengeInfo();
+          }
         }
-      }
-    }));
+      }),
+    );
 
     await _controller.clearCookies();
     await _controller.setBackgroundColor(Colors.transparent);
     await _controller.setPopupWindowPolicy(WebviewPopupWindowPolicy.deny);
     await _controller.loadUrl(url);
 
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     setState(() {});
   }
 
   Future<WebviewPermissionDecision> _onPermissionRequested(
-      String url, WebviewPermissionKind kind, bool isUserInitiated) async {
+    String url,
+    WebviewPermissionKind kind,
+    bool isUserInitiated,
+  ) async {
     final decision = await showDialog<WebviewPermissionDecision>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -311,16 +335,10 @@ class _WindowsWebViewState extends State<WindowsWebView> {
     if (!_controller.value.isInitialized) {
       return const Text(
         'Not Initialized',
-        style: TextStyle(
-          fontSize: 24.0,
-          fontWeight: FontWeight.w900,
-        ),
+        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
       );
     } else {
-      return Webview(
-        _controller,
-        permissionRequested: _onPermissionRequested,
-      );
+      return Webview(_controller, permissionRequested: _onPermissionRequested);
     }
   }
 }
@@ -342,9 +360,9 @@ class GetCookieWebView extends StatefulWidget {
 }
 
 class GetCookieWebViewState extends State<GetCookieWebView> {
-
-
+  // ignore: library_private_types_in_public_api
   GlobalKey<_MobileWebViewState> mobileState = GlobalKey();
+  // ignore: library_private_types_in_public_api
   GlobalKey<_WindowsWebViewState> windowsState = GlobalKey();
 
   Future reload() async {
@@ -364,7 +382,11 @@ class GetCookieWebViewState extends State<GetCookieWebView> {
           deletedCookie: widget.deletedCookie,
         );
       case 'windows':
-        return WindowsWebView(key: windowsState, url: widget.url, callback: widget.callback);
+        return WindowsWebView(
+          key: windowsState,
+          url: widget.url,
+          callback: widget.callback,
+        );
       default:
         throw UnimplementedError();
     }

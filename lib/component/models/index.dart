@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-library index;
+library;
 
 export 'comment.dart';
 export 'comment_poster.dart';

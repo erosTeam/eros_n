@@ -5,35 +5,38 @@ import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 
 class SmallTitle extends StatelessWidget {
-  const SmallTitle({Key? key, required this.title}) : super(key: key);
+  const SmallTitle({super.key, required this.title});
   final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-          left: max(context.mediaQueryPadding.left, 16), top: 16, bottom: 6),
+        left: max(context.mediaQueryPadding.left, 16),
+        top: 16,
+        bottom: 6,
+      ),
       child: Text(
         title,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.w500,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
 }
 
 class RadioDialogListTile<T> extends StatelessWidget {
-  const RadioDialogListTile(
-      {Key? key,
-      this.title,
-      this.subtitle,
-      this.onChanged,
-      this.dialogTitle,
-      this.groupValue,
-      required this.radioTitleMap})
-      : super(key: key);
+  const RadioDialogListTile({
+    super.key,
+    this.title,
+    this.subtitle,
+    this.onChanged,
+    this.dialogTitle,
+    this.groupValue,
+    required this.radioTitleMap,
+  });
 
   final Widget? title;
   final Widget? subtitle;
@@ -52,13 +55,13 @@ class RadioDialogListTile<T> extends StatelessWidget {
     }
 
     final children = radioTitleMap.entries
-        .map((e) => RadioListTile<T>(
-              title: e.value,
-              value: e.key,
-              groupValue: groupValue,
-              onChanged: onChanged,
-              activeColor: Theme.of(context).colorScheme.primary,
-            ))
+        .map(
+          (e) => RadioListTile<T>(
+            title: e.value,
+            value: e.key,
+            activeColor: Theme.of(context).colorScheme.primary,
+          ),
+        )
         .toList();
 
     return ListTile(
@@ -71,9 +74,13 @@ class RadioDialogListTile<T> extends StatelessWidget {
             return AlertDialog(
               contentPadding: const EdgeInsets.only(top: 16),
               title: dialogTitle ?? title,
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: children,
+              content: RadioGroup<T>(
+                groupValue: groupValue,
+                onChanged: onChanged,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: children,
+                ),
               ),
               actions: [
                 TextButton(

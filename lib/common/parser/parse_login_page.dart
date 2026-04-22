@@ -1,7 +1,5 @@
 import 'package:eros_n/component/exception/error.dart';
-import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 
 String? parseLoginPage(String html) {

@@ -1,13 +1,11 @@
+import 'package:eros_n/component/models/gallery.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'gallery.dart';
-
 part 'gallery_set.freezed.dart';
-
 part 'gallery_set.g.dart';
 
 @freezed
-class GallerySet with _$GallerySet {
+abstract class GallerySet with _$GallerySet {
   const factory GallerySet({
     List<Gallery>? gallerys,
     List<Gallery>? populars,

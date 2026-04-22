@@ -5,7 +5,7 @@ part 'comment_poster.freezed.dart';
 part 'comment_poster.g.dart';
 
 @freezed
-class CommentPoster with _$CommentPoster {
+abstract class CommentPoster with _$CommentPoster {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory CommentPoster({
     @JsonKey(name: 'id') int? posterId,

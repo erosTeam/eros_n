@@ -10,7 +10,6 @@ import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
 class SearchNotifier extends StateNotifier<ListViewState> {
   SearchNotifier(this.ref) : super(const ListViewState());
@@ -33,15 +32,17 @@ class SearchNotifier extends StateNotifier<ListViewState> {
 
     final currQryText = searchController.text.split(RegExp(r'[ ;"]')).last;
 
-    newQuery =
-        searchController.text.replaceFirst(RegExp('$currQryText\$'), newQuery);
+    newQuery = searchController.text.replaceFirst(
+      RegExp('$currQryText\$'),
+      newQuery,
+    );
 
     searchController.value = TextEditingValue(
       text: '$newQuery ',
       selection: TextSelection.collapsed(offset: '$newQuery '.length),
     );
 
-    isarHelper.updateNhTagTime(tag.id!);
+    objectBoxHelper.updateNhTagTime(tag.id);
 
     if (search) {
       searchFocusNode.unfocus();
@@ -100,8 +101,9 @@ class SearchNotifier extends StateNotifier<ListViewState> {
     late final String realQuery;
 
     // final queryUuid = '-"${const Uuid().v4()}"';
-    final searchLanguagesFilter =
-        ref.read(settingsProvider.select((s) => s.searchLanguagesFilter));
+    final searchLanguagesFilter = ref.read(
+      settingsProvider.select((s) => s.searchLanguagesFilter),
+    );
     if (searchLanguagesFilter != LanguagesFilter.all && query.isNotEmpty) {
       realQuery = '$query language:${searchLanguagesFilter.value}';
     } else {
@@ -167,17 +169,19 @@ class SearchGalleryNotifier extends GallerysNotifier {
 
 final searchGallerysProvider = StateNotifierProvider.autoDispose
     .family<SearchGalleryNotifier, List<Gallery>, int>((ref, depth) {
-  ref.onDispose(() {
-    logger.d('searchGallerysProvider $depth dispose');
-  });
-  return SearchGalleryNotifier();
-});
+      ref.onDispose(() {
+        logger.d('searchGallerysProvider $depth dispose');
+      });
+      return SearchGalleryNotifier();
+    });
 
 final searchProvider =
-    StateNotifierProvider.family<SearchNotifier, ListViewState, int>(
-        (ref, depth) {
-  return SearchNotifier(ref);
-});
+    StateNotifierProvider.family<SearchNotifier, ListViewState, int>((
+      ref,
+      depth,
+    ) {
+      return SearchNotifier(ref);
+    });
 
 final _searchDepthList = <int>[0];
 int get currentSearchDepth {

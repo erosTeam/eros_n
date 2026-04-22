@@ -6,7 +6,7 @@ part 'tag.freezed.dart';
 part 'tag.g.dart';
 
 @freezed
-class Tag with _$Tag {
+abstract class Tag with _$Tag {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory Tag({
     int? id,
@@ -14,7 +14,8 @@ class Tag with _$Tag {
     String? name,
     String? url,
     int? count,
-    @JsonKey(ignore: true) String? translatedName,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    String? translatedName,
   }) = _Tag;
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);

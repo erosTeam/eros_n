@@ -19,13 +19,16 @@ class UserNotifier extends StateNotifier<User> {
 
     try {
       csrfToken = await getLoginToken() ?? '';
-    } on HttpException catch (e) {
+    } on HttpException {
       rethrow;
     }
 
     logger.d('csrfToken $csrfToken');
     final loginResult = await loginNhentai(
-        username: username, password: password, csrfToken: csrfToken);
+      username: username,
+      password: password,
+      csrfToken: csrfToken,
+    );
 
     return loginResult;
   }
@@ -33,10 +36,12 @@ class UserNotifier extends StateNotifier<User> {
   Future<void> loginGetMore() async {
     logger.d('loginWithCookie');
 
-    final cookie =
-        await Global.cookieJar.loadForRequest(Uri.parse(NHConst.baseUrl));
-    final sessionid =
-        cookie.firstWhereOrNull((element) => element.name == 'sessionid');
+    final cookie = await Global.cookieJar.loadForRequest(
+      Uri.parse(NHConst.baseUrl),
+    );
+    final sessionid = cookie.firstWhereOrNull(
+      (element) => element.name == 'sessionid',
+    );
 
     state = state.copyWith(sessionid: sessionid?.value);
     hiveHelper.setUser(state);
@@ -44,7 +49,7 @@ class UserNotifier extends StateNotifier<User> {
     late User userFromIndex;
     try {
       userFromIndex = await getInfoFromIndex(refresh: true);
-    } on HttpException catch (e) {
+    } on HttpException {
       rethrow;
     }
     // log userFromIndex
@@ -63,14 +68,14 @@ class UserNotifier extends StateNotifier<User> {
     late User userFromProfile;
     try {
       userFromProfile = await getInfoFromUserPage(
-          url: userFromIndex.userUrl ?? '', refresh: true);
-    } on HttpException catch (e) {
+        url: userFromIndex.userUrl ?? '',
+        refresh: true,
+      );
+    } on HttpException {
       rethrow;
     }
 
-    state = state.copyWith(
-      avatarUrl: userFromProfile.avatarUrl,
-    );
+    state = state.copyWith(avatarUrl: userFromProfile.avatarUrl);
     hiveHelper.setUser(state);
   }
 

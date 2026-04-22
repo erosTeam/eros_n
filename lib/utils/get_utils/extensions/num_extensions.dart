@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../get_utils/get_utils.dart';
+import 'package:eros_n/utils/get_utils/get_utils/get_utils.dart';
 
 extension GetNumUtils on num {
   bool isLowerThan(num b) => GetUtils.isLowerThan(this, b);
@@ -24,10 +24,8 @@ extension GetNumUtils on num {
   ///   print('currently running callback 1.2sec');
   /// }
   ///```
-  Future delay([FutureOr Function()? callback]) async => Future.delayed(
-        Duration(milliseconds: (this * 1000).round()),
-        callback,
-      );
+  Future delay([FutureOr Function()? callback]) async =>
+      Future.delayed(Duration(milliseconds: (this * 1000).round()), callback);
 
   /// Easy way to make Durations from numbers.
   ///
@@ -49,20 +47,19 @@ extension GetNumUtils on num {
 
   Duration get days => Duration(hours: (this * Duration.hoursPerDay).round());
 
-//final _delayMaps = <Function, Future>{};
-// TODO: create a proper Future and control the Timer.
-//  Future delay([double seconds = 0, VoidCallback callback]) async {
-//    final ms = (seconds * 1000).round();
-//    return Future.delayed(Duration(milliseconds: ms), callback);
-//  return _delayMaps[callback];
-//  }
-//killDelay(VoidCallback callback) {
-//  if (_delayMaps.containsKey(callback)) {
-//    _delayMaps[callback]?.timeout(Duration.zero, onTimeout: () {
-//      print('callbacl eliminado!');
-//    });
-//    _delayMaps.remove(callback);
-//  }
-//}
-
+  //final _delayMaps = <Function, Future>{};
+  // TODO: create a proper Future and control the Timer.
+  //  Future delay([double seconds = 0, VoidCallback callback]) async {
+  //    final ms = (seconds * 1000).round();
+  //    return Future.delayed(Duration(milliseconds: ms), callback);
+  //  return _delayMaps[callback];
+  //  }
+  //killDelay(VoidCallback callback) {
+  //  if (_delayMaps.containsKey(callback)) {
+  //    _delayMaps[callback]?.timeout(Duration.zero, onTimeout: () {
+  //      print('callbacl eliminado!');
+  //    });
+  //    _delayMaps.remove(callback);
+  //  }
+  //}
 }

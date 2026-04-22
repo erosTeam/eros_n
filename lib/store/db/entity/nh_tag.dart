@@ -1,11 +1,11 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
 part 'nh_tag.g.dart';
 
 @CopyWith()
-@Collection()
+@Entity()
 @JsonSerializable()
 class NhTag {
   NhTag({
@@ -20,18 +20,23 @@ class NhTag {
   factory NhTag.fromJson(Map<String, Object?> json) => _$NhTagFromJson(json);
   Map<String, dynamic> toJson() => _$NhTagToJson(this);
 
-  @Index(unique: true, replace: true)
-  final Id? id;
+  @Id(assignable: true)
+  int id;
+
   @Index()
-  @JsonKey(ignore: true)
-  final String? type;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? type;
+
   @Index()
-  final String? name;
+  String? name;
+
   @Index()
-  final String? translateName;
+  String? translateName;
+
   int? count;
+
   @Index()
-  final int lastUseTime;
+  int lastUseTime;
 
   @override
   String toString() {

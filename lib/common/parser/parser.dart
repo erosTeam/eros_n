@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-library parser;
+library;
 
 export 'paese_user_page.dart';
 export 'parse_gallery_detail.dart';

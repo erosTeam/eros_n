@@ -18,10 +18,9 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   void initState() {
     super.initState();
 
-    10
-        .milliseconds
-        .delay()
-        .then((value) => erosRouter.replaceNamed(NHRoutes.home));
+    10.milliseconds.delay().then(
+      (value) => erosRouter.replace(const IndexRoute()),
+    );
   }
 
   @override
@@ -32,12 +31,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: Text(
-          'Eros-N',
-          style: TextStyle(fontSize: 40),
-        ),
-      ),
+      body: Center(child: Text('Eros-N', style: TextStyle(fontSize: 40))),
     );
   }
 }

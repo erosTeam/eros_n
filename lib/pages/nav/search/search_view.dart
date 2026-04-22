@@ -1,6 +1,6 @@
-import 'package:auto_route/auto_route.dart';
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
@@ -9,8 +9,10 @@ import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
+import 'package:eros_n/pages/nav/search/search_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
+import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -19,12 +21,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keframe/keframe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-import '../../../utils/logger.dart';
-import 'search_provider.dart';
-
 @RoutePage()
 class SearchPage extends StatefulHookConsumerWidget {
-  const SearchPage({Key? key, required this.query}) : super(key: key);
+  const SearchPage({super.key, required this.query});
   final String query;
 
   @override
@@ -63,13 +62,15 @@ class _SearchPageState extends ConsumerState<SearchPage>
 
     final keyboardVisibilityController = KeyboardVisibilityController();
     // Query
-    logger.v(
-        'Keyboard visibility direct query: ${keyboardVisibilityController.isVisible}');
+    logger.t(
+      'Keyboard visibility direct query: ${keyboardVisibilityController.isVisible}',
+    );
 
     // Subscribe
-    keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
-      logger.v('Keyboard visibility update. Is visible: $visible');
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((
+      bool visible,
+    ) {
+      logger.t('Keyboard visibility update. Is visible: $visible');
       if (!visible) {
         searchProviderNoti.searchFocusNode.unfocus();
       }
@@ -135,7 +136,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
             controller: searchProviderNoti.searchController,
             focusNode: searchProviderNoti.searchFocusNode,
             decoration: InputDecoration(
-              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               filled: true,
               contentPadding: const EdgeInsets.only(),
               // isCollapsed: true,
@@ -149,59 +150,65 @@ class _SearchPageState extends ConsumerState<SearchPage>
               // prefixIcon: const Icon(Icons.search),
               prefixIcon: getPrefixIcon(context),
               suffixIcon: KeyboardVisibilityBuilder(
-                  builder: (context, isKeyboardVisible) {
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (searchProviderNoti.searchController.text
-                            .trim()
-                            .isNotEmpty &&
-                        isKeyboardVisible)
-                      IconButton(
-                        icon: const Icon(Icons.clear),
-                        constraints: const BoxConstraints(),
-                        onPressed: () {
-                          searchProviderNoti.searchController.clear();
-                          setState(() {});
-                        },
-                      ),
-                    if (!isKeyboardVisible)
-                      LanguagesFilterPopupButton(
-                        onSelected: (LanguagesFilter value) async {
-                          if (value ==
-                              ref
-                                  .read(settingsProvider)
-                                  .searchLanguagesFilter) {
-                            return;
-                          }
-                          ref
-                              .read(settingsProvider.notifier)
-                              .setSearchLanguagesFilter(value);
-                          await searchProviderNoti.reloadData();
-                        },
-                        initValue: ref.watch(settingsProvider
-                            .select((s) => s.searchLanguagesFilter)),
-                      ),
-                    if (!isKeyboardVisible)
-                      SortPopupButton(
-                        onSelected: (value) async {
-                          if (value == ref.read(settingsProvider).searchSort) {
-                            return;
-                          }
+                builder: (context, isKeyboardVisible) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (searchProviderNoti.searchController.text
+                              .trim()
+                              .isNotEmpty &&
+                          isKeyboardVisible)
+                        IconButton(
+                          icon: const Icon(Icons.clear),
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            searchProviderNoti.searchController.clear();
+                            setState(() {});
+                          },
+                        ),
+                      if (!isKeyboardVisible)
+                        LanguagesFilterPopupButton(
+                          onSelected: (LanguagesFilter value) async {
+                            if (value ==
+                                ref
+                                    .read(settingsProvider)
+                                    .searchLanguagesFilter) {
+                              return;
+                            }
+                            ref
+                                .read(settingsProvider.notifier)
+                                .setSearchLanguagesFilter(value);
+                            await searchProviderNoti.reloadData();
+                          },
+                          initValue: ref.watch(
+                            settingsProvider.select(
+                              (s) => s.searchLanguagesFilter,
+                            ),
+                          ),
+                        ),
+                      if (!isKeyboardVisible)
+                        SortPopupButton(
+                          onSelected: (value) async {
+                            if (value ==
+                                ref.read(settingsProvider).searchSort) {
+                              return;
+                            }
 
-                          ref
-                              .read(settingsProvider.notifier)
-                              .setSearchSort(value);
+                            ref
+                                .read(settingsProvider.notifier)
+                                .setSearchSort(value);
 
-                          // reload
-                          await searchProviderNoti.reloadData();
-                        },
-                        initValue: ref.watch(
-                            settingsProvider.select((s) => s.searchSort)),
-                      ),
-                  ],
-                );
-              }),
+                            // reload
+                            await searchProviderNoti.reloadData();
+                          },
+                          initValue: ref.watch(
+                            settingsProvider.select((s) => s.searchSort),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
             ),
             textInputAction: TextInputAction.search,
             onChanged: (value) {
@@ -218,8 +225,8 @@ class _SearchPageState extends ConsumerState<SearchPage>
             },
           ),
           suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceVariant,
-            shadowColor: Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            shadowColor: Theme.of(context).colorScheme.surfaceContainerHighest,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(28),
             ),
@@ -232,7 +239,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
               return Future.value([]);
             }
             logger.d('suggestionsCallback: $currQryText');
-            return isarHelper.findNhTagContains(currQryText, 200);
+            return objectBoxHelper.findNhTagContains(currQryText, 200);
           },
           itemBuilder: (BuildContext context, itemData) {
             return ListTile(
@@ -316,19 +323,18 @@ class _SearchPageState extends ConsumerState<SearchPage>
 }
 
 class SearchListView extends HookConsumerWidget {
-  const SearchListView({Key? key}) : super(key: key);
+  const SearchListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<Gallery> galleryList =
-        ref.watch(searchGallerysProvider(currentSearchDepth));
+    final List<Gallery> galleryList = ref.watch(
+      searchGallerysProvider(currentSearchDepth),
+    );
     final state = ref.watch(searchProvider(currentSearchDepth));
 
     if (state.isLoading) {
       return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -367,12 +373,12 @@ class SearchListView extends HookConsumerWidget {
             maxPage: state.maxPage,
             tabTag: '${NHRoutes.search}_$currentSearchDepth',
           ),
-          Consumer(builder: (context, ref, _) {
-            final state = ref.watch(searchProvider(currentSearchDepth));
-            return EndIndicator(
-              loadStatus: state.status,
-            );
-          }),
+          Consumer(
+            builder: (context, ref, _) {
+              final state = ref.watch(searchProvider(currentSearchDepth));
+              return EndIndicator(loadStatus: state.status);
+            },
+          ),
         ],
       ),
     );

@@ -6,18 +6,19 @@ part of 'list_view_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ListViewState _$$_ListViewStateFromJson(Map<String, dynamic> json) =>
-    _$_ListViewState(
-      status: $enumDecodeNullable(_$LoadStatusEnumMap, json['status']) ??
+_ListViewState _$ListViewStateFromJson(Map<String, dynamic> json) =>
+    _ListViewState(
+      status:
+          $enumDecodeNullable(_$LoadStatusEnumMap, json['status']) ??
           LoadStatus.none,
-      curPage: json['cur_page'] as int? ?? 1,
-      maxPage: json['max_page'] as int? ?? 1,
+      curPage: (json['cur_page'] as num?)?.toInt() ?? 1,
+      maxPage: (json['max_page'] as num?)?.toInt() ?? 1,
       floatingAppBar: json['floating_app_bar'] as bool? ?? true,
       errorMessage: json['error_message'] as String?,
       appBarSearch: json['app_bar_search'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$_ListViewStateToJson(_$_ListViewState instance) =>
+Map<String, dynamic> _$ListViewStateToJson(_ListViewState instance) =>
     <String, dynamic>{
       'status': _$LoadStatusEnumMap[instance.status]!,
       'cur_page': instance.curPage,

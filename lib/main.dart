@@ -2,40 +2,51 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/theme/theme.dart';
+import 'package:eros_n/component/widget/broken_shield.dart';
+import 'package:eros_n/component/widget/desktop.dart';
+import 'package:eros_n/component/widget/system_ui_overlay.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:window_size/window_size.dart';
-
-import 'component/widget/broken_shield.dart';
-import 'component/widget/desktop.dart';
-import 'component/widget/system_ui_overlay.dart';
-import 'generated/l10n.dart';
+import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    await windowManager.ensureInitialized();
+  }
+
   await Global.init();
 
   initLogger();
-  runApp(const ProviderScope(
-    observers: [
-      // LoggerObserver(),
-    ],
-    child: MyApp(),
-  ));
+  runApp(
+    const ProviderScope(
+      observers: [
+        // LoggerObserver(),
+      ],
+      child: MyApp(),
+    ),
+  );
+
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-    doWhenWindowReady(() {
-      setWindowVisibility(visible: true);
-      setWindowTitle('Eros-N');
+    const windowOptions = WindowOptions(
+      title: 'Eros-N',
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+    await windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
     });
   }
 }
@@ -71,18 +82,22 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    logger.v('build MyApp');
-    final themeMode =
-        ref.watch(settingsProvider.select((settings) => settings.themeMode));
+    logger.t('build MyApp');
+    final themeMode = ref.watch(
+      settingsProvider.select((settings) => settings.themeMode),
+    );
 
-    final localeCode =
-        ref.watch(settingsProvider.select((settings) => settings.localeCode));
+    final localeCode = ref.watch(
+      settingsProvider.select((settings) => settings.localeCode),
+    );
 
-    final themeColorLabel = ref
-        .watch(settingsProvider.select((settings) => settings.themeColorLabel));
+    final themeColorLabel = ref.watch(
+      settingsProvider.select((settings) => settings.themeColorLabel),
+    );
 
     final dynamicColor = themeColorLabel == ThemeConfig.dynamicThemeColorLabel;
-    final themeSeedColor = ThemeConfig.colorMap[themeColorLabel] ??
+    final themeSeedColor =
+        ThemeConfig.colorMap[themeColorLabel] ??
         ThemeConfig.colorMap[ThemeConfig.defaultThemeColorLabel]!;
 
     return DynamicColorBuilder(
@@ -93,7 +108,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         final supportDynamicColors =
             lightDynamic != null && darkDynamic != null;
 
-        logger.v('supportDynamicColors: $supportDynamicColors');
+        logger.t('supportDynamicColors: $supportDynamicColors');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ref
               .read(settingsProvider.notifier)
@@ -104,9 +119,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
           lightColorScheme = lightDynamic.harmonized();
           darkColorScheme = darkDynamic.harmonized();
         } else {
-          lightColorScheme = ColorScheme.fromSeed(
-            seedColor: themeSeedColor,
-          );
+          lightColorScheme = ColorScheme.fromSeed(seedColor: themeSeedColor);
           darkColorScheme = ColorScheme.fromSeed(
             seedColor: themeSeedColor,
             brightness: Brightness.dark,
@@ -123,7 +136,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             space: 0,
           ),
           bottomSheetTheme: BottomSheetThemeData(
-            backgroundColor: lightColorScheme.surfaceVariant,
+            backgroundColor: lightColorScheme.surfaceContainerHighest,
           ),
         );
 
@@ -137,7 +150,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             space: 0,
           ),
           bottomSheetTheme: BottomSheetThemeData(
-            backgroundColor: darkColorScheme.surfaceVariant,
+            backgroundColor: darkColorScheme.surfaceContainerHighest,
           ),
         );
 

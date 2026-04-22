@@ -21,22 +21,24 @@ class ReceiveSharingNotifier extends StateNotifier<void> {
   }) async {
     if (url.isEmpty ||
         !(await RouteUtil.goGalleryByUrl(widgetRef, url, replace: replace))) {
-      0
-          .milliseconds
-          .delay()
-          .then((value) => erosRouter.replaceNamed(NHRoutes.home));
+      0.milliseconds.delay().then(
+        (value) => erosRouter.replace(const IndexRoute()),
+      );
     }
   }
 
   void listenReceiveSharing(WidgetRef widgetRef) {
     // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    ReceiveSharingIntent.getTextStream().listen((String value) {
-      sharedText = value;
-      logger.e('getTextStream Shared: $sharedText');
-      _goPage(sharedText ?? '', widgetRef, replace: false);
-    }, onError: (err) {
-      logger.e('getTextStream error: $err');
-    });
+    ReceiveSharingIntent.getTextStream().listen(
+      (String value) {
+        sharedText = value;
+        logger.e('getTextStream Shared: $sharedText');
+        _goPage(sharedText ?? '', widgetRef, replace: false);
+      },
+      onError: (err) {
+        logger.e('getTextStream error: $err');
+      },
+    );
 
     // For sharing or opening urls/text coming from outside the app while the app is closed
     ReceiveSharingIntent.getInitialText().then((String? value) {
@@ -47,7 +49,7 @@ class ReceiveSharingNotifier extends StateNotifier<void> {
       }
 
       sharedText = value ?? '';
-      logger.v('Shared: $sharedText');
+      logger.t('Shared: $sharedText');
       _goPage(sharedText ?? '', widgetRef, replace: false);
     });
   }
@@ -55,5 +57,5 @@ class ReceiveSharingNotifier extends StateNotifier<void> {
 
 final receiveSharingProvider =
     StateNotifierProvider.autoDispose<ReceiveSharingNotifier, void>((ref) {
-  return ReceiveSharingNotifier(ref);
-});
+      return ReceiveSharingNotifier(ref);
+    });

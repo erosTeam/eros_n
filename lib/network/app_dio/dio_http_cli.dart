@@ -1,39 +1,43 @@
 import 'package:dio/dio.dart';
+import 'package:eros_n/network/app_dio/app_dio.dart';
+import 'package:eros_n/network/app_dio/dio_through.dart';
+import 'package:eros_n/network/app_dio/http_response.dart';
+import 'package:eros_n/network/app_dio/http_transformer.dart';
 import 'package:eros_n/utils/logger.dart';
-
-import 'app_dio.dart';
-import 'dio_through.dart';
-import 'http_response.dart';
-import 'http_transformer.dart';
 
 class DioHttpClient {
   factory DioHttpClient({DioHttpConfig? dioConfig}) {
     return _clientMap.putIfAbsent(
-        dioConfig, () => DioHttpClient._(dioConfig: dioConfig));
+      dioConfig,
+      () => DioHttpClient._(dioConfig: dioConfig),
+    );
   }
 
   DioHttpClient._({BaseOptions? options, DioHttpConfig? dioConfig})
-      : _dio = AppDio(options: options, dioConfig: dioConfig);
+    : _dio = AppDio(options: options, dioConfig: dioConfig);
 
   static final _clientMap = <DioHttpConfig?, DioHttpClient>{};
 
   late final AppDio _dio;
 
-  void initThroughInterceptor(Future<bool> Function(DioError err) handler) {
-    print('initThroughInterceptor');
-    _dio.interceptors
-        .removeWhere((element) => element is DioThroughInterceptor);
-    _dio.interceptors
-        .add(DioThroughInterceptor(dio: _dio, throughHandler: handler));
+  void initThroughInterceptor(Future<bool> Function(DioException err) handler) {
+    logger.d('initThroughInterceptor');
+    _dio.interceptors.removeWhere(
+      (element) => element is DioThroughInterceptor,
+    );
+    _dio.interceptors.add(
+      DioThroughInterceptor(dio: _dio, throughHandler: handler),
+    );
   }
 
-
-  Future<DioHttpResponse> get(String uri,
-      {Map<String, dynamic>? queryParameters,
-      Options? options,
-      CancelToken? cancelToken,
-      ProgressCallback? onReceiveProgress,
-      HttpTransformer? httpTransformer}) async {
+  Future<DioHttpResponse> get(
+    String uri, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+    HttpTransformer? httpTransformer,
+  }) async {
     try {
       Response response = await _dio.get(
         uri,
@@ -47,7 +51,7 @@ class DioHttpClient {
         httpTransformer: httpTransformer,
         validateStatus: options?.validateStatus,
       );
-    } on DioError catch (e, stack) {
+    } on DioException catch (e) {
       // logger.e('DioError:\n$e\n$stack');
       return handleException(e, data: e.response?.data);
     } on Exception catch (e, stack) {
@@ -56,14 +60,16 @@ class DioHttpClient {
     }
   }
 
-  Future<DioHttpResponse> post(String uri,
-      {data,
-      Map<String, dynamic>? queryParameters,
-      Options? options,
-      CancelToken? cancelToken,
-      ProgressCallback? onSendProgress,
-      ProgressCallback? onReceiveProgress,
-      HttpTransformer? httpTransformer}) async {
+  Future<DioHttpResponse> post(
+    String uri, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    HttpTransformer? httpTransformer,
+  }) async {
     try {
       var response = await _dio.post(
         uri,
@@ -85,14 +91,16 @@ class DioHttpClient {
     }
   }
 
-  Future<DioHttpResponse> patch(String uri,
-      {data,
-      Map<String, dynamic>? queryParameters,
-      Options? options,
-      CancelToken? cancelToken,
-      ProgressCallback? onSendProgress,
-      ProgressCallback? onReceiveProgress,
-      HttpTransformer? httpTransformer}) async {
+  Future<DioHttpResponse> patch(
+    String uri, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    HttpTransformer? httpTransformer,
+  }) async {
     try {
       var response = await _dio.patch(
         uri,
@@ -113,12 +121,14 @@ class DioHttpClient {
     }
   }
 
-  Future<DioHttpResponse> delete(String uri,
-      {data,
-      Map<String, dynamic>? queryParameters,
-      Options? options,
-      CancelToken? cancelToken,
-      HttpTransformer? httpTransformer}) async {
+  Future<DioHttpResponse> delete(
+    String uri, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    HttpTransformer? httpTransformer,
+  }) async {
     try {
       var response = await _dio.delete(
         uri,
@@ -137,12 +147,14 @@ class DioHttpClient {
     }
   }
 
-  Future<DioHttpResponse> put(String uri,
-      {data,
-      Map<String, dynamic>? queryParameters,
-      Options? options,
-      CancelToken? cancelToken,
-      HttpTransformer? httpTransformer}) async {
+  Future<DioHttpResponse> put(
+    String uri, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    HttpTransformer? httpTransformer,
+  }) async {
     try {
       var response = await _dio.put(
         uri,

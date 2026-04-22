@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:dio/dio.dart';
-import 'package:eros_n/component/widget/web_view.dart';
-import 'package:flutter/material.dart';
-import '../../common/const/const.dart';
-import '../../common/global.dart';
 
-import '../../network/app_dio/dio_http_cli.dart';
+import 'package:dio/dio.dart';
+import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/common/global.dart';
+import 'package:eros_n/component/widget/desktop.dart';
+import 'package:eros_n/component/widget/web_view.dart';
+import 'package:eros_n/network/app_dio/dio_http_cli.dart';
+import 'package:flutter/material.dart';
 
 class BrokenShield extends StatefulWidget {
   const BrokenShield({super.key, required this.child});
@@ -17,9 +17,7 @@ class BrokenShield extends StatefulWidget {
   @override
   State<BrokenShield> createState() => _BrokenShieldState();
 
-  static TransitionBuilder init({
-    TransitionBuilder? builder,
-  }) {
+  static TransitionBuilder init({TransitionBuilder? builder}) {
     return (BuildContext context, Widget? child) {
       if (builder == null) {
         return BrokenShield(child: child);
@@ -48,7 +46,7 @@ class _BrokenShieldState extends State<BrokenShield> {
 
   bool get isRunning => !(completer?.isCompleted ?? true);
 
-  Future<bool> throughHandler(DioError error) {
+  Future<bool> throughHandler(DioException error) {
     pendingConnections.add(error.requestOptions);
     pendingConnectionsChangeCtrl.sink.add(null);
 
@@ -62,61 +60,68 @@ class _BrokenShieldState extends State<BrokenShield> {
 
     completer = Completer();
     entry = OverlayEntry(
-        maintainState: true,
-        builder: (BuildContext context) {
-          return StreamBuilder<WebViewCookieInfo>(
-              stream: webViewCookieInfoChangeCtrl.stream,
-              builder: (context, snapshot) {
-                final manualRequired = snapshot.data?.manualRequired ?? false;
-                final message = snapshot.data?.message ?? '安全挑战';
-                final showWebView = manualRequired;
-                double opacity = 0;
-                if (showWebView) {
-                  opacity = 1;
-                }
-                return Padding(
-                  padding: EdgeInsets.only(
-                      top: (Platform.isWindows && showWebView) ? appWindow.titleBarHeight : 0),
-                  child: Container(
-                    color: Colors.black54,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                            child: AnimatedOpacity(
-                                duration: Duration(milliseconds: 230),
-                                opacity: opacity,
-                                child: webView())),
-                        if (!showWebView)
-                          Center(
-                            child: SizedBox(
-                              width: 150,
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                      Text(message,
-                                          style: const TextStyle(
-                                            fontSize: 9,
-                                          ),
-                                          textAlign: TextAlign.center),
-                                    ],
+      maintainState: true,
+      builder: (BuildContext context) {
+        return StreamBuilder<WebViewCookieInfo>(
+          stream: webViewCookieInfoChangeCtrl.stream,
+          builder: (context, snapshot) {
+            final manualRequired = snapshot.data?.manualRequired ?? false;
+            final message = snapshot.data?.message ?? '安全挑战';
+            final showWebView = manualRequired;
+            double opacity = 0;
+            if (showWebView) {
+              opacity = 1;
+            }
+            return Padding(
+              padding: EdgeInsets.only(
+                top: (Platform.isWindows && showWebView)
+                    ? kDesktopTitleBarHeight
+                    : 0,
+              ),
+              child: Container(
+                color: Colors.black54,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 230),
+                        opacity: opacity,
+                        child: webView(),
+                      ),
+                    ),
+                    if (!showWebView)
+                      Center(
+                        child: SizedBox(
+                          width: 150,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: CircularProgressIndicator(),
                                   ),
-                                ),
+                                  Text(
+                                    message,
+                                    style: const TextStyle(fontSize: 9),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                );
-              });
-        });
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
 
     overlay.currentState!.insert(entry!);
 
@@ -125,8 +130,9 @@ class _BrokenShieldState extends State<BrokenShield> {
 
   @override
   void initState() {
-    DioHttpClient(dioConfig: globalDioConfig)
-        .initThroughInterceptor(throughHandler);
+    DioHttpClient(
+      dioConfig: globalDioConfig,
+    ).initThroughInterceptor(throughHandler);
     super.initState();
   }
 
@@ -158,7 +164,7 @@ class _BrokenShieldState extends State<BrokenShield> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: BackButtonIcon(),
+          icon: const BackButtonIcon(),
           onPressed: () {
             pendingConnections.clear();
             pendingConnectionsChangeCtrl.sink.add(null);
@@ -169,11 +175,14 @@ class _BrokenShieldState extends State<BrokenShield> {
             }
           },
         ),
-          title: Text("安全挑战"),
+        title: const Text('安全挑战'),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: () {
-            webViewState.currentState?.reload();
-          })
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              webViewState.currentState?.reload();
+            },
+          ),
         ],
       ),
       body: GetCookieWebView(
@@ -187,14 +196,15 @@ class _BrokenShieldState extends State<BrokenShield> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.transparent,
-        child: Overlay(
-          key: overlay,
-          initialEntries: [
-            OverlayEntry(
-              builder: (BuildContext context) => widget.child ?? Container(),
-            ),
-          ],
-        ));
+      color: Colors.transparent,
+      child: Overlay(
+        key: overlay,
+        initialEntries: [
+          OverlayEntry(
+            builder: (BuildContext context) => widget.child ?? Container(),
+          ),
+        ],
+      ),
+    );
   }
 }

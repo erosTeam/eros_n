@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SystemUIOverlay extends StatelessWidget {
-  const SystemUIOverlay({Key? key, this.child}) : super(key: key);
+  const SystemUIOverlay({super.key, this.child});
   final Widget? child;
 
   @override
@@ -16,16 +15,16 @@ class SystemUIOverlay extends StatelessWidget {
         systemNavigationBarDividerColor: Colors.transparent,
         statusBarColor: Colors.transparent,
         systemNavigationBarContrastEnforced: false,
-        systemNavigationBarIconBrightness:
-            brightnessLight ? Brightness.dark : Brightness.light,
+        systemNavigationBarIconBrightness: brightnessLight
+            ? Brightness.dark
+            : Brightness.light,
       ),
       child: child ?? Container(),
     );
   }
 
   static TransitionBuilder? init({TransitionBuilder? builder}) {
-    return (BuildContext context, Widget? child) => SystemUIOverlay(
-          child: builder?.call(context, child),
-        );
+    return (BuildContext context, Widget? child) =>
+        SystemUIOverlay(child: builder?.call(context, child));
   }
 }

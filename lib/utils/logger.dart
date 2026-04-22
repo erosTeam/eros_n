@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:eros_n/utils/logger/pretty_printer.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
-
-import 'logger/pretty_printer.dart';
 
 const kSuffix = '.log';
 
@@ -13,76 +12,46 @@ String? logDirectory;
 
 String? logFileName;
 
-final funcLog = () => Logger(
-      filter: EHLogFilter(),
-      // printer: SimplePrinter(),
-      printer: EhPrettyPrinter(
-        // lineLength: 100,
-        colors: false,
-        // printTime: true,
-      ),
-      output: _outPut,
-    );
+Logger funcLog() => Logger(
+  filter: EHLogFilter(),
+  printer: EhPrettyPrinter(colors: false),
+  output: _outPut,
+);
 
-final funcLogTime = () => Logger(
-      filter: EHLogFilter(),
-      // printer: SimplePrinter(),
-      printer: EhPrettyPrinter(
-        // lineLength: 100,
-        colors: false,
-        printTime: true,
-      ),
-      output: _outPut,
-    );
+Logger funcLogTime() => Logger(
+  filter: EHLogFilter(),
+  printer: EhPrettyPrinter(colors: false, printTime: true),
+  output: _outPut,
+);
 
-final funcLog5 = () => Logger(
-      filter: EHLogFilter(),
-      printer: EhPrettyPrinter(
-        // lineLength: 100,
-        methodCount: 5,
-        colors: false,
-      ),
-      output: _outPut,
-    );
+Logger funcLog5() => Logger(
+  filter: EHLogFilter(),
+  printer: EhPrettyPrinter(methodCount: 5, colors: false),
+  output: _outPut,
+);
 
-final funcLogNoStack = () => Logger(
-      filter: EHLogFilter(),
-      printer: EhPrettyPrinter(
-        // lineLength: 100,
-        methodCount: 0,
-        colors: false,
-      ),
-      output: _outPut,
-    );
+Logger funcLogNoStack() => Logger(
+  filter: EHLogFilter(),
+  printer: EhPrettyPrinter(methodCount: 0, colors: false),
+  output: _outPut,
+);
 
-final funcLogNoStackTime = () => Logger(
-      filter: EHLogFilter(),
-      printer: EhPrettyPrinter(
-        // lineLength: 100,
-        methodCount: 0,
-        colors: false,
-        printTime: true,
-      ),
-      output: _outPut,
-    );
+Logger funcLogNoStackTime() => Logger(
+  filter: EHLogFilter(),
+  printer: EhPrettyPrinter(methodCount: 0, colors: false, printTime: true),
+  output: _outPut,
+);
 
-final funcLogSimple = () => Logger(
-      filter: EHLogFilter(),
-      printer: SimplePrinter(),
-      output: _outPut,
-    );
+Logger funcLogSimple() =>
+    Logger(filter: EHLogFilter(), printer: SimplePrinter(), output: _outPut);
 
-final funcLogSimpleOnlyFile = () => Logger(
-      filter: EHLogFilter(),
-      printer: SimplePrinter(),
-      output: (logDirectory != null && logFileName != null)
-          ? _FileOutput(
-              file: File(
-                path.join(logDirectory!, logFileName),
-              ),
-            )
-          : null,
-    );
+Logger funcLogSimpleOnlyFile() => Logger(
+  filter: EHLogFilter(),
+  printer: SimplePrinter(),
+  output: (logDirectory != null && logFileName != null)
+      ? _FileOutput(file: File(path.join(logDirectory!, logFileName)))
+      : null,
+);
 
 Logger? _logger;
 set logger(Logger logger) => _logger = logger;
@@ -122,11 +91,7 @@ Logger get loggerSimpleOnlyFile =>
 final LogOutput _outPut = MultiOutput([
   ConsoleOutput(),
   if (logDirectory != null && logFileName != null)
-    _FileOutput(
-      file: File(
-        path.join(logDirectory!, logFileName),
-      ),
-    ),
+    _FileOutput(file: File(path.join(logDirectory!, logFileName))),
 ]);
 
 // void _initFile({String? directory, String? fileName}) {
@@ -184,15 +149,11 @@ final Logger loggerForGetx = Logger(
 
 /// Writes the log output to a file.
 class _FileOutput extends LogOutput {
-  _FileOutput({
-    required this.file,
-    this.overrideExisting = false,
-    this.encoding = utf8,
-  });
+  _FileOutput({required this.file});
 
   final File file;
-  final bool overrideExisting;
-  final Encoding encoding;
+  final bool overrideExisting = false;
+  final Encoding encoding = utf8;
   IOSink? _sink;
 
   @override
@@ -217,22 +178,25 @@ class _FileOutput extends LogOutput {
   }
 
   String _dataMasking(String ori) {
-    RegExp _reId = RegExp(r'(ipb_member_id=)(\d+)(;?)');
-    RegExp _rePass = RegExp(r'(ipb_pass_hash=)([a-f0-9]+)(;?)');
-    RegExp _reIgneous = RegExp(r'(igneous=)([a-f0-9]+)(;?)');
+    RegExp reId = RegExp(r'(ipb_member_id=)(\d+)(;?)');
+    RegExp rePass = RegExp(r'(ipb_pass_hash=)([a-f0-9]+)(;?)');
+    RegExp reIgneous = RegExp(r'(igneous=)([a-f0-9]+)(;?)');
     return ori
         .replaceAllMapped(
-            _reId,
-            (match) =>
-                '${match.group(1)}${match.group(2)?.substring(0, min(2, match.group(2)!.length))}****${match.group(3)}')
+          reId,
+          (match) =>
+              '${match.group(1)}${match.group(2)?.substring(0, min(2, match.group(2)!.length))}****${match.group(3)}',
+        )
         .replaceAllMapped(
-            _rePass,
-            (match) =>
-                '${match.group(1)}${match.group(2)?.substring(0, min(2, match.group(2)!.length))}****${match.group(3)}')
+          rePass,
+          (match) =>
+              '${match.group(1)}${match.group(2)?.substring(0, min(2, match.group(2)!.length))}****${match.group(3)}',
+        )
         .replaceAllMapped(
-            _reIgneous,
-            (match) =>
-                '${match.group(1)}${match.group(2)?.substring(0, min(2, match.group(2)!.length))}****${match.group(3)}');
+          reIgneous,
+          (match) =>
+              '${match.group(1)}${match.group(2)?.substring(0, min(2, match.group(2)!.length))}****${match.group(3)}',
+        );
   }
 
   @override

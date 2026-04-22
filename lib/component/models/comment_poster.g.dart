@@ -6,16 +6,16 @@ part of 'comment_poster.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_CommentPoster _$$_CommentPosterFromJson(Map<String, dynamic> json) =>
-    _$_CommentPoster(
-      posterId: json['id'] as int?,
+_CommentPoster _$CommentPosterFromJson(Map<String, dynamic> json) =>
+    _CommentPoster(
+      posterId: (json['id'] as num?)?.toInt(),
       username: json['username'] as String?,
       avatarUrl: json['avatar_url'] as String?,
       isSuperuser: json['is_superuser'] as bool?,
       isStaff: json['is_staff'] as bool?,
     );
 
-Map<String, dynamic> _$$_CommentPosterToJson(_$_CommentPoster instance) =>
+Map<String, dynamic> _$CommentPosterToJson(_CommentPoster instance) =>
     <String, dynamic>{
       'id': instance.posterId,
       'username': instance.username,

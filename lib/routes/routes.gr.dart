@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -9,183 +10,52 @@
 
 part of 'routes.dart';
 
-abstract class _$AppRouter extends RootStackRouter {
-  // ignore: unused_element
-  _$AppRouter({super.navigatorKey});
+/// generated route for
+/// [AboutPage]
+class AboutRoute extends PageRouteInfo<void> {
+  const AboutRoute({List<PageRouteInfo>? children})
+    : super(AboutRoute.name, initialChildren: children);
 
-  @override
-  final Map<String, PageFactory> pagesMap = {
-    SplashRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SplashPage(),
-      );
+  static const String name = 'AboutRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AboutPage();
     },
-    CommentsRoute.name: (routeData) {
-      final args = routeData.argsAs<CommentsRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CommentsPage(
-          key: args.key,
-          gid: args.gid,
-          colorScheme: args.colorScheme,
-        ),
-      );
-    },
-    ThumbRoute.name: (routeData) {
-      final args = routeData.argsAs<ThumbRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ThumbPage(
-          key: args.key,
-          gid: args.gid,
-          colorScheme: args.colorScheme,
-        ),
-      );
-    },
-    GalleryRoute.name: (routeData) {
-      final args = routeData.argsAs<GalleryRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: GalleryPage(
-          key: args.key,
-          gid: args.gid,
-          heroTag: args.heroTag,
-        ),
-      );
-    },
-    ReadRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<ReadRouteArgs>(orElse: () => const ReadRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ReadPage(
-          key: args.key,
-          index: args.index,
-          colorScheme: args.colorScheme,
-        ),
-      );
-    },
-    NhWebViewRoute.name: (routeData) {
-      final args = routeData.argsAs<NhWebViewRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: NhWebViewPage(
-          key: args.key,
-          initialUrl: args.initialUrl,
-          title: args.title,
-        ),
-      );
-    },
-    WebLoginRoute.name: (routeData) {
-      return AutoRoutePage<List<Cookie>>(
-        routeData: routeData,
-        child: const WebLoginPage(),
-      );
-    },
-    LoginRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const LoginPage(),
-      );
-    },
-    FavoriteRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const FavoritePage(),
-      );
-    },
-    MoreRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const MorePage(),
-      );
-    },
-    SearchRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: SearchPage(
-          key: args.key,
-          query: args.query,
-        ),
-      );
-    },
-    HistoryRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const HistoryPage(),
-      );
-    },
-    IndexRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const IndexPage(),
-      );
-    },
-    FrontRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const FrontPage(),
-      );
-    },
-    AdvancedSettingRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AdvancedSettingPage(),
-      );
-    },
-    MyLicenseRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const MyLicensePage(),
-      );
-    },
-    GeneralSettingRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const GeneralSettingPage(),
-      );
-    },
-    AppearanceSettingRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AppearanceSettingPage(),
-      );
-    },
-    AboutRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AboutPage(),
-      );
-    },
-    SettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SettingsPage(),
-      );
-    },
-    ReadSettingRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ReadSettingPage(),
-      );
-    },
-  };
+  );
 }
 
 /// generated route for
-/// [SplashPage]
-class SplashRoute extends PageRouteInfo<void> {
-  const SplashRoute({List<PageRouteInfo>? children})
-      : super(
-          SplashRoute.name,
-          initialChildren: children,
-        );
+/// [AdvancedSettingPage]
+class AdvancedSettingRoute extends PageRouteInfo<void> {
+  const AdvancedSettingRoute({List<PageRouteInfo>? children})
+    : super(AdvancedSettingRoute.name, initialChildren: children);
 
-  static const String name = 'SplashRoute';
+  static const String name = 'AdvancedSettingRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AdvancedSettingPage();
+    },
+  );
+}
+
+/// generated route for
+/// [AppearanceSettingPage]
+class AppearanceSettingRoute extends PageRouteInfo<void> {
+  const AppearanceSettingRoute({List<PageRouteInfo>? children})
+    : super(AppearanceSettingRoute.name, initialChildren: children);
+
+  static const String name = 'AppearanceSettingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AppearanceSettingPage();
+    },
+  );
 }
 
 /// generated route for
@@ -197,27 +67,28 @@ class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
     ColorScheme? colorScheme,
     List<PageRouteInfo>? children,
   }) : super(
-          CommentsRoute.name,
-          args: CommentsRouteArgs(
-            key: key,
-            gid: gid,
-            colorScheme: colorScheme,
-          ),
-          initialChildren: children,
-        );
+         CommentsRoute.name,
+         args: CommentsRouteArgs(key: key, gid: gid, colorScheme: colorScheme),
+         initialChildren: children,
+       );
 
   static const String name = 'CommentsRoute';
 
-  static const PageInfo<CommentsRouteArgs> page =
-      PageInfo<CommentsRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CommentsRouteArgs>();
+      return CommentsPage(
+        key: args.key,
+        gid: args.gid,
+        colorScheme: args.colorScheme,
+      );
+    },
+  );
 }
 
 class CommentsRouteArgs {
-  const CommentsRouteArgs({
-    this.key,
-    required this.gid,
-    this.colorScheme,
-  });
+  const CommentsRouteArgs({this.key, required this.gid, this.colorScheme});
 
   final Key? key;
 
@@ -229,48 +100,50 @@ class CommentsRouteArgs {
   String toString() {
     return 'CommentsRouteArgs{key: $key, gid: $gid, colorScheme: $colorScheme}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CommentsRouteArgs) return false;
+    return key == other.key &&
+        gid == other.gid &&
+        colorScheme == other.colorScheme;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ gid.hashCode ^ colorScheme.hashCode;
 }
 
 /// generated route for
-/// [ThumbPage]
-class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
-  ThumbRoute({
-    Key? key,
-    required int gid,
-    ColorScheme? colorScheme,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ThumbRoute.name,
-          args: ThumbRouteArgs(
-            key: key,
-            gid: gid,
-            colorScheme: colorScheme,
-          ),
-          initialChildren: children,
-        );
+/// [FavoritePage]
+class FavoriteRoute extends PageRouteInfo<void> {
+  const FavoriteRoute({List<PageRouteInfo>? children})
+    : super(FavoriteRoute.name, initialChildren: children);
 
-  static const String name = 'ThumbRoute';
+  static const String name = 'FavoriteRoute';
 
-  static const PageInfo<ThumbRouteArgs> page = PageInfo<ThumbRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const FavoritePage();
+    },
+  );
 }
 
-class ThumbRouteArgs {
-  const ThumbRouteArgs({
-    this.key,
-    required this.gid,
-    this.colorScheme,
-  });
+/// generated route for
+/// [FrontPage]
+class FrontRoute extends PageRouteInfo<void> {
+  const FrontRoute({List<PageRouteInfo>? children})
+    : super(FrontRoute.name, initialChildren: children);
 
-  final Key? key;
+  static const String name = 'FrontRoute';
 
-  final int gid;
-
-  final ColorScheme? colorScheme;
-
-  @override
-  String toString() {
-    return 'ThumbRouteArgs{key: $key, gid: $gid, colorScheme: $colorScheme}';
-  }
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const FrontPage();
+    },
+  );
 }
 
 /// generated route for
@@ -282,27 +155,24 @@ class GalleryRoute extends PageRouteInfo<GalleryRouteArgs> {
     String? heroTag,
     List<PageRouteInfo>? children,
   }) : super(
-          GalleryRoute.name,
-          args: GalleryRouteArgs(
-            key: key,
-            gid: gid,
-            heroTag: heroTag,
-          ),
-          initialChildren: children,
-        );
+         GalleryRoute.name,
+         args: GalleryRouteArgs(key: key, gid: gid, heroTag: heroTag),
+         initialChildren: children,
+       );
 
   static const String name = 'GalleryRoute';
 
-  static const PageInfo<GalleryRouteArgs> page =
-      PageInfo<GalleryRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<GalleryRouteArgs>();
+      return GalleryPage(key: args.key, gid: args.gid, heroTag: args.heroTag);
+    },
+  );
 }
 
 class GalleryRouteArgs {
-  const GalleryRouteArgs({
-    this.key,
-    required this.gid,
-    this.heroTag,
-  });
+  const GalleryRouteArgs({this.key, required this.gid, this.heroTag});
 
   final Key? key;
 
@@ -314,48 +184,112 @@ class GalleryRouteArgs {
   String toString() {
     return 'GalleryRouteArgs{key: $key, gid: $gid, heroTag: $heroTag}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! GalleryRouteArgs) return false;
+    return key == other.key && gid == other.gid && heroTag == other.heroTag;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ gid.hashCode ^ heroTag.hashCode;
 }
 
 /// generated route for
-/// [ReadPage]
-class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
-  ReadRoute({
-    Key? key,
-    int? index,
-    ColorScheme? colorScheme,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ReadRoute.name,
-          args: ReadRouteArgs(
-            key: key,
-            index: index,
-            colorScheme: colorScheme,
-          ),
-          initialChildren: children,
-        );
+/// [GeneralSettingPage]
+class GeneralSettingRoute extends PageRouteInfo<void> {
+  const GeneralSettingRoute({List<PageRouteInfo>? children})
+    : super(GeneralSettingRoute.name, initialChildren: children);
 
-  static const String name = 'ReadRoute';
+  static const String name = 'GeneralSettingRoute';
 
-  static const PageInfo<ReadRouteArgs> page = PageInfo<ReadRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const GeneralSettingPage();
+    },
+  );
 }
 
-class ReadRouteArgs {
-  const ReadRouteArgs({
-    this.key,
-    this.index,
-    this.colorScheme,
-  });
+/// generated route for
+/// [HistoryPage]
+class HistoryRoute extends PageRouteInfo<void> {
+  const HistoryRoute({List<PageRouteInfo>? children})
+    : super(HistoryRoute.name, initialChildren: children);
 
-  final Key? key;
+  static const String name = 'HistoryRoute';
 
-  final int? index;
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const HistoryPage();
+    },
+  );
+}
 
-  final ColorScheme? colorScheme;
+/// generated route for
+/// [IndexPage]
+class IndexRoute extends PageRouteInfo<void> {
+  const IndexRoute({List<PageRouteInfo>? children})
+    : super(IndexRoute.name, initialChildren: children);
 
-  @override
-  String toString() {
-    return 'ReadRouteArgs{key: $key, index: $index, colorScheme: $colorScheme}';
-  }
+  static const String name = 'IndexRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const IndexPage();
+    },
+  );
+}
+
+/// generated route for
+/// [LoginPage]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute({List<PageRouteInfo>? children})
+    : super(LoginRoute.name, initialChildren: children);
+
+  static const String name = 'LoginRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LoginPage();
+    },
+  );
+}
+
+/// generated route for
+/// [MorePage]
+class MoreRoute extends PageRouteInfo<void> {
+  const MoreRoute({List<PageRouteInfo>? children})
+    : super(MoreRoute.name, initialChildren: children);
+
+  static const String name = 'MoreRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MorePage();
+    },
+  );
+}
+
+/// generated route for
+/// [MyLicensePage]
+class MyLicenseRoute extends PageRouteInfo<void> {
+  const MyLicenseRoute({List<PageRouteInfo>? children})
+    : super(MyLicenseRoute.name, initialChildren: children);
+
+  static const String name = 'MyLicenseRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MyLicensePage();
+    },
+  );
 }
 
 /// generated route for
@@ -367,27 +301,32 @@ class NhWebViewRoute extends PageRouteInfo<NhWebViewRouteArgs> {
     String? title,
     List<PageRouteInfo>? children,
   }) : super(
-          NhWebViewRoute.name,
-          args: NhWebViewRouteArgs(
-            key: key,
-            initialUrl: initialUrl,
-            title: title,
-          ),
-          initialChildren: children,
-        );
+         NhWebViewRoute.name,
+         args: NhWebViewRouteArgs(
+           key: key,
+           initialUrl: initialUrl,
+           title: title,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'NhWebViewRoute';
 
-  static const PageInfo<NhWebViewRouteArgs> page =
-      PageInfo<NhWebViewRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<NhWebViewRouteArgs>();
+      return NhWebViewPage(
+        key: args.key,
+        initialUrl: args.initialUrl,
+        title: args.title,
+      );
+    },
+  );
 }
 
 class NhWebViewRouteArgs {
-  const NhWebViewRouteArgs({
-    this.key,
-    required this.initialUrl,
-    this.title,
-  });
+  const NhWebViewRouteArgs({this.key, required this.initialUrl, this.title});
 
   final Key? key;
 
@@ -399,90 +338,117 @@ class NhWebViewRouteArgs {
   String toString() {
     return 'NhWebViewRouteArgs{key: $key, initialUrl: $initialUrl, title: $title}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! NhWebViewRouteArgs) return false;
+    return key == other.key &&
+        initialUrl == other.initialUrl &&
+        title == other.title;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ initialUrl.hashCode ^ title.hashCode;
 }
 
 /// generated route for
-/// [WebLoginPage]
-class WebLoginRoute extends PageRouteInfo<void> {
-  const WebLoginRoute({List<PageRouteInfo>? children})
-      : super(
-          WebLoginRoute.name,
-          initialChildren: children,
-        );
+/// [ReadPage]
+class ReadRoute extends PageRouteInfo<ReadRouteArgs> {
+  ReadRoute({
+    Key? key,
+    int? index,
+    ColorScheme? colorScheme,
+    List<PageRouteInfo>? children,
+  }) : super(
+         ReadRoute.name,
+         args: ReadRouteArgs(key: key, index: index, colorScheme: colorScheme),
+         initialChildren: children,
+       );
 
-  static const String name = 'WebLoginRoute';
+  static const String name = 'ReadRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ReadRouteArgs>(
+        orElse: () => const ReadRouteArgs(),
+      );
+      return ReadPage(
+        key: args.key,
+        index: args.index,
+        colorScheme: args.colorScheme,
+      );
+    },
+  );
+}
+
+class ReadRouteArgs {
+  const ReadRouteArgs({this.key, this.index, this.colorScheme});
+
+  final Key? key;
+
+  final int? index;
+
+  final ColorScheme? colorScheme;
+
+  @override
+  String toString() {
+    return 'ReadRouteArgs{key: $key, index: $index, colorScheme: $colorScheme}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ReadRouteArgs) return false;
+    return key == other.key &&
+        index == other.index &&
+        colorScheme == other.colorScheme;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ index.hashCode ^ colorScheme.hashCode;
 }
 
 /// generated route for
-/// [LoginPage]
-class LoginRoute extends PageRouteInfo<void> {
-  const LoginRoute({List<PageRouteInfo>? children})
-      : super(
-          LoginRoute.name,
-          initialChildren: children,
-        );
+/// [ReadSettingPage]
+class ReadSettingRoute extends PageRouteInfo<void> {
+  const ReadSettingRoute({List<PageRouteInfo>? children})
+    : super(ReadSettingRoute.name, initialChildren: children);
 
-  static const String name = 'LoginRoute';
+  static const String name = 'ReadSettingRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [FavoritePage]
-class FavoriteRoute extends PageRouteInfo<void> {
-  const FavoriteRoute({List<PageRouteInfo>? children})
-      : super(
-          FavoriteRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'FavoriteRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [MorePage]
-class MoreRoute extends PageRouteInfo<void> {
-  const MoreRoute({List<PageRouteInfo>? children})
-      : super(
-          MoreRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'MoreRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ReadSettingPage();
+    },
+  );
 }
 
 /// generated route for
 /// [SearchPage]
 class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
-  SearchRoute({
-    Key? key,
-    required String query,
-    List<PageRouteInfo>? children,
-  }) : super(
-          SearchRoute.name,
-          args: SearchRouteArgs(
-            key: key,
-            query: query,
-          ),
-          initialChildren: children,
-        );
+  SearchRoute({Key? key, required String query, List<PageRouteInfo>? children})
+    : super(
+        SearchRoute.name,
+        args: SearchRouteArgs(key: key, query: query),
+        initialChildren: children,
+      );
 
   static const String name = 'SearchRoute';
 
-  static const PageInfo<SearchRouteArgs> page = PageInfo<SearchRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SearchRouteArgs>();
+      return SearchPage(key: args.key, query: args.query);
+    },
+  );
 }
 
 class SearchRouteArgs {
-  const SearchRouteArgs({
-    this.key,
-    required this.query,
-  });
+  const SearchRouteArgs({this.key, required this.query});
 
   final Key? key;
 
@@ -492,144 +458,118 @@ class SearchRouteArgs {
   String toString() {
     return 'SearchRouteArgs{key: $key, query: $query}';
   }
-}
 
-/// generated route for
-/// [HistoryPage]
-class HistoryRoute extends PageRouteInfo<void> {
-  const HistoryRoute({List<PageRouteInfo>? children})
-      : super(
-          HistoryRoute.name,
-          initialChildren: children,
-        );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SearchRouteArgs) return false;
+    return key == other.key && query == other.query;
+  }
 
-  static const String name = 'HistoryRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [IndexPage]
-class IndexRoute extends PageRouteInfo<void> {
-  const IndexRoute({List<PageRouteInfo>? children})
-      : super(
-          IndexRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'IndexRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [FrontPage]
-class FrontRoute extends PageRouteInfo<void> {
-  const FrontRoute({List<PageRouteInfo>? children})
-      : super(
-          FrontRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'FrontRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AdvancedSettingPage]
-class AdvancedSettingRoute extends PageRouteInfo<void> {
-  const AdvancedSettingRoute({List<PageRouteInfo>? children})
-      : super(
-          AdvancedSettingRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AdvancedSettingRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [MyLicensePage]
-class MyLicenseRoute extends PageRouteInfo<void> {
-  const MyLicenseRoute({List<PageRouteInfo>? children})
-      : super(
-          MyLicenseRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'MyLicenseRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [GeneralSettingPage]
-class GeneralSettingRoute extends PageRouteInfo<void> {
-  const GeneralSettingRoute({List<PageRouteInfo>? children})
-      : super(
-          GeneralSettingRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'GeneralSettingRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AppearanceSettingPage]
-class AppearanceSettingRoute extends PageRouteInfo<void> {
-  const AppearanceSettingRoute({List<PageRouteInfo>? children})
-      : super(
-          AppearanceSettingRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AppearanceSettingRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AboutPage]
-class AboutRoute extends PageRouteInfo<void> {
-  const AboutRoute({List<PageRouteInfo>? children})
-      : super(
-          AboutRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'AboutRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
+  @override
+  int get hashCode => key.hashCode ^ query.hashCode;
 }
 
 /// generated route for
 /// [SettingsPage]
 class SettingsRoute extends PageRouteInfo<void> {
   const SettingsRoute({List<PageRouteInfo>? children})
-      : super(
-          SettingsRoute.name,
-          initialChildren: children,
-        );
+    : super(SettingsRoute.name, initialChildren: children);
 
   static const String name = 'SettingsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SettingsPage();
+    },
+  );
 }
 
 /// generated route for
-/// [ReadSettingPage]
-class ReadSettingRoute extends PageRouteInfo<void> {
-  const ReadSettingRoute({List<PageRouteInfo>? children})
-      : super(
-          ReadSettingRoute.name,
-          initialChildren: children,
-        );
+/// [SplashPage]
+class SplashRoute extends PageRouteInfo<void> {
+  const SplashRoute({List<PageRouteInfo>? children})
+    : super(SplashRoute.name, initialChildren: children);
 
-  static const String name = 'ReadSettingRoute';
+  static const String name = 'SplashRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SplashPage();
+    },
+  );
+}
+
+/// generated route for
+/// [ThumbPage]
+class ThumbRoute extends PageRouteInfo<ThumbRouteArgs> {
+  ThumbRoute({
+    Key? key,
+    required int gid,
+    ColorScheme? colorScheme,
+    List<PageRouteInfo>? children,
+  }) : super(
+         ThumbRoute.name,
+         args: ThumbRouteArgs(key: key, gid: gid, colorScheme: colorScheme),
+         initialChildren: children,
+       );
+
+  static const String name = 'ThumbRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ThumbRouteArgs>();
+      return ThumbPage(
+        key: args.key,
+        gid: args.gid,
+        colorScheme: args.colorScheme,
+      );
+    },
+  );
+}
+
+class ThumbRouteArgs {
+  const ThumbRouteArgs({this.key, required this.gid, this.colorScheme});
+
+  final Key? key;
+
+  final int gid;
+
+  final ColorScheme? colorScheme;
+
+  @override
+  String toString() {
+    return 'ThumbRouteArgs{key: $key, gid: $gid, colorScheme: $colorScheme}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ThumbRouteArgs) return false;
+    return key == other.key &&
+        gid == other.gid &&
+        colorScheme == other.colorScheme;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ gid.hashCode ^ colorScheme.hashCode;
+}
+
+/// generated route for
+/// [WebLoginPage]
+class WebLoginRoute extends PageRouteInfo<void> {
+  const WebLoginRoute({List<PageRouteInfo>? children})
+    : super(WebLoginRoute.name, initialChildren: children);
+
+  static const String name = 'WebLoginRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const WebLoginPage();
+    },
+  );
 }

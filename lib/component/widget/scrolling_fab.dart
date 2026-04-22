@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 
 class ScrollingFab extends StatefulWidget {
   const ScrollingFab({
-    Key? key,
+    super.key,
     this.duration,
     this.curve,
     this.scrollController,
@@ -12,7 +12,7 @@ class ScrollingFab extends StatefulWidget {
     required this.icon,
     this.extendedIconLabelSpacing,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final Duration? duration;
   final Curve? curve;
@@ -35,7 +35,7 @@ class _ScrollingFabState extends State<ScrollingFab> {
       if (!mounted || !_isExtended) {
         return;
       }
-      logger.v('ScrollingFab: ScrollDirection.reverse');
+      logger.t('ScrollingFab: ScrollDirection.reverse');
       setState(() {
         _isExtended = false;
       });
@@ -45,7 +45,7 @@ class _ScrollingFabState extends State<ScrollingFab> {
       if (!mounted || _isExtended) {
         return;
       }
-      logger.v('ScrollingFab: _scrollListener: forward');
+      logger.t('ScrollingFab: _scrollListener: forward');
       setState(() {
         _isExtended = true;
       });
@@ -84,8 +84,9 @@ class _ScrollingFabState extends State<ScrollingFab> {
         label: labelSizeAnimation,
         icon: widget.icon,
         isExtended: true,
-        extendedIconLabelSpacing:
-            _isExtended ? widget.extendedIconLabelSpacing : 0,
+        extendedIconLabelSpacing: _isExtended
+            ? widget.extendedIconLabelSpacing
+            : 0,
         extendedPadding: _isExtended
             ? const EdgeInsetsDirectional.only(start: 16, end: 20)
             : const EdgeInsetsDirectional.only(start: 16, end: 16),

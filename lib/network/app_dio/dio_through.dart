@@ -1,19 +1,23 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:eros_n/utils/logger.dart';
 
 class DioThroughInterceptor extends Interceptor {
   DioThroughInterceptor({required this.dio, required this.throughHandler});
 
   Dio dio;
-  Future<bool> Function(DioError err) throughHandler;
+  Future<bool> Function(DioException err) throughHandler;
 
   @override
-  Future<dynamic> onError(DioError err, ErrorInterceptorHandler handler) async {
+  Future<dynamic> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     if (!err.requestOptions.disableThrough) {
       if (err.response?.statusCode == 403 || err.response?.statusCode == 503) {
-        print('DioThroughInterceptor onError');
-        print(err);
+        logger.d('DioThroughInterceptor onError');
+        logger.d(err);
         final ok = await throughHandler(err);
         if (ok) {
           final headers = err.requestOptions.headers;
