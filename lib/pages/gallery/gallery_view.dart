@@ -260,25 +260,21 @@ class _BackGround extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final canvas = Theme.of(context).canvasColor;
     return ShaderMask(
       shaderCallback: (Rect bounds) {
         return LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            // Theme.of(context).canvasColor,
-            // Colors.black,
-            Colors.transparent,
-            Theme.of(context).canvasColor,
-            // Colors.white,
-          ],
-        ).createShader(Rect.fromLTRB(0, 0, bounds.width, bounds.height - 0));
+          colors: [Colors.transparent, canvas, canvas],
+          stops: const [0.0, 0.92, 1.0],
+        ).createShader(Rect.fromLTRB(0, 0, bounds.width, bounds.height + 8));
       },
       blendMode: BlendMode.dstOut,
       child: ClipRect(
         child: BlurImage(
           sigma: 4,
-          color: Theme.of(context).canvasColor.withValues(alpha: 0.5),
+          color: canvas.withValues(alpha: 0.5),
           child: thumbUrl != null
               ? ErosCachedNetworkImage(
                   imageUrl: thumbUrl,
@@ -326,68 +322,73 @@ class GalleryDetailBody extends HookConsumerWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: context.isTablet ? 420 : 460,
-              child: Stack(
-                alignment: Alignment.bottomLeft,
-                children: [
-                  backGround ?? const SizedBox(),
-                  Container(
-                    padding: EdgeInsets.only(
-                      left: context.mediaQueryPadding.left + 16,
-                      right: context.mediaQueryPadding.right + 16,
-                      top: 16,
-                      bottom: 16,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SelectableText(
-                          title.englishTitle ?? '',
-                          style: Theme.of(context).textTheme.titleLarge,
-                          maxLines: context.isTablet ? 2 : 3,
-                          minLines: 1,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          height: 240,
-                          child: Row(
-                            // crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // 封面
-                              Container(
-                                width: 140,
-                                margin: const EdgeInsets.only(right: 12),
-                                alignment: Alignment.center,
-                                child: Hero(
-                                  tag: '${heroTag ?? ''}_$thumbUrl',
-                                  child: Card(
-                                    margin: const EdgeInsets.all(0),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: AspectRatio(
-                                      aspectRatio:
-                                          (images.thumbnail.imgWidth ?? 300) /
-                                          (images.thumbnail.imgHeight ?? 400),
-                                      child: thumbUrl == null
-                                          ? nil
-                                          : ErosCachedNetworkImage(
-                                              imageUrl: thumbUrl,
-                                              fit: BoxFit.cover,
-                                            ),
+              child: ClipRect(
+                child: Stack(
+                  alignment: Alignment.bottomLeft,
+                  children: [
+                    backGround ?? const SizedBox(),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: context.mediaQueryPadding.left + 16,
+                        right: context.mediaQueryPadding.right + 16,
+                        top: 16,
+                        bottom: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SelectableText(
+                            title.englishTitle ?? '',
+                            style: Theme.of(context).textTheme.titleLarge,
+                            maxLines: context.isTablet ? 2 : 3,
+                            minLines: 1,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            height: 240,
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // 封面
+                                Container(
+                                  width: 140,
+                                  margin: const EdgeInsets.only(right: 12),
+                                  alignment: Alignment.center,
+                                  child: Hero(
+                                    tag: '${heroTag ?? ''}_$thumbUrl',
+                                    child: Card(
+                                      margin: const EdgeInsets.all(0),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: AspectRatio(
+                                        aspectRatio:
+                                            (images.thumbnail.imgWidth ?? 300) /
+                                            (images.thumbnail.imgHeight ?? 400),
+                                        child: thumbUrl == null
+                                            ? nil
+                                            : ErosCachedNetworkImage(
+                                                imageUrl: thumbUrl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: HeadInfoView(gid: gid, context: context),
-                              ),
-                            ],
+                                Expanded(
+                                  child: HeadInfoView(
+                                    gid: gid,
+                                    context: context,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                          const SizedBox(height: 8),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -920,7 +921,7 @@ class ThumbListView extends HookConsumerWidget {
               final builtUrl = mediaId == null
                   ? null
                   : (image.imageUrl ??
-                      'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext');
+                        'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext');
               return Consumer(
                 child: GestureDetector(
                   onTap: () async {
