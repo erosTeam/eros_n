@@ -67,19 +67,24 @@ Gallery _parseGalleryDetailPure(String html) {
   final title = titleElms.firstOrNull?.text ?? '';
   final jpnTitle = titleElms.lastOrNull?.text ?? '';
 
+  // The SvelteKit frontend renders the favorite button server-side without
+  // any user-specific state — the button is always disabled, always uses
+  // `fas fa-heart`, and shows "You need to log in" copy regardless of the
+  // viewer's session. The favorite count *is* in the SSR markup though, so
+  // we still scrape it from the button text.
+  //
+  // The actual "is favorited" state has to come from the API after parse
+  // (see `getGalleryFavoriteStatus`).
   const selectorButtons = '#info > div.buttons';
   final buttonsElms = document.querySelector(selectorButtons);
-  final favoriteButtonElm = buttonsElms?.children.first;
-
+  final favoriteButtonElm = buttonsElms?.children.firstOrNull;
   final favoriteText = favoriteButtonElm?.text.trim() ?? '';
   final favNum = RegExp(r'\d+').firstMatch(favoriteText)?.group(0) ?? '';
 
-  final favText = favoriteButtonElm?.querySelector('.text')?.text.trim() ?? '';
-  final isFav = favText.contains('Un');
-
   const selectorMoreLikeGalleryList = '#related-container';
   const selectorGallery = '.gallery:not(.blacklisted)';
-  final moreLikeGalleryElmList = document
+  final moreLikeGalleryElmList =
+      document
           .querySelector(selectorMoreLikeGalleryList)
           ?.querySelectorAll(selectorGallery) ??
       [];
@@ -89,8 +94,9 @@ Gallery _parseGalleryDetailPure(String html) {
   final moreLikeGalleryList = _parseGalleryListElmRaw(moreLikeGalleryElmList);
 
   const selectorThumb = '.gallerythumb';
-  final List<Element> galleryThumbsElm =
-      document.querySelectorAll(selectorThumb);
+  final List<Element> galleryThumbsElm = document.querySelectorAll(
+    selectorThumb,
+  );
 
   String? mediaId;
 
@@ -144,7 +150,9 @@ Gallery _parseGalleryDetailPure(String html) {
     title: GalleryTitle(englishTitle: title, japaneseTitle: jpnTitle),
     images: GalleryImages(pages: galleryImagePages, thumbnail: thumbImage),
     mediaId: mediaId,
-    isFavorited: isFav,
+    // Initial favorited state is unknown — see comment above. The caller
+    // refreshes it asynchronously via `getGalleryFavoriteStatus`.
+    isFavorited: null,
     numFavorites: int.tryParse(favNum) ?? 0,
     moreLikeGallerys: moreLikeGalleryList,
     csrfToken: csrfToken,
@@ -162,15 +170,12 @@ List<Gallery> _parseGalleryListElmRaw(List<Element> galleryElmList) {
     final title = captionElm?.text ?? '';
     final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
     final lazyloadElm = elm.querySelector('.lazyload');
-    final thumbUrl = lazyloadElm?.attributes['data-src'] ??
+    final thumbUrl =
+        lazyloadElm?.attributes['data-src'] ??
         lazyloadElm?.attributes['src'] ??
         '';
-    final imageHeight = int.tryParse(
-      lazyloadElm?.attributes['height'] ?? '',
-    );
-    final imageWidth = int.tryParse(
-      lazyloadElm?.attributes['width'] ?? '',
-    );
+    final imageHeight = int.tryParse(lazyloadElm?.attributes['height'] ?? '');
+    final imageWidth = int.tryParse(lazyloadElm?.attributes['width'] ?? '');
     if (url.isEmpty) continue;
 
     final gid = RegExp(r'/(\d+)/').firstMatch(url)?.group(1) ?? '';
@@ -310,8 +315,5 @@ Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
     }
   }
 
-  return raw.copyWith(
-    tags: enrichedTags,
-    moreLikeGallerys: enrichedRelated,
-  );
+  return raw.copyWith(tags: enrichedTags, moreLikeGallerys: enrichedRelated);
 }

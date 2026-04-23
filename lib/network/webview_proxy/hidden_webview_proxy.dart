@@ -133,8 +133,22 @@ class HiddenWebViewProxy {
         ? null
         : (body is String ? body : jsonEncode(body));
 
+    // Convert same-origin absolute URLs to a relative path. Chromium's
+    // fetch() treats absolute URLs as cross-origin even when the host
+    // matches `location.host`; the upshot is that custom headers like
+    // `Authorization` get silently dropped by the spec-mandated CORS
+    // sanitization. Same-origin fetches use a *relative* URL and behave
+    // like normal browser navigation, with all our headers intact.
+    String fetchUrl = url;
+    try {
+      final uri = Uri.parse(url);
+      if (uri.host == 'nhentai.net' && uri.scheme == 'https') {
+        fetchUrl = uri.path + (uri.hasQuery ? '?${uri.query}' : '');
+      }
+    } catch (_) {}
+
     final args = <String, dynamic>{
-      'url': url,
+      'url': fetchUrl,
       'method': method.toUpperCase(),
       'headers': safeHeaders,
       'body': bodyString,
@@ -142,12 +156,24 @@ class HiddenWebViewProxy {
     };
 
     const script = r'''
+// nhentai's /api/v2/* requires `Authorization: User <access_token>`.
+// Read the freshest access_token straight out of the browser's cookie
+// jar so we always send the live value (the Dart-side CookieJar can lag
+// behind nhentai's silent token rotation).
+let finalHeaders = Object.assign({}, headers || {});
+const isApiV2 = typeof url === 'string' && url.indexOf('/api/v2/') >= 0;
+const hasAuthAlready = Object.keys(finalHeaders).some(k => k.toLowerCase() === 'authorization');
+if (isApiV2 && !hasAuthAlready) {
+  const m = /(?:^|; )access_token=([^;]+)/.exec(document.cookie);
+  if (m && m[1]) {
+    finalHeaders['Authorization'] = 'User ' + m[1];
+  }
+}
 const init = {
   method: method,
-  headers: headers,
+  headers: finalHeaders,
   credentials: 'include',
   redirect: 'follow',
-  mode: 'cors',
   cache: 'no-store',
 };
 if (hasBody) { init.body = body; }
@@ -182,7 +208,9 @@ try {
 
     final value = result.value;
     if (value is! Map) {
-      throw StateError('WebViewProxy: unexpected JS result type ${value.runtimeType}');
+      throw StateError(
+        'WebViewProxy: unexpected JS result type ${value.runtimeType}',
+      );
     }
 
     final ok = value['ok'] == true;
@@ -198,8 +226,9 @@ try {
       });
     }
 
+    final status = (value['status'] as num).toInt();
     return ProxyHttpResponse(
-      status: (value['status'] as num).toInt(),
+      status: status,
       statusText: (value['statusText'] as String?) ?? '',
       url: (value['url'] as String?) ?? url,
       headers: headersMap,
@@ -561,8 +590,7 @@ try {
       // SvelteKit may have replaced the DOM with a hydrated version and
       // any error message could live in arbitrary class names.
       final diag = await controller.evaluateJavascript(
-        source:
-            r'''
+        source: r'''
           (function () {
             const text = (document.body && document.body.innerText) || '';
             const fetches = window.__erosLoginFetches || [];
@@ -578,9 +606,7 @@ try {
         ''',
       );
       logger.w('[WebViewProxy] login stayed on /login, diag=$diag');
-      await controller.loadUrl(
-        urlRequest: URLRequest(url: WebUri(returnUrl)),
-      );
+      await controller.loadUrl(urlRequest: URLRequest(url: WebUri(returnUrl)));
       return false;
     } catch (e, st) {
       logger.e('[WebViewProxy] login error', error: e, stackTrace: st);
@@ -607,10 +633,7 @@ try {
       throw StateError('HiddenWebViewProxy: controller not attached');
     }
 
-    final args = <String, dynamic>{
-      'username': username,
-      'password': password,
-    };
+    final args = <String, dynamic>{'username': username, 'password': password};
 
     const script = r'''
 function readCookie(name) {
@@ -820,10 +843,14 @@ class _HiddenWebViewProxyHostState extends State<HiddenWebViewProxyHost> {
                   }
                 },
                 onReceivedError: (controller, request, error) {
-                  logger.w('[WebViewProxy] onReceivedError $error url=${request.url}');
+                  logger.w(
+                    '[WebViewProxy] onReceivedError $error url=${request.url}',
+                  );
                 },
                 onConsoleMessage: (controller, msg) {
-                  logger.t('[WebViewProxy console] ${msg.messageLevel}: ${msg.message}');
+                  logger.t(
+                    '[WebViewProxy console] ${msg.messageLevel}: ${msg.message}',
+                  );
                 },
               ),
             ),

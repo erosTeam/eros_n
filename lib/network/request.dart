@@ -412,6 +412,53 @@ Future<Tuple2<bool?, int?>> setFavorite({
   }
 }
 
+/// Queries nhentai for the current user's favorite state on a gallery.
+///
+/// nhentai's SvelteKit frontend renders the favorite button server-side
+/// without any session-aware state, so the only way to know whether the
+/// logged-in user has favorited a gallery is to ask the API directly.
+///
+/// Returns the boolean state when the API answered, or `null` when the
+/// endpoint isn't available / the user isn't logged in / the request
+/// failed. Failures are intentionally swallowed: this is a best-effort
+/// enrichment, not a hard requirement for the detail page.
+Future<bool?> getGalleryFavoriteStatus({
+  required int? gid,
+  CancelToken? cancelToken,
+}) async {
+  if (gid == null) {
+    return null;
+  }
+  final dio = DioHttpClient(dioConfig: globalDioConfig);
+  final path = '/api/v2/galleries/$gid/favorite';
+  try {
+    final r = await dio.get(
+      path,
+      options: getOptions(forceRefresh: true)
+        ..validateStatus = (status) => status != null && status < 500,
+      cancelToken: cancelToken,
+      httpTransformer: HttpTransformerBuilder((response) {
+        final status = response.statusCode ?? 0;
+        if (status >= 400) {
+          return DioHttpResponse<bool?>.success(null);
+        }
+        final data = response.data;
+        if (data is Map) {
+          final fav = data['favorited'];
+          if (fav is bool) {
+            return DioHttpResponse<bool?>.success(fav);
+          }
+        }
+        return DioHttpResponse<bool?>.success(null);
+      }),
+    );
+    return r.ok ? r.data as bool? : null;
+  } catch (e) {
+    logger.d('getGalleryFavoriteStatus failed: $e');
+    return null;
+  }
+}
+
 Future<bool> loginNhentai({
   required String username,
   required String password,

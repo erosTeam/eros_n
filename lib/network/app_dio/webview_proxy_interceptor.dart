@@ -14,9 +14,8 @@ import 'package:eros_n/utils/logger.dart';
 /// downloads bypass the proxy and stay on direct dio transport, preserving
 /// throughput and concurrency for large binary payloads.
 class WebViewProxyInterceptor extends Interceptor {
-  WebViewProxyInterceptor({
-    Set<String>? proxiedHosts,
-  }) : _proxiedHosts = proxiedHosts ?? const {'nhentai.net'};
+  WebViewProxyInterceptor({Set<String>? proxiedHosts})
+    : _proxiedHosts = proxiedHosts ?? const {'nhentai.net'};
 
   final Set<String> _proxiedHosts;
 
@@ -48,6 +47,18 @@ class WebViewProxyInterceptor extends Interceptor {
         }
         headers[k] = v.toString();
       });
+
+      // Strip Content-Type on bodiless requests. Dio's defaults can leak
+      // `application/x-www-form-urlencoded` onto GET/HEAD/DELETE, which the
+      // nhentai v2 API rejects with 401 (it inspects the header before the
+      // auth check passes). Always safe: bodyless requests don't need any
+      // content-type negotiation.
+      final method = options.method.toUpperCase();
+      final hasBody =
+          options.data != null && method != 'GET' && method != 'HEAD';
+      if (!hasBody) {
+        headers.removeWhere((k, _) => k.toLowerCase() == 'content-type');
+      }
 
       final url = options.uri.toString();
       logger.d('[WebViewProxy] -> ${options.method} $url');
@@ -81,23 +92,13 @@ class WebViewProxyInterceptor extends Interceptor {
         data: data,
         isRedirect: isRedirected,
         redirects: isRedirected
-            ? [
-                RedirectRecord(
-                  302,
-                  options.method,
-                  Uri.parse(finalUrl),
-                ),
-              ]
+            ? [RedirectRecord(302, options.method, Uri.parse(finalUrl))]
             : const [],
-        extra: {
-          'webview_proxy': true,
-          'final_url': finalUrl,
-        },
+        extra: {'webview_proxy': true, 'final_url': finalUrl},
       );
 
       // Preserve dio's validateStatus contract: throw on bad status codes.
-      final validate =
-          options.validateStatus(response.statusCode);
+      final validate = options.validateStatus(response.statusCode);
       if (!validate) {
         return handler.reject(
           DioException.badResponse(
@@ -151,8 +152,7 @@ const _disableWebViewProxyKey = '__webview_proxy_disable';
 extension RequestOptionsWebViewProxy on RequestOptions {
   bool get disableWebViewProxy =>
       (extra[_disableWebViewProxyKey] as bool?) ?? false;
-  set disableWebViewProxy(bool value) =>
-      extra[_disableWebViewProxyKey] = value;
+  set disableWebViewProxy(bool value) => extra[_disableWebViewProxyKey] = value;
 }
 
 extension OptionsWebViewProxy on Options {
