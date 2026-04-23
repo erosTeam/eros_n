@@ -1,17 +1,60 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eros_n/common/global.dart';
-import 'package:eros_n/common/parser/parse_gallery_list.dart';
+import 'package:eros_n/common/parser/parse_gallery_list.dart' as listparse;
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' hide Comment;
 import 'package:html/parser.dart' show parse;
 import 'package:tuple/tuple.dart';
 
+/// Parses a gallery detail page (~80 KB HTML, ~30 tags) and returns the
+/// fully-populated `Gallery`.
+///
+/// Detail HTML parsing dwarfed every other CPU spike on the main isolate,
+/// so we offload the entire HTML walk to a worker via `compute`. The
+/// returned object already carries every field that doesn't depend on the
+/// local ObjectBox, and we enrich `tags.translatedName` / `simpleTags`
+/// afterwards on the main isolate (which owns the ObjectBox `Store`).
 Future<Gallery> parseGalleryDetail(String html) async {
+  final swParse = Stopwatch()..start();
+  final raw = await compute(_parseGalleryDetailPure, html);
+  swParse.stop();
+  if (swParse.elapsedMilliseconds > 200) {
+    logger.w(
+      'parseGalleryDetail: pure parse on isolate took ${swParse.elapsedMilliseconds}ms (html ${html.length} bytes)',
+    );
+  }
+
+  final swEnrich = Stopwatch()..start();
+  final enriched = await _enrichGalleryDetail(raw);
+  swEnrich.stop();
+  if (swEnrich.elapsedMilliseconds > 200) {
+    logger.w(
+      'parseGalleryDetail: ObjectBox enrich took ${swEnrich.elapsedMilliseconds}ms',
+    );
+  }
+
+  // Passive learning: persist parsed tags into the local NhTag cache so
+  // search autocomplete works without depending on an external prebuilt
+  // tag dump. Fire-and-forget; failures here must not break detail load.
+  unawaited(
+    Future(() => objectBoxHelper.learnNhTags(enriched.tags)).catchError((
+      Object e,
+    ) {
+      logger.w('learnNhTags failed: $e');
+    }),
+  );
+  return enriched;
+}
+
+/// Top-level isolate-friendly parse. ObjectBox lookups happen on the main
+/// isolate via `_enrichGalleryDetail`.
+Gallery _parseGalleryDetailPure(String html) {
   final Document document = parse(html);
-  // logger.d('html\n$html');
 
   const selectorScript = 'body > script';
   final scriptElm = document.querySelector(selectorScript);
@@ -23,44 +66,31 @@ Future<Gallery> parseGalleryDetail(String html) async {
   final titleElms = document.querySelectorAll('#info > .title');
   final title = titleElms.firstOrNull?.text ?? '';
   final jpnTitle = titleElms.lastOrNull?.text ?? '';
-  logger.t('title: $title, jpnTitle: $jpnTitle');
 
   const selectorButtons = '#info > div.buttons';
   final buttonsElms = document.querySelector(selectorButtons);
   final favoriteButtonElm = buttonsElms?.children.first;
 
   final favoriteText = favoriteButtonElm?.text.trim() ?? '';
-  logger.t('favoriteText: $favoriteText');
   final favNum = RegExp(r'\d+').firstMatch(favoriteText)?.group(0) ?? '';
 
   final favText = favoriteButtonElm?.querySelector('.text')?.text.trim() ?? '';
-  logger.t('favText: $favText');
   final isFav = favText.contains('Un');
-
-  logger.t('favNum: $favNum isFav: $isFav');
-
-  final downloadButtonElm = buttonsElms?.children[1];
-  final torrentUrl = downloadButtonElm?.attributes['href'] ?? '';
-  logger.t('torrentUrl: $torrentUrl');
 
   const selectorMoreLikeGalleryList = '#related-container';
   const selectorGallery = '.gallery:not(.blacklisted)';
-  final moreLikeGalleryElmList =
-      document
+  final moreLikeGalleryElmList = document
           .querySelector(selectorMoreLikeGalleryList)
           ?.querySelectorAll(selectorGallery) ??
       [];
-  final moreLikeGalleryList = await parseGalleryListElm(
-    moreLikeGalleryElmList,
-    [],
-  );
+  // Reuse the listing parser so related galleries get the same shape;
+  // their `simpleTags` are still raw ids (enrichment runs on the main
+  // isolate).
+  final moreLikeGalleryList = _parseGalleryListElmRaw(moreLikeGalleryElmList);
 
   const selectorThumb = '.gallerythumb';
-
-  final List<Element> galleryThumbsElm = document.querySelectorAll(
-    selectorThumb,
-  );
-  logger.t('galleryThumbsElm ${galleryThumbsElm.length}');
+  final List<Element> galleryThumbsElm =
+      document.querySelectorAll(selectorThumb);
 
   String? mediaId;
 
@@ -106,24 +136,9 @@ Future<Gallery> parseGalleryDetail(String html) async {
     imgWidth: firstPage?.imgWidth,
   );
 
-  final tuple = parseGalleryTags(document);
+  final tuple = _parseGalleryTags(document);
   final tags = tuple.item1;
   final uploadedDateTime = tuple.item2;
-
-  final List<Future<Tag>> tagsTranslatedFutures = tags.map((tag) async {
-    final TagTranslate? translated = await objectBoxHelper
-        .findTagTranslateAsync(
-          tag.name ?? '',
-          namespace: getTagNamespace(tag.type ?? ''),
-        );
-    final translatedName = translated?.translateNameNotMD ?? tag.name ?? '';
-    return tag.copyWith(translatedName: translatedName);
-  }).toList();
-
-  final tagsTranslated = await Future.wait(tagsTranslatedFutures);
-
-  logger.t('tags: $tags');
-  logger.t('uploadedDateTime: $uploadedDateTime');
 
   return Gallery(
     title: GalleryTitle(englishTitle: title, japaneseTitle: jpnTitle),
@@ -133,15 +148,72 @@ Future<Gallery> parseGalleryDetail(String html) async {
     numFavorites: int.tryParse(favNum) ?? 0,
     moreLikeGallerys: moreLikeGalleryList,
     csrfToken: csrfToken,
-    tags: tagsTranslated,
+    tags: tags,
     uploadedDateTime: uploadedDateTime,
   );
 }
 
-Tuple2<List<Tag>, String> parseGalleryTags(Document document) {
+/// Mirrors `_parseGalleryListElmPure` from the listing parser. Kept private
+/// to the detail file so we don't widen the listing parser's public API.
+List<Gallery> _parseGalleryListElmRaw(List<Element> galleryElmList) {
+  final List<Gallery> galleryList = [];
+  for (final Element elm in galleryElmList) {
+    final captionElm = elm.querySelector('.caption');
+    final title = captionElm?.text ?? '';
+    final url = elm.querySelector('.cover')?.attributes['href'] ?? '';
+    final lazyloadElm = elm.querySelector('.lazyload');
+    final thumbUrl = lazyloadElm?.attributes['data-src'] ??
+        lazyloadElm?.attributes['src'] ??
+        '';
+    final imageHeight = int.tryParse(
+      lazyloadElm?.attributes['height'] ?? '',
+    );
+    final imageWidth = int.tryParse(
+      lazyloadElm?.attributes['width'] ?? '',
+    );
+    if (url.isEmpty) continue;
+
+    final gid = RegExp(r'/(\d+)/').firstMatch(url)?.group(1) ?? '';
+    final mediaId = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
+    final ext = RegExp(r'\.(\w+)$').firstMatch(thumbUrl)?.group(1) ?? '';
+    final type = ext.isNotEmpty ? ext.substring(0, 1) : 'j';
+
+    final dataTags = (elm.attributes['data-tags'] ?? '')
+        .split(RegExp(r'\s+'))
+        .where((e) => e.isNotEmpty)
+        .toList();
+    if (gid.isEmpty) continue;
+
+    final simpleTags = dataTags
+        .map((t) => Tag(id: int.tryParse(t) ?? 0))
+        .where((t) => t.id != 0)
+        .toList();
+
+    galleryList.add(
+      Gallery(
+        gid: int.parse(gid),
+        mediaId: mediaId,
+        languageCode: listparse.getLanguageCode(dataTags),
+        simpleTags: simpleTags,
+        title: GalleryTitle(englishTitle: title),
+        images: GalleryImages(
+          thumbnail: GalleryImage(
+            type: type,
+            imgHeight: imageHeight,
+            imgWidth: imageWidth,
+            imageUrl: thumbUrl.isNotEmpty ? thumbUrl : null,
+          ),
+        ),
+      ),
+    );
+  }
+  return galleryList;
+}
+
+Tuple2<List<Tag>, String> _parseGalleryTags(Document document) {
   const selectorTagGroups = '#tags > .tag-container';
 
-  late final String uploadedDateTime;
+  String uploadedDateTime = '';
 
   final tagGroupsElm = document.querySelectorAll(selectorTagGroups);
   final tags = <Tag>[];
@@ -150,16 +222,13 @@ Tuple2<List<Tag>, String> parseGalleryTags(Document document) {
       ':',
       '',
     );
-    // logger.d('tagType: $tagType');
     if (tagType == 'Uploaded') {
       uploadedDateTime =
           groupElm.querySelector('.nobold')?.attributes['datetime'] ?? '';
       continue;
     }
 
-    if (tagType == 'Pages') {
-      continue;
-    }
+    if (tagType == 'Pages') continue;
 
     final tagElms = groupElm.querySelectorAll('.tag');
     for (final tagElm in tagElms) {
@@ -179,4 +248,70 @@ Tuple2<List<Tag>, String> parseGalleryTags(Document document) {
     }
   }
   return Tuple2(tags, uploadedDateTime);
+}
+
+/// Main-isolate enrichment: fills `translatedName` for every tag and the
+/// `simpleTags` of every related gallery. Yields periodically to keep the
+/// UI responsive during the (rare) cases where a detail page exposes many
+/// related galleries.
+Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
+  // Enrich top-level tags (translatedName).
+  final enrichedTags = <Tag>[];
+  for (var i = 0; i < raw.tags.length; i++) {
+    final t = raw.tags[i];
+    final translated = objectBoxHelper.findTagTranslate(
+      t.name ?? '',
+      namespace: getTagNamespace(t.type ?? ''),
+    );
+    enrichedTags.add(
+      t.copyWith(
+        translatedName: translated?.translateNameNotMD ?? t.name ?? '',
+      ),
+    );
+    if (i % 8 == 7) {
+      await Future<void>.delayed(Duration.zero);
+    }
+  }
+
+  // Enrich related galleries' simpleTags.
+  final enrichedRelated = <Gallery>[];
+  for (var i = 0; i < raw.moreLikeGallerys.length; i++) {
+    final g = raw.moreLikeGallerys[i];
+    if (g.simpleTags.isEmpty) {
+      enrichedRelated.add(g);
+      continue;
+    }
+    final tags = <Tag>[];
+    for (final st in g.simpleTags) {
+      final id = st.id ?? 0;
+      if (id == 0) {
+        tags.add(st);
+        continue;
+      }
+      final nhTag = objectBoxHelper.findNhTag(id);
+      if (nhTag == null) {
+        tags.add(st);
+        continue;
+      }
+      final translated = objectBoxHelper.findTagTranslate(
+        nhTag.name ?? '',
+        namespace: getTagNamespace(nhTag.type ?? ''),
+      );
+      tags.add(
+        st.copyWith(
+          name: nhTag.name,
+          translatedName: translated?.translateNameNotMD ?? nhTag.name ?? '',
+        ),
+      );
+    }
+    enrichedRelated.add(g.copyWith(simpleTags: tags));
+    if (i % 4 == 3) {
+      await Future<void>.delayed(Duration.zero);
+    }
+  }
+
+  return raw.copyWith(
+    tags: enrichedTags,
+    moreLikeGallerys: enrichedRelated,
+  );
 }
