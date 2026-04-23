@@ -125,8 +125,17 @@ class ThumbsView extends HookConsumerWidget {
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate((context, index) {
           final thumb = pages[index];
-          final imageUrl =
-              'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[thumb.type]}';
+          // Prefer the URL parsed off the page (handles compound suffixes
+          // like `2t.jpg.webp`); fall back to a synthesized URL when only
+          // the legacy `type` is available.
+          final ext = NHConst.extMap[thumb.type] ?? 'webp';
+          final imageUrl = thumb.imageUrl ??
+              'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext';
+          final aspect =
+              (thumb.imgWidth != null && thumb.imgHeight != null &&
+                      thumb.imgHeight! > 0)
+                  ? thumb.imgWidth! / thumb.imgHeight!
+                  : 3 / 4;
           return GestureDetector(
             onTap: () {
               RouteUtil.goRead(
@@ -141,7 +150,7 @@ class ThumbsView extends HookConsumerWidget {
                 Expanded(
                   child: Center(
                     child: AspectRatio(
-                      aspectRatio: thumb.imgWidth! / thumb.imgHeight!,
+                      aspectRatio: aspect,
                       child: Card(
                         clipBehavior: Clip.antiAlias,
                         child: Hero(

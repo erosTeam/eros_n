@@ -65,35 +65,45 @@ Future<Gallery> parseGalleryDetail(String html) async {
   String? mediaId;
 
   final List<GalleryImage> galleryImagePages = [];
-  // for galleryThumbsElm
   for (final elm in galleryThumbsElm) {
     final href = elm.attributes['href'];
-    final thumbUrl = elm.querySelector('img')?.attributes['data-src'] ?? '';
-    final imgHeight = elm.querySelector('img')?.attributes['height'];
-    final imgWidth = elm.querySelector('img')?.attributes['width'];
+    final imgElm = elm.querySelector('img');
+    // SvelteKit no longer lazy-loads via `data-src`; the real URL sits on
+    // `src` directly. Keep `data-src` as a fallback for the legacy frontend.
+    final thumbUrl =
+        imgElm?.attributes['data-src'] ?? imgElm?.attributes['src'] ?? '';
+    final imgHeight = int.tryParse(imgElm?.attributes['height'] ?? '');
+    final imgWidth = int.tryParse(imgElm?.attributes['width'] ?? '');
 
     mediaId ??= RegExp(r'/galleries/(\d+)/').firstMatch(thumbUrl)?.group(1);
-    // logger.d('mediaId: $mediaId');
 
-    // 扩展名
-    final ext = RegExp(r'\.(\w+)$').firstMatch(thumbUrl)?.group(1) ?? '';
-    final type = ext.substring(0, 1);
+    // Filenames look like `1t.webp`, `2t.jpg.webp`, or even `4t.webp.webp`.
+    // The first extension after the page-token marker is the original page
+    // format (jpg/png/gif/webp); whatever comes after is just the cdn's
+    // webp-transcoded variant. We need the original to derive the full-size
+    // image URL (`{page}.{ext}`).
+    final extMatch = RegExp(r'/\d+t\.([A-Za-z0-9]+)').firstMatch(thumbUrl);
+    final ext = extMatch?.group(1) ?? 'webp';
+    final type = ext.isNotEmpty ? ext.substring(0, 1) : 'w';
 
-    // logger.d('thumbUrl: $thumbUrl');
     galleryImagePages.add(
       GalleryImage(
         href: href,
         type: type,
-        imgHeight: int.parse(imgHeight ?? '0'),
-        imgWidth: int.parse(imgWidth ?? '0'),
+        imgHeight: imgHeight,
+        imgWidth: imgWidth,
+        // Preserve the actual thumbnail URL so the thumb grid can render
+        // without having to reverse-engineer the filename suffix.
+        imageUrl: thumbUrl.isNotEmpty ? thumbUrl : null,
       ),
     );
   }
 
+  final firstPage = galleryImagePages.firstOrNull;
   final thumbImage = GalleryImage(
-    type: galleryImagePages.first.type,
-    imgHeight: galleryImagePages.first.imgHeight,
-    imgWidth: galleryImagePages.first.imgWidth,
+    type: firstPage?.type ?? 'w',
+    imgHeight: firstPage?.imgHeight,
+    imgWidth: firstPage?.imgWidth,
   );
 
   final tuple = parseGalleryTags(document);

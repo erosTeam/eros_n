@@ -34,6 +34,20 @@ typedef WebViewCallback = Function(WebViewCookieInfo);
 /// Host part of [NHConst.baseUrl] without scheme, used for cookie domain matching.
 final String _hostFromBase = WebUri(NHConst.baseUrl).host;
 
+/// Build the URL we should land on first inside the cookie-fetching WebView.
+/// Callers may pass either [NHConst.baseUrl] (no path) or [NHConst.loginUrl]
+/// (already `/login/`) — both should end up loading the login page exactly
+/// once instead of `/login/login/`.
+String _resolveLoginEntryUrl(String input) {
+  final uri = Uri.parse(input);
+  final path = uri.path;
+  if (path.contains('/login')) {
+    return uri.toString();
+  }
+  final base = path.endsWith('/') ? input.substring(0, input.length - 1) : input;
+  return '$base/login/';
+}
+
 /// Parse browser `document.cookie` string into a list of Cookies.
 List<Cookie> _parseDocumentCookie(String raw) {
   final result = <Cookie>[];
@@ -256,11 +270,7 @@ class _MobileWebViewState extends State<MobileWebView> {
         // precache, so the request always hits the origin and Cloudflare
         // can issue a fresh cf_clearance cookie.
         initialUrlRequest: URLRequest(
-          url: WebUri(
-            widget.url.endsWith('/')
-                ? '${widget.url}login/'
-                : '${widget.url}/login/',
-          ),
+          url: WebUri(_resolveLoginEntryUrl(widget.url)),
         ),
         initialSettings: inAppWebViewSettings,
         onWebViewCreated: (controller) async {
