@@ -7,258 +7,154 @@ on:
     tags:
       - v*
 
+# Cancel in-flight runs of the same ref so a flurry of pushes only builds the
+# tip commit. Tag pushes are kept separate from branch pushes.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.41.7'
+  FLUTTER_CHANNEL: 'stable'
+  JAVA_VERSION: '17'
+
 jobs:
   build_upload:
-    name: Build upload
+    name: Build (${{ matrix.target }})
     strategy:
       fail-fast: false
       matrix:
         include:
           - target: android
             os: ubuntu-latest
-            flutter_version: '3.13'
-            flutter_channel: 'stable'
             artifact_name: release-apk
             artifact_path: build/app/outputs/apk/release/*.apk
           - target: ios
-            os: macos-12
-            flutter_version: '3.13'
-            flutter_channel: 'stable'
+            os: macos-14
             artifact_name: release-ios
-            artifact_path: build/**/*.ipa
-#          - target: macos
-#            os: macos-12
-#            flutter_version: '3.7'
-#            artifact_name: release-mac
-#            artifact_path: build/macos/*.zip
-#          - target: windows
-#            os: windows-2022
-#            flutter_version: '3.7'
-#            flutter_channel: 'stable'
-#            artifact_name: release-windows
-#            artifact_path: build/windows/*.zip
+            artifact_path: build/Eros-N_*.ipa
 
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
-      # Get app version
       - name: Get app version
         id: get_version
         shell: bash
         run: |
-          app_version=$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)
-          echo "app_version=${app_version}" >> $GITHUB_ENV
+          app_version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          echo "app_version=${app_version}" >> "$GITHUB_ENV"
+          echo "App version: ${app_version}"
 
-      - name: show version
-        run: echo ${{ env.app_version }}
-
-#      - name: Cache Flutter (Linux)
-#        if: matrix.os == 'ubuntu-latest'
-#        uses: actions/cache@v3
-#        with:
-#          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
-#          path: /opt/hostedtoolcache/flutter
-#          restore-keys: |
-#            ${{ runner.os }}-flutter-
-#
-#      - name: Cache Flutter (MacOS)
-#        if: matrix.os == 'macos-12'
-#        uses: actions/cache@v3
-#        with:
-#          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
-#          path: /Users/runner/hostedtoolcache/flutter
-#          restore-keys: |
-#            ${{ runner.os }}-flutter-
-
-#      - name: Cache Flutter (Windows)
-#        if: matrix.os == 'windows-latest'
-#        uses: actions/cache@v3
-#        with:
-#          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
-#          path: 'C:\hostedtoolcache\windows\flutter'
-#          restore-keys: |
-#            ${{ runner.os }}-flutter-
-
-#      - name: Cache Gradle packages (Android)
-#        if: matrix.target == 'android'
-#        uses: actions/cache@v3
-#        with:
-#          path: |
-#            ~/.gradle/caches
-#            ~/.gradle/wrapper
-#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-#          restore-keys: |
-#            ${{ runner.os }}-gradle-
-
-      - name: Cache Pods (build macos)
-        uses: actions/cache@v3
-        if: matrix.target == 'macos'
+      - name: Cache CocoaPods (iOS)
+        if: matrix.target == 'ios'
+        uses: actions/cache@v4
         with:
-          path: |
-            macos/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('macos/Podfile.lock') }}
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
 
-      - name: Cache Pods (build ios)
-        uses: actions/cache@v3
-        if: matrix.target == 'ios'
-        with:
-          path: |
-            ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-            
-
-
-      - name: Decode keystore
+      - name: Decode keystore (Android)
         if: matrix.target == 'android'
-        run: |
-          echo $ENCODED_KEYSTORE | base64 -di > android/app/keystore.jks
         env:
           ENCODED_KEYSTORE: ${{ secrets.ENCODED_KEYSTORE }}
+        run: |
+          echo "$ENCODED_KEYSTORE" | base64 -di > android/app/keystore.jks
 
-      # 安装 JDK
-      - name: Setup Java JDK 11 (Android)
+      - name: Setup Java JDK ${{ env.JAVA_VERSION }} (Android)
         if: matrix.target == 'android'
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
-#          cache: gradle
+          java-version: ${{ env.JAVA_VERSION }}
 
-      # 安装 Flutter
-      - name: Flutter action
+      - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
         uses: subosito/flutter-action@v2
         with:
-#          flutter-version: ${{ matrix.flutter_version }}
-          channel: ${{ matrix.flutter_channel }}
-
-      - name: Build resolve Swift dependencies
-        if: matrix.os == 'macos-latest'
-        run: xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
-
-#      - name: replace isar
-#        if: matrix.target == 'windows'
-#        shell: bash
-#        run: |
-#          sed -i "s#isar: ^3.0.2'#isar: 3.0.0-dev.8#g" pubspec.yaml
-#          git stash
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
 
       - name: Flutter pub get
         run: |
           git config --global core.longpaths true
-          flutter clean
           flutter pub get
 
-      # 打包 apk
-      - name: Collect Apks
+      - name: Build APK (Android)
         if: matrix.target == 'android'
-        run: flutter build apk --release
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD}}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: flutter build apk --release
 
-      # 打包 ipa
-      - name: Build ios app
+      - name: Build iOS app (no codesign)
         if: matrix.target == 'ios'
         run: |
           sed -i '' 's/com.dev.honjow.erosn/com.honjow.erosn/g' 'ios/Runner.xcodeproj/project.pbxproj'
-          cd ios && pod update && pod install && cd ..
+          cd ios && pod install --repo-update && cd ..
           flutter build ios --release --no-codesign
-      - name: Thin app
+
+      - name: Thin iOS payload
         if: matrix.target == 'ios'
         run: sh scripts/thin-payload.sh build/ios/iphoneos/*.app
 
-      - name: Build ipa file
+      - name: Package IPA
         if: matrix.target == 'ios'
         run: |
           cd build
           mkdir -p Payload
           mv ios/iphoneos/*.app Payload
-          zip -9 Eros-N_${{ env.app_version }}.ipa -r Payload
+          zip -9 "Eros-N_${{ env.app_version }}.ipa" -r Payload
 
-#      打包 mac
-#      - name: Build mac app
-#        if: matrix.target == 'macos'
-#        run: |
-#          cd macos && pod update && pod install && cd ..
-#          flutter build macos --release
-#          APP_PATH=build/macos/Build/Products/Release/eros_n.app
-#          cp -a $APP_PATH ./build
-#          cd build && zip -qroy macos/Eros_N_macos.zip eros_n.app
-
-      - name: Build windows
-        if: matrix.target == 'windows'
-        run: |
-          flutter build windows --release
-          $DestDir = "build\windows\Eros_N"
-          $SrcDir = "build\windows\runner\Release"
-          New-Item -Path $DestDir -ItemType Directory
-          Copy-Item $SrcDir\* -Recurse $DestDir
-          Copy-Item -Filter *.dll -Path windows\* -Destination $DestDir -Force
-          Compress-Archive $DestDir build\windows\Eros_N_windows_${{ env.app_version }}.zip
-
-      - name: Publish Artifacts
-        uses: actions/upload-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
           path: ${{ matrix.artifact_path }}
+          if-no-files-found: error
+          retention-days: 14
 
   publish:
     if: startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'stable') && !contains(github.ref, 'alpha') && !contains(github.ref, 'rc')
     name: Publish
     needs: build_upload
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
-      - run: mkdir /tmp/artifacts
-      - name: Download all Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: /tmp/artifacts
-
-      - run: ls -R /tmp/artifacts
-
-      # Get app version
       - name: Get app version
         id: get_version
         shell: bash
         run: |
-          app_version=$(head -n 5 pubspec.yaml | tail -n 1 | cut -d ' ' -f 2)
-          echo "app_version=${app_version}" >> $GITHUB_ENV
+          app_version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          echo "app_version=${app_version}" >> "$GITHUB_ENV"
+          echo "App version: ${app_version}"
 
-      - name: show version
-        run: echo ${{ env.app_version }}
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/artifacts
 
-      - name: Upload to release
+      - name: List artifacts
+        run: ls -R /tmp/artifacts
+
+      - name: Upload to GitHub Release
         uses: ncipollo/release-action@v1
         with:
-#          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
           artifacts: /tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios/*.ipa
           tag: ${{ github.ref_name }}
           bodyFile: changelog/v${{ env.app_version }}.md
-          prerelease: contains(github.ref, 'pre')
+          prerelease: ${{ contains(github.ref, 'pre') }}
           allowUpdates: true
           artifactErrorsFailBuild: true
           replacesArtifacts: true
-
-#      - name: Post release notes
-#        run: |
-#          changelog=$(cat changelog/v${{ env.app_version }}.md)
-#          curl 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' \
-#          --header 'Content-Type: application/x-www-form-urlencoded' \
-#          -d parse_mode=markdown \
-#          -d chat_id=${{ secrets.TELEGRAM_CHANNEL_ID }} \
-#          --data-urlencode text="[Eros-N_${{ github.ref_name }}](https://github.com/honjow/eros_n/releases/tag/${{ github.ref_name }})
-#          $changelog" \
-#          -d disable_web_page_preview=true
