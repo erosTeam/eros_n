@@ -911,6 +911,16 @@ class ThumbListView extends HookConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
               final GalleryImage image = pages[index];
+              final iw = image.imgWidth;
+              final ih = image.imgHeight;
+              final aspect = (iw != null && ih != null && ih > 0)
+                  ? iw / ih
+                  : 3 / 4;
+              final ext = NHConst.extMap[image.type] ?? 'webp';
+              final builtUrl = mediaId == null
+                  ? null
+                  : (image.imageUrl ??
+                      'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext');
               return Consumer(
                 child: GestureDetector(
                   onTap: () async {
@@ -918,16 +928,15 @@ class ThumbListView extends HookConsumerWidget {
                   },
                   child: Center(
                     child: AspectRatio(
-                      aspectRatio: image.imgWidth! / image.imgHeight!,
+                      aspectRatio: aspect,
                       child: Card(
                         clipBehavior: Clip.antiAlias,
                         child: Hero(
                           tag: '${gid}_$index',
-                          child: mediaId == null
+                          child: builtUrl == null
                               ? nil
                               : ErosCachedNetworkImage(
-                                  imageUrl:
-                                      'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.${NHConst.extMap[image.type]}',
+                                  imageUrl: builtUrl,
                                   fit: BoxFit.cover,
                                 ),
                         ),
@@ -968,9 +977,14 @@ class MoreLikeListView extends HookConsumerWidget {
             separatorBuilder: (context, index) => const SizedBox(width: 0),
             itemBuilder: (context, index) {
               final likeGallery = moreLikeGallerys[index];
-              final aspectRatio =
-                  likeGallery.images.thumbnail.imgWidth! /
-                  likeGallery.images.thumbnail.imgHeight!;
+              // The new SvelteKit listing markup omits explicit
+              // width/height, so default to a portrait fallback when we
+              // don't have intrinsic dimensions yet.
+              final tw = likeGallery.images.thumbnail.imgWidth;
+              final th = likeGallery.images.thumbnail.imgHeight;
+              final aspectRatio = (tw != null && th != null && th > 0)
+                  ? tw / th
+                  : 3 / 4;
               return GestureDetector(
                 onTap: () {
                   RouteUtil.goGallery(ref, likeGallery, heroTag: heroTag);

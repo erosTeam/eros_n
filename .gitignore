@@ -51,3 +51,6 @@ GPUCache/
 
 # FVM Version Cache
 .fvm/
+
+# Agent-only working notes
+docs/AGENT_PROGRESS.md
