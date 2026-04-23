@@ -8,6 +8,7 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/network/app_dio/api_v2_auth_interceptor.dart';
 import 'package:eros_n/network/app_dio/dio_user_agent.dart';
 import 'package:eros_n/network/app_dio/http_config.dart';
 import 'package:eros_n/network/app_dio/proxy.dart';
@@ -116,6 +117,11 @@ class AppDio with DioMixin implements Dio {
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);
     }
+
+    // Attach `Authorization: User <access_token>` to /api/v2/* requests
+    // before they're handed off to the WebView proxy so the header travels
+    // along inside the proxied fetch.
+    interceptors.add(ApiV2AuthInterceptor());
 
     // Route Cloudflare-protected origins through the hidden WebView so the
     // request inherits Chromium's TLS/HTTP fingerprints and is not challenged.

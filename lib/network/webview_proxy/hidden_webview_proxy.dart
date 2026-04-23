@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -26,6 +27,28 @@ class ProxyHttpResponse {
   @override
   String toString() =>
       'ProxyHttpResponse(status=$status, url=$url, bodyLen=${body.length})';
+}
+
+/// Same shape as [ProxyHttpResponse] but the body is raw bytes, used for
+/// binary downloads that would be corrupted if shoved through `text()`.
+class ProxyBinaryResponse {
+  ProxyBinaryResponse({
+    required this.status,
+    required this.statusText,
+    required this.url,
+    required this.headers,
+    required this.bytes,
+  });
+
+  final int status;
+  final String statusText;
+  final String url;
+  final Map<String, String> headers;
+  final Uint8List bytes;
+
+  @override
+  String toString() =>
+      'ProxyBinaryResponse(status=$status, url=$url, bodyLen=${bytes.length})';
 }
 
 /// Singleton that owns a hidden, persistent WebView used as a transport for
@@ -181,6 +204,133 @@ try {
       url: (value['url'] as String?) ?? url,
       headers: headersMap,
       body: (value['body'] as String?) ?? '',
+    );
+  }
+
+  /// Download a binary resource through the hidden WebView and return it as
+  /// raw bytes. Useful for endpoints that sit behind Cloudflare and stream
+  /// non-text payloads (e.g. nhentai's `/g/{id}/download` torrent file).
+  ///
+  /// The whole body is buffered in memory both inside the WebView (via
+  /// `arrayBuffer()`) and on the Dart side, so this is intended for small
+  /// files only. nhentai torrents are typically a few KB to tens of KB.
+  Future<ProxyBinaryResponse> requestBinary({
+    required String url,
+    String method = 'GET',
+    Map<String, String>? headers,
+    Object? body,
+    Duration timeout = const Duration(seconds: 60),
+  }) async {
+    await ready;
+    final controller = _controller;
+    if (controller == null) {
+      throw StateError('HiddenWebViewProxy: controller not attached');
+    }
+
+    const forbidden = {
+      'host',
+      'cookie',
+      'content-length',
+      'user-agent',
+      'accept-encoding',
+      'connection',
+      'origin',
+      'referer',
+    };
+    final safeHeaders = <String, String>{};
+    headers?.forEach((k, v) {
+      if (!forbidden.contains(k.toLowerCase())) {
+        safeHeaders[k] = v;
+      }
+    });
+
+    final hasBody = body != null && method.toUpperCase() != 'GET';
+    final bodyString = body == null
+        ? null
+        : (body is String ? body : jsonEncode(body));
+
+    final args = <String, dynamic>{
+      'url': url,
+      'method': method.toUpperCase(),
+      'headers': safeHeaders,
+      'body': bodyString,
+      'hasBody': hasBody,
+    };
+
+    // Encode the response body to base64 chunk-by-chunk so we don't blow the
+    // call stack via String.fromCharCode(...veryLongArray).
+    const script = r'''
+const init = {
+  method: method,
+  headers: headers,
+  credentials: 'include',
+  redirect: 'follow',
+  mode: 'cors',
+  cache: 'no-store',
+};
+if (hasBody) { init.body = body; }
+try {
+  const resp = await fetch(url, init);
+  const buf = await resp.arrayBuffer();
+  const bytes = new Uint8Array(buf);
+  let bin = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+  }
+  const b64 = btoa(bin);
+  const headersOut = {};
+  resp.headers.forEach((value, key) => { headersOut[key] = value; });
+  return {
+    ok: true,
+    status: resp.status,
+    statusText: resp.statusText,
+    url: resp.url,
+    headers: headersOut,
+    bodyB64: b64,
+    byteLength: bytes.length,
+  };
+} catch (e) {
+  return { ok: false, error: String(e) };
+}
+''';
+
+    final result = await controller
+        .callAsyncJavaScript(functionBody: script, arguments: args)
+        .timeout(timeout);
+
+    if (result == null) {
+      throw StateError('WebViewProxy: callAsyncJavaScript returned null');
+    }
+    if (result.error != null) {
+      throw StateError('WebViewProxy JS error: ${result.error}');
+    }
+    final value = result.value;
+    if (value is! Map) {
+      throw StateError(
+        'WebViewProxy: unexpected JS result type ${value.runtimeType}',
+      );
+    }
+    if (value['ok'] != true) {
+      throw StateError('WebViewProxy fetch failed: ${value['error']}');
+    }
+
+    final headersMap = <String, String>{};
+    final headersAny = value['headers'];
+    if (headersAny is Map) {
+      headersAny.forEach((k, v) {
+        headersMap[k.toString()] = v?.toString() ?? '';
+      });
+    }
+    final b64 = (value['bodyB64'] as String?) ?? '';
+    final bytes = b64.isEmpty ? Uint8List(0) : base64Decode(b64);
+
+    return ProxyBinaryResponse(
+      status: (value['status'] as num).toInt(),
+      statusText: (value['statusText'] as String?) ?? '',
+      url: (value['url'] as String?) ?? url,
+      headers: headersMap,
+      bytes: bytes,
     );
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' show File;
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -11,6 +12,7 @@ import 'package:eros_n/component/exception/error.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/api.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
+import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
@@ -254,7 +256,9 @@ Future<List<Comment>> getGalleryComments({
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final url = '/api/gallery/$gid/comments';
+  // nhentai migrated to /api/v2 in late 2025; the legacy /api/gallery/.../comments
+  // endpoint now returns 404 with a pointer to /api/v2/docs.
+  final url = '/api/v2/galleries/$gid/comments';
   logger.d('url $url');
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
@@ -366,23 +370,38 @@ Future<Tuple2<bool?, int?>> setFavorite({
   }
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final path = '/api/gallery/$gid/${unfavorite ? 'unfavorite' : 'favorite'}';
+  // nhentai v2 API: POST adds, DELETE removes. The response is
+  // { favorited: bool, num_favorites: int? }. CSRF tokens are no longer
+  // required — auth is purely cookie/Bearer based.
+  final path = '/api/v2/galleries/$gid/favorite';
 
-  DioHttpResponse httpResponse = await dioHttpClient.post(
-    path,
-    options: getOptions(forceRefresh: refresh)
-      ..headers = {'x-csrftoken': csrfToken},
-    cancelToken: cancelToken,
-    httpTransformer: HttpTransformerBuilder((response) {
-      final result = response.data;
-      final favNums = result['num_favorites'] as List<dynamic>?;
-      final favNum = favNums?.first as int?;
-      final favorited = result['favorited'] as bool?;
-      return DioHttpResponse<Tuple2<bool?, int?>>.success(
-        Tuple2(favorited, favNum),
-      );
-    }),
-  );
+  final httpTransformer = HttpTransformerBuilder((response) {
+    final result = response.data as Map<String, dynamic>? ?? const {};
+    final favorited = result['favorited'] as bool?;
+    final favNum = result['num_favorites'] as int?;
+    return DioHttpResponse<Tuple2<bool?, int?>>.success(
+      Tuple2(favorited, favNum),
+    );
+  });
+
+  final options = getOptions(forceRefresh: refresh);
+  if (csrfToken != null && csrfToken.isNotEmpty) {
+    options.headers = {...?options.headers, 'x-csrftoken': csrfToken};
+  }
+
+  final DioHttpResponse httpResponse = unfavorite
+      ? await dioHttpClient.delete(
+          path,
+          options: options,
+          cancelToken: cancelToken,
+          httpTransformer: httpTransformer,
+        )
+      : await dioHttpClient.post(
+          path,
+          options: options,
+          cancelToken: cancelToken,
+          httpTransformer: httpTransformer,
+        );
 
   if (httpResponse.ok && httpResponse.data is Tuple2<bool?, int?>) {
     return httpResponse.data as Tuple2<bool?, int?>;
@@ -477,7 +496,43 @@ Future<void> nhDownload({
     downloadUrl = url;
   }
   logger.t('downloadUrl $downloadUrl');
+
+  // Anything served by nhentai.net itself is behind Cloudflare and would
+  // get blocked if dio streamed it directly. Pull it through the hidden
+  // WebView proxy so the request inherits the browser's TLS fingerprint
+  // and session cookies (needed for /g/{id}/download).
+  final downloadUri = Uri.parse(downloadUrl);
+  final viaProxy = downloadUri.host.endsWith('nhentai.net');
+
   try {
+    if (viaProxy) {
+      final resp = await HiddenWebViewProxy.instance.requestBinary(
+        url: downloadUrl,
+        method: 'GET',
+      );
+      if (resp.status < 200 || resp.status >= 400) {
+        throw HttpException(
+          'nhDownload via proxy failed: ${resp.status} ${resp.statusText}',
+        );
+      }
+      // Synthesise the headers shape that the savePath callback expects
+      // so call sites that read content-disposition keep working.
+      final headersMap = <String, List<String>>{};
+      resp.headers.forEach((k, v) {
+        headersMap[k.toLowerCase()] = [v];
+      });
+      final headers = Headers.fromMap(headersMap);
+      final resolvedPath = savePath is String
+          ? savePath
+          : (savePath as String Function(Headers))(headers);
+      final file = File(resolvedPath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(resp.bytes);
+      progressCallback?.call(resp.bytes.length, resp.bytes.length);
+      onDownloadComplete?.call();
+      return;
+    }
+
     await dioHttpClient.download(
       downloadUrl,
       savePath,
@@ -490,9 +545,6 @@ Future<void> nhDownload({
       },
       cancelToken: cancelToken,
     );
-
-    // logger.d('response.runtimeType ${response.runtimeType}');
-    // logger.d('response.statusCode ${response.headers}');
   } on CancelException {
     logger.d('cancel');
   } on Exception {
