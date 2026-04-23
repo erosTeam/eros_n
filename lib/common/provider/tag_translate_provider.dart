@@ -1,45 +1,27 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show File;
 
 import 'package:archive/archive.dart';
-import 'package:eros_n/common/const/const.dart';
-import 'package:eros_n/common/enum.dart';
+import 'package:dio/dio.dart';
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
-import 'package:eros_n/utils/eros_utils.dart';
-import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
-import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as path;
 
 const String kReleaseUrl =
     'https://api.github.com/repos/EhTagTranslation/Database/releases/latest';
-const String kReleaseUrlWithCDN =
+
+/// CDN-hosted copy of the latest tag database, served from the default
+/// branch of `EhTagTranslation/DatabaseReleases` via jsDelivr. The
+/// upstream repo doesn't tag its releases, so we always pull from
+/// master and use the response ETag as a synthetic version string.
+const String kJsdelivrAssetUrl =
     'https://fastly.jsdelivr.net/gh/EhTagTranslation/DatabaseReleases/db.raw.json.gz';
-
-const String kTagsUrl =
-    'https://raw.githubusercontent.com/honjow/nhentai_tags_fetcher/master/assets/tags.json';
-const String kArtistsUrl =
-    'https://raw.githubusercontent.com/honjow/nhentai_tags_fetcher/master/assets/artists.json';
-const String kGroupsUrl =
-    'https://raw.githubusercontent.com/honjow/nhentai_tags_fetcher/master/assets/groups.json';
-const String kParodiesUrl =
-    'https://raw.githubusercontent.com/honjow/nhentai_tags_fetcher/master/assets/parodies.json';
-const String kCharactersUrl =
-    'https://raw.githubusercontent.com/honjow/nhentai_tags_fetcher/master/assets/characters.json';
-
-const nhTagUrlCategoryMap = {
-  TagCategory.tags: kTagsUrl,
-  TagCategory.artists: kArtistsUrl,
-  TagCategory.groups: kGroupsUrl,
-  TagCategory.parodies: kParodiesUrl,
-  TagCategory.characters: kCharactersUrl,
-};
 
 const chunkSize = 100;
 
@@ -50,28 +32,84 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
 
   /// 检查更新
   Future<void> getUpdateInfo({bool force = false}) async {
-    final releaseInfoMap = await getGithubApi(kReleaseUrl);
+    String? remoteVer;
+    String? lastReleaseUrl;
 
-    // 获取发布时间 作为远程版本号
-    final remoteVer = releaseInfoMap['published_at']?.trim() as String;
+    try {
+      final releaseInfoMap = await getGithubApi(kReleaseUrl);
+
+      remoteVer = (releaseInfoMap['published_at'] as String?)?.trim();
+
+      final assList = releaseInfoMap['assets'] as List<dynamic>?;
+      if (assList != null) {
+        for (final dynamic assets in assList) {
+          final name = assets['name'] as String? ?? '';
+          if (name == 'db.raw.json.gz') {
+            lastReleaseUrl = assets['browser_download_url'] as String?;
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      logger.w('GitHub release lookup failed, falling back to jsDelivr: $e');
+    }
+
+    // Fallback: pull the database directly from jsDelivr's CDN (which
+    // mirrors the default branch of `DatabaseReleases`). The upstream
+    // repo doesn't tag its commits, so we use the CDN-supplied ETag as
+    // a synthetic version identifier. This avoids GitHub's anonymous
+    // rate limit and works in regions where api.github.com is blocked.
+    if (remoteVer == null || lastReleaseUrl == null || lastReleaseUrl.isEmpty) {
+      try {
+        final etag = await _headEtag(kJsdelivrAssetUrl);
+        // Even if HEAD fails or returns no ETag we can still download
+        // from the CDN; just use today's date so the user can re-trigger
+        // the update later without `force`.
+        remoteVer = etag ?? 'cdn-${DateTime.now().toIso8601String()}';
+        lastReleaseUrl = kJsdelivrAssetUrl;
+        logger.d('jsDelivr fallback: version=$remoteVer url=$lastReleaseUrl');
+      } catch (e) {
+        logger.e('jsDelivr fallback also failed: $e');
+      }
+    }
+
+    if (remoteVer == null || lastReleaseUrl == null || lastReleaseUrl.isEmpty) {
+      logger.w('getUpdateInfo: no usable release URL found');
+      return;
+    }
 
     if (remoteVer == state.version && force == false) {
       return;
     }
-
-    final List<dynamic> assList = releaseInfoMap['assets'] as List<dynamic>;
-    final Map<String, String> assMap = <String, String>{};
-    for (final dynamic assets in assList) {
-      assMap[assets['name'] as String? ?? ''] =
-          assets['browser_download_url'] as String;
-    }
-    final lastReleaseUrl = assMap['db.raw.json.gz'] ?? '';
 
     state = state.copyWith(
       remoteVersion: remoteVer,
       lastReleaseUrl: lastReleaseUrl,
     );
     hiveHelper.setTagTranslateInfo(state);
+  }
+
+  /// Issue a HEAD request to retrieve the response ETag without
+  /// downloading the body. Used as a cheap version probe for the
+  /// jsDelivr CDN fallback. Returns null if the request fails or no
+  /// ETag is present.
+  Future<String?> _headEtag(String url) async {
+    try {
+      final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 8)));
+      final resp = await dio.head<dynamic>(
+        url,
+        options: Options(
+          followRedirects: true,
+          validateStatus: (s) => s != null && s < 500,
+        ),
+      );
+      final etag = resp.headers.value('etag');
+      logger.d('HEAD $url -> ${resp.statusCode} etag=$etag');
+      return etag;
+    } catch (e) {
+      logger.w('HEAD $url failed: $e');
+      return null;
+    }
   }
 
   Future<void> updateDb({bool check = true, bool force = false}) async {
@@ -134,70 +172,34 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
     List<int> data = const GZipDecoder().decodeBytes(bytes);
     final String dbJson = utf8.decode(data);
 
-    final dataMap = jsonDecode(dbJson);
-    final List listData = dataMap['data'] as List;
+    final dataMap = jsonDecode(dbJson) as Map<String, dynamic>;
 
-    return listData;
-  }
-
-  Future<void> updateNhTags() async {
-    await transAndPutNhTag(NHConst.internalNhTags);
-    for (final category in nhTagUrlCategoryMap.keys) {
-      final nhTags = await _fetchNhTags(category);
-      if (nhTags.isEmpty) {
-        continue;
+    // The downloaded payload always carries the upstream commit info,
+    // which is far more readable than a GitHub `published_at` or a
+    // jsDelivr ETag. Promote it to the canonical version string so the
+    // settings page shows e.g. `2026-04-23 (a1b2c3d)` instead of
+    // `W/"19cf8e-..."`.
+    final head = dataMap['head'];
+    if (head is Map) {
+      final sha = (head['sha'] as String?)?.substring(0, 7);
+      final dateStr =
+          (head['committer']?['when'] as String?) ??
+          (head['author']?['when'] as String?) ??
+          (head['date'] as String?);
+      String? prettyDate;
+      if (dateStr != null && dateStr.isNotEmpty) {
+        prettyDate = dateStr.split('T').first;
       }
-
-      await transAndPutNhTag(nhTags);
+      final pretty = [
+        if (prettyDate != null) prettyDate,
+        if (sha != null) '($sha)',
+      ].join(' ');
+      if (pretty.isNotEmpty) {
+        state = state.copyWith(remoteVersion: pretty);
+      }
     }
 
-    ref.invalidate(allNhTagProvider);
-  }
-
-  Future<void> transAndPutNhTag(List<NhTag> tags) async {
-    final List<Future<NhTag>> tagFutureList = tags.map((tag) async {
-      final TagTranslate? translated = await objectBoxHelper
-          .findTagTranslateAsync(
-            tag.name ?? '',
-            namespace: getTagNamespace(tag.type ?? ''),
-          );
-      return tag.copyWith(translateName: translated?.translateName);
-    }).toList();
-
-    // 每 [chunkSize] 分块
-    final List<List<Future<NhTag>>> chunked = tagFutureList
-        .chunked(chunkSize)
-        .toList();
-
-    for (final chunk in chunked) {
-      final List<NhTag> tags = await Future.wait(chunk);
-      await objectBoxHelper.putAllNhTag(tags);
-    }
-  }
-
-  Future<List<NhTag>> _fetchNhTags(TagCategory category) async {
-    final url = nhTagUrlCategoryMap[category] ?? '';
-    if (url.isEmpty) {
-      return [];
-    }
-
-    final savePath = path.join(Global.appDocPath, '${category.value}.json');
-    await nhDownload(url: url, savePath: savePath);
-    final jsonStr = File(savePath).readAsStringSync();
-    final dataMap = jsonDecode(jsonStr);
-    final List<dynamic> list = dataMap as List<dynamic>;
-    final List<NhTag> tags = [];
-    for (final dynamic item in list) {
-      tags.add(
-        NhTag(
-          id: item['id'] as int,
-          name: item['name'] as String,
-          count: item['count'] as int,
-          type: category.value,
-        ),
-      );
-    }
-    return tags;
+    return dataMap['data'] as List;
   }
 }
 
@@ -207,7 +209,7 @@ final tagTranslateProvider =
     });
 
 final allNhTagProvider = FutureProvider<List<NhTag>>((ref) async {
-  await 500.milliseconds.delay();
+  await Future<void>.delayed(const Duration(milliseconds: 500));
   final nhTags = await objectBoxHelper.getAllNhTag();
   return nhTags;
 });

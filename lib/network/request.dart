@@ -13,6 +13,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/api.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
@@ -439,15 +440,11 @@ Future<bool> loginNhentai({
     data: formBody,
     options: getOptions(forceRefresh: true)
       ..contentType = Headers.formUrlEncodedContentType
-      ..headers = {
-        'Referer': NHConst.loginUrl,
-      }
+      ..headers = {'Referer': NHConst.loginUrl}
       ..validateStatus = (status) => status != null && status < 500,
     httpTransformer: HttpTransformerBuilder((response) {
       final finalUrl = (response.extra['final_url'] as String?) ?? '';
-      logger.d(
-        'login statusCode=${response.statusCode}, finalUrl=$finalUrl',
-      );
+      logger.d('login statusCode=${response.statusCode}, finalUrl=$finalUrl');
       // Through the WebView proxy fetch follows redirects automatically,
       // so a successful login lands on the index ("/") instead of staying
       // on "/login/". Treat that as success.
@@ -462,8 +459,7 @@ Future<bool> loginNhentai({
       if (body.contains('Please verify') || body.contains('captcha')) {
         throw LoginCaptchaError();
       }
-      if (body.contains('Please enter a correct') ||
-          body.contains('Invalid')) {
+      if (body.contains('Please enter a correct') || body.contains('Invalid')) {
         throw LoginInvalidError();
       }
       return DioHttpResponse<bool>.success(false);
@@ -533,9 +529,16 @@ Future<void> nhDownload({
       return;
     }
 
+    // dio_cache_interceptor crashes with "Response type not supported"
+    // when it tries to persist a stream response. dio's download flow
+    // is always stream-based, so disable caching for these requests.
+    final downloadOptions =
+        Api.cacheOption.copyWith(policy: CachePolicy.noCache).toOptions()
+          ..responseType = ResponseType.stream;
     await dioHttpClient.download(
       downloadUrl,
       savePath,
+      options: downloadOptions,
       deleteOnError: deleteOnError,
       onReceiveProgress: (int count, int total) {
         progressCallback?.call(count, total);
@@ -554,9 +557,28 @@ Future<void> nhDownload({
 
 Future<Map> getGithubApi(String url) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
-  DioHttpResponse httpResponse = await dioHttpClient.get(
+  // GitHub's REST API requires a non-empty UA and gets nervous when one
+  // is missing/non-standard, on top of a strict 60/hour anonymous quota.
+  final opts = getOptions(forceRefresh: true)
+    ..headers = <String, dynamic>{
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent':
+          'Mozilla/5.0 (Linux; Android 14; ErosN) AppleWebKit/537.36 '
+          '(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36',
+    };
+
+  final httpResponse = await dioHttpClient.get(
     url,
-    options: getOptions(forceRefresh: true),
+    options: opts,
+    httpTransformer: HttpTransformerBuilder((response) {
+      final code = response.statusCode ?? 0;
+      if (code >= 400) {
+        logger.w('getGithubApi $code body=${response.data}');
+        return DioHttpResponse<dynamic>.failure(errorMsg: 'getGithubApi $code');
+      }
+      return DioHttpResponse<dynamic>.success(response.data);
+    }),
   );
   if (httpResponse.ok && httpResponse.data is Map) {
     return httpResponse.data as Map;
@@ -623,35 +645,82 @@ Future<Tuple2<bool, Comment?>> postComment({
 Future<List<Tag>> nhAutocomplete({
   String? name,
   TagCategory? type,
+  String? typeName,
   CancelToken? cancelToken,
+  int limit = 15,
 }) async {
-  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
-
-  final dataMap = <String, dynamic>{'name': name, 'type': type?.value};
-
-  const url = '/api/autocomplete';
-  final dataForm = FormData.fromMap(dataMap);
-
-  DioHttpResponse httpResponse = await dioHttpClient.post(
-    url,
-    data: dataForm,
-    options: getOptions(forceRefresh: true),
-    httpTransformer: HttpTransformerBuilder((response) {
-      logger.d('statusCode ${response.statusCode}');
-      logger.d('response ${response.data}');
-      final List<dynamic> tags = response.data['result'] as List<dynamic>;
-      final List<Tag> tagList = tags
-          .map((e) => Tag.fromJson(e as Map<String, dynamic>))
-          .toList(growable: false);
-      return DioHttpResponse<List<Tag>>.success(tagList);
-    }),
-    cancelToken: cancelToken,
-  );
-
-  if (httpResponse.ok && httpResponse.data is List<Tag>) {
-    return httpResponse.data as List<Tag>;
-  } else {
-    logger.e('${httpResponse.error.runtimeType}');
-    throw httpResponse.error ?? HttpException('autocomplete error');
+  final trimmed = (name ?? '').trim();
+  if (trimmed.isEmpty) {
+    return const [];
   }
+
+  final dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  // nhentai's v2 autocomplete is `POST /api/v2/tags/search` with body
+  // `{ "type": <namespace>, "query": <prefix>, "limit": N }`. The `type`
+  // field is required and only accepts singular forms (tag, parody,
+  // character, artist, group, language, category). When the caller does
+  // not pin a namespace we fan out across the most useful ones.
+  final pinnedType = typeName != null
+      ? singularizeTagType(typeName)
+      : (type != null ? singularizeTagType(type.value) : null);
+  final probeTypes = <String>[
+    if (pinnedType != null) pinnedType,
+    if (pinnedType == null) ...[
+      'tag',
+      'parody',
+      'character',
+      'artist',
+      'group',
+    ],
+  ];
+
+  final aggregated = <Tag>[];
+  final seenIds = <int>{};
+  for (final probeType in probeTypes) {
+    final body = <String, dynamic>{
+      'type': probeType,
+      'query': trimmed,
+      'limit': limit,
+    };
+    try {
+      final resp = await dioHttpClient.post(
+        '/api/v2/tags/search',
+        data: body,
+        options: getOptions(forceRefresh: true)
+          ..contentType = 'application/json'
+          ..validateStatus = (s) => s != null && s < 500,
+        cancelToken: cancelToken,
+        httpTransformer: HttpTransformerBuilder((response) {
+          final code = response.statusCode ?? 0;
+          if (code >= 400) {
+            logger.d('autocomplete($probeType) $code: ${response.data}');
+            return DioHttpResponse<dynamic>.success(const <dynamic>[]);
+          }
+          return DioHttpResponse<dynamic>.success(response.data);
+        }),
+      );
+      if (!resp.ok || resp.data is! List) {
+        continue;
+      }
+      for (final raw in resp.data as List) {
+        if (raw is! Map) {
+          continue;
+        }
+        final map = raw.cast<String, dynamic>();
+        final id = map['id'];
+        if (id is! int || !seenIds.add(id)) {
+          continue;
+        }
+        aggregated.add(Tag.fromJson(map));
+      }
+    } catch (e) {
+      logger.w('autocomplete($probeType) failed: $e');
+    }
+    if (pinnedType != null) {
+      break;
+    }
+  }
+
+  return aggregated;
 }

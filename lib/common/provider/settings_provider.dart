@@ -35,9 +35,6 @@ class SettingsNotifier extends StateNotifier<Settings> {
 
   void setShowTags(bool value) {
     state = state.copyWith(showTags: value);
-    if (value) {
-      ref.read(tagTranslateProvider.notifier).updateNhTags();
-    }
     hiveHelper.setSettings(state);
   }
 

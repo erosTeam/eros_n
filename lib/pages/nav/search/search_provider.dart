@@ -7,6 +7,7 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,11 +24,14 @@ class SearchNotifier extends StateNotifier<ListViewState> {
       ref.read(searchGallerysProvider(currentSearchDepth).notifier);
 
   void appendNhTagQuery(NhTag tag, {bool search = false}) {
+    // Always emit the singular form; nhentai search syntax is `tag:`,
+    // `parody:`, etc. Old cached entries may still hold the plural form.
+    final type = singularizeTagType(tag.type ?? '');
     late String newQuery;
     if ((tag.name ?? '').contains(' ')) {
-      newQuery = '${tag.type}:"${tag.name}"';
+      newQuery = '$type:"${tag.name}"';
     } else {
-      newQuery = '${tag.type}:${tag.name}';
+      newQuery = '$type:${tag.name}';
     }
 
     final currQryText = searchController.text.split(RegExp(r'[ ;"]')).last;

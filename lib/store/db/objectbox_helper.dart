@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:eros_n/component/models/tag.dart';
 import 'package:eros_n/objectbox.g.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/store/db/objectbox.dart';
+import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 
 class ObjectBoxHelper {
@@ -209,5 +211,83 @@ class ObjectBoxHelper {
       lastUseTime: DateTime.now().millisecondsSinceEpoch,
     );
     _nhTagBox.put(newTag);
+  }
+
+  /// Persist tags learned from a gallery detail page or autocomplete result
+  /// into the local NhTag cache. Existing entries (same id) keep their
+  /// `lastUseTime`. Type is normalized to singular lowercase form so it
+  /// matches nhentai's search syntax. If a tag has no `translatedName`,
+  /// the local TagTranslate database is consulted to fill it in.
+  ///
+  /// Each operation yields back to the event loop between iterations so
+  /// long tag lists (~30 entries on a typical detail page) don't block
+  /// the UI thread enough to trigger an ANR — every TagTranslate lookup
+  /// is a 41k-row contains() scan and adds up quickly otherwise.
+  Future<void> learnNhTags(List<Tag> tags) async {
+    if (tags.isEmpty) {
+      return;
+    }
+    final candidates = tags
+        .where((t) => t.id != null && t.id != 0 && (t.name ?? '').isNotEmpty)
+        .toList();
+    if (candidates.isEmpty) {
+      return;
+    }
+
+    // Yield once before doing any work so callers that fire-and-forget
+    // (e.g. parseGalleryDetail) return to the caller immediately.
+    await Future<void>.delayed(Duration.zero);
+
+    final ids = candidates.map((t) => t.id!).toList();
+    final existingMap = <int, NhTag>{};
+    for (final t in _nhTagBox.getMany(ids).whereType<NhTag>()) {
+      existingMap[t.id] = t;
+    }
+
+    final toWrite = <NhTag>[];
+    for (var i = 0; i < candidates.length; i++) {
+      final tag = candidates[i];
+      final name = tag.name!.trim();
+      if (name.isEmpty) {
+        continue;
+      }
+      final type = tag.type == null || tag.type!.isEmpty
+          ? null
+          : singularizeTagType(tag.type!);
+      final existing = existingMap[tag.id!];
+
+      var translateName = tag.translatedName;
+      if (translateName == null || translateName.isEmpty) {
+        translateName = existing?.translateName;
+      }
+      if ((translateName == null || translateName.isEmpty) && type != null) {
+        // For general tags / categories TagTranslate has no canonical
+        // namespace, so search across all when type is `tag`/`category`.
+        final ns = (type == 'tag' || type == 'category') ? null : type;
+        translateName = findTagTranslate(
+          name,
+          namespace: ns,
+        )?.translateNameNotMD;
+        // Yield every few lookups so a detail page with 30+ tags
+        // doesn't stall the UI for half a second.
+        if (i % 4 == 3) {
+          await Future<void>.delayed(Duration.zero);
+        }
+      }
+
+      toWrite.add(
+        NhTag(
+          id: tag.id!,
+          name: name,
+          type: type ?? existing?.type,
+          count: tag.count ?? existing?.count,
+          translateName: translateName,
+          lastUseTime: existing?.lastUseTime ?? 0,
+        ),
+      );
+    }
+    if (toWrite.isNotEmpty) {
+      _nhTagBox.putMany(toWrite);
+    }
   }
 }
