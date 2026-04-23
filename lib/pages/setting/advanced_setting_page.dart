@@ -21,16 +21,11 @@ class AdvancedSettingPage extends StatelessWidget {
               final allNhTag = ref.watch(allNhTagProvider);
               return ListTile(
                 title: Text(L10n.of(context).tags_data),
-                // subtitle: Text('total: ${ref.watch(tagTranslateProvider).total}, long press to update'),
                 subtitle: allNhTag.when(
-                  data: (data) =>
-                      Text('total: ${data.length}, long press to update'),
+                  data: (data) => Text('cached: ${data.length}'),
                   loading: () => const Text('loading...'),
                   error: (error, stack) => Text('error: $error'),
                 ),
-                onLongPress: () {
-                  ref.read(tagTranslateProvider.notifier).updateNhTags();
-                },
               );
             },
           ),

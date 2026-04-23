@@ -195,9 +195,6 @@ class AppearanceSettingPage extends StatelessWidget {
                     ref.read(settingsProvider.notifier).setShowTags(value);
                   },
                 ),
-                onLongPress: () {
-                  ref.read(tagTranslateProvider.notifier).updateNhTags();
-                },
               );
             },
           ),
