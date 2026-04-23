@@ -1,124 +1,111 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_inappwebview (0.0.1):
+  - flutter_inappwebview_ios (0.0.1):
     - Flutter
-    - flutter_inappwebview/Core (= 0.0.1)
-    - OrderedSet (~> 5.0)
-  - flutter_inappwebview/Core (0.0.1):
+    - flutter_inappwebview_ios/Core (= 0.0.1)
+    - OrderedSet (~> 6.0.3)
+  - flutter_inappwebview_ios/Core (0.0.1):
     - Flutter
-    - OrderedSet (~> 5.0)
+    - OrderedSet (~> 6.0.3)
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
-  - fullscreen (0.0.1):
+  - ObjectBox (5.3.0-beta.4)
+  - objectbox_flutter_libs (0.0.1):
     - Flutter
-  - isar_flutter_libs (1.0.0):
-    - Flutter
+    - ObjectBox (= 5.3.0-beta.4)
   - open_by_default (0.0.1):
     - Flutter
-  - OrderedSet (5.0.0)
+  - OrderedSet (6.0.3)
   - package_info_plus (0.4.5):
     - Flutter
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - receive_sharing_intent (0.0.1):
     - Flutter
-  - share (0.0.1):
+  - share_plus (0.0.1):
     - Flutter
-  - sqflite (0.0.3):
+  - sqflite_darwin (0.0.4):
     - Flutter
-    - FMDB (>= 2.7.5)
+    - FlutterMacOS
   - system_network_proxy (0.0.1):
     - Flutter
   - system_proxy (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
-  - wakelock (0.0.1):
+  - wakelock_plus (0.0.1):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
+  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
-  - fullscreen (from `.symlinks/plugins/fullscreen/ios`)
-  - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
+  - objectbox_flutter_libs (from `.symlinks/plugins/objectbox_flutter_libs/ios`)
   - open_by_default (from `.symlinks/plugins/open_by_default/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - receive_sharing_intent (from `.symlinks/plugins/receive_sharing_intent/ios`)
-  - share (from `.symlinks/plugins/share/ios`)
-  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
+  - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - system_network_proxy (from `.symlinks/plugins/system_network_proxy/ios`)
   - system_proxy (from `.symlinks/plugins/system_proxy/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - wakelock (from `.symlinks/plugins/wakelock/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
-    - FMDB
+    - ObjectBox
     - OrderedSet
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  flutter_inappwebview:
-    :path: ".symlinks/plugins/flutter_inappwebview/ios"
+  flutter_inappwebview_ios:
+    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
-  fullscreen:
-    :path: ".symlinks/plugins/fullscreen/ios"
-  isar_flutter_libs:
-    :path: ".symlinks/plugins/isar_flutter_libs/ios"
+  objectbox_flutter_libs:
+    :path: ".symlinks/plugins/objectbox_flutter_libs/ios"
   open_by_default:
     :path: ".symlinks/plugins/open_by_default/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
-  path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   receive_sharing_intent:
     :path: ".symlinks/plugins/receive_sharing_intent/ios"
-  share:
-    :path: ".symlinks/plugins/share/ios"
-  sqflite:
-    :path: ".symlinks/plugins/sqflite/ios"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
+  sqflite_darwin:
+    :path: ".symlinks/plugins/sqflite_darwin/darwin"
   system_network_proxy:
     :path: ".symlinks/plugins/system_network_proxy/ios"
   system_proxy:
     :path: ".symlinks/plugins/system_proxy/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
-  wakelock:
-    :path: ".symlinks/plugins/wakelock/ios"
+  wakelock_plus:
+    :path: ".symlinks/plugins/wakelock_plus/ios"
   webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
-  flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
-  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  fullscreen: d93e707e6b36120f20e64e2f814ee0726164e70b
-  isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
-  open_by_default: a696353e830a8f8b4b1df1a92e7122275675f983
-  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
-  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
-  receive_sharing_intent: c0d87310754e74c0f9542947e7cbdf3a0335a3b1
-  share: 0b2c3e82132f5888bccca3351c504d0003b3b410
-  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
-  system_network_proxy: 6f63fddb34a28776f091b1221a17850170c59e01
-  system_proxy: bec1a5c5af67dd3e3ebf43979400a8756c04cc44
-  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
-  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
-  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
+  flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619
+  ObjectBox: eccb95ea2054c39d81dfa2d4ccc5f1e31187228a
+  objectbox_flutter_libs: ed1510f71602e4a0d3f2a721324e468d066fdbb9
+  open_by_default: 7a3ae9a3cb5e95a5bd7f5c6df0acebf65c2715c0
+  OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  receive_sharing_intent: bbbab6c22538c99fa709fa50c34cfe9c90c5cf03
+  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
+  system_network_proxy: c0b2ba3a6d877b4861e22300ecfb60df4d200382
+  system_proxy: df8f85da9db052f93da22ceb2a8f87b3058c2eb3
+  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
+  wakelock_plus: e29112ab3ef0b318e58cfa5c32326458be66b556
+  webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
-PODFILE CHECKSUM: d28add35dae4969e4ee90219fdc1207566e5ed8d
+PODFILE CHECKSUM: e37bd94c1ccfe169a9c54058d354342a5d77a29c
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.16.2
