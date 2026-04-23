@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
@@ -91,6 +93,22 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       ref
           .read(pageStateProvider(state.gid).notifier)
           .update((state) => state.copyWith(pageStatus: PageStatus.none));
+    }
+
+    // Resolve real favorite state via API. The SvelteKit detail HTML carries
+    // no session info, so the parser leaves `isFavorited` as null and we fill
+    // it in here. Best-effort: a failure just leaves the heart hollow.
+    unawaited(_refreshFavoriteStatus());
+  }
+
+  Future<void> _refreshFavoriteStatus() async {
+    try {
+      final fav = await getGalleryFavoriteStatus(gid: state.gid);
+      if (fav != null && fav != state.isFavorited) {
+        state = state.copyWith(isFavorited: fav);
+      }
+    } catch (_) {
+      // intentionally ignored — purely cosmetic enrichment
     }
   }
 
