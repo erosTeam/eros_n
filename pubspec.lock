@@ -353,14 +353,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.1"
-  easy_debounce:
-    dependency: "direct main"
-    description:
-      name: easy_debounce
-      sha256: f082609cfb8f37defb9e37fc28bc978c6712dedf08d4c5a26f820fa10165a236
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
   easy_image_viewer:
     dependency: "direct main"
     description:
@@ -1191,15 +1183,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
-  receive_sharing_intent:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "6ad8f582d7bc7e2fd5a258399e7dbe8c39245d32"
-      url: "https://github.com/Nahrawene-ben-hmida/receive_sharing_intent"
-    source: git
-    version: "1.4.6"
   record_use:
     dependency: transitive
     description:

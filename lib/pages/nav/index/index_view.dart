@@ -1,6 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:easy_debounce/easy_debounce.dart';
-import 'package:eros_n/common/provider/receive_sharing_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
@@ -34,14 +32,6 @@ class _IndexPageState extends ConsumerState<IndexPage> {
   void initState() {
     logger.d('initState');
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      EasyDebounce.debounce(
-        'listenReceiveSharing',
-        const Duration(milliseconds: 500),
-        () =>
-            ref.read(receiveSharingProvider.notifier).listenReceiveSharing(ref),
-      );
-    });
   }
 
   @override

@@ -83,8 +83,6 @@ dependencies:
   fluentui_system_icons: ^1.1.273
   palette_generator: ^0.3.3+7
   nil: ^1.1.1
-  receive_sharing_intent: #^1.4.5
-    git: https://github.com/Nahrawene-ben-hmida/receive_sharing_intent
   open_by_default:
     git:
       url: https://github.com/honjow/open_by_default.git
@@ -96,7 +94,6 @@ dependencies:
   wakelock_plus: ^1.6.0
   uuid: ^4.5.3
   animations: ^2.1.2
-  easy_debounce: ^2.0.3
   flutter_socks_proxy: ^0.0.3
 
   clock: any
