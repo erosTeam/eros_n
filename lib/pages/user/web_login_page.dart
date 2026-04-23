@@ -48,24 +48,25 @@ class _WebLoginPageState extends State<WebLoginPage> {
 
           // Primary signal: WebView has navigated away from the login page,
           // which only happens after a successful credential submit (or a
-          // pre-existing logged-in session). The sessionid cookie is HttpOnly
-          // and frequently invisible to CookieManager on some Android stacks,
-          // so we no longer require it to appear in the list.
+          // pre-existing logged-in session). Some auth cookies (legacy
+          // sessionid) are HttpOnly and invisible to CookieManager on some
+          // Android stacks, so we don't require any specific cookie name.
           final navigatedAway = !_looksLikeLoginPage(info.currentUrl);
 
-          // Fallback signal: if for some reason we *do* see sessionid in the
-          // cookie jar, that's also enough.
-          final hasSessionId =
-              cookies.any((element) => element.name == 'sessionid');
+          // Fallback: if a known auth cookie (access_token / refresh_token
+          // / sessionid) is already visible we're logged in regardless of URL.
+          const authNames = {'access_token', 'refresh_token', 'sessionid'};
+          final hasAuthCookie =
+              cookies.any((c) => authNames.contains(c.name));
 
-          if (!navigatedAway && !hasSessionId) {
+          if (!navigatedAway && !hasAuthCookie) {
             return;
           }
 
           _popped = true;
           await Global.setUserAgent(info.userAgent);
-          // Only sync visible cookies; the HttpOnly sessionid stays in the
-          // WebView's cookie store and is reused via the WebView proxy.
+          // Mirror any visible cookies into the dart-side jar; HttpOnly ones
+          // stay in the WebView's cookie store and are reused via the proxy.
           if (cookies.isNotEmpty) {
             await Global.setCookies(NHConst.baseUrl, info.cookies);
           }
