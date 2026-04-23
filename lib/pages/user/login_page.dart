@@ -100,11 +100,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         context.showSnackBar(L10n.of(context).login_invalid);
       } else {
         logger.e(e);
-        rethrow;
+        if (mounted) {
+          context.showSnackBar(
+            'Login failed: ${e.message.isNotEmpty ? e.message : e.type}',
+          );
+        }
       }
-    } catch (e) {
-      logger.e(e);
-      rethrow;
+    } catch (e, st) {
+      logger.e('login error', error: e, stackTrace: st);
+      if (mounted) {
+        context.showSnackBar('Login failed: $e');
+      }
     } finally {
       setState(() {
         _logining = false;

@@ -71,14 +71,28 @@ class WebViewProxyInterceptor extends Interceptor {
 
       final data = _decodeBody(proxyResp.body, options.responseType);
 
+      final finalUrl = proxyResp.url;
+      final isRedirected = finalUrl.isNotEmpty && finalUrl != url;
       final response = Response<dynamic>(
         requestOptions: options,
         statusCode: proxyResp.status,
         statusMessage: proxyResp.statusText,
         headers: Headers.fromMap(responseHeaders),
         data: data,
-        isRedirect: false,
-        extra: {'webview_proxy': true},
+        isRedirect: isRedirected,
+        redirects: isRedirected
+            ? [
+                RedirectRecord(
+                  302,
+                  options.method,
+                  Uri.parse(finalUrl),
+                ),
+              ]
+            : const [],
+        extra: {
+          'webview_proxy': true,
+          'final_url': finalUrl,
+        },
       );
 
       // Preserve dio's validateStatus contract: throw on bad status codes.

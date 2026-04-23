@@ -13,16 +13,24 @@ class WebViewCookieInfo {
     required this.url,
     required this.cookies,
     required this.userAgent,
+    this.currentUrl,
     this.manualRequired = false,
     this.message,
   });
 
   @override
   String toString() {
-    return 'WebViewCookieInfo<MR:$manualRequired, $message, $userAgent, $cookies>';
+    return 'WebViewCookieInfo<MR:$manualRequired, $message, $userAgent, '
+        'currentUrl=$currentUrl, $cookies>';
   }
 
+  /// Origin/base URL the cookies belong to (typically [NHConst.baseUrl]).
   final String url;
+
+  /// The URL the WebView is currently displaying. Useful for callers that
+  /// want to detect navigation events such as a successful login redirect.
+  final String? currentUrl;
+
   final List<Cookie> cookies;
   final String userAgent;
   final bool manualRequired;
@@ -202,6 +210,7 @@ class _MobileWebViewState extends State<MobileWebView> {
     widget.callback?.call(
       WebViewCookieInfo(
         url: NHConst.baseUrl,
+        currentUrl: currentUrl?.toString(),
         cookies: ioCookies,
         userAgent: userAgent,
         // Only show the WebView UI when interaction is actually required

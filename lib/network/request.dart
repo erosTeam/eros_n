@@ -7,6 +7,7 @@ import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
+import 'package:eros_n/component/exception/error.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/api.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
@@ -399,29 +400,54 @@ Future<bool> loginNhentai({
 }) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final dataMap = <String, dynamic>{
+  // Use application/x-www-form-urlencoded body so the request can travel
+  // through the WebView fetch proxy as a plain string. Multipart FormData
+  // would not survive jsonEncode in the proxy boundary.
+  final fields = <String, String>{
     'username_or_email': username,
     'password': password,
     'csrfmiddlewaretoken': csrfToken,
   };
-
-  final dataForm = FormData.fromMap(dataMap);
+  final formBody = fields.entries
+      .map(
+        (e) =>
+            '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}',
+      )
+      .join('&');
 
   DioHttpResponse httpResponse = await dioHttpClient.post(
     NHConst.loginUrl,
-    // queryParameters: params,
-    data: dataForm,
+    data: formBody,
     options: getOptions(forceRefresh: true)
-      ..followRedirects = false
-      ..validateStatus = (status) => status! < 500,
-    httpTransformer: HttpTransformerBuilder((response) {
-      logger.d('statusCode ${response.statusCode}');
-      logger.d('response ${response.headers}');
-      if (response.statusCode == 302) {
-        return DioHttpResponse<bool>.success(true);
-      } else {
-        return DioHttpResponse<bool>.success(false);
+      ..contentType = Headers.formUrlEncodedContentType
+      ..headers = {
+        'Referer': NHConst.loginUrl,
       }
+      ..validateStatus = (status) => status != null && status < 500,
+    httpTransformer: HttpTransformerBuilder((response) {
+      final finalUrl = (response.extra['final_url'] as String?) ?? '';
+      logger.d(
+        'login statusCode=${response.statusCode}, finalUrl=$finalUrl',
+      );
+      // Through the WebView proxy fetch follows redirects automatically,
+      // so a successful login lands on the index ("/") instead of staying
+      // on "/login/". Treat that as success.
+      final landedAwayFromLogin =
+          finalUrl.isNotEmpty && !Uri.parse(finalUrl).path.contains('/login');
+      if (response.statusCode == 302 || landedAwayFromLogin) {
+        return DioHttpResponse<bool>.success(true);
+      }
+      // Inspect the body for typical login error markers as a fallback
+      // (CAPTCHA / invalid credential responses are 200 OK with a form).
+      final body = response.data is String ? response.data as String : '';
+      if (body.contains('Please verify') || body.contains('captcha')) {
+        throw LoginCaptchaError();
+      }
+      if (body.contains('Please enter a correct') ||
+          body.contains('Invalid')) {
+        throw LoginInvalidError();
+      }
+      return DioHttpResponse<bool>.success(false);
     }),
     cancelToken: cancelToken,
   );

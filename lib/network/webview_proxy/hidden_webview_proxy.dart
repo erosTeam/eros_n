@@ -183,6 +183,432 @@ try {
       body: (value['body'] as String?) ?? '',
     );
   }
+
+  /// Submit a login to nhentai entirely from inside the WebView. We
+  /// navigate the hidden WebView to `/login/`, let SvelteKit hydrate,
+  /// fill the form with the supplied credentials and synthesise a real
+  /// click on the submit button so the framework's `use:enhance` handler
+  /// (or the native form post) fires the correct request. Returns `true`
+  /// once the WebView leaves `/login` for a regular page (i.e. the
+  /// session cookie has been issued).
+  Future<bool> loginNhentai({
+    required String username,
+    required String password,
+    Duration timeout = const Duration(seconds: 60),
+  }) async {
+    await ready;
+    final controller = _controller;
+    if (controller == null) {
+      throw StateError('HiddenWebViewProxy: controller not attached');
+    }
+
+    Future<String> currentPath() async {
+      final uri = await controller.getUrl();
+      return uri?.path ?? '';
+    }
+
+    final originalUri = await controller.getUrl();
+    final returnUrl = originalUri?.toString() ?? '${NHConst.baseUrl}/';
+
+    try {
+      await controller.loadUrl(
+        urlRequest: URLRequest(url: WebUri('${NHConst.baseUrl}/login/')),
+      );
+
+      // Wait for the SvelteKit page to *hydrate*, not just render. The
+      // SSR HTML already has the inputs but the framework needs an extra
+      // beat to attach its `use:enhance` submit handler. We poll for the
+      // SvelteKit hydration marker (`__sveltekit_*` global) and require
+      // the form inputs to be in place.
+      var hydrated = false;
+      for (var i = 0; i < 60 && !hydrated; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 250));
+        final probe = await controller.evaluateJavascript(
+          source: '''
+            (function () {
+              var hasForm = document.querySelector('input[name="username_or_email"]') != null
+                  && document.querySelector('input[name="password"]') != null;
+              var hasSk = false;
+              for (var k in window) { if (k.indexOf('__sveltekit') === 0) { hasSk = true; break; } }
+              // SvelteKit may also expose `window.__sveltekit_invalidated` or
+              // similar; if any present plus hydrate finished, we're good.
+              return hasForm && hasSk ? 'ready' : (hasForm ? 'form-only' : 'no-form');
+            })()
+          ''',
+        );
+        if (probe == 'ready') {
+          hydrated = true;
+        } else if (probe == 'form-only' && i >= 20) {
+          // Give up waiting for SvelteKit globals after 5s; we'll still
+          // try the click path even if hydration never reported in.
+          hydrated = true;
+        }
+      }
+      if (!hydrated) {
+        throw StateError('login form did not appear');
+      }
+      // Tiny extra delay so any pending mount effects bind their handlers.
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+
+      // Trigger the actual submit and let SvelteKit handle it. We track
+      // outgoing fetch + XHR + form-submit traffic so debug logs show
+      // exactly what endpoint the page contacted (or didn't).
+      final result = await controller
+          .callAsyncJavaScript(
+            functionBody: r'''
+              try {
+                if (!window.__erosFetchHook) {
+                  const orig = window.fetch;
+                  window.__erosLoginFetches = [];
+                  window.fetch = function(input, init) {
+                    try {
+                      const u = (typeof input === 'string')
+                        ? input
+                        : (input && input.url) || String(input);
+                      window.__erosLoginFetches.push({
+                        kind: 'fetch',
+                        url: u,
+                        method: (init && init.method) || (input && input.method) || 'GET',
+                      });
+                    } catch (_) {}
+                    return orig.apply(this, arguments);
+                  };
+                  // Hook XHR too in case the page uses it.
+                  const xo = window.XMLHttpRequest.prototype.open;
+                  window.XMLHttpRequest.prototype.open = function(m, u) {
+                    try {
+                      window.__erosLoginFetches.push({
+                        kind: 'xhr', url: u, method: m,
+                      });
+                    } catch (_) {}
+                    return xo.apply(this, arguments);
+                  };
+                  // Hook native form.submit() so we see synchronous POSTs.
+                  const fs = window.HTMLFormElement.prototype.submit;
+                  window.HTMLFormElement.prototype.submit = function() {
+                    try {
+                      window.__erosLoginFetches.push({
+                        kind: 'form-submit',
+                        url: this.action,
+                        method: this.method,
+                      });
+                    } catch (_) {}
+                    return fs.apply(this, arguments);
+                  };
+                  window.__erosFetchHook = true;
+                }
+                const userInput = document.querySelector('input[name="username_or_email"]');
+                const passInput = document.querySelector('input[name="password"]');
+                const form = userInput && userInput.closest('form');
+                const button = form && form.querySelector('button[type="submit"], input[type="submit"]');
+                if (!userInput || !passInput || !form) {
+                  return { ok: false, reason: 'form-missing' };
+                }
+                const setNative = (el, val) => {
+                  const desc = Object.getOwnPropertyDescriptor(
+                    window.HTMLInputElement.prototype, 'value');
+                  desc.set.call(el, val);
+                  // Svelte 5 listens for these in different combinations
+                  // depending on bind:value vs on:input — fire all of them.
+                  el.dispatchEvent(new Event('beforeinput', { bubbles: true }));
+                  el.dispatchEvent(new InputEvent('input', { bubbles: true, data: val }));
+                  el.dispatchEvent(new Event('change', { bubbles: true }));
+                  el.dispatchEvent(new Event('blur', { bubbles: true }));
+                };
+                userInput.focus();
+                setNative(userInput, username);
+                passInput.focus();
+                setNative(passInput, password);
+                // Force-enable the submit button — Svelte's reactive state
+                // sometimes needs a tick to pick up the new values, but
+                // the form is still valid so this is safe.
+                if (button) {
+                  try { button.disabled = false; } catch (_) {}
+                  try { button.removeAttribute('disabled'); } catch (_) {}
+                }
+                // Snapshot the form so we can debug from logs.
+                const formInfo = {
+                  action: form.action,
+                  method: form.method,
+                  hasButton: !!button,
+                  buttonDisabled: button ? button.disabled : null,
+                  buttonText: button ? (button.textContent || '').trim().slice(0, 60) : null,
+                  inputs: Array.prototype.map.call(form.querySelectorAll('input,textarea,select'),
+                    function(el){ return (el.name || el.type || el.tagName) + '=' + (el.value ? '['+el.value.length+']' : ''); }),
+                  hasTurnstile: document.querySelector('[name="cf-turnstile-response"], .cf-turnstile, iframe[src*="challenges.cloudflare.com"]') != null,
+                  outerStart: form.outerHTML.slice(0, 400),
+                };
+                // Strategy: now that the button is enabled, click it for
+                // real and let SvelteKit's own use:enhance handler issue
+                // the proper request. Our fetch/XHR hooks will record
+                // exactly which URL it talked to. We DO NOT attempt the
+                // native form.submit() since the form posts to /login
+                // which is 405 (the route only handles named actions).
+                let triggered = 'none';
+                if (button) {
+                  try { button.click(); triggered = 'click'; } catch (_) {}
+                }
+                if (triggered === 'none' && typeof form.requestSubmit === 'function') {
+                  try { form.requestSubmit(button || undefined); triggered = 'requestSubmit'; }
+                  catch (_) {}
+                }
+                if (triggered === 'none') {
+                  try {
+                    form.dispatchEvent(new SubmitEvent('submit', { cancelable: true, bubbles: true }));
+                    triggered = 'dispatch';
+                  } catch (_) {}
+                }
+                return { ok: true, triggered: triggered, formInfo: formInfo };
+              } catch (e) {
+                return { ok: false, reason: String(e) };
+              }
+            ''',
+            arguments: <String, dynamic>{
+              'username': username,
+              'password': password,
+            },
+          )
+          .timeout(timeout);
+
+      final value = result?.value;
+      if (value is! Map || value['ok'] != true) {
+        throw StateError(
+          'login submit prepare failed: ${value is Map ? value['reason'] : value}',
+        );
+      }
+      logger.d(
+        '[WebViewProxy] login submit triggered=${value['triggered']} '
+        'formInfo=${value['formInfo']}',
+      );
+
+      // Wait for the page to leave /login (success redirects to "/" or
+      // back to the original referer; failures stay on /login and re-render
+      // an error message in the form).
+      final stopwatch = Stopwatch()..start();
+      while (stopwatch.elapsed < timeout) {
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+        final path = await currentPath();
+        if (!path.contains('/login')) {
+          // Snapshot what fetches the page made for diagnostics. The
+          // WebView has already navigated to the post-login page (usually
+          // "/"), so we DON'T re-navigate — issuing another loadUrl here
+          // would abort the in-flight requests that the caller (e.g.
+          // `loginGetMore`) is about to make through the proxy.
+          final fetches = await controller.evaluateJavascript(
+            source:
+                'JSON.stringify(window.__erosLoginFetches || []).slice(0, 1500)',
+          );
+          logger.d('[WebViewProxy] login fetches=$fetches');
+          // Give the WebView a tiny grace window to flush any final
+          // post-login navigations before the caller starts proxying.
+          await Future<void>.delayed(const Duration(milliseconds: 800));
+          return true;
+        }
+      }
+
+      // Stayed on /login → grab as much diagnostic info as possible. The
+      // SSR HTML is more reliable than a `document.querySelector` because
+      // SvelteKit may have replaced the DOM with a hydrated version and
+      // any error message could live in arbitrary class names.
+      final diag = await controller.evaluateJavascript(
+        source:
+            r'''
+          (function () {
+            const text = (document.body && document.body.innerText) || '';
+            const fetches = window.__erosLoginFetches || [];
+            return JSON.stringify({
+              title: document.title,
+              url: location.href,
+              bodyLen: text.length,
+              bodyPreview: text.slice(0, 600),
+              cookieNames: document.cookie.split(';').map(function(s){return s.split('=')[0].trim();}).filter(Boolean),
+              fetches: fetches,
+            });
+          })()
+        ''',
+      );
+      logger.w('[WebViewProxy] login stayed on /login, diag=$diag');
+      await controller.loadUrl(
+        urlRequest: URLRequest(url: WebUri(returnUrl)),
+      );
+      return false;
+    } catch (e, st) {
+      logger.e('[WebViewProxy] login error', error: e, stackTrace: st);
+      try {
+        await controller.loadUrl(
+          urlRequest: URLRequest(url: WebUri(returnUrl)),
+        );
+      } catch (_) {}
+      rethrow;
+    }
+  }
+
+  /// Older fetch-based login attempt kept for reference. Unused but useful
+  /// when debugging different SvelteKit form-action endpoints.
+  // ignore: unused_element
+  Future<bool> _loginNhentaiViaFetch({
+    required String username,
+    required String password,
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
+    await ready;
+    final controller = _controller;
+    if (controller == null) {
+      throw StateError('HiddenWebViewProxy: controller not attached');
+    }
+
+    final args = <String, dynamic>{
+      'username': username,
+      'password': password,
+    };
+
+    const script = r'''
+function readCookie(name) {
+  const m = new RegExp('(?:^|; )' + name + '=([^;]*)').exec(document.cookie);
+  return m ? decodeURIComponent(m[1]) : '';
+}
+async function attempt(url, body, headers, extraOpts) {
+  try {
+    const r = await fetch(url, Object.assign({
+      method: 'POST',
+      credentials: 'include',
+      headers: headers,
+      body: body,
+      redirect: 'follow',
+      cache: 'no-store',
+    }, extraOpts || {}));
+    const text = await r.text();
+    return {
+      url: url,
+      status: r.status,
+      finalUrl: r.url,
+      redirected: r.redirected,
+      bodyLen: text.length,
+      bodyPreview: text.length > 1500 ? text.slice(0, 1500) : text,
+    };
+  } catch (e) {
+    return { url: url, error: String(e) };
+  }
+}
+try {
+  await fetch('/login/', { credentials: 'include', cache: 'no-store' });
+  let token = readCookie('csrftoken');
+  if (!token) {
+    await new Promise(r => setTimeout(r, 250));
+    token = readCookie('csrftoken');
+  }
+
+  const fields = new URLSearchParams();
+  if (token) fields.append('csrfmiddlewaretoken', token);
+  fields.append('username_or_email', username);
+  fields.append('password', password);
+  const formBody = fields.toString();
+
+  const baseHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' };
+  if (token) baseHeaders['X-CSRFToken'] = token;
+
+  // Inspect the rendered login page so we can discover the actual form
+  // action endpoint. SvelteKit named actions live under ?/<name>.
+  const candidates = [
+    '/login/?/default',
+    '/login?/default',
+    '/login/?/login',
+    '/login?/login',
+    '/login/',
+    '/login',
+  ];
+
+  // Probe the SSR HTML so we can surface the real form action used by
+  // the SvelteKit page. (Diagnostic, helps us pick the right URL
+  // when the static candidate list above doesn't include the right one.)
+  try {
+    const probe = await fetch('/login/', { credentials: 'include', cache: 'no-store' });
+    const html = await probe.text();
+    const formMatch = /<form[^>]*method=["']post["'][^>]*>/i.exec(html) || /<form[^>]*>/i.exec(html);
+    const actionMatch = formMatch && /action=["']([^"']*)["']/i.exec(formMatch[0]);
+    const buttonActionMatch = /<button[^>]*formaction=["']([^"']*)["']/i.exec(html);
+    console.log('LOGIN PROBE form=' + (formMatch ? formMatch[0] : 'none'));
+    console.log('LOGIN PROBE action=' + (actionMatch ? actionMatch[1] : 'none'));
+    console.log('LOGIN PROBE buttonFormaction=' + (buttonActionMatch ? buttonActionMatch[1] : 'none'));
+    // Also dump the html length and a tail slice so we know whether
+    // the form/button is even present.
+    console.log('LOGIN PROBE htmlLen=' + html.length);
+  } catch (e) {
+    console.log('LOGIN PROBE error=' + e);
+  }
+  const sveltekitHeaders = Object.assign({}, baseHeaders, {
+    'x-sveltekit-action': 'true',
+  });
+
+  const attempts = [];
+  let success = null;
+  for (const url of candidates) {
+    const headers = url.includes('?/') ? sveltekitHeaders : baseHeaders;
+    const result = await attempt(url, formBody, headers);
+    attempts.push(result);
+    if (result.error) continue;
+    if (result.status === 405 || result.status === 404) continue;
+    if (result.status >= 200 && result.status < 400) {
+      success = result;
+      break;
+    }
+    // 5xx → keep trying other candidates but remember this one as a
+    // last-resort failure to surface.
+  }
+
+  return {
+    ok: true,
+    success: success,
+    attempts: attempts,
+  };
+} catch (e) {
+  return { ok: false, error: String(e) };
+}
+''';
+
+    final result = await controller
+        .callAsyncJavaScript(functionBody: script, arguments: args)
+        .timeout(timeout);
+
+    if (result == null || result.error != null) {
+      throw StateError(
+        'WebViewProxy login JS failed: ${result?.error ?? 'null result'}',
+      );
+    }
+    final value = result.value;
+    if (value is! Map || value['ok'] != true) {
+      throw StateError(
+        'WebViewProxy login fetch failed: ${value is Map ? value['error'] : value}',
+      );
+    }
+
+    final attempts = (value['attempts'] as List?) ?? const [];
+    for (final a in attempts) {
+      if (a is Map) {
+        logger.d(
+          '[WebViewProxy] login attempt url=${a['url']} '
+          'status=${a['status']} finalUrl=${a['finalUrl']} '
+          'redirected=${a['redirected']} bodyLen=${a['bodyLen']} '
+          'error=${a['error']}',
+        );
+      }
+    }
+
+    final success = value['success'];
+    if (success is! Map) {
+      // Inspect the last attempt body to decide whether this looks like
+      // an invalid-credential response (the form re-renders) vs an auth
+      // success that we just failed to recognise.
+      return false;
+    }
+
+    final status = (success['status'] as num).toInt();
+    final finalUrl = (success['finalUrl'] as String?) ?? '';
+    final landedAwayFromLogin =
+        finalUrl.isNotEmpty && !Uri.parse(finalUrl).path.contains('/login');
+    return status == 302 ||
+        (status >= 200 && status < 400 && landedAwayFromLogin);
+  }
 }
 
 /// Mounts a 1x1 offstage [InAppWebView] used by [HiddenWebViewProxy].
