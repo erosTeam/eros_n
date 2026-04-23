@@ -27,6 +27,15 @@ allprojects {
                     }
                 }
             }
+
+            // Force all library subprojects to compile against the same SDK as the app.
+            // Older plugins (e.g. flutter_android_volume_keydown pinned to compileSdk 31)
+            // can't resolve newer androidx attrs like `android:attr/lStar`, which causes
+            // AAPT errors. Bumping their compileSdk in lockstep with the app fixes this
+            // without forking the plugin.
+            if (project.hasProperty('android') && project.android.getClass().name.contains('LibraryExtension')) {
+                project.android.compileSdkVersion 36
+            }
         }
     }
 }
