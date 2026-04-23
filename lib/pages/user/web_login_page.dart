@@ -9,8 +9,27 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class WebLoginPage extends StatelessWidget {
+class WebLoginPage extends StatefulWidget {
   const WebLoginPage({super.key});
+
+  @override
+  State<WebLoginPage> createState() => _WebLoginPageState();
+}
+
+class _WebLoginPageState extends State<WebLoginPage> {
+  // Latch so we only pop once even though the callback fires repeatedly.
+  bool _popped = false;
+
+  bool _looksLikeLoginPage(String? url) {
+    if (url == null || url.isEmpty) return true;
+    final uri = Uri.tryParse(url);
+    if (uri == null) return true;
+    // Anything still on /login (form, error message) or on Cloudflare
+    // challenge subdomains counts as "not logged in yet".
+    if (uri.path.contains('/login')) return true;
+    if (uri.host.contains('challenges.cloudflare.com')) return true;
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +39,37 @@ class WebLoginPage extends StatelessWidget {
         url: NHConst.loginUrl,
         deletedCookie: false,
         callback: (info) async {
+          if (_popped) return;
           final cookies = info.cookies;
-          logger.d('cookies: $cookies');
-          if (cookies.any((element) => element.name == 'sessionid')) {
-            await Global.setUserAgent(info.userAgent);
-            await Global.setCookies(NHConst.baseUrl, info.cookies);
-            erosRouter.pop<List<io.Cookie>>(cookies);
+          logger.d(
+            'web-login callback: currentUrl=${info.currentUrl}, '
+            'cookies=${cookies.map((e) => e.name).toList()}',
+          );
+
+          // Primary signal: WebView has navigated away from the login page,
+          // which only happens after a successful credential submit (or a
+          // pre-existing logged-in session). The sessionid cookie is HttpOnly
+          // and frequently invisible to CookieManager on some Android stacks,
+          // so we no longer require it to appear in the list.
+          final navigatedAway = !_looksLikeLoginPage(info.currentUrl);
+
+          // Fallback signal: if for some reason we *do* see sessionid in the
+          // cookie jar, that's also enough.
+          final hasSessionId =
+              cookies.any((element) => element.name == 'sessionid');
+
+          if (!navigatedAway && !hasSessionId) {
+            return;
           }
+
+          _popped = true;
+          await Global.setUserAgent(info.userAgent);
+          // Only sync visible cookies; the HttpOnly sessionid stays in the
+          // WebView's cookie store and is reused via the WebView proxy.
+          if (cookies.isNotEmpty) {
+            await Global.setCookies(NHConst.baseUrl, info.cookies);
+          }
+          erosRouter.pop<List<io.Cookie>>(cookies);
         },
       ),
     );
