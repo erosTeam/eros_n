@@ -1425,7 +1425,7 @@ packages:
     description:
       path: system_network_proxy
       ref: HEAD
-      resolved-ref: "2be220557ac039118c2039bd58ef1a16b3c8aeae"
+      resolved-ref: "90fa2ed82e6e0e5411bf5d80546b9db8d86e9e96"
       url: "https://github.com/honjow/system_network_proxy.git"
     source: git
     version: "1.0.2"
