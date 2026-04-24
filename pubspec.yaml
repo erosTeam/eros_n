@@ -14,7 +14,6 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.9
   dio: ^5.9.2
-  pretty_dio_logger: ^1.4.0
   dio_cookie_manager: ^3.4.0
   cookie_jar: ^4.0.9
   collection: ^1.19.1
@@ -22,7 +21,6 @@ dependencies:
   path_provider: ^2.1.5
   intl: ^0.20.0
   dynamic_color: ^1.8.1
-  english_words: ^4.0.0
   flutter_inappwebview: ^6.1.5
   http: ^1.6.0
   webview_flutter: ^4.0.2
@@ -42,15 +40,13 @@ dependencies:
   waterfall_flow: ^3.1.1
   hooks_riverpod: ^2.6.1
   auto_route: ^11.1.0
-  flutter_smart_dialog: ^4.9.3
+  flutter_smart_dialog: ^5.1.0
   sliver_tools: ^0.2.12
   freezed_annotation: ^3.1.0
   json_annotation: ^4.11.0
   photo_view: ^0.15.0
-  easy_image_viewer: ^1.5.1
-  async_builder: ^1.3.1+1
   preload_page_view: ^0.2.0
-  flutter_hooks: ^0.20.5
+  flutter_hooks: ^0.21.3
   url_launcher: ^6.3.2
   # replaced deprecated share with share_plus
   share_plus: ^13.1.0
@@ -70,10 +66,7 @@ dependencies:
       url: https://github.com/honjow/system_network_proxy.git
       path: system_network_proxy
   system_proxy: ^0.1.0
-  dropdown_button2: ^2.3.9
   scrollable_positioned_list: ^0.3.8
-  zoom_widget: ^2.0.1
-  zoom_pinch_overlay: ^1.4.3
   gesture_zoom_box: ^0.0.4
   flutter_keyboard_visibility: ^5.4.0
   flutter_typeahead: ^4.8.0

@@ -101,19 +101,6 @@ class AppDio with DioMixin implements Dio {
       interceptors.add(CookieManager(Global.cookieJar));
     }
 
-    // interceptors.add(PrettyDioLogger(
-    //   request: false,
-    //   requestHeader: false,
-    //   requestBody: false,
-    //   responseHeader: false,
-    //   responseBody: false,
-    //   error: true,
-    //   maxWidth: 120,
-    //   // logPrint: (_) {},
-    //   // logPrint: kDebugMode ? loggerSimple.d : loggerSimpleOnlyFile.d,
-    //   logPrint: loggerSimpleOnlyFile.d,
-    // ));
-
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);
     }
