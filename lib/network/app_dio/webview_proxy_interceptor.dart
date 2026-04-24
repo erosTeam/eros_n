@@ -110,7 +110,7 @@ class WebViewProxyInterceptor extends Interceptor {
         );
       }
 
-      handler.resolve(response);
+      handler.resolve(response, true);
     } catch (e, stack) {
       logger.e('[WebViewProxy] error', error: e, stackTrace: stack);
       handler.reject(
