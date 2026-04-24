@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io' show File;
+import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/const/const.dart';
@@ -634,59 +636,164 @@ Future<Map> getGithubApi(String url) async {
   }
 }
 
+/// nhentai's v2 API gates write actions (comments, edits, etc.) behind a
+/// proof-of-work challenge fetched from `GET /api/v2/pow?action=...`. The
+/// server returns `{challenge: hex, difficulty: int}`; the client must find a
+/// nonce such that `sha256(challenge + nonce)` has at least `difficulty`
+/// leading zero bits. Difficulty for `create_comment` is currently 16, which
+/// is solved in ~30k attempts (a few ms on device).
+Future<({String challenge, String nonce})> _solveCommentPow({
+  CancelToken? cancelToken,
+}) async {
+  final dio = DioHttpClient(dioConfig: globalDioConfig);
+  final resp = await dio.get(
+    '/api/v2/pow',
+    queryParameters: const {'action': 'comment'},
+    options: getOptions(forceRefresh: true)
+      ..validateStatus = (status) => status != null && status < 500,
+    cancelToken: cancelToken,
+    httpTransformer: HttpTransformerBuilder((response) {
+      final data = response.data;
+      if (data is Map &&
+          data['challenge'] is String &&
+          data['difficulty'] is int) {
+        return DioHttpResponse<({String challenge, int difficulty})>.success((
+          challenge: data['challenge'] as String,
+          difficulty: data['difficulty'] as int,
+        ));
+      }
+      return DioHttpResponse<({String challenge, int difficulty})>.failure(
+        errorMsg: 'invalid PoW challenge: $data',
+      );
+    }),
+  );
+
+  if (!resp.ok || resp.data is! ({String challenge, int difficulty})) {
+    throw resp.error ?? HttpException('failed to fetch PoW challenge');
+  }
+  final challenge =
+      (resp.data as ({String challenge, int difficulty})).challenge;
+  final difficulty =
+      (resp.data as ({String challenge, int difficulty})).difficulty;
+  final nonce = _findPowNonce(challenge: challenge, difficulty: difficulty);
+  return (challenge: challenge, nonce: nonce);
+}
+
+String _findPowNonce({required String challenge, required int difficulty}) {
+  final prefixBytes = utf8.encode(challenge);
+  // Bound the search to keep us from spinning forever if the server hands us
+  // an unreasonable difficulty. 2 million attempts at difficulty=24 is still
+  // < 1s on modern phones; anything beyond that means we should bail.
+  const maxAttempts = 2000000;
+  for (var i = 0; i < maxAttempts; i++) {
+    final nonce = i.toString();
+    final input = Uint8List(prefixBytes.length + nonce.length)
+      ..setRange(0, prefixBytes.length, prefixBytes)
+      ..setRange(
+        prefixBytes.length,
+        prefixBytes.length + nonce.length,
+        utf8.encode(nonce),
+      );
+    final digest = sha256.convert(input).bytes;
+    if (_leadingZeroBits(digest) >= difficulty) {
+      return nonce;
+    }
+  }
+  throw HttpException('PoW solver exhausted at difficulty=$difficulty');
+}
+
+int _leadingZeroBits(List<int> bytes) {
+  var count = 0;
+  for (final b in bytes) {
+    if (b == 0) {
+      count += 8;
+      continue;
+    }
+    var bit = 7;
+    while (bit >= 0 && (b >> bit) & 1 == 0) {
+      count++;
+      bit--;
+    }
+    break;
+  }
+  return count;
+}
+
 Future<Tuple2<bool, Comment?>> postComment({
   required int gid,
   required String comment,
   required String? csrfToken,
   CancelToken? cancelToken,
 }) async {
-  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+  final dio = DioHttpClient(dioConfig: globalDioConfig);
 
-  final dataMap = <String, dynamic>{'body': comment};
+  // nhentai migrated comment posting to /api/v2 along with the rest of the
+  // SvelteKit rewrite. The legacy `/api/gallery/.../comments/submit` route
+  // returns 404 (with a "use /api/v2 instead" notice in the body). The new
+  // endpoint expects `{body, pow_challenge, pow_nonce}` and authenticates
+  // via the access token cookie that the webview proxy injects automatically.
+  final pow = await _solveCommentPow(cancelToken: cancelToken);
 
-  final url = '/api/gallery/$gid/comments/submit';
+  final url = '/api/v2/galleries/$gid/comments';
+  final dataJson = jsonEncode(<String, dynamic>{
+    'body': comment,
+    'pow_challenge': pow.challenge,
+    'pow_nonce': pow.nonce,
+  });
 
-  final dataJson = jsonEncode(dataMap);
-
-  DioHttpResponse httpResponse = await dioHttpClient.post(
+  final httpResponse = await dio.post(
     url,
     data: dataJson,
     options: getOptions(forceRefresh: true)
+      ..contentType = 'application/json'
       ..followRedirects = false
-      ..headers = {'x-csrftoken': csrfToken}
-      ..validateStatus = (status) => status! < 500,
+      ..validateStatus = (status) => status != null && status < 500,
     httpTransformer: HttpTransformerBuilder((response) {
-      logger.d('statusCode ${response.statusCode}');
-      logger.d('response ${response.data}');
-      final success = response.data['success'] as bool?;
-      final comment = response.data['comment'] as Map?;
-      final error = response.data['error'] as String?;
-      if (error != null) {
-        return DioHttpResponse<Tuple2<bool, Comment?>>.failure(errorMsg: error);
+      final status = response.statusCode ?? 0;
+      final data = response.data;
+
+      if (status >= 400) {
+        logger.w('postComment failed: $status $data');
+        // v2 surfaces validation errors as `{"error": "..."}`; auth/CF
+        // failures usually come back as HTML. Either way, surface the
+        // most useful string we can find without crashing on type mismatch.
+        String? error;
+        if (data is Map) {
+          final raw = data['error'] ?? data['detail'] ?? data['message'];
+          if (raw is String) error = raw;
+        }
+        return DioHttpResponse<Tuple2<bool, Comment?>>.failure(
+          errorMsg: error ?? 'postComment failed: HTTP $status',
+        );
       }
 
-      if (success == true && comment != null) {
-        final Comment commentObj = Comment.fromJson(
-          comment as Map<String, dynamic>,
-        );
+      // v2 typically returns the freshly created Comment as a top-level
+      // JSON object; tolerate `{"comment": {...}}` too just in case.
+      Map<String, dynamic>? commentJson;
+      if (data is Map<String, dynamic>) {
+        if (data['id'] != null) {
+          commentJson = data;
+        } else if (data['comment'] is Map) {
+          commentJson = (data['comment'] as Map).cast<String, dynamic>();
+        }
+      }
+
+      if (commentJson != null) {
         return DioHttpResponse<Tuple2<bool, Comment?>>.success(
-          Tuple2(true, commentObj),
-        );
-      } else {
-        return DioHttpResponse<Tuple2<bool, Comment?>>.success(
-          const Tuple2(false, null),
+          Tuple2(true, Comment.fromJson(commentJson)),
         );
       }
+      return DioHttpResponse<Tuple2<bool, Comment?>>.success(
+        const Tuple2(false, null),
+      );
     }),
     cancelToken: cancelToken,
   );
 
   if (httpResponse.ok && httpResponse.data is Tuple2<bool, Comment?>) {
     return httpResponse.data as Tuple2<bool, Comment?>;
-  } else {
-    logger.e('${httpResponse.error.runtimeType}');
-    throw httpResponse.error ?? HttpException('postComment error');
   }
+  throw httpResponse.error ?? HttpException('postComment error');
 }
 
 Future<List<Tag>> nhAutocomplete({

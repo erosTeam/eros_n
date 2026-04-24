@@ -97,6 +97,7 @@ dependencies:
   flutter_socks_proxy: ^0.0.3
 
   clock: any
+  crypto: ^3.0.0
 dev_dependencies:
   # flutter pub run build_runner build --delete-conflicting-outputs
   # flutter pub run build_runner watch --delete-conflicting-outputs
