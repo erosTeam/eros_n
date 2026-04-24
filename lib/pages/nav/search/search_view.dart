@@ -156,106 +156,109 @@ class _SearchPageState extends ConsumerState<SearchPage>
     return StatefulBuilder(
       builder: (context, setState) {
         return TypeAheadField<NhTag>(
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: searchProviderNoti.searchController,
-            focusNode: searchProviderNoti.searchFocusNode,
-            decoration: InputDecoration(
-              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-              filled: true,
-              contentPadding: const EdgeInsets.only(),
-              // isCollapsed: true,
-              isDense: false,
-              hintText: L10n.of(context).search,
-              // border: InputBorder.none,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(100),
-                borderSide: BorderSide.none,
-              ),
-              // prefixIcon: const Icon(Icons.search),
-              prefixIcon: getPrefixIcon(context),
-              suffixIcon: KeyboardVisibilityBuilder(
-                builder: (context, isKeyboardVisible) {
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (searchProviderNoti.searchController.text
-                              .trim()
-                              .isNotEmpty &&
-                          isKeyboardVisible)
-                        IconButton(
-                          icon: const Icon(Icons.clear),
-                          constraints: const BoxConstraints(),
-                          onPressed: () {
-                            searchProviderNoti.searchController.clear();
-                            setState(() {});
-                          },
-                        ),
-                      if (!isKeyboardVisible)
-                        LanguagesFilterPopupButton(
-                          onSelected: (LanguagesFilter value) async {
-                            if (value ==
-                                ref
-                                    .read(settingsProvider)
-                                    .searchLanguagesFilter) {
-                              return;
-                            }
-                            ref
-                                .read(settingsProvider.notifier)
-                                .setSearchLanguagesFilter(value);
-                            await searchProviderNoti.reloadData();
-                          },
-                          initValue: ref.watch(
-                            settingsProvider.select(
-                              (s) => s.searchLanguagesFilter,
+          controller: searchProviderNoti.searchController,
+          focusNode: searchProviderNoti.searchFocusNode,
+          builder: (context, controller, focusNode) {
+            return TextField(
+              controller: controller,
+              focusNode: focusNode,
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                fillColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
+                filled: true,
+                contentPadding: const EdgeInsets.only(),
+                isDense: false,
+                hintText: L10n.of(context).search,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(100),
+                  borderSide: BorderSide.none,
+                ),
+                prefixIcon: getPrefixIcon(context),
+                suffixIcon: KeyboardVisibilityBuilder(
+                  builder: (context, isKeyboardVisible) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (controller.text.trim().isNotEmpty &&
+                            isKeyboardVisible)
+                          IconButton(
+                            icon: const Icon(Icons.clear),
+                            constraints: const BoxConstraints(),
+                            onPressed: () {
+                              controller.clear();
+                              setState(() {});
+                            },
+                          ),
+                        if (!isKeyboardVisible)
+                          LanguagesFilterPopupButton(
+                            onSelected: (LanguagesFilter value) async {
+                              if (value ==
+                                  ref
+                                      .read(settingsProvider)
+                                      .searchLanguagesFilter) {
+                                return;
+                              }
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .setSearchLanguagesFilter(value);
+                              await searchProviderNoti.reloadData();
+                            },
+                            initValue: ref.watch(
+                              settingsProvider.select(
+                                (s) => s.searchLanguagesFilter,
+                              ),
                             ),
                           ),
-                        ),
-                      if (!isKeyboardVisible)
-                        SortPopupButton(
-                          onSelected: (value) async {
-                            if (value ==
-                                ref.read(settingsProvider).searchSort) {
-                              return;
-                            }
+                        if (!isKeyboardVisible)
+                          SortPopupButton(
+                            onSelected: (value) async {
+                              if (value ==
+                                  ref.read(settingsProvider).searchSort) {
+                                return;
+                              }
 
-                            ref
-                                .read(settingsProvider.notifier)
-                                .setSearchSort(value);
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .setSearchSort(value);
 
-                            // reload
-                            await searchProviderNoti.reloadData();
-                          },
-                          initValue: ref.watch(
-                            settingsProvider.select((s) => s.searchSort),
+                              await searchProviderNoti.reloadData();
+                            },
+                            initValue: ref.watch(
+                              settingsProvider.select((s) => s.searchSort),
+                            ),
                           ),
-                        ),
-                    ],
-                  );
-                },
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-            textInputAction: TextInputAction.search,
-            onChanged: (value) {
-              setState(() {});
-            },
-            onEditingComplete: () {
-              //focusNode
-              searchProviderNoti.searchFocusNode.unfocus();
-              searchProviderNoti.search();
-            },
-            onSubmitted: (value) {
-              searchProviderNoti.searchFocusNode.unfocus();
-              searchProviderNoti.search();
-            },
-          ),
-          suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            shadowColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-            shape: RoundedRectangleBorder(
+              onChanged: (value) {
+                setState(() {});
+              },
+              onEditingComplete: () {
+                focusNode.unfocus();
+                searchProviderNoti.search();
+              },
+              onSubmitted: (value) {
+                focusNode.unfocus();
+                searchProviderNoti.search();
+              },
+            );
+          },
+          decorationBuilder: (context, child) {
+            return Material(
+              type: MaterialType.card,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              shadowColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(28),
-            ),
-            clipBehavior: Clip.antiAlias,
-          ),
+              clipBehavior: Clip.antiAlias,
+              child: child,
+            );
+          },
           suggestionsCallback: (pattern) async {
             final currQryText = pattern.split(RegExp(r'[ ;"]')).last;
 
@@ -281,15 +284,12 @@ class _SearchPageState extends ConsumerState<SearchPage>
               ),
             );
           },
-          noItemsFoundBuilder: (context) {
+          emptyBuilder: (context) {
             return const SizedBox();
           },
-          onSuggestionSelected: (suggestion) {
+          onSelected: (suggestion) {
             searchProviderNoti.appendNhTagQuery(suggestion, search: true);
           },
-          // keepSuggestionsOnSuggestionSelected: true,
-          // keepSuggestionsOnLoading: false,
-          // hideOnEmpty: true,
         );
       },
     );

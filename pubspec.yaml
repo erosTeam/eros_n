@@ -68,8 +68,8 @@ dependencies:
   system_proxy: ^0.1.0
   scrollable_positioned_list: ^0.3.8
   gesture_zoom_box: ^0.0.4
-  flutter_keyboard_visibility: ^5.4.0
-  flutter_typeahead: ^4.8.0
+  flutter_keyboard_visibility: ^6.0.0
+  flutter_typeahead: ^6.0.0
 
   fluentui_system_icons: ^1.1.273
   palette_generator: ^0.3.3+7
