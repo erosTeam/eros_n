@@ -33,19 +33,23 @@ class TagTranslate {
   @Index()
   final int lastUseTime;
 
+  /// Matches a Markdown image reference like `![alt](https://...)`.
+  /// EhTagTranslation entries occasionally embed icons next to the
+  /// translated text (e.g. `![](url) 胜利女神：妮姬`), and we only want
+  /// the textual part to render in the UI.
+  static final _markdownImageReg = RegExp(r'!\[[^\]]*\]\([^)]*\)');
+
   @Transient()
   String? get translateNameNotMD {
-    final reg = RegExp(r'!\[(\S+)?\]\(.+?\)(\S+)');
-    final match = reg.allMatches(translateName ?? '');
-    if (match.isNotEmpty) {
-      return translateName?.replaceAllMapped(
-            reg,
-            (match) => match.group(2) ?? '',
-          ) ??
-          translateName;
-    } else {
-      return translateName;
+    final raw = translateName;
+    if (raw == null) {
+      return null;
     }
+    final stripped = raw
+        .replaceAll(_markdownImageReg, '')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+    return stripped.isEmpty ? raw : stripped;
   }
 
   @override
