@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io' show File;
-import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
@@ -18,7 +17,6 @@ import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tuple/tuple.dart';
 
 Options getOptions({bool forceRefresh = false}) {
   final options = Api.cacheOption
@@ -361,7 +359,7 @@ Future<User> getInfoFromUserPage({
   }
 }
 
-Future<Tuple2<bool?, int?>> setFavorite({
+Future<({bool? favorited, int? favNum})> setFavorite({
   required int? gid,
   required String? csrfToken,
   bool unfavorite = false,
@@ -369,7 +367,7 @@ Future<Tuple2<bool?, int?>> setFavorite({
   CancelToken? cancelToken,
 }) async {
   if (gid == null) {
-    return const Tuple2(null, null);
+    return (favorited: null, favNum: null);
   }
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
@@ -382,9 +380,10 @@ Future<Tuple2<bool?, int?>> setFavorite({
     final result = response.data as Map<String, dynamic>? ?? const {};
     final favorited = result['favorited'] as bool?;
     final favNum = result['num_favorites'] as int?;
-    return DioHttpResponse<Tuple2<bool?, int?>>.success(
-      Tuple2(favorited, favNum),
-    );
+    return DioHttpResponse<({bool? favorited, int? favNum})>.success((
+      favorited: favorited,
+      favNum: favNum,
+    ));
   });
 
   final options = getOptions(forceRefresh: refresh);
@@ -406,8 +405,9 @@ Future<Tuple2<bool?, int?>> setFavorite({
           httpTransformer: httpTransformer,
         );
 
-  if (httpResponse.ok && httpResponse.data is Tuple2<bool?, int?>) {
-    return httpResponse.data as Tuple2<bool?, int?>;
+  if (httpResponse.ok &&
+      httpResponse.data is ({bool? favorited, int? favNum})) {
+    return httpResponse.data as ({bool? favorited, int? favNum});
   } else {
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('setFavorite error');
@@ -719,7 +719,7 @@ int _leadingZeroBits(List<int> bytes) {
   return count;
 }
 
-Future<Tuple2<bool, Comment?>> postComment({
+Future<({bool ok, Comment? comment})> postComment({
   required int gid,
   required String comment,
   required String? csrfToken,
@@ -760,9 +760,11 @@ Future<Tuple2<bool, Comment?>> postComment({
         String? error;
         if (data is Map) {
           final raw = data['error'] ?? data['detail'] ?? data['message'];
-          if (raw is String) error = raw;
+          if (raw is String) {
+            error = raw;
+          }
         }
-        return DioHttpResponse<Tuple2<bool, Comment?>>.failure(
+        return DioHttpResponse<({bool ok, Comment? comment})>.failure(
           errorMsg: error ?? 'postComment failed: HTTP $status',
         );
       }
@@ -779,19 +781,21 @@ Future<Tuple2<bool, Comment?>> postComment({
       }
 
       if (commentJson != null) {
-        return DioHttpResponse<Tuple2<bool, Comment?>>.success(
-          Tuple2(true, Comment.fromJson(commentJson)),
-        );
+        return DioHttpResponse<({bool ok, Comment? comment})>.success((
+          ok: true,
+          comment: Comment.fromJson(commentJson),
+        ));
       }
-      return DioHttpResponse<Tuple2<bool, Comment?>>.success(
-        const Tuple2(false, null),
-      );
+      return DioHttpResponse<({bool ok, Comment? comment})>.success((
+        ok: false,
+        comment: null,
+      ));
     }),
     cancelToken: cancelToken,
   );
 
-  if (httpResponse.ok && httpResponse.data is Tuple2<bool, Comment?>) {
-    return httpResponse.data as Tuple2<bool, Comment?>;
+  if (httpResponse.ok && httpResponse.data is ({bool ok, Comment? comment})) {
+    return httpResponse.data as ({bool ok, Comment? comment});
   }
   throw httpResponse.error ?? HttpException('postComment error');
 }
@@ -819,7 +823,7 @@ Future<List<Tag>> nhAutocomplete({
       ? singularizeTagType(typeName)
       : (type != null ? singularizeTagType(type.value) : null);
   final probeTypes = <String>[
-    if (pinnedType != null) pinnedType,
+    ?pinnedType,
     if (pinnedType == null) ...[
       'tag',
       'parody',

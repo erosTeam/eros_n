@@ -191,7 +191,7 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
         prettyDate = dateStr.split('T').first;
       }
       final pretty = [
-        if (prettyDate != null) prettyDate,
+        ?prettyDate,
         if (sha != null) '($sha)',
       ].join(' ');
       if (pretty.isNotEmpty) {

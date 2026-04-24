@@ -48,9 +48,13 @@ class DioThroughInterceptor extends Interceptor {
   /// outage, etc), so we need to check actual Cloudflare markers instead of
   /// blindly trusting the status code.
   bool _isCloudflareChallenge(Response? response) {
-    if (response == null) return false;
+    if (response == null) {
+      return false;
+    }
     final code = response.statusCode;
-    if (code != 403 && code != 503) return false;
+    if (code != 403 && code != 503) {
+      return false;
+    }
 
     final headers = response.headers;
     final cfMitigated = headers.value('cf-mitigated')?.toLowerCase();

@@ -21,13 +21,21 @@ class _WebLoginPageState extends State<WebLoginPage> {
   bool _popped = false;
 
   bool _looksLikeLoginPage(String? url) {
-    if (url == null || url.isEmpty) return true;
+    if (url == null || url.isEmpty) {
+      return true;
+    }
     final uri = Uri.tryParse(url);
-    if (uri == null) return true;
+    if (uri == null) {
+      return true;
+    }
     // Anything still on /login (form, error message) or on Cloudflare
     // challenge subdomains counts as "not logged in yet".
-    if (uri.path.contains('/login')) return true;
-    if (uri.host.contains('challenges.cloudflare.com')) return true;
+    if (uri.path.contains('/login')) {
+      return true;
+    }
+    if (uri.host.contains('challenges.cloudflare.com')) {
+      return true;
+    }
     return false;
   }
 
@@ -39,7 +47,9 @@ class _WebLoginPageState extends State<WebLoginPage> {
         url: NHConst.loginUrl,
         deletedCookie: false,
         callback: (info) async {
-          if (_popped) return;
+          if (_popped) {
+            return;
+          }
           final cookies = info.cookies;
           logger.d(
             'web-login callback: currentUrl=${info.currentUrl}, '
@@ -56,8 +66,7 @@ class _WebLoginPageState extends State<WebLoginPage> {
           // Fallback: if a known auth cookie (access_token / refresh_token
           // / sessionid) is already visible we're logged in regardless of URL.
           const authNames = {'access_token', 'refresh_token', 'sessionid'};
-          final hasAuthCookie =
-              cookies.any((c) => authNames.contains(c.name));
+          final hasAuthCookie = cookies.any((c) => authNames.contains(c.name));
 
           if (!navigatedAway && !hasAuthCookie) {
             return;

@@ -103,9 +103,7 @@ class UserNotifier extends StateNotifier<User> {
     );
     String? firstFound;
     for (final name in _authCookieNames) {
-      final v = jarCookies
-          .firstWhereOrNull((c) => c.name == name)
-          ?.value;
+      final v = jarCookies.firstWhereOrNull((c) => c.name == name)?.value;
       if (v != null && v.isNotEmpty) {
         firstFound = v;
         break;
@@ -124,8 +122,12 @@ class UserNotifier extends StateNotifier<User> {
           try {
             final c = await cm.getCookie(url: WebUri(url), name: name);
             final v = c?.value?.toString();
-            if (v == null || v.isEmpty) continue;
-            if (fromWebView.any((x) => x.name == name)) continue;
+            if (v == null || v.isEmpty) {
+              continue;
+            }
+            if (fromWebView.any((x) => x.name == name)) {
+              continue;
+            }
             fromWebView.add(io.Cookie(name, v));
           } catch (_) {}
         }

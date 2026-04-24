@@ -9,7 +9,6 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' hide Comment;
 import 'package:html/parser.dart' show parse;
-import 'package:tuple/tuple.dart';
 
 /// Parses a gallery detail page (~80 KB HTML, ~30 tags) and returns the
 /// fully-populated `Gallery`.
@@ -142,9 +141,9 @@ Gallery _parseGalleryDetailPure(String html) {
     imgWidth: firstPage?.imgWidth,
   );
 
-  final tuple = _parseGalleryTags(document);
-  final tags = tuple.item1;
-  final uploadedDateTime = tuple.item2;
+  final parsed = _parseGalleryTags(document);
+  final tags = parsed.tags;
+  final uploadedDateTime = parsed.uploadedDateTime;
 
   return Gallery(
     title: GalleryTitle(englishTitle: title, japaneseTitle: jpnTitle),
@@ -176,7 +175,9 @@ List<Gallery> _parseGalleryListElmRaw(List<Element> galleryElmList) {
         '';
     final imageHeight = int.tryParse(lazyloadElm?.attributes['height'] ?? '');
     final imageWidth = int.tryParse(lazyloadElm?.attributes['width'] ?? '');
-    if (url.isEmpty) continue;
+    if (url.isEmpty) {
+      continue;
+    }
 
     final gid = RegExp(r'/(\d+)/').firstMatch(url)?.group(1) ?? '';
     final mediaId = RegExp(r'/(\d+)/').firstMatch(thumbUrl)?.group(1) ?? '';
@@ -187,7 +188,9 @@ List<Gallery> _parseGalleryListElmRaw(List<Element> galleryElmList) {
         .split(RegExp(r'\s+'))
         .where((e) => e.isNotEmpty)
         .toList();
-    if (gid.isEmpty) continue;
+    if (gid.isEmpty) {
+      continue;
+    }
 
     final simpleTags = dataTags
         .map((t) => Tag(id: int.tryParse(t) ?? 0))
@@ -215,7 +218,9 @@ List<Gallery> _parseGalleryListElmRaw(List<Element> galleryElmList) {
   return galleryList;
 }
 
-Tuple2<List<Tag>, String> _parseGalleryTags(Document document) {
+({List<Tag> tags, String uploadedDateTime}) _parseGalleryTags(
+  Document document,
+) {
   const selectorTagGroups = '#tags > .tag-container';
 
   String uploadedDateTime = '';
@@ -233,7 +238,9 @@ Tuple2<List<Tag>, String> _parseGalleryTags(Document document) {
       continue;
     }
 
-    if (tagType == 'Pages') continue;
+    if (tagType == 'Pages') {
+      continue;
+    }
 
     final tagElms = groupElm.querySelectorAll('.tag');
     for (final tagElm in tagElms) {
@@ -252,7 +259,7 @@ Tuple2<List<Tag>, String> _parseGalleryTags(Document document) {
       );
     }
   }
-  return Tuple2(tags, uploadedDateTime);
+  return (tags: tags, uploadedDateTime: uploadedDateTime);
 }
 
 /// Main-isolate enrichment: fills `translatedName` for every tag and the

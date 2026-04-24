@@ -12,7 +12,6 @@ import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tuple/tuple.dart';
 
 class GalleryNotifier extends StateNotifier<Gallery> {
   GalleryNotifier(super.state, this.ref);
@@ -114,7 +113,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
 
   /// 收藏
   Future<void> toggleFavorite() async {
-    late final Tuple2<bool?, int?> result;
+    late final ({bool? favorited, int? favNum}) result;
     if (state.isFavorited ?? false) {
       logger.d('取消收藏');
       result = await setFavorite(
@@ -126,8 +125,8 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       logger.d('收藏');
       result = await setFavorite(gid: state.gid, csrfToken: state.csrfToken);
     }
-    final int? numFavorite = result.item2;
-    final bool? isFavorite = result.item1;
+    final int? numFavorite = result.favNum;
+    final bool? isFavorite = result.favorited;
 
     if (isFavorite != null && numFavorite != null) {
       state = state.copyWith(
@@ -152,13 +151,13 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     if (comment.isEmpty) {
       return;
     }
-    final Tuple2<bool, Comment?> result = await postComment(
+    final result = await postComment(
       gid: state.gid,
       comment: comment,
       csrfToken: state.csrfToken,
     );
-    final success = result.item1;
-    final Comment? commentData = result.item2;
+    final success = result.ok;
+    final Comment? commentData = result.comment;
     if (success) {
       commentEditingController.clear();
       state = state.copyWith(comments: [commentData!, ...state.comments]);

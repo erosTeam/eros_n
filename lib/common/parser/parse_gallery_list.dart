@@ -46,7 +46,8 @@ GallerySet _parseGallerySetPure(String html) {
   final scriptElm = document.querySelector(selectorScript);
   final scriptText = scriptElm?.text ?? '';
 
-  final blacklistTags = RegExp(
+  final blacklistTags =
+      RegExp(
         r'blacklisted_tags:\s+\[(.*)\],',
       ).firstMatch(scriptText)?.group(1) ??
       '';
@@ -71,7 +72,7 @@ GallerySet _parseGallerySetPure(String html) {
   final Element? popularElm = document.querySelector(selectorPopular);
   final Element? galleryListElm =
       document.querySelector(selectorGalleryListLegacy) ??
-          document.querySelector(selectorGalleryListSvelte);
+      document.querySelector(selectorGalleryListSvelte);
   final Element? favoriteListElm = document.querySelector(selectorFavoriteList);
 
   final List<Element> galleryElmListOfPopular =
@@ -85,7 +86,8 @@ GallerySet _parseGallerySetPure(String html) {
   // the match on the explicit `page=` query parameter.
   final lastHref =
       document.querySelector(selectorMaxPage)?.attributes['href'] ?? '';
-  final maxPage = RegExp(r'[?&]page=(\d+)').firstMatch(lastHref)?.group(1) ??
+  final maxPage =
+      RegExp(r'[?&]page=(\d+)').firstMatch(lastHref)?.group(1) ??
       RegExp(r'\d+').firstMatch(lastHref)?.group(0) ??
       '1';
 
@@ -123,15 +125,12 @@ List<Gallery> _parseGalleryListElmPure(
     // live on `src`, with `data-src` no longer emitted. Fall back to `src`
     // when `data-src` is missing.
     final lazyloadElm = elm.querySelector('.lazyload');
-    final thumbUrl = lazyloadElm?.attributes['data-src'] ??
+    final thumbUrl =
+        lazyloadElm?.attributes['data-src'] ??
         lazyloadElm?.attributes['src'] ??
         '';
-    final imageHeight = int.tryParse(
-      lazyloadElm?.attributes['height'] ?? '',
-    );
-    final imageWidth = int.tryParse(
-      lazyloadElm?.attributes['width'] ?? '',
-    );
+    final imageHeight = int.tryParse(lazyloadElm?.attributes['height'] ?? '');
+    final imageWidth = int.tryParse(lazyloadElm?.attributes['width'] ?? '');
 
     if (url.isEmpty) {
       continue;
@@ -231,9 +230,13 @@ Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
 
 Tag _enrichSimpleTag(Tag t) {
   final id = t.id ?? 0;
-  if (id == 0) return t;
+  if (id == 0) {
+    return t;
+  }
   final nhTag = objectBoxHelper.findNhTag(id);
-  if (nhTag == null) return t;
+  if (nhTag == null) {
+    return t;
+  }
   // findTagTranslate is an indexed equality lookup -> microsecond-fast.
   final translated = objectBoxHelper.findTagTranslate(
     nhTag.name ?? '',

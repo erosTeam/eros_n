@@ -52,7 +52,9 @@ String _resolveLoginEntryUrl(String input) {
   if (path.contains('/login')) {
     return uri.toString();
   }
-  final base = path.endsWith('/') ? input.substring(0, input.length - 1) : input;
+  final base = path.endsWith('/')
+      ? input.substring(0, input.length - 1)
+      : input;
   return '$base/login/';
 }
 
@@ -61,10 +63,14 @@ List<Cookie> _parseDocumentCookie(String raw) {
   final result = <Cookie>[];
   for (final part in raw.split(';')) {
     final eq = part.indexOf('=');
-    if (eq <= 0) continue;
+    if (eq <= 0) {
+      continue;
+    }
     final name = part.substring(0, eq).trim();
     final value = part.substring(eq + 1).trim();
-    if (name.isEmpty) continue;
+    if (name.isEmpty) {
+      continue;
+    }
     result.add(Cookie(name, value));
   }
   return result;
@@ -354,8 +360,12 @@ class _MobileWebViewState extends State<MobileWebView> {
                 name: 'cf_clearance',
                 webViewController: controller,
               );
-              logger.d('cfClearance@$u => ${c?.value != null ? "FOUND len=${c!.value.toString().length}" : "null"}');
-              if (c != null) break;
+              logger.d(
+                'cfClearance@$u => ${c?.value != null ? "FOUND len=${c!.value.toString().length}" : "null"}',
+              );
+              if (c != null) {
+                break;
+              }
             } catch (e) {
               logger.d('cfClearance@$u failed: $e');
             }
