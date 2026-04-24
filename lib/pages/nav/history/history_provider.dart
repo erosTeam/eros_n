@@ -3,6 +3,7 @@ import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 class HistoryNotifier extends StateNotifier<ListViewState> {
   HistoryNotifier(this.ref) : super(const ListViewState());

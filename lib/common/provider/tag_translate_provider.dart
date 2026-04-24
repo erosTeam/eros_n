@@ -11,6 +11,7 @@ import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 import 'package:path/path.dart' as path;
 
 const String kReleaseUrl =

@@ -12,6 +12,7 @@ import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 class GalleryNotifier extends StateNotifier<Gallery> {
   GalleryNotifier(super.state, this.ref);

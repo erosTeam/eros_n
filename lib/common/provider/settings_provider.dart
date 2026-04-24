@@ -4,6 +4,7 @@ import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 class SettingsNotifier extends StateNotifier<Settings> {
   SettingsNotifier(super.state, this.ref);

@@ -14,6 +14,7 @@ import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 class SearchNotifier extends StateNotifier<ListViewState> {
   SearchNotifier(this.ref) : super(const ListViewState());

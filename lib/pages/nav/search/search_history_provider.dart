@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:eros_n/store/kv/hive.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 const int _kMaxHistory = 50;
 const String _kSearchHistoryKey = 'search_history';

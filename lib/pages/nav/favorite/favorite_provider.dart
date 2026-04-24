@@ -8,6 +8,7 @@ import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 class FavoriteNotifier extends StateNotifier<ListViewState> {
   FavoriteNotifier(this.ref) : super(const ListViewState());

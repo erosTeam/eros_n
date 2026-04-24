@@ -4,6 +4,7 @@ import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 class IndexNotifier extends StateNotifier<IndexState> {
   IndexNotifier(this.ref) : super(IndexState());

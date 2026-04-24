@@ -36,11 +36,14 @@ Future<void> main() async {
 
   initLogger();
   runApp(
-    const ProviderScope(
-      observers: [
+    ProviderScope(
+      observers: const [
         // LoggerObserver(),
       ],
-      child: MyApp(),
+      // Preserve v2 behaviour: do not auto-retry failing providers,
+      // otherwise a single failed request keeps re-firing in the background.
+      retry: (retryCount, error) => null,
+      child: const MyApp(),
     ),
   );
 
@@ -213,14 +216,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   }
 }
 
-class LoggerObserver extends ProviderObserver {
+base class LoggerObserver extends ProviderObserver {
   @override
   void didUpdateProvider(
-    ProviderBase provider,
+    ProviderObserverContext context,
     Object? previousValue,
     Object? newValue,
-    ProviderContainer container,
   ) {
+    final provider = context.provider;
     logger.d('''
 {
   "provider": "${provider.name ?? provider.runtimeType}",

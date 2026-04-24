@@ -38,7 +38,7 @@ dependencies:
   dio_cache_interceptor_hive_store: ^4.0.0
   flutter_list_view: ^1.1.29
   waterfall_flow: ^3.1.1
-  hooks_riverpod: ^2.6.1
+  hooks_riverpod: ^3.3.1
   auto_route: ^11.1.0
   flutter_smart_dialog: ^5.1.0
   sliver_tools: ^0.2.12

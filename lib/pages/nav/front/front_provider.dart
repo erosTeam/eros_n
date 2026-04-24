@@ -9,6 +9,7 @@ import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 import 'package:uuid/uuid.dart';
 
 class GallerysNotifier extends StateNotifier<List<Gallery>> {

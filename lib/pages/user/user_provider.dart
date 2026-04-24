@@ -9,7 +9,7 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 /// Cookie names that mark a logged-in nhentai session, in priority order.
 /// `access_token` / `refresh_token` are the new JWT-style cookies issued by
