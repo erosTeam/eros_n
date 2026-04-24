@@ -2,20 +2,21 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class HistoryNotifier extends StateNotifier<ListViewState> {
-  HistoryNotifier(this.ref) : super(const ListViewState());
-  final Ref ref;
+part 'history_provider.g.dart';
 
-  HistoryGalleryNotifier get historyGalleryNotifier =>
+@Riverpod(keepAlive: true)
+class HistoryNotifier extends _$HistoryNotifier {
+  @override
+  ListViewState build() => const ListViewState();
+
+  HistoryGallerys get _historyGalleryNotifier =>
       ref.read(historyGallerysProvider.notifier);
 
-  // set appBarSearch
   void setAppBarSearch(bool val) {
     if (!val) {
-      ref.read(searchKeyProvider.notifier).update((state) => state = '');
+      ref.read(searchKeyProvider.notifier).set('');
     }
     state = state.copyWith(appBarSearch: val);
   }
@@ -31,23 +32,25 @@ class HistoryNotifier extends StateNotifier<ListViewState> {
       ..mediaId = gallery.mediaId
       ..lastReadTime = DateTime.now().millisecondsSinceEpoch;
 
-    historyGalleryNotifier.insertGallery(galleryHistory);
+    _historyGalleryNotifier.insertGallery(galleryHistory);
     await objectBoxHelper.addHistory(galleryHistory);
   }
 
   Future<void> removeHistory(int? gid) async {
-    historyGalleryNotifier.deleteGallerys(gid);
+    _historyGalleryNotifier.deleteGallerys(gid);
     await objectBoxHelper.removeHistory(gid);
   }
 
   void clearHistory() {
-    historyGalleryNotifier.clearGallerys();
+    _historyGalleryNotifier.clearGallerys();
     objectBoxHelper.clearHistory();
   }
 }
 
-class HistoryGalleryNotifier extends StateNotifier<List<GalleryHistory>> {
-  HistoryGalleryNotifier(super.create);
+@Riverpod(keepAlive: true)
+class HistoryGallerys extends _$HistoryGallerys {
+  @override
+  List<GalleryHistory> build() => objectBoxHelper.getAllHistory();
 
   void addGallerys(List<GalleryHistory> gallerys) {
     state = [...state, ...gallerys];
@@ -71,12 +74,8 @@ class HistoryGalleryNotifier extends StateNotifier<List<GalleryHistory>> {
   }
 }
 
-final historyGallerysProvider =
-    StateNotifierProvider<HistoryGalleryNotifier, List<GalleryHistory>>((ref) {
-      return HistoryGalleryNotifier(objectBoxHelper.getAllHistory());
-    });
-
-final filteredHistoryGallerysProvider = Provider<List<GalleryHistory>>((ref) {
+@Riverpod(keepAlive: true)
+List<GalleryHistory> filteredHistoryGallerys(Ref ref) {
   final historyGallerys = ref.watch(historyGallerysProvider);
   final searchKey = ref.watch(searchKeyProvider);
   if (searchKey.isEmpty) {
@@ -88,12 +87,12 @@ final filteredHistoryGallerysProvider = Provider<List<GalleryHistory>>((ref) {
           searchKey.toLowerCase(),
         );
   }).toList();
-});
+}
 
-final searchKeyProvider = StateProvider<String>((ref) => '');
+@Riverpod(keepAlive: true)
+class SearchKey extends _$SearchKey {
+  @override
+  String build() => '';
 
-final historyProvider = StateNotifierProvider<HistoryNotifier, ListViewState>((
-  ref,
-) {
-  return HistoryNotifier(ref);
-});
+  void set(String value) => state = value;
+}

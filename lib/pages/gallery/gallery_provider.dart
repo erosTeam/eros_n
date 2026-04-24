@@ -11,17 +11,24 @@ import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
 import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class GalleryNotifier extends StateNotifier<Gallery> {
-  GalleryNotifier(super.state, this.ref);
+part 'gallery_provider.g.dart';
 
-  final Ref ref;
+@riverpod
+class GalleryNotifier extends _$GalleryNotifier {
+  late final TextEditingController commentEditingController;
 
-  // ReadNotifier get readNotifier => reader(readProvider.notifier);
-  final TextEditingController commentEditingController =
-      TextEditingController();
+  @override
+  Gallery build(int gid) {
+    logger.d('galleryProvider gid $gid');
+    commentEditingController = TextEditingController();
+    ref.onDispose(() {
+      logger.d('galleryProvider $gid onDispose');
+      commentEditingController.dispose();
+    });
+    return Gallery(gid: gid);
+  }
 
   void initFromGallery(Gallery gallery) {
     logger.d('init ${gallery.toString()} ');
@@ -53,17 +60,16 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     state = state.copyWith(currentPageIndex: page);
   }
 
-  /// 加载数据
+  /// Fetch detail + comments + favorite status.
   Future<void> loadData({bool refresh = false}) async {
     logger.d('loadData refresh $refresh  url: ${state.url}');
     if (state.images.pages.isEmpty) {
       ref
           .read(pageStateProvider(state.gid).notifier)
-          .update((state) => state.copyWith(pageStatus: PageStatus.loading));
+          .update((s) => s.copyWith(pageStatus: PageStatus.loading));
     }
 
     logger.d('url ${state.url}');
-    // 获取画廊数据
     try {
       final gallery = await getGalleryDetail(url: state.url, refresh: refresh);
       state = gallery.copyWith(
@@ -75,11 +81,10 @@ class GalleryNotifier extends StateNotifier<Gallery> {
       rethrow;
     } finally {
       ref
-          .watch(pageStateProvider(state.gid).notifier)
-          .update((state) => state.copyWith(pageStatus: PageStatus.none));
+          .read(pageStateProvider(state.gid).notifier)
+          .update((s) => s.copyWith(pageStatus: PageStatus.none));
     }
 
-    // 获取评论数据
     logger.d('url ${state.url}');
     try {
       final comments = await getGalleryComments(
@@ -92,7 +97,7 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     } finally {
       ref
           .read(pageStateProvider(state.gid).notifier)
-          .update((state) => state.copyWith(pageStatus: PageStatus.none));
+          .update((s) => s.copyWith(pageStatus: PageStatus.none));
     }
 
     // Resolve real favorite state via API. The SvelteKit detail HTML carries
@@ -112,7 +117,6 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     }
   }
 
-  /// 收藏
   Future<void> toggleFavorite() async {
     late final ({bool? favorited, int? favNum}) result;
     if (state.isFavorited ?? false) {
@@ -137,7 +141,6 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     }
   }
 
-  /// 重新加载
   Future<void> reloadData() async {
     await loadData(refresh: true);
   }
@@ -146,7 +149,6 @@ class GalleryNotifier extends StateNotifier<Gallery> {
     state = state.copyWith(currentPageIndex: index);
   }
 
-  /// 评论
   Future<void> comment() async {
     final String comment = commentEditingController.text.trim();
     if (comment.isEmpty) {
@@ -167,22 +169,24 @@ class GalleryNotifier extends StateNotifier<Gallery> {
   }
 }
 
-final galleryProvider = StateNotifierProvider.autoDispose
-    .family<GalleryNotifier, Gallery, int>((ref, gid) {
-      logger.d('galleryProvider gid $gid');
+@riverpod
+class PageState extends _$PageState {
+  @override
+  GalleryViewState build(int gid) =>
+      const GalleryViewState(pageStatus: PageStatus.none);
 
-      ref.onDispose(() {
-        logger.d('galleryProvider $gid onDispose');
-      });
-      return GalleryNotifier(Gallery(gid: gid), ref);
-    });
+  void update(GalleryViewState Function(GalleryViewState) cb) {
+    state = cb(state);
+  }
+}
 
-final pageStateProvider = StateProvider.family<GalleryViewState, int>((
-  ref,
-  gid,
-) {
-  return const GalleryViewState(pageStatus: PageStatus.none);
-});
+@Riverpod(keepAlive: true)
+class ThumbHeroTagPrefix extends _$ThumbHeroTagPrefix {
+  @override
+  String build() => '';
+
+  void set(String value) => state = value;
+}
 
 final _gidList = <int>[];
 void pushGalleryPage(int gid) {
@@ -201,9 +205,4 @@ int get currentGalleryGid {
 
 String getGalleryImageUrl(String imageKey, int index, String ext) {
   return 'https://i.nhentai.net/galleries/$imageKey/${index + 1}.$ext';
-  // return 'https://i${radomList(['', '3', '5', '7'])}.nhentai.net/galleries/$imageKey/${index + 1}.jpg';
 }
-
-final thumbHeroTagPrefixProvider = StateProvider<String>((ref) {
-  return '';
-});

@@ -8,18 +8,25 @@ import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
-class GallerysNotifier extends StateNotifier<List<Gallery>> {
-  GallerysNotifier(super.create);
+part 'front_provider.g.dart';
 
-  void addGallerys(List<Gallery> gallerys) {
+// Shared list-mutation behaviour previously provided by `GallerysNotifier`.
+// Each generated `_$FooNotifier` extends `$Notifier<List<Gallery>>`, so we
+// can hang the helpers off of the framework `Notifier` and pick them up via
+// extension instead of class inheritance (which `@riverpod`'s sealed
+// `_$Foo` base class disallows).
+mixin GalleryListOps<T> {
+  List<T> get state;
+  set state(List<T> value);
+
+  void addGallerys(List<T> gallerys) {
     state = [...state, ...gallerys];
   }
 
-  void insertGallerys(List<Gallery> gallerys) {
+  void insertGallerys(List<T> gallerys) {
     state = [...gallerys, ...state];
   }
 
@@ -28,30 +35,27 @@ class GallerysNotifier extends StateNotifier<List<Gallery>> {
   }
 }
 
-class PopularNotifier extends GallerysNotifier {
-  PopularNotifier() : super([]);
+@Riverpod(keepAlive: true)
+class GallerysNotifier extends _$GallerysNotifier
+    with GalleryListOps<Gallery> {
+  @override
+  List<Gallery> build() => [];
 }
 
-final gallerysProvider = StateNotifierProvider<GallerysNotifier, List<Gallery>>(
-  (ref) {
-    return GallerysNotifier([]);
-  },
-);
+@Riverpod(keepAlive: true)
+class PopularNotifier extends _$PopularNotifier with GalleryListOps<Gallery> {
+  @override
+  List<Gallery> build() => [];
+}
 
-final popularProvider = StateNotifierProvider<PopularNotifier, List<Gallery>>((
-  ref,
-) {
-  return PopularNotifier();
-});
+@Riverpod(keepAlive: true)
+class FrontNotifier extends _$FrontNotifier {
+  @override
+  ListViewState build() => const ListViewState();
 
-class FrontNotifier extends StateNotifier<ListViewState> {
-  FrontNotifier(this.ref) : super(const ListViewState());
+  GallerysNotifier get _gallerysNoti => ref.read(gallerysProvider.notifier);
 
-  final Ref ref;
-
-  GallerysNotifier get gallerysNoti => ref.read(gallerysProvider.notifier);
-
-  PopularNotifier get popularNoti => ref.read(popularProvider.notifier);
+  PopularNotifier get _popularNoti => ref.read(popularProvider.notifier);
 
   Future<bool> getGalleryData({
     bool refresh = false,
@@ -84,7 +88,7 @@ class FrontNotifier extends StateNotifier<ListViewState> {
     } else if (prev) {
       state = state.copyWith(status: LoadStatus.loadingMore);
     } else {
-      if (gallerysNoti.state.isEmpty) {
+      if (_gallerysNoti.state.isEmpty) {
         state = state.copyWith(status: LoadStatus.loading);
       }
     }
@@ -100,8 +104,8 @@ class FrontNotifier extends StateNotifier<ListViewState> {
         ) {
           final populars = gallerySetPopular.populars ?? [];
 
-          popularNoti.clearGallerys();
-          popularNoti.addGallerys(populars);
+          _popularNoti.clearGallerys();
+          _popularNoti.addGallerys(populars);
         });
       }
 
@@ -125,12 +129,12 @@ class FrontNotifier extends StateNotifier<ListViewState> {
       final gallerys = gallerySet.gallerys ?? [];
 
       if (next) {
-        gallerysNoti.addGallerys(gallerys);
+        _gallerysNoti.addGallerys(gallerys);
       } else if (prev) {
-        gallerysNoti.insertGallerys(gallerys);
+        _gallerysNoti.insertGallerys(gallerys);
       } else {
-        gallerysNoti.clearGallerys();
-        gallerysNoti.addGallerys(gallerys);
+        _gallerysNoti.clearGallerys();
+        _gallerysNoti.addGallerys(gallerys);
       }
 
       state = state.copyWith(
@@ -162,7 +166,6 @@ class FrontNotifier extends StateNotifier<ListViewState> {
   }
 
   Future<void> loadNextPage() async {
-    // await 100.milliseconds.delay();
     await getGalleryData(next: true);
   }
 
@@ -174,9 +177,3 @@ class FrontNotifier extends StateNotifier<ListViewState> {
     await getGalleryData(refresh: true);
   }
 }
-
-final frontProvider = StateNotifierProvider<FrontNotifier, ListViewState>((
-  ref,
-) {
-  return FrontNotifier(ref);
-});

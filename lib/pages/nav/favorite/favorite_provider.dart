@@ -7,14 +7,23 @@ import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class FavoriteNotifier extends StateNotifier<ListViewState> {
-  FavoriteNotifier(this.ref) : super(const ListViewState());
-  final Ref ref;
+part 'favorite_provider.g.dart';
 
-  FavoriteGalleryNotifier get favoriteGalleryNotifier =>
+@Riverpod(keepAlive: true)
+class FavoriteGallerys extends _$FavoriteGallerys
+    with GalleryListOps<Gallery> {
+  @override
+  List<Gallery> build() => [];
+}
+
+@Riverpod(keepAlive: true)
+class FavoriteNotifier extends _$FavoriteNotifier {
+  @override
+  ListViewState build() => const ListViewState();
+
+  FavoriteGallerys get _favoriteGalleryNotifier =>
       ref.read(favoriteGallerysProvider.notifier);
 
   Future<bool> getGalleryData({
@@ -46,7 +55,7 @@ class FavoriteNotifier extends StateNotifier<ListViewState> {
     } else if (prev) {
       state = state.copyWith(status: LoadStatus.loadingMore);
     } else {
-      if (favoriteGalleryNotifier.state.isEmpty) {
+      if (_favoriteGalleryNotifier.state.isEmpty) {
         state = state.copyWith(status: LoadStatus.loading);
       }
     }
@@ -63,12 +72,12 @@ class FavoriteNotifier extends StateNotifier<ListViewState> {
       logger.t('favorites.length ${favorites.length}');
 
       if (next) {
-        favoriteGalleryNotifier.addGallerys(favorites);
+        _favoriteGalleryNotifier.addGallerys(favorites);
       } else if (prev) {
-        favoriteGalleryNotifier.insertGallerys(favorites);
+        _favoriteGalleryNotifier.insertGallerys(favorites);
       } else {
-        favoriteGalleryNotifier.clearGallerys();
-        favoriteGalleryNotifier.addGallerys(favorites);
+        _favoriteGalleryNotifier.clearGallerys();
+        _favoriteGalleryNotifier.addGallerys(favorites);
       }
 
       state = state.copyWith(
@@ -112,18 +121,3 @@ class FavoriteNotifier extends StateNotifier<ListViewState> {
     await getGalleryData(refresh: true);
   }
 }
-
-class FavoriteGalleryNotifier extends GallerysNotifier {
-  FavoriteGalleryNotifier() : super([]);
-}
-
-final favoriteGallerysProvider =
-    StateNotifierProvider<FavoriteGalleryNotifier, List<Gallery>>((ref) {
-      return FavoriteGalleryNotifier();
-    });
-
-final favoriteProvider = StateNotifierProvider<FavoriteNotifier, ListViewState>(
-  (ref) {
-    return FavoriteNotifier(ref);
-  },
-);

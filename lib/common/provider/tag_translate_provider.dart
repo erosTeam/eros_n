@@ -10,9 +10,10 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
 import 'package:path/path.dart' as path;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'tag_translate_provider.g.dart';
 
 const String kReleaseUrl =
     'https://api.github.com/repos/EhTagTranslation/Database/releases/latest';
@@ -26,12 +27,12 @@ const String kJsdelivrAssetUrl =
 
 const chunkSize = 100;
 
-class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
-  TagTranslateNotifier(this.ref) : super(hiveHelper.getTagTranslateInfo());
+@Riverpod(keepAlive: true)
+class TagTranslateNotifier extends _$TagTranslateNotifier {
+  @override
+  TagTranslateInfo build() => hiveHelper.getTagTranslateInfo();
 
-  final Ref ref;
-
-  /// 检查更新
+  /// Probe the upstream registry for a newer database version.
   Future<void> getUpdateInfo({bool force = false}) async {
     String? remoteVer;
     String? lastReleaseUrl;
@@ -147,9 +148,7 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
       });
     }
 
-    // log len
     logger.d('tagTranslates len: ${tagTranslates.length}');
-    // await objectBoxHelper.putAllTagTranslate(tagTranslates);
 
     tagTranslates.chunked(chunkSize).forEach((element) async {
       await objectBoxHelper.putAllTagTranslate(element);
@@ -204,13 +203,8 @@ class TagTranslateNotifier extends StateNotifier<TagTranslateInfo> {
   }
 }
 
-final tagTranslateProvider =
-    StateNotifierProvider<TagTranslateNotifier, TagTranslateInfo>((ref) {
-      return TagTranslateNotifier(ref);
-    });
-
-final allNhTagProvider = FutureProvider<List<NhTag>>((ref) async {
+@riverpod
+Future<List<NhTag>> allNhTag(Ref ref) async {
   await Future<void>.delayed(const Duration(milliseconds: 500));
-  final nhTags = await objectBoxHelper.getAllNhTag();
-  return nhTags;
-});
+  return objectBoxHelper.getAllNhTag();
+}

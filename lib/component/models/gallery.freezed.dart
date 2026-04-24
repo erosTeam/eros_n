@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Gallery {
 
-@JsonKey(name: 'id') int get gid;@JsonKey(name: 'media_id') String? get mediaId; GalleryTitle get title; GalleryImages get images; String? get scanlator;@JsonKey(name: 'upload_date') int? get uploadDate;@JsonKey(name: 'num_pages') int? get numPages;@JsonKey(name: 'num_favorites') int? get numFavorites; List<Tag> get tags;@JsonKey(ignore: true) List<Tag> get simpleTags;@JsonKey(ignore: true) String? get languageCode;@JsonKey(ignore: true) int? get viewTime;@JsonKey(ignore: true) List<Comment> get comments;@JsonKey(ignore: true) List<Gallery> get moreLikeGallerys;@JsonKey(ignore: true) int get currentPageIndex;@JsonKey(ignore: true) bool? get isFavorited;@JsonKey(ignore: true) String? get uploadedDateTime;@JsonKey(ignore: true) String? get csrfToken;
+@JsonKey(name: 'id') int get gid;@JsonKey(name: 'media_id') String? get mediaId; GalleryTitle get title; GalleryImages get images; String? get scanlator;@JsonKey(name: 'upload_date') int? get uploadDate;@JsonKey(name: 'num_pages') int? get numPages;@JsonKey(name: 'num_favorites') int? get numFavorites; List<Tag> get tags;@JsonKey(includeFromJson: false, includeToJson: false) List<Tag> get simpleTags;@JsonKey(includeFromJson: false, includeToJson: false) String? get languageCode;@JsonKey(includeFromJson: false, includeToJson: false) int? get viewTime;@JsonKey(includeFromJson: false, includeToJson: false) List<Comment> get comments;@JsonKey(includeFromJson: false, includeToJson: false) List<Gallery> get moreLikeGallerys;@JsonKey(includeFromJson: false, includeToJson: false) int get currentPageIndex;@JsonKey(includeFromJson: false, includeToJson: false) bool? get isFavorited;@JsonKey(includeFromJson: false, includeToJson: false) String? get uploadedDateTime;@JsonKey(includeFromJson: false, includeToJson: false) String? get csrfToken;
 /// Create a copy of Gallery
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $GalleryCopyWith<$Res>  {
   factory $GalleryCopyWith(Gallery value, $Res Function(Gallery) _then) = _$GalleryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int gid,@JsonKey(name: 'media_id') String? mediaId, GalleryTitle title, GalleryImages images, String? scanlator,@JsonKey(name: 'upload_date') int? uploadDate,@JsonKey(name: 'num_pages') int? numPages,@JsonKey(name: 'num_favorites') int? numFavorites, List<Tag> tags,@JsonKey(ignore: true) List<Tag> simpleTags,@JsonKey(ignore: true) String? languageCode,@JsonKey(ignore: true) int? viewTime,@JsonKey(ignore: true) List<Comment> comments,@JsonKey(ignore: true) List<Gallery> moreLikeGallerys,@JsonKey(ignore: true) int currentPageIndex,@JsonKey(ignore: true) bool? isFavorited,@JsonKey(ignore: true) String? uploadedDateTime,@JsonKey(ignore: true) String? csrfToken
+@JsonKey(name: 'id') int gid,@JsonKey(name: 'media_id') String? mediaId, GalleryTitle title, GalleryImages images, String? scanlator,@JsonKey(name: 'upload_date') int? uploadDate,@JsonKey(name: 'num_pages') int? numPages,@JsonKey(name: 'num_favorites') int? numFavorites, List<Tag> tags,@JsonKey(includeFromJson: false, includeToJson: false) List<Tag> simpleTags,@JsonKey(includeFromJson: false, includeToJson: false) String? languageCode,@JsonKey(includeFromJson: false, includeToJson: false) int? viewTime,@JsonKey(includeFromJson: false, includeToJson: false) List<Comment> comments,@JsonKey(includeFromJson: false, includeToJson: false) List<Gallery> moreLikeGallerys,@JsonKey(includeFromJson: false, includeToJson: false) int currentPageIndex,@JsonKey(includeFromJson: false, includeToJson: false) bool? isFavorited,@JsonKey(includeFromJson: false, includeToJson: false) String? uploadedDateTime,@JsonKey(includeFromJson: false, includeToJson: false) String? csrfToken
 });
 
 
@@ -188,7 +188,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int gid, @JsonKey(name: 'media_id')  String? mediaId,  GalleryTitle title,  GalleryImages images,  String? scanlator, @JsonKey(name: 'upload_date')  int? uploadDate, @JsonKey(name: 'num_pages')  int? numPages, @JsonKey(name: 'num_favorites')  int? numFavorites,  List<Tag> tags, @JsonKey(ignore: true)  List<Tag> simpleTags, @JsonKey(ignore: true)  String? languageCode, @JsonKey(ignore: true)  int? viewTime, @JsonKey(ignore: true)  List<Comment> comments, @JsonKey(ignore: true)  List<Gallery> moreLikeGallerys, @JsonKey(ignore: true)  int currentPageIndex, @JsonKey(ignore: true)  bool? isFavorited, @JsonKey(ignore: true)  String? uploadedDateTime, @JsonKey(ignore: true)  String? csrfToken)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int gid, @JsonKey(name: 'media_id')  String? mediaId,  GalleryTitle title,  GalleryImages images,  String? scanlator, @JsonKey(name: 'upload_date')  int? uploadDate, @JsonKey(name: 'num_pages')  int? numPages, @JsonKey(name: 'num_favorites')  int? numFavorites,  List<Tag> tags, @JsonKey(includeFromJson: false, includeToJson: false)  List<Tag> simpleTags, @JsonKey(includeFromJson: false, includeToJson: false)  String? languageCode, @JsonKey(includeFromJson: false, includeToJson: false)  int? viewTime, @JsonKey(includeFromJson: false, includeToJson: false)  List<Comment> comments, @JsonKey(includeFromJson: false, includeToJson: false)  List<Gallery> moreLikeGallerys, @JsonKey(includeFromJson: false, includeToJson: false)  int currentPageIndex, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isFavorited, @JsonKey(includeFromJson: false, includeToJson: false)  String? uploadedDateTime, @JsonKey(includeFromJson: false, includeToJson: false)  String? csrfToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Gallery() when $default != null:
 return $default(_that.gid,_that.mediaId,_that.title,_that.images,_that.scanlator,_that.uploadDate,_that.numPages,_that.numFavorites,_that.tags,_that.simpleTags,_that.languageCode,_that.viewTime,_that.comments,_that.moreLikeGallerys,_that.currentPageIndex,_that.isFavorited,_that.uploadedDateTime,_that.csrfToken);case _:
@@ -209,7 +209,7 @@ return $default(_that.gid,_that.mediaId,_that.title,_that.images,_that.scanlator
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int gid, @JsonKey(name: 'media_id')  String? mediaId,  GalleryTitle title,  GalleryImages images,  String? scanlator, @JsonKey(name: 'upload_date')  int? uploadDate, @JsonKey(name: 'num_pages')  int? numPages, @JsonKey(name: 'num_favorites')  int? numFavorites,  List<Tag> tags, @JsonKey(ignore: true)  List<Tag> simpleTags, @JsonKey(ignore: true)  String? languageCode, @JsonKey(ignore: true)  int? viewTime, @JsonKey(ignore: true)  List<Comment> comments, @JsonKey(ignore: true)  List<Gallery> moreLikeGallerys, @JsonKey(ignore: true)  int currentPageIndex, @JsonKey(ignore: true)  bool? isFavorited, @JsonKey(ignore: true)  String? uploadedDateTime, @JsonKey(ignore: true)  String? csrfToken)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int gid, @JsonKey(name: 'media_id')  String? mediaId,  GalleryTitle title,  GalleryImages images,  String? scanlator, @JsonKey(name: 'upload_date')  int? uploadDate, @JsonKey(name: 'num_pages')  int? numPages, @JsonKey(name: 'num_favorites')  int? numFavorites,  List<Tag> tags, @JsonKey(includeFromJson: false, includeToJson: false)  List<Tag> simpleTags, @JsonKey(includeFromJson: false, includeToJson: false)  String? languageCode, @JsonKey(includeFromJson: false, includeToJson: false)  int? viewTime, @JsonKey(includeFromJson: false, includeToJson: false)  List<Comment> comments, @JsonKey(includeFromJson: false, includeToJson: false)  List<Gallery> moreLikeGallerys, @JsonKey(includeFromJson: false, includeToJson: false)  int currentPageIndex, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isFavorited, @JsonKey(includeFromJson: false, includeToJson: false)  String? uploadedDateTime, @JsonKey(includeFromJson: false, includeToJson: false)  String? csrfToken)  $default,) {final _that = this;
 switch (_that) {
 case _Gallery():
 return $default(_that.gid,_that.mediaId,_that.title,_that.images,_that.scanlator,_that.uploadDate,_that.numPages,_that.numFavorites,_that.tags,_that.simpleTags,_that.languageCode,_that.viewTime,_that.comments,_that.moreLikeGallerys,_that.currentPageIndex,_that.isFavorited,_that.uploadedDateTime,_that.csrfToken);case _:
@@ -229,7 +229,7 @@ return $default(_that.gid,_that.mediaId,_that.title,_that.images,_that.scanlator
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int gid, @JsonKey(name: 'media_id')  String? mediaId,  GalleryTitle title,  GalleryImages images,  String? scanlator, @JsonKey(name: 'upload_date')  int? uploadDate, @JsonKey(name: 'num_pages')  int? numPages, @JsonKey(name: 'num_favorites')  int? numFavorites,  List<Tag> tags, @JsonKey(ignore: true)  List<Tag> simpleTags, @JsonKey(ignore: true)  String? languageCode, @JsonKey(ignore: true)  int? viewTime, @JsonKey(ignore: true)  List<Comment> comments, @JsonKey(ignore: true)  List<Gallery> moreLikeGallerys, @JsonKey(ignore: true)  int currentPageIndex, @JsonKey(ignore: true)  bool? isFavorited, @JsonKey(ignore: true)  String? uploadedDateTime, @JsonKey(ignore: true)  String? csrfToken)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int gid, @JsonKey(name: 'media_id')  String? mediaId,  GalleryTitle title,  GalleryImages images,  String? scanlator, @JsonKey(name: 'upload_date')  int? uploadDate, @JsonKey(name: 'num_pages')  int? numPages, @JsonKey(name: 'num_favorites')  int? numFavorites,  List<Tag> tags, @JsonKey(includeFromJson: false, includeToJson: false)  List<Tag> simpleTags, @JsonKey(includeFromJson: false, includeToJson: false)  String? languageCode, @JsonKey(includeFromJson: false, includeToJson: false)  int? viewTime, @JsonKey(includeFromJson: false, includeToJson: false)  List<Comment> comments, @JsonKey(includeFromJson: false, includeToJson: false)  List<Gallery> moreLikeGallerys, @JsonKey(includeFromJson: false, includeToJson: false)  int currentPageIndex, @JsonKey(includeFromJson: false, includeToJson: false)  bool? isFavorited, @JsonKey(includeFromJson: false, includeToJson: false)  String? uploadedDateTime, @JsonKey(includeFromJson: false, includeToJson: false)  String? csrfToken)?  $default,) {final _that = this;
 switch (_that) {
 case _Gallery() when $default != null:
 return $default(_that.gid,_that.mediaId,_that.title,_that.images,_that.scanlator,_that.uploadDate,_that.numPages,_that.numFavorites,_that.tags,_that.simpleTags,_that.languageCode,_that.viewTime,_that.comments,_that.moreLikeGallerys,_that.currentPageIndex,_that.isFavorited,_that.uploadedDateTime,_that.csrfToken);case _:
@@ -244,7 +244,7 @@ return $default(_that.gid,_that.mediaId,_that.title,_that.images,_that.scanlator
 @JsonSerializable()
 
 class _Gallery extends Gallery {
-  const _Gallery({@JsonKey(name: 'id') this.gid = 0, @JsonKey(name: 'media_id') this.mediaId, this.title = const GalleryTitle(), this.images = const GalleryImages(), this.scanlator, @JsonKey(name: 'upload_date') this.uploadDate, @JsonKey(name: 'num_pages') this.numPages, @JsonKey(name: 'num_favorites') this.numFavorites, final  List<Tag> tags = const <Tag>[], @JsonKey(ignore: true) final  List<Tag> simpleTags = const <Tag>[], @JsonKey(ignore: true) this.languageCode, @JsonKey(ignore: true) this.viewTime, @JsonKey(ignore: true) final  List<Comment> comments = const <Comment>[], @JsonKey(ignore: true) final  List<Gallery> moreLikeGallerys = const <Gallery>[], @JsonKey(ignore: true) this.currentPageIndex = 0, @JsonKey(ignore: true) this.isFavorited, @JsonKey(ignore: true) this.uploadedDateTime, @JsonKey(ignore: true) this.csrfToken}): _tags = tags,_simpleTags = simpleTags,_comments = comments,_moreLikeGallerys = moreLikeGallerys,super._();
+  const _Gallery({@JsonKey(name: 'id') this.gid = 0, @JsonKey(name: 'media_id') this.mediaId, this.title = const GalleryTitle(), this.images = const GalleryImages(), this.scanlator, @JsonKey(name: 'upload_date') this.uploadDate, @JsonKey(name: 'num_pages') this.numPages, @JsonKey(name: 'num_favorites') this.numFavorites, final  List<Tag> tags = const <Tag>[], @JsonKey(includeFromJson: false, includeToJson: false) final  List<Tag> simpleTags = const <Tag>[], @JsonKey(includeFromJson: false, includeToJson: false) this.languageCode, @JsonKey(includeFromJson: false, includeToJson: false) this.viewTime, @JsonKey(includeFromJson: false, includeToJson: false) final  List<Comment> comments = const <Comment>[], @JsonKey(includeFromJson: false, includeToJson: false) final  List<Gallery> moreLikeGallerys = const <Gallery>[], @JsonKey(includeFromJson: false, includeToJson: false) this.currentPageIndex = 0, @JsonKey(includeFromJson: false, includeToJson: false) this.isFavorited, @JsonKey(includeFromJson: false, includeToJson: false) this.uploadedDateTime, @JsonKey(includeFromJson: false, includeToJson: false) this.csrfToken}): _tags = tags,_simpleTags = simpleTags,_comments = comments,_moreLikeGallerys = moreLikeGallerys,super._();
   factory _Gallery.fromJson(Map<String, dynamic> json) => _$GalleryFromJson(json);
 
 @override@JsonKey(name: 'id') final  int gid;
@@ -263,32 +263,32 @@ class _Gallery extends Gallery {
 }
 
  final  List<Tag> _simpleTags;
-@override@JsonKey(ignore: true) List<Tag> get simpleTags {
+@override@JsonKey(includeFromJson: false, includeToJson: false) List<Tag> get simpleTags {
   if (_simpleTags is EqualUnmodifiableListView) return _simpleTags;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_simpleTags);
 }
 
-@override@JsonKey(ignore: true) final  String? languageCode;
-@override@JsonKey(ignore: true) final  int? viewTime;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  String? languageCode;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  int? viewTime;
  final  List<Comment> _comments;
-@override@JsonKey(ignore: true) List<Comment> get comments {
+@override@JsonKey(includeFromJson: false, includeToJson: false) List<Comment> get comments {
   if (_comments is EqualUnmodifiableListView) return _comments;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_comments);
 }
 
  final  List<Gallery> _moreLikeGallerys;
-@override@JsonKey(ignore: true) List<Gallery> get moreLikeGallerys {
+@override@JsonKey(includeFromJson: false, includeToJson: false) List<Gallery> get moreLikeGallerys {
   if (_moreLikeGallerys is EqualUnmodifiableListView) return _moreLikeGallerys;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_moreLikeGallerys);
 }
 
-@override@JsonKey(ignore: true) final  int currentPageIndex;
-@override@JsonKey(ignore: true) final  bool? isFavorited;
-@override@JsonKey(ignore: true) final  String? uploadedDateTime;
-@override@JsonKey(ignore: true) final  String? csrfToken;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  int currentPageIndex;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  bool? isFavorited;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  String? uploadedDateTime;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  String? csrfToken;
 
 /// Create a copy of Gallery
 /// with the given fields replaced by the non-null parameter values.
@@ -323,7 +323,7 @@ abstract mixin class _$GalleryCopyWith<$Res> implements $GalleryCopyWith<$Res> {
   factory _$GalleryCopyWith(_Gallery value, $Res Function(_Gallery) _then) = __$GalleryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int gid,@JsonKey(name: 'media_id') String? mediaId, GalleryTitle title, GalleryImages images, String? scanlator,@JsonKey(name: 'upload_date') int? uploadDate,@JsonKey(name: 'num_pages') int? numPages,@JsonKey(name: 'num_favorites') int? numFavorites, List<Tag> tags,@JsonKey(ignore: true) List<Tag> simpleTags,@JsonKey(ignore: true) String? languageCode,@JsonKey(ignore: true) int? viewTime,@JsonKey(ignore: true) List<Comment> comments,@JsonKey(ignore: true) List<Gallery> moreLikeGallerys,@JsonKey(ignore: true) int currentPageIndex,@JsonKey(ignore: true) bool? isFavorited,@JsonKey(ignore: true) String? uploadedDateTime,@JsonKey(ignore: true) String? csrfToken
+@JsonKey(name: 'id') int gid,@JsonKey(name: 'media_id') String? mediaId, GalleryTitle title, GalleryImages images, String? scanlator,@JsonKey(name: 'upload_date') int? uploadDate,@JsonKey(name: 'num_pages') int? numPages,@JsonKey(name: 'num_favorites') int? numFavorites, List<Tag> tags,@JsonKey(includeFromJson: false, includeToJson: false) List<Tag> simpleTags,@JsonKey(includeFromJson: false, includeToJson: false) String? languageCode,@JsonKey(includeFromJson: false, includeToJson: false) int? viewTime,@JsonKey(includeFromJson: false, includeToJson: false) List<Comment> comments,@JsonKey(includeFromJson: false, includeToJson: false) List<Gallery> moreLikeGallerys,@JsonKey(includeFromJson: false, includeToJson: false) int currentPageIndex,@JsonKey(includeFromJson: false, includeToJson: false) bool? isFavorited,@JsonKey(includeFromJson: false, includeToJson: false) String? uploadedDateTime,@JsonKey(includeFromJson: false, includeToJson: false) String? csrfToken
 });
 
 

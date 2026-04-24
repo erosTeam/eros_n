@@ -110,9 +110,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                           //   logger.d('onSubmitted $value');
                           // },
                           onChanged: (value) {
-                            ref
-                                .read(searchKeyProvider.notifier)
-                                .update((state) => state = value);
+                            ref.read(searchKeyProvider.notifier).set(value);
                           },
                         )
                       : Row(children: [Text(L10n.of(context).history)]),

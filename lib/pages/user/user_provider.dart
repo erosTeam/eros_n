@@ -9,7 +9,9 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'user_provider.g.dart';
 
 /// Cookie names that mark a logged-in nhentai session, in priority order.
 /// `access_token` / `refresh_token` are the new JWT-style cookies issued by
@@ -18,8 +20,10 @@ import 'package:hooks_riverpod/legacy.dart';
 /// authenticated.
 const _authCookieNames = ['access_token', 'refresh_token', 'sessionid'];
 
-class UserNotifier extends StateNotifier<User> {
-  UserNotifier(super.state);
+@Riverpod(keepAlive: true)
+class UserNotifier extends _$UserNotifier {
+  @override
+  User build() => hiveHelper.getUser();
 
   Future<bool> login({
     required String username,
@@ -46,10 +50,6 @@ class UserNotifier extends StateNotifier<User> {
 
     final tokenValue = await _syncAuthCookies();
 
-    // Real auth happens via cookies in the WebView store / Dio jar; the
-    // sessionid field is now just a "logged-in" marker for the UI. Use the
-    // first available token value, or fall back to a sentinel so the UI
-    // flips even when every token is HttpOnly.
     state = state.copyWith(sessionid: tokenValue ?? 'webview-managed');
     hiveHelper.setUser(state);
 
@@ -59,7 +59,6 @@ class UserNotifier extends StateNotifier<User> {
     } on HttpException {
       rethrow;
     }
-    // log userFromIndex
     logger.d('userFromIndex $userFromIndex');
 
     state = state.copyWith(
@@ -137,9 +136,6 @@ class UserNotifier extends StateNotifier<User> {
     }
 
     if (fromWebView.isNotEmpty) {
-      // Mirror visible (non-HttpOnly) tokens into the dart-side jar so any
-      // future direct dio request can use them. HttpOnly cookies just won't
-      // show up here and remain webview-only, which is fine.
       try {
         await Global.setCookies(NHConst.baseUrl, fromWebView);
       } catch (e) {
@@ -151,7 +147,3 @@ class UserNotifier extends StateNotifier<User> {
     return firstFound;
   }
 }
-
-final userProvider = StateNotifierProvider<UserNotifier, User>((ref) {
-  return UserNotifier(hiveHelper.getUser());
-});

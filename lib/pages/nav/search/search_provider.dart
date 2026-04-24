@@ -14,17 +14,42 @@ import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class SearchNotifier extends StateNotifier<ListViewState> {
-  SearchNotifier(this.ref) : super(const ListViewState());
-  final Ref ref;
-  String query = '';
+part 'search_provider.g.dart';
 
-  final TextEditingController searchController = TextEditingController();
-  final FocusNode searchFocusNode = FocusNode();
+@riverpod
+class SearchGallerys extends _$SearchGallerys with GalleryListOps<Gallery> {
+  @override
+  List<Gallery> build(int depth) {
+    ref.onDispose(() {
+      logger.d('searchGallerysProvider $depth dispose');
+    });
+    return [];
+  }
+}
 
-  SearchGalleryNotifier get searchGalleryNotifier =>
+@Riverpod(keepAlive: true)
+class SearchNotifier extends _$SearchNotifier {
+  String _query = '';
+
+  late final TextEditingController searchController;
+  late final FocusNode searchFocusNode;
+
+  @override
+  ListViewState build(int depth) {
+    searchController = TextEditingController();
+    searchFocusNode = FocusNode();
+    ref.onDispose(() {
+      searchController.dispose();
+      searchFocusNode.dispose();
+    });
+    return const ListViewState();
+  }
+
+  String get query => _query;
+
+  SearchGallerys get _searchGalleryNotifier =>
       ref.read(searchGallerysProvider(currentSearchDepth).notifier);
 
   void appendNhTagQuery(NhTag tag, {bool search = false}) {
@@ -61,12 +86,12 @@ class SearchNotifier extends StateNotifier<ListViewState> {
   }
 
   Future<void> search() async {
-    query = searchController.text;
-    if (query.trim().isEmpty) {
+    _query = searchController.text;
+    if (_query.trim().isEmpty) {
       return;
     }
     // Record before firing so the entry is kept even when the request fails.
-    unawaited(ref.read(searchHistoryProvider.notifier).add(query));
+    unawaited(ref.read(searchHistoryProvider.notifier).add(_query));
     await loadData();
   }
 
@@ -86,7 +111,7 @@ class SearchNotifier extends StateNotifier<ListViewState> {
       return;
     }
 
-    if (query.trim().isEmpty) {
+    if (_query.trim().isEmpty) {
       return;
     }
 
@@ -98,7 +123,7 @@ class SearchNotifier extends StateNotifier<ListViewState> {
     } else if (prev) {
       state = state.copyWith(status: LoadStatus.loadingMore);
     } else {
-      if (searchGalleryNotifier.state.isEmpty || first) {
+      if (_searchGalleryNotifier.state.isEmpty || first) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           state = state.copyWith(status: LoadStatus.loading);
         });
@@ -110,14 +135,13 @@ class SearchNotifier extends StateNotifier<ListViewState> {
 
     late final String realQuery;
 
-    // final queryUuid = '-"${const Uuid().v4()}"';
     final searchLanguagesFilter = ref.read(
       settingsProvider.select((s) => s.searchLanguagesFilter),
     );
-    if (searchLanguagesFilter != LanguagesFilter.all && query.isNotEmpty) {
-      realQuery = '$query language:${searchLanguagesFilter.value}';
+    if (searchLanguagesFilter != LanguagesFilter.all && _query.isNotEmpty) {
+      realQuery = '$_query language:${searchLanguagesFilter.value}';
     } else {
-      realQuery = query;
+      realQuery = _query;
     }
 
     try {
@@ -128,14 +152,13 @@ class SearchNotifier extends StateNotifier<ListViewState> {
         sort: ref.read(settingsProvider).searchSort,
       );
       final galleryList = result.gallerys ?? [];
-      // logger.d('len: ${galleryList.length}');
       if (next) {
-        searchGalleryNotifier.addGallerys(galleryList);
+        _searchGalleryNotifier.addGallerys(galleryList);
       } else if (prev) {
-        searchGalleryNotifier.insertGallerys(galleryList);
+        _searchGalleryNotifier.insertGallerys(galleryList);
       } else {
-        searchGalleryNotifier.clearGallerys();
-        searchGalleryNotifier.addGallerys(galleryList);
+        _searchGalleryNotifier.clearGallerys();
+        _searchGalleryNotifier.addGallerys(galleryList);
       }
       state = state.copyWith(
         maxPage: result.maxPage ?? 1,
@@ -172,26 +195,6 @@ class SearchNotifier extends StateNotifier<ListViewState> {
     await getGalleryData(refresh: true);
   }
 }
-
-class SearchGalleryNotifier extends GallerysNotifier {
-  SearchGalleryNotifier() : super([]);
-}
-
-final searchGallerysProvider = StateNotifierProvider.autoDispose
-    .family<SearchGalleryNotifier, List<Gallery>, int>((ref, depth) {
-      ref.onDispose(() {
-        logger.d('searchGallerysProvider $depth dispose');
-      });
-      return SearchGalleryNotifier();
-    });
-
-final searchProvider =
-    StateNotifierProvider.family<SearchNotifier, ListViewState, int>((
-      ref,
-      depth,
-    ) {
-      return SearchNotifier(ref);
-    });
 
 final _searchDepthList = <int>[0];
 int get currentSearchDepth {

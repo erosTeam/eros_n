@@ -4,15 +4,17 @@ import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class IndexNotifier extends StateNotifier<IndexState> {
-  IndexNotifier(this.ref) : super(IndexState());
+part 'index_provider.g.dart';
 
+@Riverpod(keepAlive: true)
+class IndexNotifier extends _$IndexNotifier {
   final Map<int, ScrollController> scrollControllerMap = {};
   bool tapAwait = false;
 
-  final Ref ref;
+  @override
+  IndexState build() => IndexState();
 
   Future<void> setIndex(
     int index, {
@@ -20,7 +22,6 @@ class IndexNotifier extends StateNotifier<IndexState> {
     bool jumpToPage = false,
   }) async {
     if (index == state.selectedIndex) {
-      // logger.d('state.scrollControllerMap len ${scrollControllerMap.length}');
       await doubleTapBar(
         duration: const Duration(milliseconds: 800),
         awaitComplete: false,
@@ -62,7 +63,7 @@ class IndexNotifier extends StateNotifier<IndexState> {
     logger.t('state.scrollControllerMap len ${scrollControllerMap.length}');
   }
 
-  /// 双击bar的处理
+  /// Handle double-tap on the bottom navigation bar.
   Future<void> doubleTapBar({
     required VoidCallback onTap,
     VoidCallback? onDoubleTap,
@@ -75,7 +76,6 @@ class IndexNotifier extends StateNotifier<IndexState> {
       if (awaitComplete) {
         await Future<void>.delayed(duration);
         if (tapAwait) {
-          //        loggerNoStack.v('等待结束 执行单击事件');
           tapAwait = false;
           onTap();
         }
@@ -90,7 +90,3 @@ class IndexNotifier extends StateNotifier<IndexState> {
     }
   }
 }
-
-final indexProvider = StateNotifierProvider<IndexNotifier, IndexState>((ref) {
-  return IndexNotifier(ref);
-});

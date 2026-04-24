@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Tag implements DiagnosticableTreeMixin {
 
- int? get id; String? get type; String? get name; String? get url; int? get count;@JsonKey(ignore: true) String? get translatedName;
+ int? get id; String? get type; String? get name; String? get url; int? get count;@JsonKey(includeFromJson: false, includeToJson: false) String? get translatedName;
 /// Create a copy of Tag
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -54,7 +54,7 @@ abstract mixin class $TagCopyWith<$Res>  {
   factory $TagCopyWith(Tag value, $Res Function(Tag) _then) = _$TagCopyWithImpl;
 @useResult
 $Res call({
- int? id, String? type, String? name, String? url, int? count,@JsonKey(ignore: true) String? translatedName
+ int? id, String? type, String? name, String? url, int? count,@JsonKey(includeFromJson: false, includeToJson: false) String? translatedName
 });
 
 
@@ -164,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(ignore: true)  String? translatedName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(includeFromJson: false, includeToJson: false)  String? translatedName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Tag() when $default != null:
 return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.translatedName);case _:
@@ -185,7 +185,7 @@ return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.trans
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(ignore: true)  String? translatedName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(includeFromJson: false, includeToJson: false)  String? translatedName)  $default,) {final _that = this;
 switch (_that) {
 case _Tag():
 return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.translatedName);case _:
@@ -205,7 +205,7 @@ return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.trans
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(ignore: true)  String? translatedName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? type,  String? name,  String? url,  int? count, @JsonKey(includeFromJson: false, includeToJson: false)  String? translatedName)?  $default,) {final _that = this;
 switch (_that) {
 case _Tag() when $default != null:
 return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.translatedName);case _:
@@ -220,7 +220,7 @@ return $default(_that.id,_that.type,_that.name,_that.url,_that.count,_that.trans
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _Tag with DiagnosticableTreeMixin implements Tag {
-  const _Tag({this.id, this.type, this.name, this.url, this.count, @JsonKey(ignore: true) this.translatedName});
+  const _Tag({this.id, this.type, this.name, this.url, this.count, @JsonKey(includeFromJson: false, includeToJson: false) this.translatedName});
   factory _Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
 @override final  int? id;
@@ -228,7 +228,7 @@ class _Tag with DiagnosticableTreeMixin implements Tag {
 @override final  String? name;
 @override final  String? url;
 @override final  int? count;
-@override@JsonKey(ignore: true) final  String? translatedName;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  String? translatedName;
 
 /// Create a copy of Tag
 /// with the given fields replaced by the non-null parameter values.
@@ -269,7 +269,7 @@ abstract mixin class _$TagCopyWith<$Res> implements $TagCopyWith<$Res> {
   factory _$TagCopyWith(_Tag value, $Res Function(_Tag) _then) = __$TagCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String? type, String? name, String? url, int? count,@JsonKey(ignore: true) String? translatedName
+ int? id, String? type, String? name, String? url, int? count,@JsonKey(includeFromJson: false, includeToJson: false) String? translatedName
 });
 
 

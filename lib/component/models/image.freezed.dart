@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GalleryImage implements DiagnosticableTreeMixin {
 
-@JsonKey(name: 't') String get type;@JsonKey(name: 'h') int? get imgHeight;@JsonKey(name: 'w') int? get imgWidth;@JsonKey(ignore: true) String? get imageUrl;@JsonKey(ignore: true) String? get href;
+@JsonKey(name: 't') String get type;@JsonKey(name: 'h') int? get imgHeight;@JsonKey(name: 'w') int? get imgWidth;@JsonKey(includeFromJson: false, includeToJson: false) String? get imageUrl;@JsonKey(includeFromJson: false, includeToJson: false) String? get href;
 /// Create a copy of GalleryImage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -54,7 +54,7 @@ abstract mixin class $GalleryImageCopyWith<$Res>  {
   factory $GalleryImageCopyWith(GalleryImage value, $Res Function(GalleryImage) _then) = _$GalleryImageCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 't') String type,@JsonKey(name: 'h') int? imgHeight,@JsonKey(name: 'w') int? imgWidth,@JsonKey(ignore: true) String? imageUrl,@JsonKey(ignore: true) String? href
+@JsonKey(name: 't') String type,@JsonKey(name: 'h') int? imgHeight,@JsonKey(name: 'w') int? imgWidth,@JsonKey(includeFromJson: false, includeToJson: false) String? imageUrl,@JsonKey(includeFromJson: false, includeToJson: false) String? href
 });
 
 
@@ -163,7 +163,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(ignore: true)  String? imageUrl, @JsonKey(ignore: true)  String? href)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(includeFromJson: false, includeToJson: false)  String? imageUrl, @JsonKey(includeFromJson: false, includeToJson: false)  String? href)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GalleryImage() when $default != null:
 return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.href);case _:
@@ -184,7 +184,7 @@ return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.h
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(ignore: true)  String? imageUrl, @JsonKey(ignore: true)  String? href)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(includeFromJson: false, includeToJson: false)  String? imageUrl, @JsonKey(includeFromJson: false, includeToJson: false)  String? href)  $default,) {final _that = this;
 switch (_that) {
 case _GalleryImage():
 return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.href);case _:
@@ -204,7 +204,7 @@ return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.h
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(ignore: true)  String? imageUrl, @JsonKey(ignore: true)  String? href)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 't')  String type, @JsonKey(name: 'h')  int? imgHeight, @JsonKey(name: 'w')  int? imgWidth, @JsonKey(includeFromJson: false, includeToJson: false)  String? imageUrl, @JsonKey(includeFromJson: false, includeToJson: false)  String? href)?  $default,) {final _that = this;
 switch (_that) {
 case _GalleryImage() when $default != null:
 return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.href);case _:
@@ -219,14 +219,14 @@ return $default(_that.type,_that.imgHeight,_that.imgWidth,_that.imageUrl,_that.h
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _GalleryImage with DiagnosticableTreeMixin implements GalleryImage {
-  const _GalleryImage({@JsonKey(name: 't') this.type = 'j', @JsonKey(name: 'h') this.imgHeight, @JsonKey(name: 'w') this.imgWidth, @JsonKey(ignore: true) this.imageUrl, @JsonKey(ignore: true) this.href});
+  const _GalleryImage({@JsonKey(name: 't') this.type = 'j', @JsonKey(name: 'h') this.imgHeight, @JsonKey(name: 'w') this.imgWidth, @JsonKey(includeFromJson: false, includeToJson: false) this.imageUrl, @JsonKey(includeFromJson: false, includeToJson: false) this.href});
   factory _GalleryImage.fromJson(Map<String, dynamic> json) => _$GalleryImageFromJson(json);
 
 @override@JsonKey(name: 't') final  String type;
 @override@JsonKey(name: 'h') final  int? imgHeight;
 @override@JsonKey(name: 'w') final  int? imgWidth;
-@override@JsonKey(ignore: true) final  String? imageUrl;
-@override@JsonKey(ignore: true) final  String? href;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  String? imageUrl;
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  String? href;
 
 /// Create a copy of GalleryImage
 /// with the given fields replaced by the non-null parameter values.
@@ -267,7 +267,7 @@ abstract mixin class _$GalleryImageCopyWith<$Res> implements $GalleryImageCopyWi
   factory _$GalleryImageCopyWith(_GalleryImage value, $Res Function(_GalleryImage) _then) = __$GalleryImageCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 't') String type,@JsonKey(name: 'h') int? imgHeight,@JsonKey(name: 'w') int? imgWidth,@JsonKey(ignore: true) String? imageUrl,@JsonKey(ignore: true) String? href
+@JsonKey(name: 't') String type,@JsonKey(name: 'h') int? imgHeight,@JsonKey(name: 'w') int? imgWidth,@JsonKey(includeFromJson: false, includeToJson: false) String? imageUrl,@JsonKey(includeFromJson: false, includeToJson: false) String? href
 });
 
 

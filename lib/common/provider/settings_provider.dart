@@ -3,130 +3,81 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class SettingsNotifier extends StateNotifier<Settings> {
-  SettingsNotifier(super.state, this.ref);
+part 'settings_provider.g.dart';
 
-  final Ref ref;
+@Riverpod(keepAlive: true)
+class SettingsNotifier extends _$SettingsNotifier {
+  @override
+  Settings build() => hiveHelper.getSettings() ?? const Settings();
 
-  void setCoverBlur(bool value) {
-    state = state.copyWith(isCoverBlur: value);
+  void _save(Settings next) {
+    state = next;
     hiveHelper.setSettings(state);
   }
 
+  void setCoverBlur(bool value) => _save(state.copyWith(isCoverBlur: value));
+
   void setTagTranslate(bool value) {
-    state = state.copyWith(isTagTranslate: value);
+    _save(state.copyWith(isTagTranslate: value));
     if (value) {
       ref.read(tagTranslateProvider.notifier).updateDb();
     }
-    hiveHelper.setSettings(state);
   }
 
-  void setDynamicColor(bool value) {
-    state = state.copyWith(dynamicColor: value);
-    hiveHelper.setSettings(state);
-  }
+  void setDynamicColor(bool value) =>
+      _save(state.copyWith(dynamicColor: value));
 
-  void setSearchSort(SearchSort value) {
-    state = state.copyWith(searchSort: value);
-    hiveHelper.setSettings(state);
-  }
+  void setSearchSort(SearchSort value) =>
+      _save(state.copyWith(searchSort: value));
 
-  void setShowTags(bool value) {
-    state = state.copyWith(showTags: value);
-    hiveHelper.setSettings(state);
-  }
+  void setShowTags(bool value) => _save(state.copyWith(showTags: value));
 
-  void setTagLayoutOnItem(TagLayoutOnItem value) {
-    state = state.copyWith(tagLayoutOnItem: value);
-    hiveHelper.setSettings(state);
-  }
+  void setTagLayoutOnItem(TagLayoutOnItem value) =>
+      _save(state.copyWith(tagLayoutOnItem: value));
 
-  void setThemeMode(ThemeMode value) {
-    state = state.copyWith(themeMode: value);
-    hiveHelper.setSettings(state);
-  }
+  void setThemeMode(ThemeMode value) => _save(state.copyWith(themeMode: value));
 
-  void setFullScreenReader(bool value) {
-    state = state.copyWith(fullScreenReader: value);
-    hiveHelper.setSettings(state);
-  }
+  void setFullScreenReader(bool value) =>
+      _save(state.copyWith(fullScreenReader: value));
 
-  void setReadModel(ReadModel value) {
-    state = state.copyWith(readModel: value);
-    hiveHelper.setSettings(state);
-  }
+  void setReadModel(ReadModel value) => _save(state.copyWith(readModel: value));
 
-  void setListModel(ListModel value) {
-    state = state.copyWith(listModel: value);
-    hiveHelper.setSettings(state);
-  }
+  void setListModel(ListModel value) => _save(state.copyWith(listModel: value));
 
-  void setLocaleCode(String value) {
-    state = state.copyWith(localeCode: value);
-    hiveHelper.setSettings(state);
-  }
+  void setLocaleCode(String value) => _save(state.copyWith(localeCode: value));
 
-  void setThemeColorLabel(String value) {
-    state = state.copyWith(themeColorLabel: value);
-    hiveHelper.setSettings(state);
-  }
+  void setThemeColorLabel(String value) =>
+      _save(state.copyWith(themeColorLabel: value));
 
-  void setSupportDynamicColors(bool value) {
-    state = state.copyWith(supportDynamicColors: value);
-    hiveHelper.setSettings(state);
-  }
+  void setSupportDynamicColors(bool value) =>
+      _save(state.copyWith(supportDynamicColors: value));
 
-  void setHideBottomNavigationOnScroll(bool value) {
-    state = state.copyWith(hideBottomNavigationOnScroll: value);
-    hiveHelper.setSettings(state);
-  }
+  void setHideBottomNavigationOnScroll(bool value) =>
+      _save(state.copyWith(hideBottomNavigationOnScroll: value));
 
-  void setUseGalleryTint(bool value) {
-    state = state.copyWith(useGalleryTint: value);
-    hiveHelper.setSettings(state);
-  }
+  void setUseGalleryTint(bool value) =>
+      _save(state.copyWith(useGalleryTint: value));
 
-  void setVolumeKeyTurnPage(bool value) {
-    state = state.copyWith(volumeKeyTurnPage: value);
-    hiveHelper.setSettings(state);
-  }
+  void setVolumeKeyTurnPage(bool value) =>
+      _save(state.copyWith(volumeKeyTurnPage: value));
 
-  void setAutoReadInterval(double value) {
-    state = state.copyWith(autoReadInterval: value);
-    hiveHelper.setSettings(state);
-  }
+  void setAutoReadInterval(double value) =>
+      _save(state.copyWith(autoReadInterval: value));
 
-  void setPreloadPagesCount(int value) {
-    state = state.copyWith(preloadPagesCount: value);
-    hiveHelper.setSettings(state);
-  }
+  void setPreloadPagesCount(int value) =>
+      _save(state.copyWith(preloadPagesCount: value));
 
-  void setSearchSortOnFrontPage(SearchSort value) {
-    state = state.copyWith(searchSortOnFrontPage: value);
-    hiveHelper.setSettings(state);
-  }
+  void setSearchSortOnFrontPage(SearchSort value) =>
+      _save(state.copyWith(searchSortOnFrontPage: value));
 
-  void setFrontLanguagesFilter(LanguagesFilter value) {
-    state = state.copyWith(frontLanguagesFilter: value);
-    hiveHelper.setSettings(state);
-  }
+  void setFrontLanguagesFilter(LanguagesFilter value) =>
+      _save(state.copyWith(frontLanguagesFilter: value));
 
-  void setSearchLanguagesFilter(LanguagesFilter value) {
-    state = state.copyWith(searchLanguagesFilter: value);
-    hiveHelper.setSettings(state);
-  }
+  void setSearchLanguagesFilter(LanguagesFilter value) =>
+      _save(state.copyWith(searchLanguagesFilter: value));
 
-  void setClipboardDetection(bool value) {
-    state = state.copyWith(clipboardDetection: value);
-    hiveHelper.setSettings(state);
-  }
+  void setClipboardDetection(bool value) =>
+      _save(state.copyWith(clipboardDetection: value));
 }
-
-final settingsProvider = StateNotifierProvider<SettingsNotifier, Settings>((
-  ref,
-) {
-  return SettingsNotifier(hiveHelper.getSettings() ?? const Settings(), ref);
-});

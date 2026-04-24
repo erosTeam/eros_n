@@ -103,9 +103,7 @@ class RouteUtil {
       ref.read(galleryProvider(gid).notifier).setInitialPage(index);
     }
 
-    ref
-        .read(thumbHeroTagPrefixProvider.notifier)
-        .update((state) => heroTagPrefix ?? '');
+    ref.read(thumbHeroTagPrefixProvider.notifier).set(heroTagPrefix ?? '');
 
     // erosRouter.push(ReadRoute(index: index));
     await context.router.push(

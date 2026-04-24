@@ -39,6 +39,7 @@ dependencies:
   flutter_list_view: ^1.1.29
   waterfall_flow: ^3.1.1
   hooks_riverpod: ^3.3.1
+  riverpod_annotation: ^4.0.0
   auto_route: ^11.1.0
   flutter_smart_dialog: ^5.1.0
   sliver_tools: ^0.2.12
@@ -93,10 +94,16 @@ dev_dependencies:
   # flutter pub run build_runner build --delete-conflicting-outputs
   # flutter pub run build_runner watch --delete-conflicting-outputs
   build_runner: ^2.13.1
-  json_serializable: ^6.13.1
+  riverpod_generator: ^4.0.3
+  # Pinned to <6.13.1 because riverpod_generator ^4.0.3 still requires analyzer ^9.x.
+  # Once riverpod_generator publishes a stable release on analyzer ^10/12,
+  # we can lift this constraint and let json_serializable upgrade.
+  json_serializable: ">=6.13.0 <6.13.1"
   copy_with_extension_gen: ^14.0.0
   objectbox_generator: ^5.3.1
-  auto_route_generator: ^10.5.0
+  # Pinned <10.5 because 10.5+ pulls dart_style 3.1.5 which requires analyzer ^10,
+  # incompatible with riverpod_generator 4.0.3 (analyzer ^9).
+  auto_route_generator: ">=10.4.0 <10.5.0"
   index_generator: ^4.1.2
   flutter_test:
     sdk: flutter

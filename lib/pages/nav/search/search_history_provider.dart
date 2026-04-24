@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:eros_n/store/kv/hive.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'search_history_provider.g.dart';
 
 const int _kMaxHistory = 50;
 const String _kSearchHistoryKey = 'search_history';
@@ -22,27 +24,27 @@ class SearchHistoryEntry {
   Map<String, dynamic> toJson() => {'q': query, 't': usedAt};
 }
 
-class SearchHistoryNotifier extends StateNotifier<List<SearchHistoryEntry>> {
-  SearchHistoryNotifier() : super(const []) {
-    _load();
-  }
-
+@Riverpod(keepAlive: true)
+class SearchHistory extends _$SearchHistory {
   final HiveHelper _hive = HiveHelper();
 
-  void _load() {
+  @override
+  List<SearchHistoryEntry> build() => _read();
+
+  List<SearchHistoryEntry> _read() {
     try {
       final raw = _hive.getString(_kSearchHistoryKey) ?? '';
       if (raw.isEmpty) {
-        return;
+        return const [];
       }
-      final list = (jsonDecode(raw) as List)
+      return (jsonDecode(raw) as List)
           .whereType<Map>()
           .map((e) => SearchHistoryEntry.fromJson(e.cast<String, dynamic>()))
           .where((e) => e.query.trim().isNotEmpty)
           .toList();
-      state = list;
     } catch (e) {
       logger.w('load search history failed: $e');
+      return const [];
     }
   }
 
@@ -83,8 +85,3 @@ class SearchHistoryNotifier extends StateNotifier<List<SearchHistoryEntry>> {
     await _persist();
   }
 }
-
-final searchHistoryProvider =
-    StateNotifierProvider<SearchHistoryNotifier, List<SearchHistoryEntry>>(
-      (ref) => SearchHistoryNotifier(),
-    );

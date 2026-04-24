@@ -12,24 +12,58 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
 import 'package:preload_page_view/preload_page_view.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-class ReadNotifier extends StateNotifier<ReadState> {
-  ReadNotifier(super.state, this.ref)
-    : preloadPageController = PreloadPageController(
-        initialPage: ref
-            .read(galleryProvider(currentGalleryGid))
-            .currentPageIndex,
-        keepPage: true,
-      );
-  final Ref ref;
+part 'read_provider.g.dart';
 
-  final PreloadPageController preloadPageController;
+@riverpod
+class ReadNotifier extends _$ReadNotifier {
+  late final PreloadPageController preloadPageController;
+  late final ItemScrollController itemScrollController;
+  late final ItemPositionsListener itemPositionsListener;
 
   final completerMap = <int, Completer<void>>{};
+
+  late double offsetTopHide;
+
+  bool conditionItemIndex = true;
+  int tempIndex = 0;
+  int minImageIndex = 0;
+  int maxImageIndex = 0;
+
+  StreamSubscription? _volumeKeyDownSubscription;
+  Timer? _autoReadTimer;
+
+  @override
+  ReadState build() {
+    ref.onDispose(() {
+      logger.d('readProvider dispose');
+      _volumeKeyDownSubscription?.cancel();
+      _autoReadTimer?.cancel();
+    });
+
+    preloadPageController = PreloadPageController(
+      initialPage: ref
+          .read(galleryProvider(currentGalleryGid))
+          .currentPageIndex,
+      keepPage: true,
+    );
+    itemScrollController = ItemScrollController();
+    itemPositionsListener = ItemPositionsListener.create();
+
+    const bottomBarHeight =
+        kBottomBarHeight + kSliderBarHeight + kThumbListViewHeight;
+
+    return const ReadState(
+      showAppBar: false,
+      bottomBarOffset: -bottomBarHeight,
+      topBarOffset: -300,
+      bottomBarHeight: bottomBarHeight,
+    );
+  }
 
   Completer<void>? getCompleter(int index) {
     if (completerMap.containsKey(index)) {
@@ -40,10 +74,6 @@ class ReadNotifier extends StateNotifier<ReadState> {
       return completer;
     }
   }
-
-  final ItemScrollController itemScrollController = ItemScrollController();
-  final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
 
   bool get isPageView {
     return ref.watch(settingsProvider.select((s) => s.readModelPageView));
@@ -122,13 +152,12 @@ class ReadNotifier extends StateNotifier<ReadState> {
       hideAppBar();
     } else {
       await showAppBar();
-      if (mounted) {
+      if (ref.mounted) {
         calculateBar(context);
       }
     }
   }
 
-  //
   void calculateBar(BuildContext context) {
     final bottomBarHeight =
         (!context.isTablet ? kBottomBarHeight : 0) +
@@ -160,8 +189,6 @@ class ReadNotifier extends StateNotifier<ReadState> {
       state = state.copyWith(bottomBarHeight: bottomBarHeight);
     }
   }
-
-  late double offsetTopHide;
 
   Future<void> showAppBar() async {
     await unFullscreen();
@@ -197,12 +224,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
     await 100.milliseconds.delay();
   }
 
-  bool conditionItemIndex = true;
-  int tempIndex = 0;
-  int minImageIndex = 0;
-  int maxImageIndex = 0;
-
-  /// 竖屏阅读下页码变化的监听
+  /// Handle scroll position changes for vertical reading mode.
   void handItemPositionsChange(
     Iterable<ItemPosition> positions, {
     ValueChanged<int>? onChanged,
@@ -234,7 +256,6 @@ class ReadNotifier extends StateNotifier<ReadState> {
           .index;
 
       tempIndex = (min + max) ~/ 2;
-      // logger.d('max $max  min $min tempIndex ${vState.tempIndex}');
 
       minImageIndex = min;
       maxImageIndex = max;
@@ -242,8 +263,6 @@ class ReadNotifier extends StateNotifier<ReadState> {
       onChanged?.call(tempIndex);
     }
   }
-
-  StreamSubscription? _volumeKeyDownSubscription;
 
   void addVolumeKeydownListen() {
     logger.t('addVolumeKeydownListen');
@@ -267,8 +286,6 @@ class ReadNotifier extends StateNotifier<ReadState> {
     logger.t('closeVolumeKeydownListen');
     _volumeKeyDownSubscription?.cancel();
   }
-
-  Timer? _autoReadTimer;
 
   void toggleAutoRead() {
     if (state.autoRead) {
@@ -302,8 +319,7 @@ class ReadNotifier extends StateNotifier<ReadState> {
     WakelockPlus.enable();
 
     _autoReadTimer = Timer.periodic(autoReadDuration, (timer) async {
-      if (state.autoRead && mounted) {
-        // toNext();
+      if (state.autoRead && ref.mounted) {
         waitAutoRead();
       } else {
         timer.cancel();
@@ -312,22 +328,15 @@ class ReadNotifier extends StateNotifier<ReadState> {
   }
 
   Future<void> waitAutoRead() async {
-    if (state.autoRead && mounted) {
-      if (ref
-              .read(readProvider.notifier)
-              .getCompleter(currentPageIndex)
-              ?.isCompleted ??
-          false) {
+    if (state.autoRead && ref.mounted) {
+      if (getCompleter(currentPageIndex)?.isCompleted ?? false) {
         logger.t('waitAutoRead toNext');
         toNext();
       } else {
         logger.d('waitAutoRead delay');
         _autoReadTimer?.cancel();
         _autoReadTimer = null;
-        await ref
-            .read(readProvider.notifier)
-            .getCompleter(currentPageIndex)
-            ?.future;
+        await getCompleter(currentPageIndex)?.future;
         if (state.autoRead) {
           logger.d('resume toNext');
           startAutoRead();
@@ -355,24 +364,3 @@ class ReadNotifier extends StateNotifier<ReadState> {
     }
   }
 }
-
-final readProvider = StateNotifierProvider.autoDispose<ReadNotifier, ReadState>(
-  (ref) {
-    ref.onDispose(() {
-      logger.d('readProvider dispose');
-    });
-
-    const bottomBarHeight =
-        kBottomBarHeight + kSliderBarHeight + kThumbListViewHeight;
-
-    return ReadNotifier(
-      const ReadState(
-        showAppBar: false,
-        bottomBarOffset: -bottomBarHeight,
-        topBarOffset: -300,
-        bottomBarHeight: bottomBarHeight,
-      ),
-      ref,
-    );
-  },
-);
