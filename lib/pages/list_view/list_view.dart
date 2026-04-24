@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_list_view/flutter_list_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:keframe/keframe.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 class GallerySliverList extends HookConsumerWidget {
@@ -216,18 +215,12 @@ class GalleryWaterfallFlowView extends StatelessWidget {
 
     final Gallery gallery = gallerys[index];
 
-    Widget item = ItemWaterfallFlowCard(
+    return ItemWaterfallFlowCard(
       gallery: gallery,
       index: index,
       tabTag: tabTag,
       compact: compact,
     );
-
-    if (!GetPlatform.isDesktop) {
-      item = FrameSeparateWidget(index: index, child: item);
-    }
-
-    return item;
   }
 
   @override

@@ -70,7 +70,6 @@ dependencies:
       url: https://github.com/honjow/system_network_proxy.git
       path: system_network_proxy
   system_proxy: ^0.1.0
-  keframe: ^3.0.0
   dropdown_button2: ^2.3.9
   scrollable_positioned_list: ^0.3.8
   zoom_widget: ^2.0.1

@@ -16,7 +16,6 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:keframe/keframe.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -79,33 +78,31 @@ class _FrontPageState extends ConsumerState<FrontPage>
       body: RefreshIndicator(
         onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
-        child: SizeCacheWidget(
-          child: CustomScrollView(
-            controller: scrollController,
-            // cacheExtent: 500,
-            physics: const ClampingScrollPhysics(),
-            slivers: [
-              const SliverAppBar(
-                floating: true,
-                pinned: true,
-                // scrolledUnderElevation: 0,
-                bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(0),
-                  child: SizedBox(height: 0),
-                ),
-                toolbarHeight: 0,
-                elevation: 0,
+        child: CustomScrollView(
+          controller: scrollController,
+          // cacheExtent: 500,
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            const SliverAppBar(
+              floating: true,
+              pinned: true,
+              // scrolledUnderElevation: 0,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(0),
+                child: SizedBox(height: 0),
               ),
-              const PopularListView(),
-              SliverGalleryListView(scrollController: scrollController),
-              Consumer(
-                builder: (context, ref, _) {
-                  final state = ref.watch(frontProvider);
-                  return EndIndicator(loadStatus: state.status);
-                },
-              ),
-            ],
-          ),
+              toolbarHeight: 0,
+              elevation: 0,
+            ),
+            const PopularListView(),
+            SliverGalleryListView(scrollController: scrollController),
+            Consumer(
+              builder: (context, ref, _) {
+                final state = ref.watch(frontProvider);
+                return EndIndicator(loadStatus: state.status);
+              },
+            ),
+          ],
         ),
       ),
     );

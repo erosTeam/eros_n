@@ -20,7 +20,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:keframe/keframe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 @RoutePage()
@@ -101,30 +100,28 @@ class _SearchPageState extends ConsumerState<SearchPage>
       body: RefreshIndicator(
         onRefresh: () => searchProviderNoti.reloadData(),
         edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
-        child: SizeCacheWidget(
-          child: CustomScrollView(
-            // cacheExtent: 500,
-            controller: scrollController,
-            physics: const ClampingScrollPhysics(),
-            slivers: [
-              SliverAppBar(
-                // leadingWidth: 36,
-                // leading: getLeading(context),
-                leading: const SizedBox(),
-                leadingWidth: 0,
-                // titleSpacing: 0,
-                title: buildSearchBar(),
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                bottom: const PreferredSize(
-                  preferredSize: Size.fromHeight(0),
-                  child: SizedBox(height: 0),
-                ),
-                floating: true,
-                pinned: true,
+        child: CustomScrollView(
+          // cacheExtent: 500,
+          controller: scrollController,
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              // leadingWidth: 36,
+              // leading: getLeading(context),
+              leading: const SizedBox(),
+              leadingWidth: 0,
+              // titleSpacing: 0,
+              title: buildSearchBar(),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              bottom: const PreferredSize(
+                preferredSize: Size.fromHeight(0),
+                child: SizedBox(height: 0),
               ),
-              const SearchListView(),
-            ],
-          ),
+              floating: true,
+              pinned: true,
+            ),
+            const SearchListView(),
+          ],
         ),
       ),
     );

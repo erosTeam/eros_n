@@ -10,7 +10,6 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:keframe/keframe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 @RoutePage()
@@ -73,57 +72,55 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
         onRefresh: isUserLoggedIn
             ? ref.read(favoriteProvider.notifier).reloadData
             : () async {},
-        child: SizeCacheWidget(
-          child: CustomScrollView(
-            controller: scrollController,
-            physics: const ClampingScrollPhysics(),
-            slivers: [
-              SliverAppBar(
-                title: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  child: Row(children: [Text(L10n.of(context).favorites)]),
-                  onTap: () {
-                    scrollController.animateTo(
-                      0,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.ease,
-                    );
-                  },
+        child: CustomScrollView(
+          controller: scrollController,
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              title: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: Row(children: [Text(L10n.of(context).favorites)]),
+                onTap: () {
+                  scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                  );
+                },
+              ),
+              floating: true,
+              pinned: true,
+              bottom: const PreferredSize(
+                preferredSize: Size.fromHeight(0),
+                child: SizedBox(height: 0),
+              ),
+            ),
+            if (isUserLoggedIn)
+              SliverSafeArea(
+                top: false,
+                bottom: false,
+                sliver: MultiSliver(
+                  children: [
+                    const FavoriteListView(),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final state = ref.watch(favoriteProvider);
+                        return EndIndicator(loadStatus: state.status);
+                      },
+                    ),
+                  ],
                 ),
-                floating: true,
-                pinned: true,
-                bottom: const PreferredSize(
-                  preferredSize: Size.fromHeight(0),
-                  child: SizedBox(height: 0),
+              )
+            else
+              SliverFillRemaining(
+                child: Center(
+                  child: Text(
+                    L10n.of(context).please_login_first,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               ),
-              if (isUserLoggedIn)
-                SliverSafeArea(
-                  top: false,
-                  bottom: false,
-                  sliver: MultiSliver(
-                    children: [
-                      const FavoriteListView(),
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final state = ref.watch(favoriteProvider);
-                          return EndIndicator(loadStatus: state.status);
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              else
-                SliverFillRemaining(
-                  child: Center(
-                    child: Text(
-                      L10n.of(context).please_login_first,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
-                ),
-            ],
-          ),
+          ],
         ),
       ),
     );
