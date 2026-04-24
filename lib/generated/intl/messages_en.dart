@@ -41,6 +41,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_history_tip": MessageLookupByLibrary.simpleMessage(
       "Are you sure to clear all history?",
     ),
+    "clear_search_history_tip": MessageLookupByLibrary.simpleMessage(
+      "Clear all search history?",
+    ),
     "clipboard_detection": MessageLookupByLibrary.simpleMessage(
       "Clipboard link detection",
     ),
@@ -113,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "read": MessageLookupByLibrary.simpleMessage("Read"),
     "read_model": MessageLookupByLibrary.simpleMessage("Read Model"),
     "recent": MessageLookupByLibrary.simpleMessage("Recent"),
+    "recent_searches": MessageLookupByLibrary.simpleMessage("Recent searches"),
     "register": MessageLookupByLibrary.simpleMessage("Register"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "right_to_left": MessageLookupByLibrary.simpleMessage("Right to Left"),

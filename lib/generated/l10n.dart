@@ -389,6 +389,26 @@ class L10n {
     );
   }
 
+  /// `Recent searches`
+  String get recent_searches {
+    return Intl.message(
+      'Recent searches',
+      name: 'recent_searches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear all search history?`
+  String get clear_search_history_tip {
+    return Intl.message(
+      'Clear all search history?',
+      name: 'clear_search_history_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Left to Right`
   String get left_to_right {
     return Intl.message(

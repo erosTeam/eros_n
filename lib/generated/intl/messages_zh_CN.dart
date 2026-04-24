@@ -36,6 +36,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "chinese": MessageLookupByLibrary.simpleMessage("汉语"),
     "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
     "clear_history_tip": MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
+    "clear_search_history_tip": MessageLookupByLibrary.simpleMessage(
+      "确定要清除全部搜索历史吗?",
+    ),
     "clipboard_detection": MessageLookupByLibrary.simpleMessage("剪贴板链接检测"),
     "comment_length_error": MessageLookupByLibrary.simpleMessage(
       "评论内容需要超过10个字符",
@@ -94,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "read": MessageLookupByLibrary.simpleMessage("阅读"),
     "read_model": MessageLookupByLibrary.simpleMessage("阅读模式"),
     "recent": MessageLookupByLibrary.simpleMessage("最新发布"),
+    "recent_searches": MessageLookupByLibrary.simpleMessage("最近搜索"),
     "register": MessageLookupByLibrary.simpleMessage("注册"),
     "resume": MessageLookupByLibrary.simpleMessage("继续"),
     "right_to_left": MessageLookupByLibrary.simpleMessage("从右到左"),

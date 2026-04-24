@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
@@ -6,6 +8,7 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
+import 'package:eros_n/pages/nav/search/search_history_provider.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -61,6 +64,8 @@ class SearchNotifier extends StateNotifier<ListViewState> {
     if (query.trim().isEmpty) {
       return;
     }
+    // Record before firing so the entry is kept even when the request fails.
+    unawaited(ref.read(searchHistoryProvider.notifier).add(query));
     await loadData();
   }
 

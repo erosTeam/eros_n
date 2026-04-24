@@ -10,6 +10,7 @@ import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/index/index_provider.dart';
+import 'package:eros_n/pages/nav/search/search_history_provider.dart';
 import 'package:eros_n/pages/nav/search/search_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
@@ -119,6 +120,30 @@ class _SearchPageState extends ConsumerState<SearchPage>
               ),
               floating: true,
               pinned: true,
+            ),
+            SliverToBoxAdapter(
+              child: ListenableBuilder(
+                listenable: searchProviderNoti.searchController,
+                builder: (context, _) {
+                  final isEmpty = searchProviderNoti.searchController.text
+                      .trim()
+                      .isEmpty;
+                  if (!isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return _SearchHistoryPanel(
+                    onTap: (q) {
+                      searchProviderNoti.searchController.value =
+                          TextEditingValue(
+                            text: q,
+                            selection: TextSelection.collapsed(offset: q.length),
+                          );
+                      searchProviderNoti.searchFocusNode.unfocus();
+                      searchProviderNoti.search();
+                    },
+                  );
+                },
+              ),
             ),
             const SearchListView(),
           ],
@@ -502,6 +527,85 @@ class _TagSeed {
   const _TagSeed({required this.name, required this.type});
   final String name;
   final String type;
+}
+
+class _SearchHistoryPanel extends ConsumerWidget {
+  const _SearchHistoryPanel({required this.onTap});
+
+  final ValueChanged<String> onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final history = ref.watch(searchHistoryProvider);
+    if (history.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                L10n.of(context).recent_searches,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const Spacer(),
+              TextButton.icon(
+                icon: const Icon(Icons.delete_sweep_outlined, size: 18),
+                label: Text(L10n.of(context).clear_history),
+                onPressed: () => _confirmClear(context, ref),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final entry in history)
+                  InputChip(
+                    label: Text(entry.query),
+                    onPressed: () => onTap(entry.query),
+                    onDeleted: () => ref
+                        .read(searchHistoryProvider.notifier)
+                        .remove(entry.query),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _confirmClear(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(L10n.of(ctx).clear_history),
+        content: Text(L10n.of(ctx).clear_search_history_tip),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(L10n.of(ctx).cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(L10n.of(ctx).ok),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await ref.read(searchHistoryProvider.notifier).clear();
+    }
+  }
 }
 
 class SearchListView extends HookConsumerWidget {
