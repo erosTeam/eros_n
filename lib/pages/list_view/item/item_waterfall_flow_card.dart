@@ -3,22 +3,12 @@ import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/component/widget/eros_cached_network_image.dart';
+import 'package:eros_n/component/widget/cover_aspect.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
-
-/// Cache of resolved cover aspect ratios keyed by thumbnail URL. Lets the
-/// waterfall card re-use the real ratio across rebuilds and page revisits so
-/// we don't snap from a placeholder ratio to the real one every time.
-final Map<String, double> _coverAspectCache = <String, double>{};
-
-/// Fallback aspect ratio used while we don't yet know the real cover size.
-/// Most nhentai thumbnails are roughly portrait 3:4.
-const double _fallbackCoverAspect = 3 / 4;
 
 class ItemWaterfallFlowCard extends HookConsumerWidget {
   const ItemWaterfallFlowCard({
@@ -40,59 +30,22 @@ class ItemWaterfallFlowCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showTags = ref.watch(settingsProvider.select((s) => s.showTags));
 
-    // Compute the best aspect ratio we currently know for this cover:
-    //   1. cache from a previous decode
-    //   2. width/height that came in the listing payload (legacy frontend)
-    //   3. portrait fallback while loading
+    // Resolve the cover aspect ratio: cached → listing payload hint →
+    // decoded intrinsic size. Shared with the gallery detail header so the
+    // Hero source/target rectangles always have the same shape.
     final thumbUrl = gallery.thumbUrl ?? '';
     final imgWidth = gallery.images.thumbnail.imgWidth;
     final imgHeight = gallery.images.thumbnail.imgHeight;
-    final initialAspect = _coverAspectCache[thumbUrl] ??
-        ((imgWidth != null && imgHeight != null && imgHeight > 0)
-            ? imgWidth / imgHeight
-            : _fallbackCoverAspect);
-    final aspectState = useState<double>(initialAspect);
-
-    // Resolve the real intrinsic image size once and update the aspect ratio
-    // so the waterfall card grows/shrinks to fit each cover.
-    useEffect(() {
-      if (thumbUrl.isEmpty) {
-        return null;
-      }
-      final cached = _coverAspectCache[thumbUrl];
-      if (cached != null) {
-        if (aspectState.value != cached) {
-          aspectState.value = cached;
-        }
-        return null;
-      }
-      final provider = getErosImageProvider(thumbUrl);
-      final stream = provider.resolve(const ImageConfiguration());
-      late ImageStreamListener listener;
-      listener = ImageStreamListener(
-        (ImageInfo info, bool _) {
-          final w = info.image.width;
-          final h = info.image.height;
-          if (w > 0 && h > 0) {
-            final ratio = w / h;
-            _coverAspectCache[thumbUrl] = ratio;
-            if (aspectState.value != ratio) {
-              aspectState.value = ratio;
-            }
-          }
-          stream.removeListener(listener);
-        },
-        onError: (_, __) => stream.removeListener(listener),
-      );
-      stream.addListener(listener);
-      return () => stream.removeListener(listener);
-    }, [thumbUrl]);
+    final hint = (imgWidth != null && imgHeight != null && imgHeight > 0)
+        ? imgWidth / imgHeight
+        : null;
+    final aspect = useCoverAspectRatio(thumbUrl, hint: hint);
 
     Widget item = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildCoverImage(context, compact, showTags, aspectState.value),
+        buildCoverImage(context, compact, showTags, aspect),
         if (!compact) buildTitle(),
         if (!compact) SimpleTagsView(simpleTags: gallery.simpleTags),
       ],

@@ -7,6 +7,7 @@ import 'package:eros_n/common/provider/palette_generator.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
+import 'package:eros_n/component/widget/cover_aspect.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -312,6 +313,13 @@ class GalleryDetailBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final hint = (images.thumbnail.imgWidth != null &&
+            images.thumbnail.imgHeight != null &&
+            images.thumbnail.imgHeight! > 0)
+        ? images.thumbnail.imgWidth! / images.thumbnail.imgHeight!
+        : null;
+    final coverAspect = useCoverAspectRatio(thumbUrl, hint: hint);
+
     return RefreshIndicator(
       onRefresh: ref.read(galleryProvider(gid).notifier).reloadData,
       edgeOffset: MediaQuery.of(context).padding.top,
@@ -355,15 +363,19 @@ class GalleryDetailBody extends HookConsumerWidget {
                                   width: 140,
                                   margin: const EdgeInsets.only(right: 12),
                                   alignment: Alignment.center,
+                                  // Mirror the list-card structure
+                                  // (Hero > AspectRatio > Card) so the Hero
+                                  // placeholder shares the same shape on both
+                                  // sides — otherwise wide covers stretch to
+                                  // fill the row height during the fly and
+                                  // snap back at the end.
                                   child: Hero(
                                     tag: '${heroTag ?? ''}_$thumbUrl',
-                                    child: Card(
-                                      margin: const EdgeInsets.all(0),
-                                      clipBehavior: Clip.antiAlias,
-                                      child: AspectRatio(
-                                        aspectRatio:
-                                            (images.thumbnail.imgWidth ?? 300) /
-                                            (images.thumbnail.imgHeight ?? 400),
+                                    child: AspectRatio(
+                                      aspectRatio: coverAspect,
+                                      child: Card(
+                                        margin: const EdgeInsets.all(0),
+                                        clipBehavior: Clip.antiAlias,
                                         child: thumbUrl == null
                                             ? nil
                                             : ErosCachedNetworkImage(
