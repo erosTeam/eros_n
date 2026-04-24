@@ -383,7 +383,7 @@ class ReadModelButton extends HookConsumerWidget {
           return readModelIconMap[readModel]!;
         },
       ),
-      color: Theme.of(context).colorScheme.onSurfaceVariant,
+      color: Theme.of(context).colorScheme.surfaceContainer,
       elevation: 2,
       onSelected: (val) {
         ref.read(settingsProvider.notifier).setReadModel(val);
