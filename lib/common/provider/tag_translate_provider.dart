@@ -10,6 +10,7 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -121,44 +122,36 @@ class TagTranslateNotifier extends _$TagTranslateNotifier {
 
     logger.d('state $state');
 
-    final dataList = await _fetchLastVersionData(force: force);
-    if (dataList == null) {
+    final parsed = await _fetchAndDecodeLastVersion(force: force);
+    if (parsed == null) {
       return;
     }
 
-    final tagTranslates = <TagTranslate>[];
-
-    for (final data in dataList) {
-      final namespace = data['namespace'] as String;
-      Map dataMap = data['data'] as Map;
-      dataMap.forEach((name, value) {
-        final translateName = (value['name'] ?? '') as String;
-        final intro = (value['intro'] ?? '') as String;
-        final links = (value['links'] ?? '') as String;
-
-        tagTranslates.add(
-          TagTranslate(
-            namespace: namespace,
-            name: name as String,
-            translateName: translateName,
-            intro: intro,
-            links: links,
-          ),
-        );
-      });
+    if (parsed.prettyVersion != null) {
+      state = state.copyWith(remoteVersion: parsed.prettyVersion);
     }
 
+    final tagTranslates = parsed.translates;
     logger.d('tagTranslates len: ${tagTranslates.length}');
 
-    tagTranslates.chunked(chunkSize).forEach((element) async {
-      await objectBoxHelper.putAllTagTranslate(element);
-    });
+    // Sequential write + cooperative yield. The previous implementation
+    // fired chunks with `forEach((e) async => await put(e))`, which let the
+    // futures race the UI thread and never actually awaited completion;
+    // the resulting batch-storms were the main cause of the ANR popup
+    // when toggling tag translation back on.
+    for (final chunk in tagTranslates.chunked(chunkSize)) {
+      await objectBoxHelper.putAllTagTranslate(chunk);
+      // Yield once per chunk so the framework can pump frames; without
+      // this the loop monopolises the platform thread until the very last
+      // chunk lands.
+      await Future<void>.delayed(Duration.zero);
+    }
 
     state = state.copyWith(version: state.remoteVersion);
     hiveHelper.setTagTranslateInfo(state);
   }
 
-  Future<List?> _fetchLastVersionData({bool force = false}) async {
+  Future<_ParsedTagDb?> _fetchAndDecodeLastVersion({bool force = false}) async {
     logger.t('_fetchData start');
     if (state.remoteVersion == null ||
         (!force && state.remoteVersion == state.version) ||
@@ -168,39 +161,80 @@ class TagTranslateNotifier extends _$TagTranslateNotifier {
 
     final gzFilePath = path.join(Global.appDocPath, 'db.raw.json.gz');
     await nhDownload(url: state.lastReleaseUrl!, savePath: gzFilePath);
-    List<int> bytes = File(gzFilePath).readAsBytesSync();
-    List<int> data = const GZipDecoder().decodeBytes(bytes);
-    final String dbJson = utf8.decode(data);
 
-    final dataMap = jsonDecode(dbJson) as Map<String, dynamic>;
-
-    // The downloaded payload always carries the upstream commit info,
-    // which is far more readable than a GitHub `published_at` or a
-    // jsDelivr ETag. Promote it to the canonical version string so the
-    // settings page shows e.g. `2026-04-23 (a1b2c3d)` instead of
-    // `W/"19cf8e-..."`.
-    final head = dataMap['head'];
-    if (head is Map) {
-      final sha = (head['sha'] as String?)?.substring(0, 7);
-      final dateStr =
-          (head['committer']?['when'] as String?) ??
-          (head['author']?['when'] as String?) ??
-          (head['date'] as String?);
-      String? prettyDate;
-      if (dateStr != null && dateStr.isNotEmpty) {
-        prettyDate = dateStr.split('T').first;
-      }
-      final pretty = [
-        ?prettyDate,
-        if (sha != null) '($sha)',
-      ].join(' ');
-      if (pretty.isNotEmpty) {
-        state = state.copyWith(remoteVersion: pretty);
-      }
-    }
-
-    return dataMap['data'] as List;
+    // The expensive part: ~5 MB gzip → ~25 MB JSON → ~40k TagTranslate
+    // rows. Doing this on the platform isolate stalled the UI for several
+    // seconds on mid-range Android. Hand it off to a worker isolate via
+    // `compute`; only the path crosses the boundary, the worker reads the
+    // file itself so we don't have to ship the bytes through the channel.
+    return compute(_decodeTagDbInIsolate, gzFilePath);
   }
+}
+
+/// Worker-isolate entry point. Reads the gzipped JSON dump from disk,
+/// inflates it, parses it, and walks the namespace map to produce the
+/// concrete `TagTranslate` rows. All of this is CPU-bound, so keeping it
+/// off the platform isolate is what fixes the ANR.
+_ParsedTagDb _decodeTagDbInIsolate(String gzFilePath) {
+  final bytes = File(gzFilePath).readAsBytesSync();
+  final data = const GZipDecoder().decodeBytes(bytes);
+  final dbJson = utf8.decode(data);
+  final dataMap = jsonDecode(dbJson) as Map<String, dynamic>;
+
+  String? prettyVersion;
+  // The downloaded payload carries upstream commit info, which is far more
+  // readable than GitHub `published_at` or a jsDelivr ETag. Promote it to
+  // the canonical version string so the settings page shows e.g.
+  // `2026-04-23 (a1b2c3d)` instead of `W/"19cf8e-..."`.
+  final head = dataMap['head'];
+  if (head is Map) {
+    final shaFull = head['sha'] as String?;
+    final sha = (shaFull != null && shaFull.length >= 7)
+        ? shaFull.substring(0, 7)
+        : null;
+    final dateStr =
+        (head['committer']?['when'] as String?) ??
+        (head['author']?['when'] as String?) ??
+        (head['date'] as String?);
+    String? prettyDate;
+    if (dateStr != null && dateStr.isNotEmpty) {
+      prettyDate = dateStr.split('T').first;
+    }
+    final pretty = [
+      ?prettyDate,
+      if (sha != null) '($sha)',
+    ].join(' ');
+    if (pretty.isNotEmpty) {
+      prettyVersion = pretty;
+    }
+  }
+
+  final dataList = dataMap['data'] as List;
+  final translates = <TagTranslate>[];
+  for (final item in dataList) {
+    final namespace = item['namespace'] as String;
+    final inner = item['data'] as Map;
+    inner.forEach((name, value) {
+      translates.add(
+        TagTranslate(
+          namespace: namespace,
+          name: name as String,
+          translateName: (value['name'] ?? '') as String,
+          intro: (value['intro'] ?? '') as String,
+          links: (value['links'] ?? '') as String,
+        ),
+      );
+    });
+  }
+
+  return _ParsedTagDb(translates: translates, prettyVersion: prettyVersion);
+}
+
+/// Result bundle returned from the worker isolate.
+class _ParsedTagDb {
+  const _ParsedTagDb({required this.translates, this.prettyVersion});
+  final List<TagTranslate> translates;
+  final String? prettyVersion;
 }
 
 @riverpod

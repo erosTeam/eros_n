@@ -72,6 +72,11 @@ Future<GallerySearch> searchGalleryByApi({
   }
 }
 
+/// Search galleries via nhentai's v2 API (`GET /api/v2/search`).
+///
+/// Replaces the old HTML scrape of `/search/` — the SvelteKit frontend no
+/// longer ships per-gallery `data-tags`, so the JSON endpoint is the only
+/// way to get tag ids back into the listing.
 Future<GallerySet> searchGallery({
   bool refresh = false,
   CancelToken? cancelToken,
@@ -79,26 +84,26 @@ Future<GallerySet> searchGallery({
   String? query,
   SearchSort? sort,
 }) async {
-  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+  final dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  const url = '/search/';
+  const url = '/api/v2/search';
   final params = <String, dynamic>{
+    'query': query ?? '',
     'page': ?page,
     if (sort != null && sort.value.isNotEmpty) 'sort': sort.value,
-    'q': query ?? '',
   };
 
   logger.d('searchGallery params $params');
 
   int? statusCode;
   final httpTransformer = HttpTransformerBuilder((response) async {
-    logger.t('statusCode ${response.statusCode}');
     statusCode = response.statusCode;
-    final list = await parseGalleryList(response.data as String);
-    return DioHttpResponse<GallerySet>.success(list);
+    final json = response.data as Map<String, dynamic>;
+    final set = await parseGalleryListV2(json, backfill: getTagsByIds);
+    return DioHttpResponse<GallerySet>.success(set);
   });
 
-  DioHttpResponse httpResponse = await dioHttpClient.get(
+  final httpResponse = await dioHttpClient.get(
     url,
     queryParameters: params,
     httpTransformer: httpTransformer,
@@ -114,31 +119,35 @@ Future<GallerySet> searchGallery({
     return data;
   } else {
     logger.e('${httpResponse.error.runtimeType}');
-    throw httpResponse.error ?? HttpException('getGalleryList error');
+    throw httpResponse.error ?? HttpException('searchGallery error');
   }
 }
 
+/// Newest galleries via `/api/v2/galleries`. Used as the front page list
+/// when no language filter is active. Popular galleries live on a separate
+/// endpoint (`/api/v2/galleries/popular`) and are fetched alongside via
+/// `getPopularList`.
 Future<GallerySet> getGalleryList({
   bool refresh = false,
   CancelToken? cancelToken,
   String? referer,
   int? page,
 }) async {
-  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+  final dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
   final params = <String, dynamic>{'page': ?page};
 
   int? statusCode;
 
   final httpTransformer = HttpTransformerBuilder((response) async {
-    logger.t('statusCode ${response.statusCode}');
     statusCode = response.statusCode;
-    final list = await parseGalleryList(response.data as String);
-    return DioHttpResponse<GallerySet>.success(list);
+    final json = response.data as Map<String, dynamic>;
+    final set = await parseGalleryListV2(json, backfill: getTagsByIds);
+    return DioHttpResponse<GallerySet>.success(set);
   });
 
-  DioHttpResponse httpResponse = await dioHttpClient.get(
-    '/',
+  final httpResponse = await dioHttpClient.get(
+    '/api/v2/galleries',
     queryParameters: params,
     httpTransformer: httpTransformer,
     options: getOptions(forceRefresh: refresh),
@@ -158,27 +167,66 @@ Future<GallerySet> getGalleryList({
   }
 }
 
+/// Today's popular galleries via `/api/v2/galleries/popular`. Returns a
+/// bare JSON array (no pagination), so we route through the array variant
+/// of the parser. Caller is expected to swallow failures so a popular
+/// outage doesn't take down the main listing.
+Future<GallerySet> getPopularList({
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
+  final dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final httpTransformer = HttpTransformerBuilder((response) async {
+    final list = response.data as List<dynamic>;
+    final set = await parseGalleryListV2Array(list, backfill: getTagsByIds);
+    return DioHttpResponse<GallerySet>.success(set);
+  });
+
+  final httpResponse = await dioHttpClient.get(
+    '/api/v2/galleries/popular',
+    httpTransformer: httpTransformer,
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (httpResponse.ok && httpResponse.data is GallerySet) {
+    return httpResponse.data as GallerySet;
+  }
+  throw httpResponse.error ?? HttpException('getPopularList error');
+}
+
+/// User favorites via `/api/v2/favorites`. Requires the v2 access token,
+/// which `ApiV2AuthInterceptor` injects from the persisted cookie jar.
 Future<GallerySet> getFavoriteList({
   bool refresh = false,
   CancelToken? cancelToken,
   String? referer,
   int? page,
+  String? query,
 }) async {
-  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+  final dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
-  final params = <String, dynamic>{if (page != null && page > 1) 'page': page};
+  final params = <String, dynamic>{
+    if (page != null && page > 1) 'page': page,
+    if (query != null && query.isNotEmpty) 'q': query,
+  };
 
   int? statusCode;
 
   final httpTransformer = HttpTransformerBuilder((response) async {
-    logger.t('statusCode ${response.statusCode}');
     statusCode = response.statusCode;
-    final list = await parseGalleryList(response.data as String);
-    return DioHttpResponse<GallerySet>.success(list);
+    final json = response.data as Map<String, dynamic>;
+    final set = await parseGalleryListV2(
+      json,
+      kind: GalleryListKind.favorites,
+      backfill: getTagsByIds,
+    );
+    return DioHttpResponse<GallerySet>.success(set);
   });
 
-  DioHttpResponse httpResponse = await dioHttpClient.get(
-    '/favorites/',
+  final httpResponse = await dioHttpClient.get(
+    '/api/v2/favorites',
     queryParameters: params,
     httpTransformer: httpTransformer,
     options: getOptions(forceRefresh: refresh),
@@ -881,4 +929,56 @@ Future<List<Tag>> nhAutocomplete({
   }
 
   return aggregated;
+}
+
+/// Resolve a batch of tag ids into rich `Tag` objects via
+/// `GET /api/v2/tags/ids?ids=...`. The endpoint accepts at most 100 ids
+/// per call (rate-limited to 15/min per IP), so we chunk and bail out
+/// gracefully on rate-limit errors. Used to backfill the local
+/// `NhTag` table for ids encountered in v2 list responses but not yet
+/// known locally.
+Future<List<Tag>> getTagsByIds(
+  List<int> ids, {
+  CancelToken? cancelToken,
+}) async {
+  if (ids.isEmpty) {
+    return const [];
+  }
+  final dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final results = <Tag>[];
+  // Chunk to 100 per call. /api/v2/tags/ids hard-caps at 100 ids and the
+  // overall rate limit is 15/min, so even worst-case (~1000 ids on a busy
+  // listing) only burns ~10 calls.
+  for (var i = 0; i < ids.length; i += 100) {
+    final chunk = ids.sublist(i, i + 100 > ids.length ? ids.length : i + 100);
+    try {
+      final resp = await dioHttpClient.get(
+        '/api/v2/tags/ids',
+        queryParameters: {'ids': chunk.join(',')},
+        options: getOptions(),
+        cancelToken: cancelToken,
+        httpTransformer: HttpTransformerBuilder((response) {
+          final code = response.statusCode ?? 0;
+          if (code >= 400) {
+            logger.w('getTagsByIds $code: ${response.data}');
+            return DioHttpResponse<dynamic>.success(const <dynamic>[]);
+          }
+          return DioHttpResponse<dynamic>.success(response.data);
+        }),
+      );
+      if (!resp.ok || resp.data is! List) {
+        continue;
+      }
+      for (final raw in resp.data as List) {
+        if (raw is! Map) {
+          continue;
+        }
+        results.add(Tag.fromJson(raw.cast<String, dynamic>()));
+      }
+    } catch (e) {
+      logger.w('getTagsByIds chunk failed: $e');
+    }
+  }
+  return results;
 }

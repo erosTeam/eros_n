@@ -259,3 +259,150 @@ String? getLanguageCode(List<String> tagIds) {
     return null;
   }
 }
+
+/// Maps a `GalleryListItem` JSON object (as returned by `/api/v2/galleries`,
+/// `/api/v2/search`, `/api/v2/galleries/popular`, `/api/v2/favorites`) onto
+/// our `Gallery` model.
+///
+/// The v2 list endpoints intentionally return only `tag_ids` (not full tag
+/// objects), so we keep using the local ObjectBox `NhTag` table to look up
+/// names / translations — same enrichment path the legacy HTML parser uses.
+Gallery _galleryFromV2Json(Map<String, dynamic> json) {
+  final tagIdsRaw = (json['tag_ids'] as List?) ?? const [];
+  final tagIds = tagIdsRaw
+      .map((e) => e is int ? e : int.tryParse(e.toString()) ?? 0)
+      .where((e) => e != 0)
+      .toList();
+
+  final simpleTags = tagIds.map((id) => Tag(id: id)).toList();
+
+  // v2 returns the thumbnail as a CDN-relative path (e.g.
+  // `galleries/3903926/thumb.webp`); the legacy HTML scrape gave us the
+  // absolute URL. Rebuild the absolute URL here so downstream image
+  // loading keeps working without any caller-side knowledge of the CDN.
+  final thumbnailRaw = (json['thumbnail'] as String?) ?? '';
+  final thumbnailUrl = thumbnailRaw.isEmpty
+      ? ''
+      : (thumbnailRaw.startsWith('http')
+            ? thumbnailRaw
+            : 'https://t.nhentai.net/${thumbnailRaw.replaceFirst(RegExp(r'^/'), '')}');
+  final ext = RegExp(r'\.(\w+)$').firstMatch(thumbnailUrl)?.group(1) ?? '';
+  final type = ext.isNotEmpty ? ext.substring(0, 1) : 'j';
+
+  return Gallery(
+    gid: (json['id'] as num?)?.toInt() ?? 0,
+    mediaId: json['media_id'] as String?,
+    numPages: (json['num_pages'] as num?)?.toInt(),
+    title: GalleryTitle(
+      englishTitle: json['english_title'] as String?,
+      japaneseTitle: json['japanese_title'] as String?,
+    ),
+    images: GalleryImages(
+      thumbnail: GalleryImage(
+        type: type,
+        imgWidth: (json['thumbnail_width'] as num?)?.toInt(),
+        imgHeight: (json['thumbnail_height'] as num?)?.toInt(),
+        imageUrl: thumbnailUrl.isNotEmpty ? thumbnailUrl : null,
+      ),
+    ),
+    languageCode: getLanguageCode(tagIds.map((e) => e.toString()).toList()),
+    simpleTags: simpleTags,
+  );
+}
+
+/// Optional resolver supplied by the caller (typically `request.dart`) to
+/// fetch full `Tag` records for ids the local `NhTag` table doesn't know
+/// yet. Kept as a typedef so the parser layer doesn't have to import the
+/// network layer (which would create an import cycle).
+typedef NhTagBackfillResolver = Future<List<Tag>> Function(List<int> ids);
+
+/// Builds a `GallerySet` from the `PaginatedResponse[GalleryListItem]` shape
+/// (`/api/v2/galleries`, `/api/v2/search`, `/api/v2/favorites`). `kind` picks
+/// which slot of `GallerySet` the result list lands in.
+///
+/// When [backfill] is supplied, any tag id present in the response but
+/// missing from the local `NhTag` table is fetched in bulk and learned
+/// before enrichment, so the very first render of the list shows real
+/// tag names instead of blanks.
+Future<GallerySet> parseGalleryListV2(
+  Map<String, dynamic> json, {
+  GalleryListKind kind = GalleryListKind.gallerys,
+  NhTagBackfillResolver? backfill,
+}) async {
+  final results = (json['result'] as List? ?? const [])
+      .whereType<Map>()
+      .where((e) => e['blacklisted'] != true)
+      .map((e) => _galleryFromV2Json(e.cast<String, dynamic>()))
+      .toList();
+  final maxPage = (json['num_pages'] as num?)?.toInt() ?? 1;
+
+  if (backfill != null) {
+    await _backfillUnknownNhTags(results, backfill);
+  }
+  final enriched = await _enrichGalleryList(results);
+
+  return GallerySet(
+    gallerys: kind == GalleryListKind.gallerys ? enriched : null,
+    populars: kind == GalleryListKind.populars ? enriched : null,
+    favorites: kind == GalleryListKind.favorites ? enriched : null,
+    maxPage: maxPage,
+  );
+}
+
+/// Same idea as `parseGalleryListV2` but for endpoints that return a bare
+/// JSON array (e.g. `/api/v2/galleries/popular`).
+Future<GallerySet> parseGalleryListV2Array(
+  List<dynamic> json, {
+  GalleryListKind kind = GalleryListKind.populars,
+  NhTagBackfillResolver? backfill,
+}) async {
+  final results = json
+      .whereType<Map>()
+      .where((e) => e['blacklisted'] != true)
+      .map((e) => _galleryFromV2Json(e.cast<String, dynamic>()))
+      .toList();
+  if (backfill != null) {
+    await _backfillUnknownNhTags(results, backfill);
+  }
+  final enriched = await _enrichGalleryList(results);
+  return GallerySet(
+    gallerys: kind == GalleryListKind.gallerys ? enriched : null,
+    populars: kind == GalleryListKind.populars ? enriched : null,
+    favorites: kind == GalleryListKind.favorites ? enriched : null,
+    maxPage: 1,
+  );
+}
+
+/// Walk the listing for every tag id that isn't in `NhTag` yet, ask the
+/// caller-supplied resolver to fetch them in bulk, and feed the response
+/// into `learnNhTags` so subsequent enrichment finds them. Failures are
+/// swallowed: missing tag names are ugly but better than failing the
+/// whole listing.
+Future<void> _backfillUnknownNhTags(
+  List<Gallery> galleries,
+  NhTagBackfillResolver backfill,
+) async {
+  final unknown = <int>{};
+  for (final g in galleries) {
+    for (final t in g.simpleTags) {
+      final id = t.id ?? 0;
+      if (id == 0) continue;
+      if (objectBoxHelper.findNhTag(id) == null) {
+        unknown.add(id);
+      }
+    }
+  }
+  if (unknown.isEmpty) {
+    return;
+  }
+  try {
+    final fetched = await backfill(unknown.toList());
+    if (fetched.isNotEmpty) {
+      await objectBoxHelper.learnNhTags(fetched);
+    }
+  } catch (e) {
+    logger.w('NhTag backfill failed (non-fatal): $e');
+  }
+}
+
+enum GalleryListKind { gallerys, populars, favorites }

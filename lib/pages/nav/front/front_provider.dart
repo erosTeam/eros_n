@@ -9,7 +9,6 @@ import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 part 'front_provider.g.dart';
 
@@ -98,33 +97,38 @@ class FrontNotifier extends _$FrontNotifier {
     logger.t('toPage: $toPage');
 
     try {
-      if (page == 1 || refresh || first) {
-        getGalleryList(refresh: refresh || next || prev, page: page).then((
-          gallerySetPopular,
-        ) {
-          final populars = gallerySetPopular.populars ?? [];
-
-          _popularNoti.clearGallerys();
-          _popularNoti.addGallerys(populars);
-        });
+      // Popular galleries live on a dedicated v2 endpoint and only matter
+      // for the first page; fire-and-forget so a slow popular response
+      // can't block the main listing.
+      if (toPage == 1 || refresh || first) {
+        getPopularList(refresh: refresh || next || prev)
+            .then((set) {
+              final populars = set.populars ?? const [];
+              _popularNoti.clearGallerys();
+              _popularNoti.addGallerys(populars);
+            })
+            .catchError((Object e) {
+              logger.w('getPopularList failed (non-fatal): $e');
+            });
       }
 
-      late String query;
-      final queryUuid = '-"${const Uuid().v4()}"';
-      if (ref.read(settingsProvider).frontLanguagesFilter !=
-          LanguagesFilter.all) {
-        query =
-            'language:${ref.read(settingsProvider).frontLanguagesFilter.value}';
-      } else {
-        query = queryUuid;
-      }
+      final filter = ref.read(settingsProvider).frontLanguagesFilter;
+      final shouldFilter = filter != LanguagesFilter.all;
 
-      final gallerySet = await searchGallery(
-        refresh: refresh || next || prev,
-        page: toPage,
-        query: query,
-        sort: ref.read(settingsProvider).searchSortOnFrontPage,
-      );
+      // Without a language filter we can use the lighter `/api/v2/galleries`
+      // endpoint (no query parsing on the server). With a filter we fall back
+      // to `/api/v2/search` so the `language:xxx` qualifier is respected.
+      final gallerySet = shouldFilter
+          ? await searchGallery(
+              refresh: refresh || next || prev,
+              page: toPage,
+              query: 'language:${filter.value}',
+              sort: ref.read(settingsProvider).searchSortOnFrontPage,
+            )
+          : await getGalleryList(
+              refresh: refresh || next || prev,
+              page: toPage,
+            );
 
       final gallerys = gallerySet.gallerys ?? [];
 
