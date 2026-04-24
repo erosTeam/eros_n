@@ -106,7 +106,14 @@ class ErosCachedNetworkImage extends StatelessWidget {
   /// OctoImage only animates the fade-in when a placeholder builder is
   /// provided. Fall back to a neutral coloured square so callers that don't
   /// pass a custom placeholder still get the smoother transition.
-  OctoPlaceholderBuilder get _octoPlaceholderBuilder {
+  ///
+  /// OctoImage asserts that placeholder and progress indicator are mutually
+  /// exclusive, so when the caller wants a progress indicator we drop the
+  /// placeholder and let the progress UI take over the loading state.
+  OctoPlaceholderBuilder? get _octoPlaceholderBuilder {
+    if (progressIndicatorBuilder != null) {
+      return null;
+    }
     if (placeholder != null) {
       return (context) => placeholder!(context, imageUrl ?? '');
     }
