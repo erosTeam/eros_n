@@ -76,7 +76,7 @@ class ReadNotifier extends _$ReadNotifier {
   }
 
   bool get isPageView {
-    return ref.watch(settingsProvider.select((s) => s.readModelPageView));
+    return ref.read(settingsProvider.select((s) => s.readModelPageView));
   }
 
   int get currentPageIndex {
@@ -209,7 +209,7 @@ class ReadNotifier extends _$ReadNotifier {
   }
 
   void setFullscreen() {
-    final fullScreenReader = ref.watch(
+    final fullScreenReader = ref.read(
       settingsProvider.select((s) => s.fullScreenReader),
     );
     if (fullScreenReader) {

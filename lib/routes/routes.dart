@@ -116,6 +116,10 @@ class RouteUtil {
     Gallery gallery, {
     String? heroTag,
   }) async {
+    // NOTE: must be `watch`, not `read`. `galleryProvider` is autoDispose;
+    // a `read` would let the freshly-initialised notifier be disposed before
+    // the gallery page mounts and re-watches it, so the init state is lost
+    // and the page renders with an empty Gallery.
     ref.watch(galleryProvider(gallery.gid).notifier).initFromGallery(gallery);
     pushGalleryPage(gallery.gid);
     try {
@@ -131,6 +135,8 @@ class RouteUtil {
     String? heroTag,
     bool replace = false,
   }) async {
+    // See note above in goGallery: keep `watch` to anchor the autoDispose
+    // provider until the gallery page itself starts watching it.
     ref.watch(galleryProvider(gid).notifier).initFromGid(gid);
     pushGalleryPage(gid);
     try {
