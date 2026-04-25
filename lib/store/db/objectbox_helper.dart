@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/tag.dart';
 import 'package:eros_n/objectbox.g.dart';
+import 'package:eros_n/store/db/db_store.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
@@ -8,13 +9,14 @@ import 'package:eros_n/store/db/objectbox.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 
-class ObjectBoxHelper {
+class ObjectBoxHelper implements DbStore {
   late final Store _store;
 
   late final Box<GalleryHistory> _historyBox;
   late final Box<TagTranslate> _tagTranslateBox;
   late final Box<NhTag> _nhTagBox;
 
+  @override
   Future<void> init({String? path}) async {
     _store = await openObjectBox(path: path);
     _historyBox = Box<GalleryHistory>(_store);
@@ -22,6 +24,7 @@ class ObjectBoxHelper {
     _nhTagBox = Box<NhTag>(_store);
   }
 
+  @override
   void close() {
     _store.close();
   }
@@ -30,6 +33,7 @@ class ObjectBoxHelper {
   // GalleryHistory
   // ---------------------------------------------------------------------------
 
+  @override
   List<GalleryHistory> getAllHistory() {
     final query = _historyBox
         .query()
@@ -40,16 +44,19 @@ class ObjectBoxHelper {
     return result;
   }
 
+  @override
   Future<void> addHistory(GalleryHistory galleryHistory) async {
     _historyBox.put(galleryHistory);
   }
 
+  @override
   Future<void> removeHistory(int? gid) async {
     if (gid != null) {
       _historyBox.remove(gid);
     }
   }
 
+  @override
   Future<void> clearHistory() async {
     _historyBox.removeAll();
   }
@@ -58,6 +65,7 @@ class ObjectBoxHelper {
   // TagTranslate
   // ---------------------------------------------------------------------------
 
+  @override
   Future<void> putAllTagTranslate(List<TagTranslate> tagTranslates) async {
     // Upsert by (name, namespace): load existing id map, fill ids, then putMany
     final existing = _tagTranslateBox.getAll();
@@ -74,6 +82,7 @@ class ObjectBoxHelper {
     _tagTranslateBox.putMany(tagTranslates);
   }
 
+  @override
   Future<void> putTagTranslate(TagTranslate tagTranslate) async {
     final existing = _tagTranslateBox
         .query(
@@ -89,15 +98,18 @@ class ObjectBoxHelper {
     _tagTranslateBox.put(tagTranslate);
   }
 
+  @override
   Future<void> deleteAllTagTranslate() async {
     _tagTranslateBox.removeAll();
   }
 
+  @override
   Future<List<String>> findAllTagNamespace() async {
     final all = _tagTranslateBox.getAll();
     return all.map((t) => t.namespace).toSet().toList();
   }
 
+  @override
   TagTranslate? findTagTranslate(String name, {String? namespace}) {
     if (name.contains('|')) {
       name = name.split('|').first.trim();
@@ -127,6 +139,7 @@ class ObjectBoxHelper {
     }
   }
 
+  @override
   Future<TagTranslate?> findTagTranslateAsync(
     String name, {
     String? namespace,
@@ -134,6 +147,7 @@ class ObjectBoxHelper {
     return findTagTranslate(name, namespace: namespace);
   }
 
+  @override
   Future<List<TagTranslate>> findTagTranslateContains(
     String text,
     int limit,
@@ -162,14 +176,17 @@ class ObjectBoxHelper {
   // NhTag
   // ---------------------------------------------------------------------------
 
+  @override
   Future<void> putAllNhTag(List<NhTag> tags) async {
     _nhTagBox.putMany(tags);
   }
 
+  @override
   Future<void> putNhTag(NhTag tag) async {
     _nhTagBox.put(tag);
   }
 
+  @override
   NhTag? findNhTag(int? id) {
     if (id == null) {
       return null;
@@ -177,14 +194,17 @@ class ObjectBoxHelper {
     return _nhTagBox.get(id);
   }
 
+  @override
   Future<NhTag?> findNhTagAsync(int? id) async {
     return findNhTag(id);
   }
 
+  @override
   Future<List<NhTag>> getAllNhTag() async {
     return _nhTagBox.getAll();
   }
 
+  @override
   Future<List<NhTag>> findNhTagContains(String text, int limit) async {
     final query =
         _nhTagBox
@@ -202,6 +222,7 @@ class ObjectBoxHelper {
     return result;
   }
 
+  @override
   Future<void> updateNhTagTime(int nhTagId) async {
     final oriNhTag = _nhTagBox.get(nhTagId);
     if (oriNhTag == null) {
@@ -223,6 +244,7 @@ class ObjectBoxHelper {
   /// long tag lists (~30 entries on a typical detail page) don't block
   /// the UI thread enough to trigger an ANR — every TagTranslate lookup
   /// is a 41k-row contains() scan and adds up quickly otherwise.
+  @override
   Future<void> learnNhTags(List<Tag> tags) async {
     if (tags.isEmpty) {
       return;

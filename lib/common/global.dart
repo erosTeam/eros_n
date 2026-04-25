@@ -4,6 +4,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/network/app_dio/app_dio.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/store/db/db_store.dart';
 import 'package:eros_n/store/db/objectbox_helper.dart';
 import 'package:eros_n/store/kv/hive.dart';
 import 'package:eros_n/utils/clipboard_helper.dart';
@@ -17,7 +18,7 @@ import 'package:path_provider/path_provider.dart';
 DioHttpConfig globalDioConfig = nhDioConfig;
 
 final HiveHelper hiveHelper = HiveHelper();
-final ObjectBoxHelper objectBoxHelper = ObjectBoxHelper();
+final DbStore objectBoxHelper = ObjectBoxHelper();
 final ClipboardHelper clipboardHelper = ClipboardHelper();
 final erosRouter = AppRouter();
 
