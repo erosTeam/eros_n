@@ -324,3 +324,101 @@ Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
 
   return raw.copyWith(tags: enrichedTags, moreLikeGallerys: enrichedRelated);
 }
+
+/// Parses a gallery detail from nhentai's v2 JSON API (`GET /api/v2/galleries/<id>`).
+///
+/// Used as a Cloudflare-safe alternative to fetching the HTML detail page
+/// (autoFallback mode falls back here on CF 403; OHOS always uses this path).
+Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
+  const cdnThumb = 'https://t.nhentai.net';
+  // Map file extension to nhentai type shorthand.
+  const extToType = {'jpg': 'j', 'jpeg': 'j', 'png': 'p', 'gif': 'g', 'webp': 'w'};
+
+  String typeFromPath(String path) {
+    final ext = path.split('.').last.toLowerCase();
+    return extToType[ext] ?? 'j';
+  }
+
+  final gid = (json['id'] as num?)?.toInt() ?? 0;
+  final mediaId = json['media_id'] as String?;
+  final titleMap = json['title'] as Map<String, dynamic>? ?? {};
+
+  // pages (top-level in v2)
+  final rawPages = json['pages'] as List? ?? [];
+  final pages = <GalleryImage>[];
+  for (final p in rawPages) {
+    final page = p as Map<String, dynamic>;
+    final path = page['path'] as String? ?? '';
+    final thumbPath = page['thumbnail'] as String? ?? '';
+    final number = (page['number'] as num?)?.toInt() ?? (pages.length + 1);
+    pages.add(GalleryImage(
+      type: typeFromPath(path),
+      imgWidth: (page['width'] as num?)?.toInt(),
+      imgHeight: (page['height'] as num?)?.toInt(),
+      imageUrl: thumbPath.isNotEmpty ? '$cdnThumb/$thumbPath' : null,
+      href: '/g/$gid/$number/',
+    ));
+  }
+
+  // cover (top-level in v2)
+  final coverMap = json['cover'] as Map<String, dynamic>? ?? {};
+  final coverPath = coverMap['path'] as String? ?? '';
+  final cover = GalleryImage(
+    type: typeFromPath(coverPath),
+    imgWidth: (coverMap['width'] as num?)?.toInt(),
+    imgHeight: (coverMap['height'] as num?)?.toInt(),
+    imageUrl: coverPath.isNotEmpty ? '$cdnThumb/$coverPath' : null,
+  );
+
+  // thumbnail (top-level in v2)
+  final thumbMap = json['thumbnail'] as Map<String, dynamic>? ?? {};
+  final thumbPath = thumbMap['path'] as String? ?? '';
+  final thumbnail = GalleryImage(
+    type: typeFromPath(thumbPath),
+    imgWidth: (thumbMap['width'] as num?)?.toInt(),
+    imgHeight: (thumbMap['height'] as num?)?.toInt(),
+    imageUrl: thumbPath.isNotEmpty ? '$cdnThumb/$thumbPath' : null,
+  );
+
+  // tags — full Tag objects (not just ids)
+  final rawTags = (json['tags'] as List? ?? [])
+      .whereType<Map>()
+      .map((t) => Tag(
+            id: (t['id'] as num?)?.toInt(),
+            type: t['type'] as String?,
+            name: t['name'] as String?,
+            url: t['url'] as String?,
+            count: (t['count'] as num?)?.toInt(),
+          ))
+      .toList();
+
+  final uploadDate = (json['upload_date'] as num?)?.toInt();
+  final uploadedDateTime = uploadDate != null
+      ? DateTime.fromMillisecondsSinceEpoch(uploadDate * 1000).toIso8601String()
+      : null;
+
+  final raw = Gallery(
+    gid: gid,
+    mediaId: mediaId,
+    title: GalleryTitle(
+      englishTitle: titleMap['english'] as String?,
+      japaneseTitle: titleMap['japanese'] as String?,
+      prettyTitle: titleMap['pretty'] as String?,
+    ),
+    images: GalleryImages(pages: pages, cover: cover, thumbnail: thumbnail),
+    numPages: (json['num_pages'] as num?)?.toInt(),
+    numFavorites: (json['num_favorites'] as num?)?.toInt() ?? 0,
+    scanlator: (json['scanlator'] as String?)?.isEmpty == true
+        ? null
+        : json['scanlator'] as String?,
+    uploadedDateTime: uploadedDateTime,
+    tags: rawTags,
+    simpleTags: rawTags.map((t) => Tag(id: t.id)).toList(),
+    moreLikeGallerys: const [],
+    csrfToken: null,
+    isFavorited: null,
+  );
+
+  return _enrichGalleryDetail(raw);
+}
+

@@ -119,16 +119,17 @@ class GalleryNotifier extends _$GalleryNotifier {
 
   Future<void> toggleFavorite() async {
     late final ({bool? favorited, int? favNum}) result;
+    final csrf = state.csrfToken ?? await getCsrfTokenFromCookie();
     if (state.isFavorited ?? false) {
       logger.d('取消收藏');
       result = await setFavorite(
         gid: state.gid,
         unfavorite: true,
-        csrfToken: state.csrfToken,
+        csrfToken: csrf,
       );
     } else {
       logger.d('收藏');
-      result = await setFavorite(gid: state.gid, csrfToken: state.csrfToken);
+      result = await setFavorite(gid: state.gid, csrfToken: csrf);
     }
     final int? numFavorite = result.favNum;
     final bool? isFavorite = result.favorited;

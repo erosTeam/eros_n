@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
+import 'package:collection/collection.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
+import 'package:eros_n/common/gallery_fetch_mode.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parser.dart';
 import 'package:eros_n/component/exception/error.dart';
@@ -250,6 +253,37 @@ Future<Gallery> getGalleryDetail({
   bool refresh = false,
   CancelToken? cancelToken,
 }) async {
+  if (kGalleryFetchMode == GalleryFetchMode.api) {
+    final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);
+    if (gid != null) {
+      return _getGalleryDetailByApi(int.parse(gid), refresh: refresh, cancelToken: cancelToken);
+    }
+  }
+
+  if (kGalleryFetchMode == GalleryFetchMode.html) {
+    return _getGalleryDetailHtml(url: url, refresh: refresh, cancelToken: cancelToken);
+  }
+
+  // autoFallback: try HTML first, fall back to API on CF 403.
+  try {
+    return await _getGalleryDetailHtml(url: url, refresh: refresh, cancelToken: cancelToken);
+  } on BadRequestException catch (e) {
+    if (e.code == 403) {
+      logger.w('getGalleryDetail CF 403, falling back to API for $url');
+      final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);
+      if (gid != null) {
+        return _getGalleryDetailByApi(int.parse(gid), refresh: refresh, cancelToken: cancelToken);
+      }
+    }
+    rethrow;
+  }
+}
+
+Future<Gallery> _getGalleryDetailHtml({
+  required String url,
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
   DioHttpResponse httpResponse = await dioHttpClient.get(
@@ -269,6 +303,85 @@ Future<Gallery> getGalleryDetail({
     logger.e('${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? HttpException('getGalleryDetail error');
   }
+}
+
+/// Fetches gallery detail via `GET /api/v2/galleries/<gid>` (JSON, no Cloudflare).
+Future<Gallery> _getGalleryDetailByApi(
+  int gid, {
+  bool refresh = false,
+  CancelToken? cancelToken,
+}) async {
+  final dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+
+  final DioHttpResponse httpResponse = await dioHttpClient.get(
+    '/api/v2/galleries/$gid',
+    httpTransformer: HttpTransformerBuilder((response) async {
+      final json = response.data as Map<String, dynamic>;
+      final gallery = await parseGalleryDetailFromApi(json);
+      return DioHttpResponse<Gallery>.success(gallery);
+    }),
+    options: getOptions(forceRefresh: refresh),
+    cancelToken: cancelToken,
+  );
+
+  if (!httpResponse.ok || httpResponse.data is! Gallery) {
+    logger.e('_getGalleryDetailByApi gid=$gid ${httpResponse.error.runtimeType}');
+    throw httpResponse.error ?? HttpException('getGalleryDetail api error');
+  }
+
+  final gallery = httpResponse.data as Gallery;
+
+  // Fetch related galleries separately (best-effort, don't fail on error).
+  try {
+    final relatedResponse = await dioHttpClient.get(
+      '/api/v2/galleries/$gid/related',
+      httpTransformer: HttpTransformerBuilder((response) {
+        final data = response.data as Map<String, dynamic>;
+        final items = (data['result'] as List? ?? []).whereType<Map>().map((item) {
+          final id = (item['id'] as num?)?.toInt() ?? 0;
+          final mediaId = item['media_id'] as String?;
+          final thumbPath = item['thumbnail'] as String? ?? '';
+          return Gallery(
+            gid: id,
+            mediaId: mediaId,
+            title: GalleryTitle(
+              englishTitle: item['english_title'] as String?,
+              japaneseTitle: item['japanese_title'] as String?,
+            ),
+            images: GalleryImages(
+              pages: const [],
+              cover: const GalleryImage(),
+              thumbnail: GalleryImage(
+                type: thumbPath.endsWith('.webp') ? 'w' : 'j',
+                imgWidth: (item['thumbnail_width'] as num?)?.toInt(),
+                imgHeight: (item['thumbnail_height'] as num?)?.toInt(),
+                imageUrl: thumbPath.isNotEmpty
+                    ? 'https://t.nhentai.net/$thumbPath'
+                    : null,
+              ),
+            ),
+            numPages: (item['num_pages'] as num?)?.toInt(),
+            simpleTags: (item['tag_ids'] as List? ?? [])
+                .whereType<num>()
+                .map((id) => Tag(id: id.toInt()))
+                .toList(),
+            tags: const [],
+            moreLikeGallerys: const [],
+          );
+        }).toList();
+        return DioHttpResponse<List<Gallery>>.success(items);
+      }),
+      options: getOptions(forceRefresh: refresh),
+      cancelToken: cancelToken,
+    );
+    if (relatedResponse.ok && relatedResponse.data is List<Gallery>) {
+      return gallery.copyWith(moreLikeGallerys: relatedResponse.data as List<Gallery>);
+    }
+  } catch (e) {
+    logger.w('_getGalleryDetailByApi related gid=$gid error: $e');
+  }
+
+  return gallery;
 }
 
 Future<GalleryImage> getGalleryImage({
@@ -981,4 +1094,12 @@ Future<List<Tag>> getTagsByIds(
     }
   }
   return results;
+}
+
+/// Returns the nhentai csrftoken cookie value from the persistent cookie jar.
+/// Used when Gallery.csrfToken is null (API mode) and a write operation needs it.
+Future<String?> getCsrfTokenFromCookie() async {
+  final cookies = await Global.cookieJar
+      .loadForRequest(Uri.parse(NHConst.baseUrl));
+  return cookies.firstWhereOrNull((Cookie c) => c.name == 'csrftoken')?.value;
 }
