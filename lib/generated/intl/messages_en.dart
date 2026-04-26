@@ -81,6 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
     "license": MessageLookupByLibrary.simpleMessage("License"),
     "light": MessageLookupByLibrary.simpleMessage("Light"),
+    "liquid_glass": MessageLookupByLibrary.simpleMessage("Liquid Glass"),
     "list": MessageLookupByLibrary.simpleMessage("List"),
     "list_model": MessageLookupByLibrary.simpleMessage("List Model"),
     "list_style": MessageLookupByLibrary.simpleMessage("List Style"),

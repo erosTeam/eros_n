@@ -111,5 +111,6 @@
   "custom_layout_width": "自定义布局宽度",
   "show_less": "显示更少内容",
   "show_more": "显示更多内容",
-  "pinch_to_zoom_hint": "也可以在页面上双指缩放调整"
+  "pinch_to_zoom_hint": "也可以在页面上双指缩放调整",
+  "liquid_glass": "液态玻璃"
 }

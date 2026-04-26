@@ -838,6 +838,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Liquid Glass`
+  String get liquid_glass {
+    return Intl.message(
+      'Liquid Glass',
+      name: 'liquid_glass',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

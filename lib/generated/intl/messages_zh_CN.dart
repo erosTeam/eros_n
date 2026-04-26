@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "left_to_right": MessageLookupByLibrary.simpleMessage("从左到右"),
     "license": MessageLookupByLibrary.simpleMessage("许可证"),
     "light": MessageLookupByLibrary.simpleMessage("浅色"),
+    "liquid_glass": MessageLookupByLibrary.simpleMessage("液态玻璃"),
     "list": MessageLookupByLibrary.simpleMessage("列表"),
     "list_model": MessageLookupByLibrary.simpleMessage("列表模式"),
     "list_style": MessageLookupByLibrary.simpleMessage("列表样式"),

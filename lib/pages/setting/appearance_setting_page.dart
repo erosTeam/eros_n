@@ -44,6 +44,22 @@ class AppearanceSettingPage extends StatelessWidget {
             },
           ),
 
+          // Liquid Glass
+          Consumer(
+            builder: (context, ref, child) {
+              final liquidGlass = ref.watch(
+                settingsProvider.select((settings) => settings.liquidGlass),
+              );
+              return SwitchListTile(
+                title: Text(L10n.of(context).liquid_glass),
+                value: liquidGlass,
+                onChanged: (value) {
+                  ref.read(settingsProvider.notifier).setLiquidGlass(value);
+                },
+              );
+            },
+          ),
+
           // Switch dynamic color
           // Consumer(builder: (context, ref, child) {
           //   final dynamicColor = ref.watch(

@@ -33,6 +33,7 @@ abstract class Settings with _$Settings {
     @Default(false) bool clipboardDetection,
     @Default(150.0) double gridMaxCrossAxisExtent,
     @Default(190.0) double waterfallMaxCrossAxisExtent,
+    @Default(false) bool liquidGlass,
   }) = _Settings;
 
   const Settings._();

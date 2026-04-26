@@ -15,6 +15,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -33,6 +34,7 @@ Future<void> main() async {
   }
 
   await Global.init();
+  await LiquidGlassWidgets.initialize();
 
   initLogger();
   runApp(
@@ -43,7 +45,7 @@ Future<void> main() async {
       // Preserve v2 behaviour: do not auto-retry failing providers,
       // otherwise a single failed request keeps re-firing in the background.
       retry: (retryCount, error) => null,
-      child: const MyApp(),
+      child: LiquidGlassWidgets.wrap(const MyApp()),
     ),
   );
 

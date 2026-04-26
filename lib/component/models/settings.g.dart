@@ -57,6 +57,7 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
       (json['gridMaxCrossAxisExtent'] as num?)?.toDouble() ?? 150.0,
   waterfallMaxCrossAxisExtent:
       (json['waterfallMaxCrossAxisExtent'] as num?)?.toDouble() ?? 190.0,
+  liquidGlass: json['liquidGlass'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -86,6 +87,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'clipboardDetection': instance.clipboardDetection,
   'gridMaxCrossAxisExtent': instance.gridMaxCrossAxisExtent,
   'waterfallMaxCrossAxisExtent': instance.waterfallMaxCrossAxisExtent,
+  'liquidGlass': instance.liquidGlass,
 };
 
 const _$SearchSortEnumMap = {

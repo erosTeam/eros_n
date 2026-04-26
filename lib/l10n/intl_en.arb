@@ -111,5 +111,6 @@
   "custom_layout_width": "Custom Layout Width",
   "show_less": "Showing less",
   "show_more": "Showing more",
-  "pinch_to_zoom_hint": "You can also pinch to adjust on the page"
+  "pinch_to_zoom_hint": "You can also pinch to adjust on the page",
+  "liquid_glass": "Liquid Glass"
 }
