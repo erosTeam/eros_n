@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:eros_n/common/const/const.dart';
@@ -155,6 +156,22 @@ class HiddenWebViewProxy {
       'hasBody': hasBody,
     };
 
+    // On HarmonyOS, callAsyncJavaScript never returns results (the JS→Dart
+    // callback bridge is not implemented). Use evaluateJavascript + polling
+    // as a workaround.
+    if (Platform.operatingSystem == 'ohos') {
+      return _requestViaPolling(
+        controller: controller,
+        url: url,
+        fetchUrl: fetchUrl,
+        method: method.toUpperCase(),
+        headers: safeHeaders,
+        bodyString: bodyString,
+        hasBody: hasBody,
+        timeout: timeout,
+      );
+    }
+
     const script = r'''
 // nhentai's /api/v2/* requires `Authorization: User <access_token>`.
 // Read the freshest access_token straight out of the browser's cookie
@@ -233,6 +250,102 @@ try {
       url: (value['url'] as String?) ?? url,
       headers: headersMap,
       body: (value['body'] as String?) ?? '',
+    );
+  }
+
+  /// Polling-based alternative to [request] for platforms where
+  /// callAsyncJavaScript doesn't return results (e.g. HarmonyOS).
+  Future<ProxyHttpResponse> _requestViaPolling({
+    required InAppWebViewController controller,
+    required String url,
+    required String fetchUrl,
+    required String method,
+    required Map<String, String> headers,
+    required String? bodyString,
+    required bool hasBody,
+    required Duration timeout,
+  }) async {
+    final id = DateTime.now().microsecondsSinceEpoch.toString();
+    final headersJson = jsonEncode(headers);
+    final bodyJs = bodyString != null
+        ? jsonEncode(bodyString)
+        : 'null';
+
+    final startScript = '''
+(function() {
+  var hdr = $headersJson;
+  var isApiV2 = '$fetchUrl'.indexOf('/api/v2/') >= 0;
+  var hasAuth = Object.keys(hdr).some(function(k) { return k.toLowerCase() === 'authorization'; });
+  if (isApiV2 && !hasAuth) {
+    var m = /(?:^|; )access_token=([^;]+)/.exec(document.cookie);
+    if (m && m[1]) { hdr['Authorization'] = 'User ' + m[1]; }
+  }
+  var init = { method: '$method', headers: hdr, credentials: 'include', redirect: 'follow', cache: 'no-store' };
+  ${hasBody ? "init.body = $bodyJs;" : ""}
+  window['__proxy_$id'] = { done: false };
+  fetch('$fetchUrl', init).then(function(resp) {
+    return resp.text().then(function(text) {
+      var ho = {};
+      resp.headers.forEach(function(v, k) { ho[k] = v; });
+      window['__proxy_$id'] = { done: true, ok: true, status: resp.status, statusText: resp.statusText, url: resp.url, headers: ho, body: text };
+    });
+  }).catch(function(e) {
+    window['__proxy_$id'] = { done: true, ok: false, error: String(e) };
+  });
+})();
+''';
+
+    await controller.evaluateJavascript(source: startScript);
+
+    final stopwatch = Stopwatch()..start();
+    while (stopwatch.elapsed < timeout) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      final poll = await controller.evaluateJavascript(
+        source: "JSON.stringify(window['__proxy_$id'] || {})",
+      );
+
+      if (poll == null || poll == '{}' || poll == 'null') continue;
+
+      Map<String, dynamic> result;
+      try {
+        final decoded = poll is String ? jsonDecode(poll) : poll;
+        result = (decoded is Map<String, dynamic>) ? decoded : {};
+      } catch (_) {
+        continue;
+      }
+
+      if (result['done'] != true) continue;
+
+      // Clean up
+      await controller.evaluateJavascript(
+        source: "delete window['__proxy_$id'];",
+      );
+
+      if (result['ok'] != true) {
+        throw StateError('WebViewProxy fetch failed: ${result['error']}');
+      }
+
+      final headersMap = <String, String>{};
+      final headersAny = result['headers'];
+      if (headersAny is Map) {
+        headersAny.forEach((k, v) {
+          headersMap[k.toString()] = v?.toString() ?? '';
+        });
+      }
+
+      return ProxyHttpResponse(
+        status: (result['status'] as num).toInt(),
+        statusText: (result['statusText'] as String?) ?? '',
+        url: (result['url'] as String?) ?? url,
+        headers: headersMap,
+        body: (result['body'] as String?) ?? '',
+      );
+    }
+
+    throw TimeoutException(
+      'WebViewProxy polling timed out',
+      timeout,
     );
   }
 

@@ -618,6 +618,7 @@ class GetCookieWebViewState extends State<GetCookieWebView> {
     switch (Platform.operatingSystem) {
       case 'ios':
       case 'android':
+      case 'ohos':
         return MobileWebView(
           key: mobileState,
           url: widget.url,

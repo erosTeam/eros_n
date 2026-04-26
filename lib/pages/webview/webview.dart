@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:eros_n/common/const/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -25,6 +26,7 @@ final InAppWebViewSettings inAppWebViewSettings = InAppWebViewSettings(
   mediaPlaybackRequiresUserGesture: false,
   useHybridComposition: true,
   allowsInlineMediaPlayback: true,
+  userAgent: NHConst.userAgent,
   // Required so the WebView accepts and persists Cloudflare's cookies
   // and we can read them via CookieManager / document.cookie.
   thirdPartyCookiesEnabled: true,
