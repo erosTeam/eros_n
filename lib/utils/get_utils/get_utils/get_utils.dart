@@ -630,7 +630,7 @@ class GetUtils {
   }
 
   static bool hasMatch(String? value, String pattern) {
-    return value == null ? false : RegExp(pattern).hasMatch(value);
+    return !(value == null) && RegExp(pattern).hasMatch(value);
   }
 
   static String createPath(String path, [Iterable? segments]) {

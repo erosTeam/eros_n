@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
@@ -12,6 +13,7 @@ import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nil/nil.dart';
@@ -97,6 +99,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                 final appBarSearch = ref.watch(
                   historyProvider.select((s) => s.appBarSearch),
                 );
+                final glass = isLiquidGlass(ref);
                 return SliverAppBar(
                   title: appBarSearch
                       ? TextField(
@@ -106,14 +109,20 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                             border: InputBorder.none,
                           ),
                           textInputAction: TextInputAction.search,
-                          // onSubmitted: (value) {
-                          //   logger.d('onSubmitted $value');
-                          // },
                           onChanged: (value) {
                             ref.read(searchKeyProvider.notifier).set(value);
                           },
                         )
-                      : Row(children: [Text(L10n.of(context).history)]),
+                      : Row(
+                          children: [
+                            Text(
+                              L10n.of(context).history,
+                              style: glass
+                                  ? glassAppBarTitleStyle(context)
+                                  : null,
+                            ),
+                          ],
+                        ),
                   leadingWidth: appBarSearch ? 60 : 0,
                   leading: appBarSearch
                       ? IconButton(
@@ -127,6 +136,15 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                       : nil,
                   floating: true,
                   pinned: true,
+                  centerTitle: false,
+                  backgroundColor: glass ? Colors.transparent : null,
+                  flexibleSpace: glass ? glassFlexibleSpace(context) : null,
+                  elevation: glass ? 0 : null,
+                  scrolledUnderElevation: glass ? 0 : null,
+                  systemOverlayStyle:
+                      Theme.of(context).brightness == Brightness.dark
+                      ? SystemUiOverlayStyle.light
+                      : SystemUiOverlayStyle.dark,
                   bottom: const PreferredSize(
                     preferredSize: Size.fromHeight(0),
                     child: SizedBox(height: 0),

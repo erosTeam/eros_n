@@ -40,3 +40,11 @@ alwaysApply: true
 - Commits: ohos project first, then main project only when user says "同步"
 - Do NOT push to remote unless explicitly asked
 - Use hot reload for UI iteration, do NOT reinstall the app for UI changes
+- Run `dart fix --apply` after every code change
+
+## UI Modification Rules
+
+- **Before modifying any UI**: first identify ALL related components that share the same visual style (height, spacing, color, font). List them out, define unified parameters (constants or shared values), then apply changes to ALL of them in one pass.
+- **NEVER modify only one instance** of a repeated UI pattern. If three capsules should be the same height, change all three at once.
+- **NEVER use different approaches** (e.g. padding vs IntrinsicHeight vs SizedBox) for the same visual requirement across components. Pick ONE approach and apply it consistently.
+- When pointing to code files, always reference the ohos project path.

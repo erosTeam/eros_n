@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,6 +95,31 @@ PreferredSizeWidget adaptiveAppBar({
     elevation: elevation,
     backgroundColor: backgroundColor,
     automaticallyImplyLeading: automaticallyImplyLeading,
+  );
+}
+
+Color glassAppBarColor(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  return isDark
+      ? const Color.fromARGB(60, 60, 60, 60)
+      : const Color.fromARGB(60, 255, 255, 255);
+}
+
+Widget glassFlexibleSpace(BuildContext context) {
+  return ClipRect(
+    child: BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+      child: Container(color: glassAppBarColor(context)),
+    ),
+  );
+}
+
+TextStyle glassAppBarTitleStyle(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  return TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: isDark ? Colors.white : Colors.black,
   );
 }
 

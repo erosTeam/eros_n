@@ -11,7 +11,6 @@ import 'package:eros_n/pages/setting/read_setting_page.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
@@ -21,10 +20,7 @@ const _kMaxSliderWidth = 400.0;
 const _kMaxButtonBarWidth = 200.0;
 
 class _BarAlignmentScope extends InheritedWidget {
-  const _BarAlignmentScope({
-    required this.alignment,
-    required super.child,
-  });
+  const _BarAlignmentScope({required this.alignment, required super.child});
 
   final Alignment alignment;
 
@@ -45,7 +41,7 @@ LiquidGlassSettings _glassSettings(bool isDark) => LiquidGlassSettings(
   thickness: 30,
   glassColor: isDark
       ? const Color.fromARGB(100, 60, 60, 60)
-      : const Color.fromARGB(160, 255, 255, 255),
+      : const Color.fromARGB(100, 255, 255, 255),
 );
 
 class ViewTopBar extends HookConsumerWidget {
@@ -147,7 +143,7 @@ class ViewTopBar extends HookConsumerWidget {
                   if (context.isTablet)
                     GlassContainer(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
-                      shape: LiquidRoundedSuperellipse(borderRadius: 999),
+                      shape: const LiquidRoundedSuperellipse(borderRadius: 999),
                       settings: _glassSettings(isDark),
                       child: _TabletButtonRow(ref: ref),
                     )
@@ -366,7 +362,9 @@ class GlassBottomBarControl extends HookConsumerWidget {
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeOutCubic,
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: _kMaxButtonBarWidth),
+                constraints: const BoxConstraints(
+                  maxWidth: _kMaxButtonBarWidth,
+                ),
                 child: GlassContainer(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 4,

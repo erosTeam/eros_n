@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
-import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/theme/theme.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/setting/setting_base.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

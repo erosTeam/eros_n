@@ -51,7 +51,7 @@ double useCoverAspectRatio(String? thumbUrl, {double? hint}) {
         }
         stream.removeListener(listener);
       },
-      onError: (_, __) => stream.removeListener(listener),
+      onError: (_, _) => stream.removeListener(listener),
     );
     stream.addListener(listener);
     return () => stream.removeListener(listener);

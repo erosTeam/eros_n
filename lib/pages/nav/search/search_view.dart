@@ -5,6 +5,7 @@ import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/component/widget/pinch_grid_zoom.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -20,9 +21,9 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 @RoutePage()
@@ -137,51 +138,59 @@ class _SearchPageState extends ConsumerState<SearchPage>
           onRefresh: () => searchProviderNoti.reloadData(),
           edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
           child: CustomScrollView(
-          // cacheExtent: 500,
-          controller: scrollController,
-          physics: const ClampingScrollPhysics(),
-          slivers: [
-            SliverAppBar(
-              // leadingWidth: 36,
-              // leading: getLeading(context),
-              leading: const SizedBox(),
-              leadingWidth: 0,
-              // titleSpacing: 0,
-              title: buildSearchBar(),
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: SizedBox(height: 0),
-              ),
-              floating: true,
-              pinned: true,
-            ),
-            SliverToBoxAdapter(
-              child: ListenableBuilder(
-                listenable: searchProviderNoti.searchController,
-                builder: (context, _) {
-                  final isEmpty = searchProviderNoti.searchController.text
-                      .trim()
-                      .isEmpty;
-                  if (!isEmpty) {
-                    return const SizedBox.shrink();
-                  }
-                  return _SearchHistoryPanel(
-                    onTap: (q) {
-                      searchProviderNoti.searchController.value =
-                          TextEditingValue(
-                            text: q,
-                            selection: TextSelection.collapsed(offset: q.length),
-                          );
-                      searchProviderNoti.searchFocusNode.unfocus();
-                      searchProviderNoti.search();
-                    },
+            // cacheExtent: 500,
+            controller: scrollController,
+            physics: const ClampingScrollPhysics(),
+            slivers: [
+              Builder(
+                builder: (context) {
+                  final glass = isLiquidGlass(ref);
+                  return SliverAppBar(
+                    leading: const SizedBox(),
+                    leadingWidth: 0,
+                    title: buildSearchBar(),
+                    backgroundColor: glass
+                        ? Colors.transparent
+                        : Theme.of(context).colorScheme.surface,
+                    flexibleSpace: glass ? glassFlexibleSpace(context) : null,
+                    elevation: glass ? 0 : null,
+                    scrolledUnderElevation: glass ? 0 : null,
+                    bottom: const PreferredSize(
+                      preferredSize: Size.fromHeight(0),
+                      child: SizedBox(height: 0),
+                    ),
+                    floating: true,
+                    pinned: true,
                   );
                 },
               ),
-            ),
-            const SearchListView(),
-          ],
+              SliverToBoxAdapter(
+                child: ListenableBuilder(
+                  listenable: searchProviderNoti.searchController,
+                  builder: (context, _) {
+                    final isEmpty = searchProviderNoti.searchController.text
+                        .trim()
+                        .isEmpty;
+                    if (!isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return _SearchHistoryPanel(
+                      onTap: (q) {
+                        searchProviderNoti
+                            .searchController
+                            .value = TextEditingValue(
+                          text: q,
+                          selection: TextSelection.collapsed(offset: q.length),
+                        );
+                        searchProviderNoti.searchFocusNode.unfocus();
+                        searchProviderNoti.search();
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SearchListView(),
+            ],
           ),
         ),
       ),

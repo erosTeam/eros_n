@@ -6,6 +6,7 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/palette_generator.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/widget/blur_image.dart';
 import 'package:eros_n/component/widget/cover_aspect.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
@@ -25,6 +26,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:nil/nil.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as path;
@@ -120,6 +122,23 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
   }
 }
 
+Color _glassIconColor(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
+
+LiquidGlassSettings _glassButtonSettings(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  return LiquidGlassSettings(
+    blur: 10,
+    thickness: 20,
+    lightIntensity: 0.05,
+    glassColor: isDark
+        ? const Color.fromARGB(80, 60, 60, 60)
+        : const Color.fromARGB(80, 255, 255, 255),
+  );
+}
+
 class GalleryPageBody extends HookConsumerWidget {
   const GalleryPageBody({super.key, required this.gid, this.heroTag});
 
@@ -139,33 +158,52 @@ class GalleryPageBody extends HookConsumerWidget {
     final ScrollController scrollController = useScrollController();
     final ScrollController thumbScrollController = useScrollController();
 
+    final glass = isLiquidGlass(ref);
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
-        backgroundColor: WidgetStateColor.resolveWith((states) {
-          if (states.contains(WidgetState.scrolledUnder)) {
-            return Theme.of(context).colorScheme.surface;
-          }
-          return Colors.transparent;
-        }),
-        // systemOverlayStyle: Theme.of(context).brightness == Brightness.light
-        //     ? SystemUiOverlayStyle.dark
-        //     : SystemUiOverlayStyle.light,
-        // systemOverlayStyle: Theme.of(context).brightness == Brightness.light
-        //     ? const SystemUiOverlayStyle(
-        //         systemNavigationBarColor: Colors.transparent,
-        //         systemNavigationBarDividerColor: Colors.transparent,
-        //         systemNavigationBarIconBrightness: Brightness.dark,
-        //         statusBarColor: Colors.transparent,
-        //         // statusBarIconBrightness: Brightness.dark,
-        //       )
-        //     : const SystemUiOverlayStyle(
-        //         systemNavigationBarColor: Colors.transparent,
-        //         systemNavigationBarDividerColor: Colors.transparent,
-        //         statusBarColor: Colors.transparent,
-        //         // statusBarIconBrightness: Brightness.light,
-        //       ),
+        backgroundColor: glass
+            ? Colors.transparent
+            : WidgetStateColor.resolveWith((states) {
+                if (states.contains(WidgetState.scrolledUnder)) {
+                  return Theme.of(context).colorScheme.surface;
+                }
+                return Colors.transparent;
+              }),
+        flexibleSpace: glass
+            ? ListenableBuilder(
+                listenable: Listenable.merge([scrollController, thumbScrollController]),
+                builder: (context, _) {
+                  final leftScrolled = scrollController.hasClients &&
+                      scrollController.offset > 0;
+                  final rightScrolled = thumbScrollController.hasClients &&
+                      thumbScrollController.offset > 0;
+                  if (!leftScrolled && !rightScrolled) {
+                    return const SizedBox.shrink();
+                  }
+                  return glassFlexibleSpace(context);
+                },
+              )
+            : null,
+        elevation: 0,
+        scrolledUnderElevation: glass ? 0 : null,
+        automaticallyImplyLeading: !glass,
+        leading: glass
+            ? Padding(
+                padding: const EdgeInsets.only(left: NavigationToolbar.kMiddleSpacing),
+                child: Center(
+                  child: GlassIconButton(
+                    icon: Icon(Icons.arrow_back,
+                        color: _glassIconColor(context)),
+                    onPressed: () => Navigator.maybePop(context),
+                    size: 36,
+                    useOwnLayer: true,
+                    settings: _glassButtonSettings(context),
+                  ),
+                ),
+              )
+            : null,
         systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
           systemNavigationBarDividerColor: Colors.transparent,
@@ -175,17 +213,46 @@ class GalleryPageBody extends HookConsumerWidget {
                   ? Brightness.light
                   : Brightness.dark,
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              final shareText = 'title:${title.englishTitle}\n$url';
-              logger.d(shareText);
-              Share.share(shareText);
-            },
-          ),
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-        ],
+        actions: glass
+            ? [
+                GlassIconButton(
+                  icon: Icon(Icons.share,
+                      color: _glassIconColor(context)),
+                  onPressed: () {
+                    final shareText =
+                        'title:${title.englishTitle}\n$url';
+                    logger.d(shareText);
+                    Share.share(shareText);
+                  },
+                  size: 36,
+                  useOwnLayer: true,
+                  settings: _glassButtonSettings(context),
+                ),
+                const SizedBox(width: 8),
+                GlassIconButton(
+                  icon: Icon(Icons.more_vert,
+                      color: _glassIconColor(context)),
+                  onPressed: () {},
+                  size: 36,
+                  useOwnLayer: true,
+                  settings: _glassButtonSettings(context),
+                ),
+                const SizedBox(width: NavigationToolbar.kMiddleSpacing),
+              ]
+            : [
+                IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: () {
+                    final shareText =
+                        'title:${title.englishTitle}\n$url';
+                    logger.d(shareText);
+                    Share.share(shareText);
+                  },
+                ),
+                IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {}),
+              ],
       ),
       floatingActionButton: ScrollingFab(
         onPressed: () {
@@ -244,10 +311,14 @@ class GalleryPageBody extends HookConsumerWidget {
                         child: _BackGround(thumbUrl: thumbUrl),
                       ),
                       SafeArea(
+                        top: !glass,
                         bottom: false,
                         child: ThumbBody(
                           gid: gid,
                           scrollController: thumbScrollController,
+                          topPadding: glass
+                              ? kToolbarHeight
+                              : 0,
                         ),
                       ),
                     ],

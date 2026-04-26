@@ -69,7 +69,7 @@ class _PinchGridZoomState extends ConsumerState<PinchGridZoom> {
     final avail = _availableWidth();
     final extent = _getExtent();
     if (_isWaterfall()) {
-      final spacing = NHConst.waterfallFlowLargeCrossAxisSpacing;
+      const spacing = NHConst.waterfallFlowLargeCrossAxisSpacing;
       return max(1, (avail / (extent + spacing)).ceil());
     }
     return max(1, (avail / extent).ceil());
@@ -82,7 +82,7 @@ class _PinchGridZoomState extends ConsumerState<PinchGridZoom> {
     if (target < 1) return;
     double newExtent;
     if (_isWaterfall()) {
-      final spacing = NHConst.waterfallFlowLargeCrossAxisSpacing;
+      const spacing = NHConst.waterfallFlowLargeCrossAxisSpacing;
       newExtent = avail / target - spacing;
     } else {
       newExtent = avail / target;

@@ -334,7 +334,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   // Map file extension to nhentai type shorthand.
   const extToType = {'jpg': 'j', 'jpeg': 'j', 'png': 'p', 'gif': 'g', 'webp': 'w'};
 
-  String _typeFromPath(String path) {
+  String typeFromPath(String path) {
     final ext = path.split('.').last.toLowerCase();
     return extToType[ext] ?? 'j';
   }
@@ -344,7 +344,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   final titleMap = json['title'] as Map<String, dynamic>? ?? {};
 
   // pages (top-level in v2)
-  final rawPages = (json['pages'] as List? ?? []);
+  final rawPages = json['pages'] as List? ?? [];
   final pages = <GalleryImage>[];
   for (final p in rawPages) {
     final page = p as Map<String, dynamic>;
@@ -352,7 +352,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
     final thumbPath = page['thumbnail'] as String? ?? '';
     final number = (page['number'] as num?)?.toInt() ?? (pages.length + 1);
     pages.add(GalleryImage(
-      type: _typeFromPath(path),
+      type: typeFromPath(path),
       imgWidth: (page['width'] as num?)?.toInt(),
       imgHeight: (page['height'] as num?)?.toInt(),
       imageUrl: thumbPath.isNotEmpty ? '$cdnThumb/$thumbPath' : null,
@@ -364,7 +364,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   final coverMap = json['cover'] as Map<String, dynamic>? ?? {};
   final coverPath = coverMap['path'] as String? ?? '';
   final cover = GalleryImage(
-    type: _typeFromPath(coverPath),
+    type: typeFromPath(coverPath),
     imgWidth: (coverMap['width'] as num?)?.toInt(),
     imgHeight: (coverMap['height'] as num?)?.toInt(),
     imageUrl: coverPath.isNotEmpty ? '$cdnThumb/$coverPath' : null,
@@ -374,7 +374,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   final thumbMap = json['thumbnail'] as Map<String, dynamic>? ?? {};
   final thumbPath = thumbMap['path'] as String? ?? '';
   final thumbnail = GalleryImage(
-    type: _typeFromPath(thumbPath),
+    type: typeFromPath(thumbPath),
     imgWidth: (thumbMap['width'] as num?)?.toInt(),
     imgHeight: (thumbMap['height'] as num?)?.toInt(),
     imageUrl: thumbPath.isNotEmpty ? '$cdnThumb/$thumbPath' : null,

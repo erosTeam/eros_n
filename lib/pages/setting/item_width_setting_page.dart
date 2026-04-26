@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
-import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/item/item_grid_card.dart';
 import 'package:flutter/material.dart';
@@ -86,9 +86,7 @@ class _ItemWidthSettingPageState extends ConsumerState<ItemWidthSettingPage> {
 
     if (isGrid) {
       return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: gridCrossAxisSpacing,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: gridCrossAxisSpacing),
         child: GridView.builder(
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

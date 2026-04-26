@@ -3,6 +3,7 @@ import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/widget/buttons.dart';
 import 'package:eros_n/component/widget/pinch_grid_zoom.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -16,9 +17,23 @@ import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+
+LiquidGlassSettings _glassButtonSettings(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  return LiquidGlassSettings(
+    blur: 10,
+    thickness: 20,
+    lightIntensity: 0.05,
+    glassColor: isDark
+        ? const Color.fromARGB(80, 60, 60, 60)
+        : const Color.fromARGB(80, 255, 255, 255),
+  );
+}
 
 @RoutePage()
 class FrontPage extends StatefulHookConsumerWidget {
@@ -75,8 +90,16 @@ class _FrontPageState extends ConsumerState<FrontPage>
     super.build(context);
     logger.t('${MediaQuery.of(context).padding.top}');
     logger.t('${context.width}');
-    return Scaffold(
-      body: PinchGridZoom(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            Theme.of(context).brightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
+      ),
+      child: Scaffold(
+        body: PinchGridZoom(
         child: RefreshIndicator(
           onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
           edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
@@ -85,18 +108,32 @@ class _FrontPageState extends ConsumerState<FrontPage>
           // cacheExtent: 500,
           physics: const ClampingScrollPhysics(),
           slivers: [
-            const SliverAppBar(
-              floating: true,
-              pinned: true,
-              // scrolledUnderElevation: 0,
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: SizedBox(height: 0),
-              ),
-              toolbarHeight: 0,
-              elevation: 0,
+            Builder(
+              builder: (context) {
+                final glass = isLiquidGlass(ref);
+                return SliverAppBar(
+                  floating: true,
+                  pinned: true,
+                  bottom: const PreferredSize(
+                    preferredSize: Size.fromHeight(0),
+                    child: SizedBox(height: 0),
+                  ),
+                  toolbarHeight: 0,
+                  elevation: 0,
+                  scrolledUnderElevation: glass ? 0 : null,
+                  backgroundColor: glass ? Colors.transparent : null,
+                  flexibleSpace: glass ? glassFlexibleSpace(context) : null,
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    statusBarIconBrightness:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Brightness.light
+                            : Brightness.dark,
+                  ),
+                );
+              },
             ),
-            const PopularListView(),
+            PopularListView(scrollController: scrollController),
             SliverGalleryListView(scrollController: scrollController),
             Consumer(
               builder: (context, ref, _) {
@@ -107,6 +144,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
           ],
         ),
         ),
+      ),
       ),
     );
   }
@@ -159,23 +197,15 @@ class SliverGalleryListView extends HookConsumerWidget {
                       curve: Curves.ease,
                     );
                   },
-                  child: Container(
-                    height: kToolbarHeight,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              sortMap[searchSortOnFrontPage] ??
-                                  L10n.of(context).recent,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ),
-                        ),
+                  child: ListenableBuilder(
+                    listenable: scrollController,
+                    builder: (context, _) {
+                      final glass = isLiquidGlass(ref);
+                      final pinned = glass &&
+                          scrollController.hasClients &&
+                          scrollController.offset > 250;
+
+                      final buttons = <Widget>[
                         IconButton(
                           icon: const Icon(Icons.search),
                           onPressed: () {
@@ -193,27 +223,133 @@ class SliverGalleryListView extends HookConsumerWidget {
                             ref
                                 .read(settingsProvider.notifier)
                                 .setFrontLanguagesFilter(value);
-                            await ref.read(frontProvider.notifier).reloadData();
+                            await ref
+                                .read(frontProvider.notifier)
+                                .reloadData();
                           },
                           initValue: frontLanguagesFilter,
                         ),
                         SortPopupButton(
                           onSelected: (value) async {
-                            // if not change, do nothing
                             if (value == searchSortOnFrontPage) {
                               return;
                             }
                             ref
                                 .read(settingsProvider.notifier)
                                 .setSearchSortOnFrontPage(value);
-
-                            // reload
-                            await ref.read(frontProvider.notifier).reloadData();
+                            await ref
+                                .read(frontProvider.notifier)
+                                .reloadData();
                           },
                           initValue: searchSortOnFrontPage,
                         ),
-                      ],
-                    ),
+                      ];
+
+                      final isDark =
+                          Theme.of(context).brightness == Brightness.dark;
+                      final iconColor =
+                          isDark ? Colors.white : Colors.black;
+
+                      final sortText = sortMap[searchSortOnFrontPage] ??
+                          L10n.of(context).recent;
+
+                      const dur = Duration(milliseconds: 300);
+                      const curve = Curves.easeInOut;
+
+                      final bgColor =
+                          Theme.of(context).scaffoldBackgroundColor;
+                      return AnimatedContainer(
+                        duration: dur,
+                        curve: curve,
+                        height: kToolbarHeight,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: pinned ? 8 : 16),
+                        color: pinned
+                            ? bgColor.withValues(alpha: 0)
+                            : bgColor,
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            // Normal state
+                            AnimatedOpacity(
+                              opacity: pinned ? 0.0 : 1.0,
+                              duration: dur,
+                              child: IgnorePointer(
+                                ignoring: pinned,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          sortText,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge,
+                                        ),
+                                      ),
+                                    ),
+                                    ...buttons,
+                                  ],
+                                ),
+                              ),
+                            ),
+                            // Pinned glass state
+                            AnimatedOpacity(
+                              opacity: pinned ? 1.0 : 0.0,
+                              duration: dur,
+                              child: IgnorePointer(
+                                ignoring: !pinned,
+                                child: IntrinsicHeight(
+                                  child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    GlassContainer(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      shape:
+                                          const LiquidRoundedSuperellipse(
+                                              borderRadius: 999),
+                                      settings:
+                                          _glassButtonSettings(context),
+                                      child: Center(
+                                        child: Text(
+                                          sortText,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge
+                                              ?.copyWith(height: 1.0),
+                                        ),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    GlassContainer(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      shape:
+                                          const LiquidRoundedSuperellipse(
+                                              borderRadius: 999),
+                                      settings:
+                                          _glassButtonSettings(context),
+                                      child: IconTheme(
+                                        data: IconThemeData(
+                                            size: 22, color: iconColor),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: buttons,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               );
@@ -227,11 +363,14 @@ class SliverGalleryListView extends HookConsumerWidget {
 }
 
 class PopularListView extends ConsumerWidget {
-  const PopularListView({super.key});
+  const PopularListView({super.key, required this.scrollController});
+
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final popularList = ref.watch(popularProvider);
+    final glass = isLiquidGlass(ref);
     return SliverSafeArea(
       top: false,
       bottom: false,
@@ -239,15 +378,69 @@ class PopularListView extends ConsumerWidget {
         pushPinnedChildren: true,
         children: [
           SliverPinnedHeader(
-            child: Container(
-              height: kToolbarHeight,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              color: Theme.of(context).scaffoldBackgroundColor,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                L10n.of(context).popular,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            child: ListenableBuilder(
+              listenable: scrollController,
+              builder: (context, _) {
+                final pinned = glass &&
+                    scrollController.hasClients &&
+                    scrollController.offset > 0;
+
+                const dur = Duration(milliseconds: 300);
+                final bgColor = Theme.of(context).scaffoldBackgroundColor;
+                return AnimatedContainer(
+                  duration: dur,
+                  curve: Curves.easeInOut,
+                  height: kToolbarHeight,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: pinned ? 8 : 16),
+                  color: pinned
+                      ? bgColor.withValues(alpha: 0)
+                      : bgColor,
+                  alignment: Alignment.centerLeft,
+                  child: Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      AnimatedOpacity(
+                        opacity: pinned ? 0.0 : 1.0,
+                        duration: dur,
+                        child: Text(
+                          L10n.of(context).popular,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                      AnimatedOpacity(
+                        opacity: pinned ? 1.0 : 0.0,
+                        duration: dur,
+                        child: IgnorePointer(
+                          ignoring: !pinned,
+                          child: UnconstrainedBox(
+                            alignment: Alignment.centerLeft,
+                            child: SizedBox(
+                              height: 48,
+                              child: GlassContainer(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20),
+                                shape: const LiquidRoundedSuperellipse(
+                                    borderRadius: 999),
+                                settings: _glassButtonSettings(context),
+                                child: Center(
+                                  child: Text(
+                                    L10n.of(context).popular,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(height: 1.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
           SizedBox(

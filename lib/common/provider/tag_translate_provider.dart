@@ -3,7 +3,6 @@ import 'dart:io' show File;
 
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
-import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/network/request.dart';

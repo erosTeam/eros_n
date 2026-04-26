@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/widget/pinch_grid_zoom.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
@@ -10,6 +11,7 @@ import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -75,67 +77,86 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
               ? ref.read(favoriteProvider.notifier).reloadData
               : () async {},
           child: CustomScrollView(
-          controller: scrollController,
-          physics: const ClampingScrollPhysics(),
-          slivers: [
-            SliverAppBar(
-              title: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(L10n.of(context).favorites),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        context.router.push(SearchRoute(query: ''));
+            controller: scrollController,
+            physics: const ClampingScrollPhysics(),
+            slivers: [
+              Builder(
+                builder: (context) {
+                  final glass = isLiquidGlass(ref);
+                  return SliverAppBar(
+                    title: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              L10n.of(context).favorites,
+                              style: glass
+                                  ? glassAppBarTitleStyle(context)
+                                  : null,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.search),
+                            onPressed: () {
+                              context.router.push(SearchRoute(query: ''));
+                            },
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        scrollController.animateTo(
+                          0,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease,
+                        );
                       },
                     ),
-                  ],
-                ),
-                onTap: () {
-                  scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.ease,
+                    titleSpacing: 16,
+                    floating: true,
+                    pinned: true,
+                    centerTitle: false,
+                    backgroundColor: glass ? Colors.transparent : null,
+                    flexibleSpace: glass ? glassFlexibleSpace(context) : null,
+                    elevation: glass ? 0 : null,
+                    scrolledUnderElevation: glass ? 0 : null,
+                    systemOverlayStyle:
+                        Theme.of(context).brightness == Brightness.dark
+                        ? SystemUiOverlayStyle.light
+                        : SystemUiOverlayStyle.dark,
+                    bottom: const PreferredSize(
+                      preferredSize: Size.fromHeight(0),
+                      child: SizedBox(height: 0),
+                    ),
                   );
                 },
               ),
-              titleSpacing: 16,
-              floating: true,
-              pinned: true,
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: SizedBox(height: 0),
-              ),
-            ),
-            if (isUserLoggedIn)
-              SliverSafeArea(
-                top: false,
-                bottom: false,
-                sliver: MultiSliver(
-                  children: [
-                    const FavoriteListView(),
-                    Consumer(
-                      builder: (context, ref, _) {
-                        final state = ref.watch(favoriteProvider);
-                        return EndIndicator(loadStatus: state.status);
-                      },
+              if (isUserLoggedIn)
+                SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  sliver: MultiSliver(
+                    children: [
+                      const FavoriteListView(),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final state = ref.watch(favoriteProvider);
+                          return EndIndicator(loadStatus: state.status);
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              else
+                SliverFillRemaining(
+                  child: Center(
+                    child: Text(
+                      L10n.of(context).please_login_first,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                  ],
-                ),
-              )
-            else
-              SliverFillRemaining(
-                child: Center(
-                  child: Text(
-                    L10n.of(context).please_login_first,
-                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
-              ),
-          ],
+            ],
           ),
         ),
       ),

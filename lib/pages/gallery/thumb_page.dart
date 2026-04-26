@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:eros_n/common/const/const.dart';
-import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/models/image.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/scrolling_fab.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -70,11 +70,13 @@ class ThumbBody extends StatelessWidget {
     required this.scrollController,
     required this.gid,
     this.backGround,
+    this.topPadding = 0,
   });
 
   final ScrollController scrollController;
   final int gid;
   final Widget? backGround;
+  final double topPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,11 @@ class ThumbBody extends StatelessWidget {
           controller: scrollController,
           child: CustomScrollView(
             controller: scrollController,
-            slivers: [ThumbsView(gid: gid)],
+            slivers: [
+              if (topPadding > 0)
+                SliverPadding(padding: EdgeInsets.only(top: topPadding)),
+              ThumbsView(gid: gid),
+            ],
           ),
         ),
       ],
@@ -137,13 +143,15 @@ class ThumbsView extends HookConsumerWidget {
           // like `2t.jpg.webp`); fall back to a synthesized URL when only
           // the legacy `type` is available.
           final ext = NHConst.extMap[thumb.type] ?? 'webp';
-          final imageUrl = thumb.imageUrl ??
+          final imageUrl =
+              thumb.imageUrl ??
               'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext';
           final aspect =
-              (thumb.imgWidth != null && thumb.imgHeight != null &&
-                      thumb.imgHeight! > 0)
-                  ? thumb.imgWidth! / thumb.imgHeight!
-                  : 3 / 4;
+              (thumb.imgWidth != null &&
+                  thumb.imgHeight != null &&
+                  thumb.imgHeight! > 0)
+              ? thumb.imgWidth! / thumb.imgHeight!
+              : 3 / 4;
           return GestureDetector(
             onTap: () {
               RouteUtil.goRead(
