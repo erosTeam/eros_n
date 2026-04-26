@@ -177,7 +177,7 @@ class GalleryPageBody extends HookConsumerWidget {
             onPressed: () {
               final shareText = 'title:${title.englishTitle}\n$url';
               logger.d(shareText);
-              SharePlus.instance.share(ShareParams(text: shareText));
+              Share.share(shareText);
             },
           ),
           IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
@@ -867,18 +867,28 @@ class TagsView extends HookConsumerWidget {
 String _getTagTypeTranslate(BuildContext context, String tagType) {
   switch (tagType) {
     case 'Parodies':
+    case 'parody':
       return L10n.of(context).tag_type_parodies;
     case 'Characters':
+    case 'character':
       return L10n.of(context).tag_type_characters;
     case 'Tags':
+    case 'tag':
+    case 'male':
+    case 'female':
+    case 'mixed':
       return L10n.of(context).tag_type_tags;
     case 'Artists':
+    case 'artist':
       return L10n.of(context).tag_type_artists;
     case 'Groups':
+    case 'group':
       return L10n.of(context).tag_type_groups;
     case 'Languages':
+    case 'language':
       return L10n.of(context).tag_type_languages;
     case 'Categories':
+    case 'category':
       return L10n.of(context).tag_type_categories;
     default:
       return tagType;
@@ -1292,9 +1302,7 @@ class ToolBarView extends HookConsumerWidget {
                         return savePath;
                       },
                     );
-                    SharePlus.instance.share(
-                      ShareParams(files: [XFile(savePath)]),
-                    );
+                    Share.shareXFiles([XFile(savePath)]);
                   }
                 : null,
           ),

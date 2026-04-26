@@ -26,8 +26,6 @@ const String kReleaseUrl =
 const String kJsdelivrAssetUrl =
     'https://fastly.jsdelivr.net/gh/EhTagTranslation/DatabaseReleases/db.raw.json.gz';
 
-const chunkSize = 100;
-
 @Riverpod(keepAlive: true)
 class TagTranslateNotifier extends _$TagTranslateNotifier {
   @override
@@ -116,39 +114,36 @@ class TagTranslateNotifier extends _$TagTranslateNotifier {
   }
 
   Future<void> updateDb({bool check = true, bool force = false}) async {
-    if (check) {
-      await getUpdateInfo(force: force);
+    state = state.copyWith(isUpdating: true);
+    try {
+      if (check) {
+        await getUpdateInfo(force: force);
+      }
+
+      logger.d('state $state');
+
+      final parsed = await _fetchAndDecodeLastVersion(force: force);
+      if (parsed == null) {
+        return;
+      }
+
+      if (parsed.prettyVersion != null) {
+        state = state.copyWith(remoteVersion: parsed.prettyVersion);
+      }
+
+      final tagTranslates = parsed.translates;
+      logger.d('tagTranslates len: ${tagTranslates.length}');
+
+      await objectBoxHelper.putAllTagTranslate(tagTranslates);
+
+      state = state.copyWith(version: state.remoteVersion);
+      hiveHelper.setTagTranslateInfo(state);
+    } catch (e, st) {
+      logger.e('updateDb failed: $e\n$st');
+      rethrow;
+    } finally {
+      state = state.copyWith(isUpdating: false);
     }
-
-    logger.d('state $state');
-
-    final parsed = await _fetchAndDecodeLastVersion(force: force);
-    if (parsed == null) {
-      return;
-    }
-
-    if (parsed.prettyVersion != null) {
-      state = state.copyWith(remoteVersion: parsed.prettyVersion);
-    }
-
-    final tagTranslates = parsed.translates;
-    logger.d('tagTranslates len: ${tagTranslates.length}');
-
-    // Sequential write + cooperative yield. The previous implementation
-    // fired chunks with `forEach((e) async => await put(e))`, which let the
-    // futures race the UI thread and never actually awaited completion;
-    // the resulting batch-storms were the main cause of the ANR popup
-    // when toggling tag translation back on.
-    for (final chunk in tagTranslates.chunked(chunkSize)) {
-      await objectBoxHelper.putAllTagTranslate(chunk);
-      // Yield once per chunk so the framework can pump frames; without
-      // this the loop monopolises the platform thread until the very last
-      // chunk lands.
-      await Future<void>.delayed(Duration.zero);
-    }
-
-    state = state.copyWith(version: state.remoteVersion);
-    hiveHelper.setTagTranslateInfo(state);
   }
 
   Future<_ParsedTagDb?> _fetchAndDecodeLastVersion({bool force = false}) async {

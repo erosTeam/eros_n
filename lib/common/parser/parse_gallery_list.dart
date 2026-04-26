@@ -216,7 +216,7 @@ Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
     }
     final enrichedTags = <Tag>[];
     for (final t in g.simpleTags) {
-      enrichedTags.add(_enrichSimpleTag(t));
+      enrichedTags.add(await _enrichSimpleTag(t));
     }
     result.add(g.copyWith(simpleTags: enrichedTags));
     // Every 5 galleries yield once, keeps frame budget reasonable even
@@ -228,17 +228,16 @@ Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
   return result;
 }
 
-Tag _enrichSimpleTag(Tag t) {
+Future<Tag> _enrichSimpleTag(Tag t) async {
   final id = t.id ?? 0;
   if (id == 0) {
     return t;
   }
-  final nhTag = objectBoxHelper.findNhTag(id);
+  final nhTag = await objectBoxHelper.findNhTagAsync(id);
   if (nhTag == null) {
     return t;
   }
-  // findTagTranslate is an indexed equality lookup -> microsecond-fast.
-  final translated = objectBoxHelper.findTagTranslate(
+  final translated = await objectBoxHelper.findTagTranslateAsync(
     nhTag.name ?? '',
     namespace: getTagNamespace(nhTag.type ?? ''),
   );
@@ -386,8 +385,10 @@ Future<void> _backfillUnknownNhTags(
   for (final g in galleries) {
     for (final t in g.simpleTags) {
       final id = t.id ?? 0;
-      if (id == 0) continue;
-      if (objectBoxHelper.findNhTag(id) == null) {
+      if (id == 0) {
+        continue;
+      }
+      if (await objectBoxHelper.findNhTagAsync(id) == null) {
         unknown.add(id);
       }
     }

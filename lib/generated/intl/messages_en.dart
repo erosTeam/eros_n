@@ -135,6 +135,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tag_translation": MessageLookupByLibrary.simpleMessage("Tag Translation"),
     "tag_translation_tip": m0,
+    "tag_translation_update_failed": MessageLookupByLibrary.simpleMessage(
+      "Translation data update failed",
+    ),
+    "tag_translation_updated": MessageLookupByLibrary.simpleMessage(
+      "Translation data updated",
+    ),
+    "tag_translation_updating": MessageLookupByLibrary.simpleMessage(
+      "Downloading translation data...",
+    ),
     "tag_type_artists": MessageLookupByLibrary.simpleMessage("Artists"),
     "tag_type_categories": MessageLookupByLibrary.simpleMessage("Categories"),
     "tag_type_characters": MessageLookupByLibrary.simpleMessage("Characters"),

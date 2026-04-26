@@ -271,7 +271,7 @@ Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
   final enrichedTags = <Tag>[];
   for (var i = 0; i < raw.tags.length; i++) {
     final t = raw.tags[i];
-    final translated = objectBoxHelper.findTagTranslate(
+    final translated = await objectBoxHelper.findTagTranslateAsync(
       t.name ?? '',
       namespace: getTagNamespace(t.type ?? ''),
     );
@@ -300,12 +300,12 @@ Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
         tags.add(st);
         continue;
       }
-      final nhTag = objectBoxHelper.findNhTag(id);
+      final nhTag = await objectBoxHelper.findNhTagAsync(id);
       if (nhTag == null) {
         tags.add(st);
         continue;
       }
-      final translated = objectBoxHelper.findTagTranslate(
+      final translated = await objectBoxHelper.findTagTranslateAsync(
         nhTag.name ?? '',
         namespace: getTagNamespace(nhTag.type ?? ''),
       );
@@ -327,14 +327,14 @@ Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
 
 /// Parses a gallery detail from nhentai's v2 JSON API (`GET /api/v2/galleries/<id>`).
 ///
-/// Used as a Cloudflare-safe alternative to fetching the HTML detail page
-/// (autoFallback mode falls back here on CF 403; OHOS always uses this path).
+/// Used on HarmonyOS as a Cloudflare-safe alternative to fetching the HTML
+/// detail page which returns 403 from dart:io.
 Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   const cdnThumb = 'https://t.nhentai.net';
   // Map file extension to nhentai type shorthand.
   const extToType = {'jpg': 'j', 'jpeg': 'j', 'png': 'p', 'gif': 'g', 'webp': 'w'};
 
-  String typeFromPath(String path) {
+  String _typeFromPath(String path) {
     final ext = path.split('.').last.toLowerCase();
     return extToType[ext] ?? 'j';
   }
@@ -344,7 +344,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   final titleMap = json['title'] as Map<String, dynamic>? ?? {};
 
   // pages (top-level in v2)
-  final rawPages = json['pages'] as List? ?? [];
+  final rawPages = (json['pages'] as List? ?? []);
   final pages = <GalleryImage>[];
   for (final p in rawPages) {
     final page = p as Map<String, dynamic>;
@@ -352,7 +352,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
     final thumbPath = page['thumbnail'] as String? ?? '';
     final number = (page['number'] as num?)?.toInt() ?? (pages.length + 1);
     pages.add(GalleryImage(
-      type: typeFromPath(path),
+      type: _typeFromPath(path),
       imgWidth: (page['width'] as num?)?.toInt(),
       imgHeight: (page['height'] as num?)?.toInt(),
       imageUrl: thumbPath.isNotEmpty ? '$cdnThumb/$thumbPath' : null,
@@ -364,7 +364,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   final coverMap = json['cover'] as Map<String, dynamic>? ?? {};
   final coverPath = coverMap['path'] as String? ?? '';
   final cover = GalleryImage(
-    type: typeFromPath(coverPath),
+    type: _typeFromPath(coverPath),
     imgWidth: (coverMap['width'] as num?)?.toInt(),
     imgHeight: (coverMap['height'] as num?)?.toInt(),
     imageUrl: coverPath.isNotEmpty ? '$cdnThumb/$coverPath' : null,
@@ -374,7 +374,7 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
   final thumbMap = json['thumbnail'] as Map<String, dynamic>? ?? {};
   final thumbPath = thumbMap['path'] as String? ?? '';
   final thumbnail = GalleryImage(
-    type: typeFromPath(thumbPath),
+    type: _typeFromPath(thumbPath),
     imgWidth: (thumbMap['width'] as num?)?.toInt(),
     imgHeight: (thumbMap['height'] as num?)?.toInt(),
     imageUrl: thumbPath.isNotEmpty ? '$cdnThumb/$thumbPath' : null,
@@ -393,9 +393,10 @@ Future<Gallery> parseGalleryDetailFromApi(Map<String, dynamic> json) async {
       .toList();
 
   final uploadDate = (json['upload_date'] as num?)?.toInt();
-  final uploadedDateTime = uploadDate != null
-      ? DateTime.fromMillisecondsSinceEpoch(uploadDate * 1000).toIso8601String()
-      : null;
+  final uploadedDateTime =
+      uploadDate != null
+          ? DateTime.fromMillisecondsSinceEpoch(uploadDate * 1000).toIso8601String()
+          : null;
 
   final raw = Gallery(
     gid: gid,

@@ -114,6 +114,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag_layout_on_item": MessageLookupByLibrary.simpleMessage("列表项标签布局"),
     "tag_translation": MessageLookupByLibrary.simpleMessage("标签翻译"),
     "tag_translation_tip": m0,
+    "tag_translation_update_failed": MessageLookupByLibrary.simpleMessage(
+      "翻译数据更新失败",
+    ),
+    "tag_translation_updated": MessageLookupByLibrary.simpleMessage("翻译数据更新成功"),
+    "tag_translation_updating": MessageLookupByLibrary.simpleMessage(
+      "正在下载翻译数据...",
+    ),
     "tag_type_artists": MessageLookupByLibrary.simpleMessage("作者"),
     "tag_type_categories": MessageLookupByLibrary.simpleMessage("类别"),
     "tag_type_characters": MessageLookupByLibrary.simpleMessage("角色"),

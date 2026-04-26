@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TagTranslateInfo implements DiagnosticableTreeMixin {
 
- String? get version; String? get remoteVersion; String? get lastReleaseUrl; String? get nhTagVersion;
+ String? get version; String? get remoteVersion; String? get lastReleaseUrl; String? get nhTagVersion;@JsonKey(includeToJson: false, includeFromJson: false) bool get isUpdating;
 /// Create a copy of TagTranslateInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,21 +29,21 @@ $TagTranslateInfoCopyWith<TagTranslateInfo> get copyWith => _$TagTranslateInfoCo
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'TagTranslateInfo'))
-    ..add(DiagnosticsProperty('version', version))..add(DiagnosticsProperty('remoteVersion', remoteVersion))..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))..add(DiagnosticsProperty('nhTagVersion', nhTagVersion));
+    ..add(DiagnosticsProperty('version', version))..add(DiagnosticsProperty('remoteVersion', remoteVersion))..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))..add(DiagnosticsProperty('nhTagVersion', nhTagVersion))..add(DiagnosticsProperty('isUpdating', isUpdating));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagTranslateInfo&&(identical(other.version, version) || other.version == version)&&(identical(other.remoteVersion, remoteVersion) || other.remoteVersion == remoteVersion)&&(identical(other.lastReleaseUrl, lastReleaseUrl) || other.lastReleaseUrl == lastReleaseUrl)&&(identical(other.nhTagVersion, nhTagVersion) || other.nhTagVersion == nhTagVersion));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagTranslateInfo&&(identical(other.version, version) || other.version == version)&&(identical(other.remoteVersion, remoteVersion) || other.remoteVersion == remoteVersion)&&(identical(other.lastReleaseUrl, lastReleaseUrl) || other.lastReleaseUrl == lastReleaseUrl)&&(identical(other.nhTagVersion, nhTagVersion) || other.nhTagVersion == nhTagVersion)&&(identical(other.isUpdating, isUpdating) || other.isUpdating == isUpdating));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,remoteVersion,lastReleaseUrl,nhTagVersion);
+int get hashCode => Object.hash(runtimeType,version,remoteVersion,lastReleaseUrl,nhTagVersion,isUpdating);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion)';
+  return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion, isUpdating: $isUpdating)';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $TagTranslateInfoCopyWith<$Res>  {
   factory $TagTranslateInfoCopyWith(TagTranslateInfo value, $Res Function(TagTranslateInfo) _then) = _$TagTranslateInfoCopyWithImpl;
 @useResult
 $Res call({
- String? version, String? remoteVersion, String? lastReleaseUrl, String? nhTagVersion
+ String? version, String? remoteVersion, String? lastReleaseUrl, String? nhTagVersion,@JsonKey(includeToJson: false, includeFromJson: false) bool isUpdating
 });
 
 
@@ -71,13 +71,14 @@ class _$TagTranslateInfoCopyWithImpl<$Res>
 
 /// Create a copy of TagTranslateInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? version = freezed,Object? remoteVersion = freezed,Object? lastReleaseUrl = freezed,Object? nhTagVersion = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? version = freezed,Object? remoteVersion = freezed,Object? lastReleaseUrl = freezed,Object? nhTagVersion = freezed,Object? isUpdating = null,}) {
   return _then(_self.copyWith(
 version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String?,remoteVersion: freezed == remoteVersion ? _self.remoteVersion : remoteVersion // ignore: cast_nullable_to_non_nullable
 as String?,lastReleaseUrl: freezed == lastReleaseUrl ? _self.lastReleaseUrl : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
 as String?,nhTagVersion: freezed == nhTagVersion ? _self.nhTagVersion : nhTagVersion // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isUpdating: null == isUpdating ? _self.isUpdating : isUpdating // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -162,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion, @JsonKey(includeToJson: false, includeFromJson: false)  bool isUpdating)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TagTranslateInfo() when $default != null:
-return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion);case _:
+return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion,_that.isUpdating);case _:
   return orElse();
 
 }
@@ -183,10 +184,10 @@ return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhT
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion, @JsonKey(includeToJson: false, includeFromJson: false)  bool isUpdating)  $default,) {final _that = this;
 switch (_that) {
 case _TagTranslateInfo():
-return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion);case _:
+return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion,_that.isUpdating);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +204,10 @@ return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhT
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? version,  String? remoteVersion,  String? lastReleaseUrl,  String? nhTagVersion, @JsonKey(includeToJson: false, includeFromJson: false)  bool isUpdating)?  $default,) {final _that = this;
 switch (_that) {
 case _TagTranslateInfo() when $default != null:
-return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion);case _:
+return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhTagVersion,_that.isUpdating);case _:
   return null;
 
 }
@@ -218,13 +219,14 @@ return $default(_that.version,_that.remoteVersion,_that.lastReleaseUrl,_that.nhT
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _TagTranslateInfo with DiagnosticableTreeMixin implements TagTranslateInfo {
-  const _TagTranslateInfo({this.version, this.remoteVersion, this.lastReleaseUrl, this.nhTagVersion});
+  const _TagTranslateInfo({this.version, this.remoteVersion, this.lastReleaseUrl, this.nhTagVersion, @JsonKey(includeToJson: false, includeFromJson: false) this.isUpdating = false});
   factory _TagTranslateInfo.fromJson(Map<String, dynamic> json) => _$TagTranslateInfoFromJson(json);
 
 @override final  String? version;
 @override final  String? remoteVersion;
 @override final  String? lastReleaseUrl;
 @override final  String? nhTagVersion;
+@override@JsonKey(includeToJson: false, includeFromJson: false) final  bool isUpdating;
 
 /// Create a copy of TagTranslateInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -240,21 +242,21 @@ Map<String, dynamic> toJson() {
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'TagTranslateInfo'))
-    ..add(DiagnosticsProperty('version', version))..add(DiagnosticsProperty('remoteVersion', remoteVersion))..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))..add(DiagnosticsProperty('nhTagVersion', nhTagVersion));
+    ..add(DiagnosticsProperty('version', version))..add(DiagnosticsProperty('remoteVersion', remoteVersion))..add(DiagnosticsProperty('lastReleaseUrl', lastReleaseUrl))..add(DiagnosticsProperty('nhTagVersion', nhTagVersion))..add(DiagnosticsProperty('isUpdating', isUpdating));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagTranslateInfo&&(identical(other.version, version) || other.version == version)&&(identical(other.remoteVersion, remoteVersion) || other.remoteVersion == remoteVersion)&&(identical(other.lastReleaseUrl, lastReleaseUrl) || other.lastReleaseUrl == lastReleaseUrl)&&(identical(other.nhTagVersion, nhTagVersion) || other.nhTagVersion == nhTagVersion));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagTranslateInfo&&(identical(other.version, version) || other.version == version)&&(identical(other.remoteVersion, remoteVersion) || other.remoteVersion == remoteVersion)&&(identical(other.lastReleaseUrl, lastReleaseUrl) || other.lastReleaseUrl == lastReleaseUrl)&&(identical(other.nhTagVersion, nhTagVersion) || other.nhTagVersion == nhTagVersion)&&(identical(other.isUpdating, isUpdating) || other.isUpdating == isUpdating));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,version,remoteVersion,lastReleaseUrl,nhTagVersion);
+int get hashCode => Object.hash(runtimeType,version,remoteVersion,lastReleaseUrl,nhTagVersion,isUpdating);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion)';
+  return 'TagTranslateInfo(version: $version, remoteVersion: $remoteVersion, lastReleaseUrl: $lastReleaseUrl, nhTagVersion: $nhTagVersion, isUpdating: $isUpdating)';
 }
 
 
@@ -265,7 +267,7 @@ abstract mixin class _$TagTranslateInfoCopyWith<$Res> implements $TagTranslateIn
   factory _$TagTranslateInfoCopyWith(_TagTranslateInfo value, $Res Function(_TagTranslateInfo) _then) = __$TagTranslateInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String? version, String? remoteVersion, String? lastReleaseUrl, String? nhTagVersion
+ String? version, String? remoteVersion, String? lastReleaseUrl, String? nhTagVersion,@JsonKey(includeToJson: false, includeFromJson: false) bool isUpdating
 });
 
 
@@ -282,13 +284,14 @@ class __$TagTranslateInfoCopyWithImpl<$Res>
 
 /// Create a copy of TagTranslateInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? version = freezed,Object? remoteVersion = freezed,Object? lastReleaseUrl = freezed,Object? nhTagVersion = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? version = freezed,Object? remoteVersion = freezed,Object? lastReleaseUrl = freezed,Object? nhTagVersion = freezed,Object? isUpdating = null,}) {
   return _then(_TagTranslateInfo(
 version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String?,remoteVersion: freezed == remoteVersion ? _self.remoteVersion : remoteVersion // ignore: cast_nullable_to_non_nullable
 as String?,lastReleaseUrl: freezed == lastReleaseUrl ? _self.lastReleaseUrl : lastReleaseUrl // ignore: cast_nullable_to_non_nullable
 as String?,nhTagVersion: freezed == nhTagVersion ? _self.nhTagVersion : nhTagVersion // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isUpdating: null == isUpdating ? _self.isUpdating : isUpdating // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

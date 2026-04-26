@@ -19,18 +19,28 @@ String buildImageCacheKey(String url) {
 String? getTagNamespace(String tagType) {
   switch (tagType) {
     case 'Parodies':
+    case 'parody':
       return 'parody';
     case 'Characters':
+    case 'character':
       return 'character';
     case 'Tags':
+    case 'tag':
+    case 'male':
+    case 'female':
+    case 'mixed':
       return null;
     case 'Artists':
+    case 'artist':
       return 'artist';
     case 'Groups':
+    case 'group':
       return 'group';
     case 'Languages':
+    case 'language':
       return 'language';
     case 'Categories':
+    case 'category':
       return null;
     default:
       return null;

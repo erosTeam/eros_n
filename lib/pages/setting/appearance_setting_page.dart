@@ -227,23 +227,61 @@ class AppearanceSettingPage extends StatelessWidget {
                 settingsProvider.select((settings) => settings.isTagTranslate),
               );
               final tagTranslateInfo = ref.watch(tagTranslateProvider);
+              final isUpdating = tagTranslateInfo.isUpdating;
+
+              Future<void> triggerUpdate({bool force = false}) async {
+                try {
+                  await ref
+                      .read(tagTranslateProvider.notifier)
+                      .updateDb(force: force);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(L10n.of(context).tag_translation_updated),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${L10n.of(context).tag_translation_update_failed}: $e'),
+                        duration: const Duration(seconds: 4),
+                      ),
+                    );
+                  }
+                }
+              }
+
               return ListTile(
                 title: Text(L10n.of(context).tag_translation),
                 subtitle: Text(
-                  L10n.of(
-                    context,
-                  ).tag_translation_tip(tagTranslateInfo.version ?? ''),
+                  isUpdating
+                      ? L10n.of(context).tag_translation_updating
+                      : L10n.of(context).tag_translation_tip(
+                          tagTranslateInfo.version ?? '',
+                        ),
                 ),
-                trailing: Switch(
-                  activeThumbColor: Theme.of(context).colorScheme.primary,
-                  value: isTagTranslate,
-                  onChanged: (value) {
-                    ref.read(settingsProvider.notifier).setTagTranslate(value);
-                  },
-                ),
-                onLongPress: () {
-                  ref.read(tagTranslateProvider.notifier).updateDb(force: true);
-                },
+                trailing: isUpdating
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Switch(
+                        activeThumbColor: Theme.of(context).colorScheme.primary,
+                        value: isTagTranslate,
+                        onChanged: (value) {
+                          ref
+                              .read(settingsProvider.notifier)
+                              .setTagTranslate(value);
+                          if (value) {
+                            triggerUpdate();
+                          }
+                        },
+                      ),
+                onLongPress: isUpdating ? null : () => triggerUpdate(force: true),
               );
             },
           ),

@@ -42,7 +42,7 @@ final class TagTranslateNotifierProvider
 }
 
 String _$tagTranslateNotifierHash() =>
-    r'e8d2fc9071803a2107357dc8c5bd989e5105705b';
+    r'0bccd9aa6faf29ea7e35154a12d6aa2c93d8e298';
 
 abstract class _$TagTranslateNotifier extends $Notifier<TagTranslateInfo> {
   TagTranslateInfo build();

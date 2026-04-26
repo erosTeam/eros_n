@@ -529,6 +529,36 @@ class L10n {
     );
   }
 
+  /// `Downloading translation data...`
+  String get tag_translation_updating {
+    return Intl.message(
+      'Downloading translation data...',
+      name: 'tag_translation_updating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translation data updated`
+  String get tag_translation_updated {
+    return Intl.message(
+      'Translation data updated',
+      name: 'tag_translation_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translation data update failed`
+  String get tag_translation_update_failed {
+    return Intl.message(
+      'Translation data update failed',
+      name: 'tag_translation_update_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tags Data`
   String get tags_data {
     return Intl.message('Tags Data', name: 'tags_data', desc: '', args: []);
