@@ -6,22 +6,66 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-LiquidGlassSettings _defaultGlassSettings(bool isDark) => LiquidGlassSettings(
-  blur: 10,
-  thickness: 30,
-  lightIntensity: 0.05,
-  glassColor: isDark
-      ? const Color.fromARGB(60, 60, 60, 60)
-      : const Color.fromARGB(60, 255, 255, 255),
-);
+// ---------------------------------------------------------------------------
+// Glass design tokens
+// ---------------------------------------------------------------------------
+
+const double kGlassBlur = 10.0;
+const double kGlassLightIntensity = 0.05;
+const double kGlassBackdropSigma = 10.0;
+
+const double kGlassAppBarThickness = 30.0;
+const double kGlassButtonThickness = 20.0;
+
+const int kGlassAppBarAlpha = 60;
+const int kGlassButtonAlpha = 80;
+
+const double kGlassIconButtonSize = 36.0;
+const double kGlassFabSize = 56.0;
+const double kGlassFabRadius = 28.0;
+const double kGlassCapsuleRadius = 999.0;
+
+const double kGlassAppBarHeight = 56.0;
+const double kGlassTitleFontSize = 22.0;
+
+Color _glassColorForBrightness(bool isDark, int alpha) => isDark
+    ? Color.fromARGB(alpha, 60, 60, 60)
+    : Color.fromARGB(alpha, 255, 255, 255);
+
+// ---------------------------------------------------------------------------
+// Shared glass helpers
+// ---------------------------------------------------------------------------
 
 bool isLiquidGlass(WidgetRef ref) =>
     ref.watch(settingsProvider.select((s) => s.liquidGlass));
 
-const double _kGlassAppBarHeight = 56.0;
+Color glassIconColor(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
+
+LiquidGlassSettings glassAppBarSettings(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  return LiquidGlassSettings(
+    blur: kGlassBlur,
+    thickness: kGlassAppBarThickness,
+    lightIntensity: kGlassLightIntensity,
+    glassColor: _glassColorForBrightness(isDark, kGlassAppBarAlpha),
+  );
+}
+
+LiquidGlassSettings glassButtonSettings(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  return LiquidGlassSettings(
+    blur: kGlassBlur,
+    thickness: kGlassButtonThickness,
+    lightIntensity: kGlassLightIntensity,
+    glassColor: _glassColorForBrightness(isDark, kGlassButtonAlpha),
+  );
+}
 
 EdgeInsets glassBodyPadding(BuildContext context) => EdgeInsets.only(
-  top: MediaQuery.of(context).padding.top + _kGlassAppBarHeight,
+  top: MediaQuery.of(context).padding.top + kGlassAppBarHeight,
 );
 
 PreferredSizeWidget adaptiveAppBar({
@@ -39,23 +83,21 @@ PreferredSizeWidget adaptiveAppBar({
 
   if (liquidGlass) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final iconColor = isDark ? Colors.white : Colors.black;
+    final iconClr = glassIconColor(context);
     final route = ModalRoute.of(context);
     final canPop = route?.canPop ?? false;
 
     Widget? effectiveLeading = leading;
     if (effectiveLeading == null && automaticallyImplyLeading && canPop) {
       effectiveLeading = GlassIconButton(
-        icon: Icon(Icons.arrow_back, color: iconColor),
+        icon: Icon(Icons.arrow_back, color: iconClr),
         onPressed: () => Navigator.maybePop(context),
-        size: 36,
+        size: kGlassIconButtonSize,
         settings: LiquidGlassSettings(
           blur: 8,
-          thickness: 30,
+          thickness: kGlassAppBarThickness,
           lightIntensity: 0.02,
-          glassColor: isDark
-              ? const Color.fromARGB(40, 60, 60, 60)
-              : const Color.fromARGB(40, 255, 255, 255),
+          glassColor: _glassColorForBrightness(isDark, 40),
         ),
       );
     }
@@ -70,9 +112,9 @@ PreferredSizeWidget adaptiveAppBar({
         title: title != null
             ? DefaultTextStyle.merge(
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: kGlassTitleFontSize,
                   fontWeight: FontWeight.bold,
-                  color: iconColor,
+                  color: iconClr,
                 ),
                 child: title,
               )
@@ -81,8 +123,8 @@ PreferredSizeWidget adaptiveAppBar({
         actions: actions,
         centerTitle: false,
         useOwnLayer: true,
-        preferredSize: const Size.fromHeight(56),
-        settings: _defaultGlassSettings(isDark),
+        preferredSize: const Size.fromHeight(kGlassAppBarHeight),
+        settings: glassAppBarSettings(context),
       ),
     );
   }
@@ -100,26 +142,24 @@ PreferredSizeWidget adaptiveAppBar({
 
 Color glassAppBarColor(BuildContext context) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
-  return isDark
-      ? const Color.fromARGB(60, 60, 60, 60)
-      : const Color.fromARGB(60, 255, 255, 255);
+  return _glassColorForBrightness(isDark, kGlassAppBarAlpha);
 }
 
 Widget glassFlexibleSpace(BuildContext context) {
   return ClipRect(
     child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+      filter: ImageFilter.blur(
+          sigmaX: kGlassBackdropSigma, sigmaY: kGlassBackdropSigma),
       child: Container(color: glassAppBarColor(context)),
     ),
   );
 }
 
 TextStyle glassAppBarTitleStyle(BuildContext context) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
   return TextStyle(
-    fontSize: 22,
+    fontSize: kGlassTitleFontSize,
     fontWeight: FontWeight.bold,
-    color: isDark ? Colors.white : Colors.black,
+    color: glassIconColor(context),
   );
 }
 

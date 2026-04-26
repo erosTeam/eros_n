@@ -108,23 +108,14 @@ class _SearchPageState extends ConsumerState<SearchPage>
           ? GlassIconButton(
               icon: Icon(
                 Icons.search,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                color: glassIconColor(context),
               ),
               onPressed: () {
                 searchProviderNoti.searchFocusNode.unfocus();
                 searchProviderNoti.search();
               },
-              size: 56,
-              settings: LiquidGlassSettings(
-                blur: 10,
-                thickness: 20,
-                lightIntensity: 0.05,
-                glassColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color.fromARGB(60, 60, 60, 60)
-                    : const Color.fromARGB(60, 255, 255, 255),
-              ),
+              size: kGlassFabSize,
+              settings: glassButtonSettings(context),
             )
           : FloatingActionButton(
               onPressed: () {

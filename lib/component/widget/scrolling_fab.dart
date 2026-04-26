@@ -1,3 +1,4 @@
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -108,39 +109,29 @@ class _ScrollingFabState extends State<ScrollingFab> {
   }
 
   Widget _buildGlassFab(Duration duration, Curve curve) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final iconColor = isDark ? Colors.white : Colors.black;
-    final glassSettings = LiquidGlassSettings(
-      blur: 10,
-      thickness: 20,
-      lightIntensity: 0.05,
-      glassColor: isDark
-          ? const Color.fromARGB(60, 60, 60, 60)
-          : const Color.fromARGB(60, 255, 255, 255),
-    );
+    final iconClr = glassIconColor(context);
+    final settings = glassButtonSettings(context);
 
     return AnimatedSize(
       duration: duration,
       curve: curve,
       child: GlassContainer(
-        height: 56,
-        shape: const LiquidRoundedSuperellipse(borderRadius: 28),
+        height: kGlassFabSize,
+        shape: const LiquidRoundedSuperellipse(borderRadius: kGlassFabRadius),
         useOwnLayer: true,
-        settings: glassSettings,
+        settings: settings,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(kGlassFabRadius),
             onTap: widget.onPressed,
             child: Padding(
-              padding: _isExtended
-                  ? const EdgeInsets.symmetric(horizontal: 16)
-                  : const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconTheme(
-                    data: IconThemeData(color: iconColor, size: 24),
+                    data: IconThemeData(color: iconClr, size: 24),
                     child: widget.icon,
                   ),
                   AnimatedSize(
@@ -152,7 +143,7 @@ class _ScrollingFabState extends State<ScrollingFab> {
                           ? Padding(
                               padding: const EdgeInsets.only(left: 8),
                               child: DefaultTextStyle.merge(
-                                style: TextStyle(color: iconColor),
+                                style: TextStyle(color: iconClr),
                                 child: widget.label,
                               ),
                             )

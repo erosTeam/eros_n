@@ -122,23 +122,6 @@ class _GalleryPageState extends ConsumerState<GalleryPage> {
   }
 }
 
-Color _glassIconColor(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
-
-LiquidGlassSettings _glassButtonSettings(BuildContext context) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
-  return LiquidGlassSettings(
-    blur: 10,
-    thickness: 20,
-    lightIntensity: 0.05,
-    glassColor: isDark
-        ? const Color.fromARGB(80, 60, 60, 60)
-        : const Color.fromARGB(80, 255, 255, 255),
-  );
-}
-
 class GalleryPageBody extends HookConsumerWidget {
   const GalleryPageBody({super.key, required this.gid, this.heroTag});
 
@@ -195,11 +178,11 @@ class GalleryPageBody extends HookConsumerWidget {
                 child: Center(
                   child: GlassIconButton(
                     icon: Icon(Icons.arrow_back,
-                        color: _glassIconColor(context)),
+                        color: glassIconColor(context)),
                     onPressed: () => Navigator.maybePop(context),
                     size: 36,
                     useOwnLayer: true,
-                    settings: _glassButtonSettings(context),
+                    settings: glassButtonSettings(context),
                   ),
                 ),
               )
@@ -217,7 +200,7 @@ class GalleryPageBody extends HookConsumerWidget {
             ? [
                 GlassIconButton(
                   icon: Icon(Icons.share,
-                      color: _glassIconColor(context)),
+                      color: glassIconColor(context)),
                   onPressed: () {
                     final shareText =
                         'title:${title.englishTitle}\n$url';
@@ -226,16 +209,16 @@ class GalleryPageBody extends HookConsumerWidget {
                   },
                   size: 36,
                   useOwnLayer: true,
-                  settings: _glassButtonSettings(context),
+                  settings: glassButtonSettings(context),
                 ),
                 const SizedBox(width: 8),
                 GlassIconButton(
                   icon: Icon(Icons.more_vert,
-                      color: _glassIconColor(context)),
+                      color: glassIconColor(context)),
                   onPressed: () {},
                   size: 36,
                   useOwnLayer: true,
-                  settings: _glassButtonSettings(context),
+                  settings: glassButtonSettings(context),
                 ),
                 const SizedBox(width: NavigationToolbar.kMiddleSpacing),
               ]

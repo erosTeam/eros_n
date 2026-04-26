@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
@@ -37,8 +38,8 @@ class _BarAlignmentScope extends InheritedWidget {
 }
 
 LiquidGlassSettings _glassSettings(bool isDark) => LiquidGlassSettings(
-  blur: 10,
-  thickness: 30,
+  blur: kGlassBlur,
+  thickness: kGlassAppBarThickness,
   glassColor: isDark
       ? const Color.fromARGB(100, 60, 60, 60)
       : const Color.fromARGB(100, 255, 255, 255),

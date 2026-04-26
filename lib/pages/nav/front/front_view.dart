@@ -23,18 +23,6 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-LiquidGlassSettings _glassButtonSettings(BuildContext context) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
-  return LiquidGlassSettings(
-    blur: 10,
-    thickness: 20,
-    lightIntensity: 0.05,
-    glassColor: isDark
-        ? const Color.fromARGB(80, 60, 60, 60)
-        : const Color.fromARGB(80, 255, 255, 255),
-  );
-}
-
 @RoutePage()
 class FrontPage extends StatefulHookConsumerWidget {
   const FrontPage({super.key});
@@ -312,7 +300,7 @@ class SliverGalleryListView extends HookConsumerWidget {
                                           const LiquidRoundedSuperellipse(
                                               borderRadius: 999),
                                       settings:
-                                          _glassButtonSettings(context),
+                                          glassButtonSettings(context),
                                       child: Center(
                                         child: Text(
                                           sortText,
@@ -331,7 +319,7 @@ class SliverGalleryListView extends HookConsumerWidget {
                                           const LiquidRoundedSuperellipse(
                                               borderRadius: 999),
                                       settings:
-                                          _glassButtonSettings(context),
+                                          glassButtonSettings(context),
                                       child: IconTheme(
                                         data: IconThemeData(
                                             size: 22, color: iconColor),
@@ -422,7 +410,7 @@ class PopularListView extends ConsumerWidget {
                                     horizontal: 20),
                                 shape: const LiquidRoundedSuperellipse(
                                     borderRadius: 999),
-                                settings: _glassButtonSettings(context),
+                                settings: glassButtonSettings(context),
                                 child: Center(
                                   child: Text(
                                     L10n.of(context).popular,
