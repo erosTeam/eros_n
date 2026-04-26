@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "always": MessageLookupByLibrary.simpleMessage("Always"),
     "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+    "author": MessageLookupByLibrary.simpleMessage("Author"),
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "auto_read_interval": MessageLookupByLibrary.simpleMessage(
       "Auto read interval",
@@ -75,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "language": MessageLookupByLibrary.simpleMessage("Language"),
     "language_name": MessageLookupByLibrary.simpleMessage("English"),
     "left_to_right": MessageLookupByLibrary.simpleMessage("Left to Right"),
+    "license": MessageLookupByLibrary.simpleMessage("License"),
     "light": MessageLookupByLibrary.simpleMessage("Light"),
     "list": MessageLookupByLibrary.simpleMessage("List"),
     "list_model": MessageLookupByLibrary.simpleMessage("List Model"),
@@ -164,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tint gallery pages base on the color of the cover",
     ),
     "username": MessageLookupByLibrary.simpleMessage("Username"),
+    "version": MessageLookupByLibrary.simpleMessage("Version"),
     "vertical": MessageLookupByLibrary.simpleMessage("Vertical"),
     "volume_key_turn_page": MessageLookupByLibrary.simpleMessage(
       "Volume key to turn page",

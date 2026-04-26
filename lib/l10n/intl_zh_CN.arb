@@ -104,5 +104,8 @@
   "translated": "翻译",
   "none": "无",
   "all": "全部",
-  "clipboard_detection": "剪贴板链接检测"
+  "clipboard_detection": "剪贴板链接检测",
+  "version": "版本",
+  "author": "作者",
+  "license": "许可证"
 }

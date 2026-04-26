@@ -104,5 +104,8 @@
   "translated": "Translated",
   "none": "None",
   "all": "All",
-  "clipboard_detection": "Clipboard link detection"
+  "clipboard_detection": "Clipboard link detection",
+  "version": "Version",
+  "author": "Author",
+  "license": "License"
 }
