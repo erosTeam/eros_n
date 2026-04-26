@@ -22,15 +22,13 @@ class HiveHelper {
     await Hive.openBox<String>(
       configBox,
       compactionStrategy: (int entries, int deletedEntries) {
-        logger.t('entries $entries');
-        return entries > 2;
+        return deletedEntries > 50;
       },
     );
     await Hive.openBox<String>(
       userKey,
       compactionStrategy: (int entries, int deletedEntries) {
-        logger.t('entries $entries');
-        return true;
+        return deletedEntries > 10;
       },
     );
   }
@@ -41,6 +39,7 @@ class HiveHelper {
 
   Future<void> setString(String key, String value) async {
     await _configBox.put(key, value);
+    await _configBox.flush();
   }
 
   String? getUserAgent() {

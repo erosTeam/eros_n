@@ -91,7 +91,9 @@ class SearchNotifier extends _$SearchNotifier {
       return;
     }
     // Record before firing so the entry is kept even when the request fails.
-    unawaited(ref.read(searchHistoryProvider.notifier).add(_query));
+    // Awaited so that the Hive flush completes before the provider/page might
+    // be disposed; unawaited futures can be dropped under memory pressure.
+    await ref.read(searchHistoryProvider.notifier).add(_query);
     await loadData();
   }
 
@@ -203,10 +205,8 @@ int get currentSearchDepth {
 
 void pushSearchDepth() {
   _searchDepthList.add(_searchDepthList.last + 1);
-  logger.d('pushSearchDepth $_searchDepthList');
 }
 
 void popSearchDepth() {
   _searchDepthList.removeLast();
-  logger.d('popSearchDepth $_searchDepthList');
 }
