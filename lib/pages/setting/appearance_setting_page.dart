@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/common/provider/tag_translate_provider.dart';
 import 'package:eros_n/component/theme/theme.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -179,6 +180,24 @@ class AppearanceSettingPage extends StatelessWidget {
               );
             },
           ),
+          Consumer(
+            builder: (context, ref, child) {
+              final listModel = ref.watch(
+                settingsProvider.select((settings) => settings.listModel),
+              );
+              if (listModel == ListModel.list) {
+                return const SizedBox.shrink();
+              }
+              return ListTile(
+                title: Text(L10n.of(context).custom_layout_width),
+                subtitle: Text(L10n.of(context).pinch_to_zoom_hint),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  context.router.push(const ItemWidthSettingRoute());
+                },
+              );
+            },
+          ),
           // Switch show tags
           Consumer(
             builder: (context, ref, child) {
@@ -246,7 +265,9 @@ class AppearanceSettingPage extends StatelessWidget {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('${L10n.of(context).tag_translation_update_failed}: $e'),
+                        content: Text(
+                          '${L10n.of(context).tag_translation_update_failed}: $e',
+                        ),
                         duration: const Duration(seconds: 4),
                       ),
                     );
@@ -259,9 +280,9 @@ class AppearanceSettingPage extends StatelessWidget {
                 subtitle: Text(
                   isUpdating
                       ? L10n.of(context).tag_translation_updating
-                      : L10n.of(context).tag_translation_tip(
-                          tagTranslateInfo.version ?? '',
-                        ),
+                      : L10n.of(
+                          context,
+                        ).tag_translation_tip(tagTranslateInfo.version ?? ''),
                 ),
                 trailing: isUpdating
                     ? const SizedBox(
@@ -281,7 +302,9 @@ class AppearanceSettingPage extends StatelessWidget {
                           }
                         },
                       ),
-                onLongPress: isUpdating ? null : () => triggerUpdate(force: true),
+                onLongPress: isUpdating
+                    ? null
+                    : () => triggerUpdate(force: true),
               );
             },
           ),

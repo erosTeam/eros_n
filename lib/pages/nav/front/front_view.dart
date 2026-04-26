@@ -4,6 +4,7 @@ import 'package:eros_n/common/extension.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
 import 'package:eros_n/component/widget/buttons.dart';
+import 'package:eros_n/component/widget/pinch_grid_zoom.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/item/item_base.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
@@ -75,10 +76,11 @@ class _FrontPageState extends ConsumerState<FrontPage>
     logger.t('${MediaQuery.of(context).padding.top}');
     logger.t('${context.width}');
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
-        edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
-        child: CustomScrollView(
+      body: PinchGridZoom(
+        child: RefreshIndicator(
+          onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
+          edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
+          child: CustomScrollView(
           controller: scrollController,
           // cacheExtent: 500,
           physics: const ClampingScrollPhysics(),
@@ -103,6 +105,7 @@ class _FrontPageState extends ConsumerState<FrontPage>
               },
             ),
           ],
+        ),
         ),
       ),
     );

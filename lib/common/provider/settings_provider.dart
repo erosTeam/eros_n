@@ -80,4 +80,10 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   void setClipboardDetection(bool value) =>
       _save(state.copyWith(clipboardDetection: value));
+
+  void setGridMaxCrossAxisExtent(double value) =>
+      _save(state.copyWith(gridMaxCrossAxisExtent: value.clamp(80.0, 300.0)));
+
+  void setWaterfallMaxCrossAxisExtent(double value) =>
+      _save(state.copyWith(waterfallMaxCrossAxisExtent: value.clamp(80.0, 300.0)));
 }

@@ -31,6 +31,8 @@ abstract class Settings with _$Settings {
     @Default(LanguagesFilter.all) LanguagesFilter frontLanguagesFilter,
     @Default(LanguagesFilter.all) LanguagesFilter searchLanguagesFilter,
     @Default(false) bool clipboardDetection,
+    @Default(150.0) double gridMaxCrossAxisExtent,
+    @Default(190.0) double waterfallMaxCrossAxisExtent,
   }) = _Settings;
 
   const Settings._();

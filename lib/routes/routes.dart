@@ -17,6 +17,7 @@ import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/pages/setting/about_page.dart';
 import 'package:eros_n/pages/setting/advanced_setting_page.dart';
 import 'package:eros_n/pages/setting/appearance_setting_page.dart';
+import 'package:eros_n/pages/setting/item_width_setting_page.dart';
 import 'package:eros_n/pages/setting/general_setting_page.dart';
 import 'package:eros_n/pages/setting/license_page.dart';
 import 'package:eros_n/pages/setting/read_setting_page.dart';
@@ -52,6 +53,7 @@ class NHRoutes {
   static const String comments = '/comments';
   static const String search = '/search';
   static const String more = '/more';
+  static const String itemWidthSetting = '/itemWidthSetting';
 }
 
 class AppRouteObserver extends AutoRouterObserver {
@@ -89,6 +91,10 @@ class AppRouter extends RootStackRouter {
     AutoRoute(path: NHRoutes.webView, page: NhWebViewRoute.page),
     AutoRoute(path: NHRoutes.about, page: AboutRoute.page),
     AutoRoute(path: NHRoutes.license, page: MyLicenseRoute.page),
+    AutoRoute(
+      path: NHRoutes.itemWidthSetting,
+      page: ItemWidthSettingRoute.page,
+    ),
   ];
 }
 

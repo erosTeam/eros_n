@@ -53,6 +53,10 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
       ) ??
       LanguagesFilter.all,
   clipboardDetection: json['clipboardDetection'] as bool? ?? false,
+  gridMaxCrossAxisExtent:
+      (json['gridMaxCrossAxisExtent'] as num?)?.toDouble() ?? 150.0,
+  waterfallMaxCrossAxisExtent:
+      (json['waterfallMaxCrossAxisExtent'] as num?)?.toDouble() ?? 190.0,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -80,6 +84,8 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'searchLanguagesFilter':
       _$LanguagesFilterEnumMap[instance.searchLanguagesFilter]!,
   'clipboardDetection': instance.clipboardDetection,
+  'gridMaxCrossAxisExtent': instance.gridMaxCrossAxisExtent,
+  'waterfallMaxCrossAxisExtent': instance.waterfallMaxCrossAxisExtent,
 };
 
 const _$SearchSortEnumMap = {

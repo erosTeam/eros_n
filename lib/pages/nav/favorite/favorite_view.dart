@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/component/widget/pinch_grid_zoom.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/list_view/list_view.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_provider.dart';
@@ -67,12 +68,13 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
     );
     super.build(context);
     return Scaffold(
-      body: RefreshIndicator(
-        edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
-        onRefresh: isUserLoggedIn
-            ? ref.read(favoriteProvider.notifier).reloadData
-            : () async {},
-        child: CustomScrollView(
+      body: PinchGridZoom(
+        child: RefreshIndicator(
+          edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
+          onRefresh: isUserLoggedIn
+              ? ref.read(favoriteProvider.notifier).reloadData
+              : () async {},
+          child: CustomScrollView(
           controller: scrollController,
           physics: const ClampingScrollPhysics(),
           slivers: [
@@ -121,6 +123,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
                 ),
               ),
           ],
+          ),
         ),
       ),
     );

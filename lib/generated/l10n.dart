@@ -808,6 +808,36 @@ class L10n {
   String get license {
     return Intl.message('License', name: 'license', desc: '', args: []);
   }
+
+  /// `Custom Layout Width`
+  String get custom_layout_width {
+    return Intl.message(
+      'Custom Layout Width',
+      name: 'custom_layout_width',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Showing less`
+  String get show_less {
+    return Intl.message('Showing less', name: 'show_less', desc: '', args: []);
+  }
+
+  /// `Showing more`
+  String get show_more {
+    return Intl.message('Showing more', name: 'show_more', desc: '', args: []);
+  }
+
+  /// `You can also pinch to adjust on the page`
+  String get pinch_to_zoom_hint {
+    return Intl.message(
+      'You can also pinch to adjust on the page',
+      name: 'pinch_to_zoom_hint',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

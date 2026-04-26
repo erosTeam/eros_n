@@ -107,5 +107,9 @@
   "clipboard_detection": "Clipboard link detection",
   "version": "Version",
   "author": "Author",
-  "license": "License"
+  "license": "License",
+  "custom_layout_width": "Custom Layout Width",
+  "show_less": "Showing less",
+  "show_more": "Showing more",
+  "pinch_to_zoom_hint": "You can also pinch to adjust on the page"
 }

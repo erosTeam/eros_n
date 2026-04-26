@@ -76,7 +76,7 @@ class GallerySliverList extends HookConsumerWidget {
   }
 }
 
-class GalleryCardSliverGridView extends StatelessWidget {
+class GalleryCardSliverGridView extends ConsumerWidget {
   const GalleryCardSliverGridView({
     super.key,
     required this.gallerys,
@@ -100,7 +100,6 @@ class GalleryCardSliverGridView extends StatelessWidget {
     }
 
     if (index == gallerys.length - 1 && currentPage < maxPage) {
-      // 加载完成最后一项的回调
       SchedulerBinding.instance.addPostFrameCallback(
         (_) => lastComplete?.call(),
       );
@@ -112,12 +111,15 @@ class GalleryCardSliverGridView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final maxExtent = ref.watch(
+      settingsProvider.select((s) => s.gridMaxCrossAxisExtent),
+    );
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: gridCrossAxisSpacing),
       sliver: SliverGrid(
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: gridMaxCrossAxisExtent,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: maxExtent,
           crossAxisSpacing: gridCrossAxisSpacing,
           mainAxisSpacing: gridMainAxisSpacing,
           childAspectRatio: gridChildAspectRatio,
@@ -181,7 +183,7 @@ class GalleryCardSliverListView extends StatelessWidget {
   }
 }
 
-class GalleryWaterfallFlowView extends StatelessWidget {
+class GalleryWaterfallFlowView extends ConsumerWidget {
   const GalleryWaterfallFlowView({
     super.key,
     required this.gallerys,
@@ -207,7 +209,6 @@ class GalleryWaterfallFlowView extends StatelessWidget {
     }
 
     if (index == gallerys.length - 1 && currentPage < maxPage) {
-      // 加载完成最后一项的回调
       SchedulerBinding.instance.addPostFrameCallback(
         (_) => lastComplete?.call(),
       );
@@ -224,7 +225,10 @@ class GalleryWaterfallFlowView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final maxExtent = ref.watch(
+      settingsProvider.select((s) => s.waterfallMaxCrossAxisExtent),
+    );
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
         vertical: NHConst.waterfallFlowLargeMainAxisSpacing,
@@ -236,7 +240,7 @@ class GalleryWaterfallFlowView extends StatelessWidget {
           childCount: gallerys.length,
         ),
         gridDelegate: SliverWaterfallFlowDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: NHConst.waterfallFlowLargeMaxCrossAxisExtent,
+          maxCrossAxisExtent: maxExtent,
           crossAxisSpacing: NHConst.waterfallFlowLargeCrossAxisSpacing,
           mainAxisSpacing: NHConst.waterfallFlowLargeMainAxisSpacing,
           lastChildLayoutTypeBuilder: (int index) => index == gallerys.length

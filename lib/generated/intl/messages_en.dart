@@ -54,6 +54,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "comments": MessageLookupByLibrary.simpleMessage("Comments"),
     "cover_blur": MessageLookupByLibrary.simpleMessage("Cover Blur"),
     "curl_vertical": MessageLookupByLibrary.simpleMessage("Curl Vertical"),
+    "custom_layout_width": MessageLookupByLibrary.simpleMessage(
+      "Custom Layout Width",
+    ),
     "dark": MessageLookupByLibrary.simpleMessage("Dark"),
     "display": MessageLookupByLibrary.simpleMessage("Display"),
     "download": MessageLookupByLibrary.simpleMessage("Download"),
@@ -101,6 +104,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Starting with Android 12, apps can only be used as web link handling apps if they are approved. Otherwise it will be processed using the default browser. You can manually approve it here",
     ),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "pinch_to_zoom_hint": MessageLookupByLibrary.simpleMessage(
+      "You can also pinch to adjust on the page",
+    ),
     "please_login_first": MessageLookupByLibrary.simpleMessage(
       "Please login first",
     ),
@@ -125,6 +131,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
+    "show_less": MessageLookupByLibrary.simpleMessage("Showing less"),
+    "show_more": MessageLookupByLibrary.simpleMessage("Showing more"),
     "show_tags": MessageLookupByLibrary.simpleMessage("Show Tags"),
     "show_tags_tip": MessageLookupByLibrary.simpleMessage(
       "Show tags in list, need download tags data",
