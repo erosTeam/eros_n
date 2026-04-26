@@ -987,6 +987,9 @@ class MoreLikeListView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final moreLikeGallerys = ref.watch(galleryProvider(gid)).moreLikeGallerys;
+    if (moreLikeGallerys.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
     final heroTag = useMemoized(() => 'more_like_$gid');
     return MultiSliver(
       children: [
