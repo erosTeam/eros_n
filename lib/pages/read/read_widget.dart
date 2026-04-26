@@ -17,6 +17,28 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 const _kShowBarGradient = false;
+const _kMaxSliderWidth = 400.0;
+const _kMaxButtonBarWidth = 200.0;
+
+class _BarAlignmentScope extends InheritedWidget {
+  const _BarAlignmentScope({
+    required this.alignment,
+    required super.child,
+  });
+
+  final Alignment alignment;
+
+  static Alignment of(BuildContext context) {
+    return context
+            .dependOnInheritedWidgetOfExactType<_BarAlignmentScope>()
+            ?.alignment ??
+        Alignment.bottomCenter;
+  }
+
+  @override
+  bool updateShouldNotify(_BarAlignmentScope oldWidget) =>
+      alignment != oldWidget.alignment;
+}
 
 LiquidGlassSettings _glassSettings(bool isDark) => LiquidGlassSettings(
   blur: 10,
@@ -300,6 +322,8 @@ class GlassBottomBarControl extends HookConsumerWidget {
     );
     final readNotifier = ref.read(readProvider.notifier);
 
+    final alignment = _BarAlignmentScope.of(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: context.mediaQueryPadding.horizontal / 2 + 12,
@@ -307,32 +331,54 @@ class GlassBottomBarControl extends HookConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GlassContainer(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            shape: const LiquidRoundedSuperellipse(borderRadius: 999),
-            settings: _glassSettings(isDark),
-            child: GlassViewPageSlider(
-              key: ValueKey('GlassViewPageSlider_$currentItemIndex'),
-              max: math.max(0, totNum - 1.0),
-              initValue: math.max(
-                0,
-                math.min(currentItemIndex.roundToDouble(), totNum - 1.0),
+          AnimatedAlign(
+            alignment: alignment,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOutCubic,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: _kMaxSliderWidth),
+              child: GlassContainer(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                shape: const LiquidRoundedSuperellipse(borderRadius: 999),
+                settings: _glassSettings(isDark),
+                child: GlassViewPageSlider(
+                  key: ValueKey('GlassViewPageSlider_$currentItemIndex'),
+                  max: math.max(0, totNum - 1.0),
+                  initValue: math.max(
+                    0,
+                    math.min(currentItemIndex.roundToDouble(), totNum - 1.0),
+                  ),
+                  onChangedEnd: (val) {
+                    readNotifier.jumpToPage(val.round());
+                  },
+                  onChanged: (_) {},
+                ),
               ),
-              onChangedEnd: (val) {
-                readNotifier.jumpToPage(val.round());
-              },
-              onChanged: (_) {},
             ),
           ),
           const SizedBox(height: 8),
           if (!context.isTablet)
-            GlassContainer(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-              shape: const LiquidRoundedSuperellipse(borderRadius: 999),
-              settings: _glassSettings(isDark),
-              child: const GlassControllerButtonBar(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+            AnimatedAlign(
+              alignment: alignment,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOutCubic,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: _kMaxButtonBarWidth),
+                child: GlassContainer(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 4,
+                  ),
+                  shape: const LiquidRoundedSuperellipse(borderRadius: 999),
+                  settings: _glassSettings(isDark),
+                  child: const GlassControllerButtonBar(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                  ),
+                ),
               ),
             ),
         ],
@@ -845,7 +891,7 @@ class ThumbnailListView extends HookConsumerWidget {
   }
 }
 
-class ReadScaffold extends HookConsumerWidget {
+class ReadScaffold extends ConsumerStatefulWidget {
   const ReadScaffold({
     super.key,
     required this.child,
@@ -858,15 +904,38 @@ class ReadScaffold extends HookConsumerWidget {
   final Widget bottomBar;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // ref.read(readProvider.notifier).init(context);
+  ConsumerState<ReadScaffold> createState() => _ReadScaffoldState();
+}
+
+class _ReadScaffoldState extends ConsumerState<ReadScaffold> {
+  Alignment _barAlignment = Alignment.bottomCenter;
+
+  @override
+  Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(readProvider.notifier).resetBottomBarHeight(context);
     });
     return LiquidGlassScope(
       child: Stack(
         children: [
-          GlassRefractionSource(child: child),
+          GlassRefractionSource(
+            child: Listener(
+              onPointerMove: (event) {
+                final w = MediaQuery.of(context).size.width;
+                final dx = event.position.dx;
+                if (dx < w / 3) {
+                  if (_barAlignment != Alignment.bottomLeft) {
+                    setState(() => _barAlignment = Alignment.bottomLeft);
+                  }
+                } else if (dx > w * 2 / 3) {
+                  if (_barAlignment != Alignment.bottomRight) {
+                    setState(() => _barAlignment = Alignment.bottomRight);
+                  }
+                }
+              },
+              child: widget.child,
+            ),
+          ),
           Consumer(
             builder: (context, ref, child) {
               final topBarOffset = ref.watch(
@@ -885,13 +954,16 @@ class ReadScaffold extends HookConsumerWidget {
                     curve: Curves.fastOutSlowIn,
                     duration: const Duration(milliseconds: 300),
                     top: topBarOffset,
-                    child: topBar,
+                    child: widget.topBar,
                   ),
                   AnimatedPositioned(
                     curve: Curves.fastOutSlowIn,
                     duration: const Duration(milliseconds: 300),
                     bottom: bottomBarOffset,
-                    child: bottomBar,
+                    child: _BarAlignmentScope(
+                      alignment: _barAlignment,
+                      child: widget.bottomBar,
+                    ),
                   ),
                 ],
               );
