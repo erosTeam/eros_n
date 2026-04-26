@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/setting/setting_base.dart';
 import 'package:flutter/foundation.dart';
@@ -9,14 +10,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:open_by_default/open_by_default.dart';
 
 @RoutePage()
-class GeneralSettingPage extends StatelessWidget {
+class GeneralSettingPage extends ConsumerWidget {
   const GeneralSettingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final glass = isLiquidGlass(ref);
     return Scaffold(
-      appBar: AppBar(title: Text(L10n.of(context).general)),
+      extendBodyBehindAppBar: glass,
+      appBar: adaptiveAppBar(
+        context: context,
+        ref: ref,
+        title: Text(L10n.of(context).general),
+      ),
       body: ListView(
+        padding: glass ? glassBodyPadding(context) : null,
         children: [
           // switch language
           Consumer(

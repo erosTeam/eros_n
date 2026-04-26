@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
@@ -8,14 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class ReadSettingPage extends StatelessWidget {
+class ReadSettingPage extends ConsumerWidget {
   const ReadSettingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final glass = isLiquidGlass(ref);
     return Scaffold(
-      appBar: AppBar(title: Text(L10n.of(context).read)),
+      extendBodyBehindAppBar: glass,
+      appBar: adaptiveAppBar(
+        context: context,
+        ref: ref,
+        title: Text(L10n.of(context).read),
+      ),
       body: ListView(
+        padding: glass ? glassBodyPadding(context) : null,
         children: <Widget>[
           SmallTitle(title: L10n.of(context).display),
           // Switch full screen reader

@@ -160,17 +160,14 @@ class ReadPage extends HookConsumerWidget {
     //   child: readView,
     // );
 
-    // readView = AnnotatedRegion<SystemUiOverlayStyle>(
-    //   value: const SystemUiOverlayStyle(
-    //     systemNavigationBarColor: Colors.transparent,
-    //     systemNavigationBarDividerColor: Colors.transparent,
-    //     statusBarColor: Colors.transparent,
-    //     systemNavigationBarIconBrightness: Brightness.light,
-    //     statusBarIconBrightness: Brightness.light,
-    //     statusBarBrightness: Brightness.dark,
-    //   ),
-    //   child: readView,
-    // );
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    readView = AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      ),
+      child: readView,
+    );
 
     readView = Scaffold(body: readView);
 

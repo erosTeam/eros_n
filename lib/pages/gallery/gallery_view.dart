@@ -166,10 +166,14 @@ class GalleryPageBody extends HookConsumerWidget {
         //         statusBarColor: Colors.transparent,
         //         // statusBarIconBrightness: Brightness.light,
         //       ),
-        systemOverlayStyle: const SystemUiOverlayStyle(
+        systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
           systemNavigationBarDividerColor: Colors.transparent,
           statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.light
+                  : Brightness.dark,
         ),
         actions: [
           IconButton(

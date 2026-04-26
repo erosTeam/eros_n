@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/exception/error.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -134,9 +135,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final glass = isLiquidGlass(ref);
     return Scaffold(
-      appBar: AppBar(title: Text(L10n.of(context).login)),
+      extendBodyBehindAppBar: glass,
+      appBar: adaptiveAppBar(
+        context: context,
+        ref: ref,
+        title: Text(L10n.of(context).login),
+      ),
       body: SingleChildScrollView(
+        padding: glass ? glassBodyPadding(context) : null,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           child: Column(

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -64,13 +65,18 @@ class _ItemWidthSettingPageState extends ConsumerState<ItemWidthSettingPage> {
         ? '${l10n.grid} - ${l10n.custom_layout_width}'
         : '${l10n.waterfall} - ${l10n.custom_layout_width}';
 
+    final glass = isLiquidGlass(ref);
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Column(
-        children: [
-          Expanded(child: _buildPreview(context)),
-          _buildSlider(context),
-        ],
+      extendBodyBehindAppBar: glass,
+      appBar: adaptiveAppBar(context: context, ref: ref, title: Text(title)),
+      body: Padding(
+        padding: glass ? glassBodyPadding(context) : EdgeInsets.zero,
+        child: Column(
+          children: [
+            Expanded(child: _buildPreview(context)),
+            _buildSlider(context),
+          ],
+        ),
       ),
     );
   }

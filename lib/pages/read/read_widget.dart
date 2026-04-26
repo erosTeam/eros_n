@@ -16,7 +16,7 @@ import 'dart:ui';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-const _kShowBarGradient = false;
+const _kShowBarGradient = true;
 const _kMaxSliderWidth = 400.0;
 const _kMaxButtonBarWidth = 200.0;
 

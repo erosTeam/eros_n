@@ -2,21 +2,23 @@ import 'dart:io' as io;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/widget/web_view.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class WebLoginPage extends StatefulWidget {
+class WebLoginPage extends ConsumerStatefulWidget {
   const WebLoginPage({super.key});
 
   @override
-  State<WebLoginPage> createState() => _WebLoginPageState();
+  ConsumerState<WebLoginPage> createState() => _WebLoginPageState();
 }
 
-class _WebLoginPageState extends State<WebLoginPage> {
+class _WebLoginPageState extends ConsumerState<WebLoginPage> {
   // Latch so we only pop once even though the callback fires repeatedly.
   bool _popped = false;
 
@@ -41,8 +43,14 @@ class _WebLoginPageState extends State<WebLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final glass = isLiquidGlass(ref);
     return Scaffold(
-      appBar: AppBar(title: Text(L10n.of(context).login)),
+      extendBodyBehindAppBar: glass,
+      appBar: adaptiveAppBar(
+        context: context,
+        ref: ref,
+        title: Text(L10n.of(context).login),
+      ),
       body: GetCookieWebView(
         url: NHConst.loginUrl,
         deletedCookie: false,

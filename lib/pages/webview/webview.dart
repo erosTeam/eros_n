@@ -1,18 +1,26 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class NhWebViewPage extends StatelessWidget {
+class NhWebViewPage extends ConsumerWidget {
   const NhWebViewPage({super.key, required this.initialUrl, this.title});
   final String initialUrl;
   final String? title;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final glass = isLiquidGlass(ref);
     return Scaffold(
-      appBar: AppBar(title: Text(title ?? '')),
+      extendBodyBehindAppBar: glass,
+      appBar: adaptiveAppBar(
+        context: context,
+        ref: ref,
+        title: Text(title ?? ''),
+      ),
       body: InAppWebView(
         initialUrlRequest: URLRequest(url: WebUri(initialUrl)),
         initialSettings: inAppWebViewSettings,

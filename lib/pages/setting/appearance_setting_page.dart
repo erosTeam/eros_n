@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
@@ -11,14 +12,21 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class AppearanceSettingPage extends StatelessWidget {
+class AppearanceSettingPage extends ConsumerWidget {
   const AppearanceSettingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final glass = isLiquidGlass(ref);
     return Scaffold(
-      appBar: AppBar(title: Text(L10n.of(context).appearance)),
+      extendBodyBehindAppBar: glass,
+      appBar: adaptiveAppBar(
+        context: context,
+        ref: ref,
+        title: Text(L10n.of(context).appearance),
+      ),
       body: ListView(
+        padding: glass ? glassBodyPadding(context) : null,
         children: <Widget>[
           /// Theme
           SmallTitle(title: L10n.of(context).theme),

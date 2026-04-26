@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/models/comment.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
@@ -52,12 +53,20 @@ class CommentsPage extends HookConsumerWidget {
       data: Theme.of(context).copyWith(colorScheme: colorScheme),
       child: Builder(
         builder: (context) {
+          final glass = isLiquidGlass(ref);
           return Scaffold(
-            appBar: AppBar(title: const Text('评论')),
-            body: Column(
-              children: [
-                Expanded(child: CommentsListView(comments: comments)),
-                Container(
+            extendBodyBehindAppBar: glass,
+            appBar: adaptiveAppBar(
+              context: context,
+              ref: ref,
+              title: const Text('评论'),
+            ),
+            body: Padding(
+              padding: glass ? glassBodyPadding(context) : EdgeInsets.zero,
+              child: Column(
+                children: [
+                  Expanded(child: CommentsListView(comments: comments)),
+                  Container(
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   padding: EdgeInsets.only(
                     left: max(16, context.mediaQueryPadding.left),
@@ -138,7 +147,8 @@ class CommentsPage extends HookConsumerWidget {
                     },
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
           );
         },
