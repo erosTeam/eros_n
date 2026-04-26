@@ -28,6 +28,8 @@ class _IndexPageState extends ConsumerState<IndexPage> {
     const MorePage(),
   ];
 
+  Alignment _barAlignment = Alignment.bottomCenter;
+
   @override
   void initState() {
     logger.d('initState');
@@ -54,10 +56,21 @@ class _IndexPageState extends ConsumerState<IndexPage> {
       return Scaffold(
         body: Stack(
           children: [
-            pageView,
+            Listener(
+              onPointerMove: (event) {
+                final half = MediaQuery.of(context).size.width / 2;
+                final target = event.position.dx < half
+                    ? Alignment.bottomLeft
+                    : Alignment.bottomRight;
+                if (target != _barAlignment) {
+                  setState(() => _barAlignment = target);
+                }
+              },
+              child: pageView,
+            ),
             Positioned(
-              left: 0,
-              right: 0,
+              left: 16,
+              right: 16,
               bottom: 0,
               child: AnimatedSlide(
                 offset: state.hideNavigationBar
@@ -67,7 +80,10 @@ class _IndexPageState extends ConsumerState<IndexPage> {
                 curve: Curves.ease,
                 child: SafeArea(
                   top: false,
-                  child: Center(
+                  child: AnimatedAlign(
+                    alignment: _barAlignment,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeOutCubic,
                     child: Builder(
                       builder: (context) {
                         final isDark = Theme.of(context).brightness == Brightness.dark;
