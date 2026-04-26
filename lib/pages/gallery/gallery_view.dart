@@ -505,7 +505,7 @@ class HeadInfoView extends StatelessWidget {
                   final artistTags = ref
                       .watch(galleryProvider(gid))
                       .tags
-                      .where((e) => e.type == 'Artists')
+                      .where((e) => e.type == 'Artists' || e.type == 'artist')
                       .toList();
 
                   final textStyle = Theme.of(context).textTheme.bodySmall
@@ -774,7 +774,7 @@ class TagsView extends HookConsumerWidget {
     // tags group by type
     final tagsGroupByType = <String, List<Tag>>{};
     for (final tag in tags) {
-      if (tag.type == 'Artists') {
+      if (tag.type == 'Artists' || tag.type == 'artist') {
         continue;
       }
 
