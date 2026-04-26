@@ -172,10 +172,7 @@ class ReadPage extends HookConsumerWidget {
     //   child: readView,
     // );
 
-    readView = Theme(
-      data: Theme.of(context).copyWith(colorScheme: colorScheme),
-      child: Scaffold(body: readView),
-    );
+    readView = Scaffold(body: readView);
 
     return readView;
   }
