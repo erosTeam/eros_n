@@ -183,22 +183,33 @@ class _SearchPageState extends ConsumerState<SearchPage>
                   borderSide: BorderSide.none,
                 ),
                 prefixIcon: getPrefixIcon(context),
-                suffixIcon: KeyboardVisibilityBuilder(
-                  builder: (context, isKeyboardVisible) {
+                suffixIcon: ListenableBuilder(
+                  // Drive the suffix area off the actual text + focus state
+                  // instead of keyboard visibility, which is unreliable on
+                  // tablets / desktops / split-screen and on platforms where
+                  // the keyboard plugin doesn't report changes.
+                  listenable: Listenable.merge([
+                    searchProviderNoti.searchController,
+                    searchProviderNoti.searchFocusNode,
+                  ]),
+                  builder: (context, _) {
+                    final hasText = searchProviderNoti.searchController.text
+                        .trim()
+                        .isNotEmpty;
+                    final hasFocus =
+                        searchProviderNoti.searchFocusNode.hasFocus;
                     return Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (controller.text.trim().isNotEmpty &&
-                            isKeyboardVisible)
+                        if (hasText && hasFocus)
                           IconButton(
                             icon: const Icon(Icons.clear),
                             constraints: const BoxConstraints(),
                             onPressed: () {
-                              controller.clear();
-                              setState(() {});
+                              searchProviderNoti.searchController.clear();
                             },
                           ),
-                        if (!isKeyboardVisible)
+                        if (!hasFocus)
                           LanguagesFilterPopupButton(
                             onSelected: (LanguagesFilter value) async {
                               if (value ==
@@ -218,7 +229,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                               ),
                             ),
                           ),
-                        if (!isKeyboardVisible)
+                        if (!hasFocus)
                           SortPopupButton(
                             onSelected: (value) async {
                               if (value ==
@@ -241,9 +252,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                   },
                 ),
               ),
-              onChanged: (value) {
-                setState(() {});
-              },
+              onChanged: (value) {},
               onEditingComplete: () {
                 focusNode.unfocus();
                 searchProviderNoti.search();
@@ -273,7 +282,13 @@ class _SearchPageState extends ConsumerState<SearchPage>
               return Future.value([]);
             }
             logger.d('suggestionsCallback: $currQryText');
-            return _suggestTags(currQryText);
+            try {
+              return await _suggestTags(currQryText);
+            } catch (e) {
+              // Don't let a transient DB error keep the dropdown spinning.
+              logger.w('suggestionsCallback error (DB not ready?): $e');
+              return const [];
+            }
           },
           itemBuilder: (BuildContext context, itemData) {
             return ListTile(
@@ -294,6 +309,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
           emptyBuilder: (context) {
             return const SizedBox();
           },
+          hideOnEmpty: true,
           onSelected: (suggestion) {
             searchProviderNoti.appendNhTagQuery(suggestion, search: true);
           },
