@@ -11,16 +11,137 @@ import 'package:eros_n/pages/setting/read_setting_page.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+
+const _kShowBarGradient = false;
+
+LiquidGlassSettings _glassSettings(bool isDark) => LiquidGlassSettings(
+  blur: 10,
+  thickness: 30,
+  glassColor: isDark
+      ? const Color.fromARGB(100, 60, 60, 60)
+      : const Color.fromARGB(160, 255, 255, 255),
+);
 
 class ViewTopBar extends HookConsumerWidget {
   const ViewTopBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final liquidGlass = ref.watch(
+      settingsProvider.select((s) => s.liquidGlass),
+    );
+
+    final height = context.mediaQueryPadding.top + kTopBarHeight;
+    final width = context.mediaQuery.size.width;
+
+    if (liquidGlass) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      return SizedBox(
+        height: height,
+        width: width,
+        child: Stack(
+          children: [
+            if (_kShowBarGradient)
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: isDark
+                          ? const [
+                              Color.fromARGB(255, 0, 0, 0),
+                              Color.fromARGB(200, 0, 0, 0),
+                              Color.fromARGB(80, 0, 0, 0),
+                              Color.fromARGB(0, 0, 0, 0),
+                            ]
+                          : const [
+                              Color.fromARGB(255, 255, 255, 255),
+                              Color.fromARGB(200, 255, 255, 255),
+                              Color.fromARGB(80, 255, 255, 255),
+                              Color.fromARGB(0, 255, 255, 255),
+                            ],
+                      stops: const [0.0, 0.35, 0.7, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: context.mediaQueryPadding.top,
+                left: context.mediaQueryPadding.horizontal / 2 + 12,
+                right: context.mediaQueryPadding.horizontal / 2 + 12,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GlassContainer(
+                    padding: EdgeInsets.zero,
+                    shape: const LiquidOval(),
+                    settings: _glassSettings(isDark),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                      onPressed: () => context.router.pop(),
+                    ),
+                  ),
+                  const Spacer(),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final gid = currentGalleryGid;
+                      final currentItemIndex = ref.watch(
+                        galleryProvider(
+                          gid,
+                        ).select((val) => val.currentPageIndex),
+                      );
+                      final totalItem = ref.watch(
+                        galleryProvider(
+                          gid,
+                        ).select((val) => val.images.pages.length),
+                      );
+                      return GlassContainer(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        settings: _glassSettings(isDark),
+                        child: Text(
+                          '${currentItemIndex + 1} / $totalItem',
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
+                        ),
+                      );
+                    },
+                  ),
+                  const Spacer(),
+                  if (context.isTablet)
+                    GlassContainer(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      shape: LiquidRoundedSuperellipse(borderRadius: 999),
+                      settings: _glassSettings(isDark),
+                      child: _TabletButtonRow(ref: ref),
+                    )
+                  else
+                    const SizedBox(width: 40),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
-      height: context.mediaQueryPadding.top + kTopBarHeight,
-      width: context.mediaQuery.size.width,
+      height: height,
+      width: width,
       color: Theme.of(
         context,
       ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
@@ -39,9 +160,7 @@ class ViewTopBar extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                      onPressed: () {
-                        context.router.pop();
-                      },
+                      onPressed: () => context.router.pop(),
                       icon: const Icon(Icons.arrow_back),
                     ),
                     if (context.isTablet)
@@ -85,12 +204,63 @@ class ViewBottomBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final liquidGlass = ref.watch(
+      settingsProvider.select((s) => s.liquidGlass),
+    );
     final bottomBarHeight = ref.watch(
       readProvider.select((val) => val.bottomBarHeight),
     );
     final showThumbList = ref.watch(
       readProvider.select((val) => val.showThumbList),
     );
+
+    if (liquidGlass) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      return SizedBox(
+        height: bottomBarHeight,
+        width: context.mediaQuery.size.width,
+        child: Stack(
+          children: [
+            if (_kShowBarGradient)
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: isDark
+                          ? const [
+                              Color.fromARGB(255, 0, 0, 0),
+                              Color.fromARGB(200, 0, 0, 0),
+                              Color.fromARGB(80, 0, 0, 0),
+                              Color.fromARGB(0, 0, 0, 0),
+                            ]
+                          : const [
+                              Color.fromARGB(255, 255, 255, 255),
+                              Color.fromARGB(200, 255, 255, 255),
+                              Color.fromARGB(80, 255, 255, 255),
+                              Color.fromARGB(0, 255, 255, 255),
+                            ],
+                      stops: const [0.0, 0.35, 0.7, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+            Column(
+              children: [
+                AnimatedContainer(
+                  height: showThumbList ? kThumbListViewHeight : 0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  child: const ThumbnailListView(),
+                ),
+                const GlassBottomBarControl(),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
 
     return AnimatedContainer(
       color: Theme.of(
@@ -102,15 +272,160 @@ class ViewBottomBar extends HookConsumerWidget {
       curve: Curves.easeOut,
       child: Column(
         children: [
-          // 缩略图栏
           AnimatedContainer(
             height: showThumbList ? kThumbListViewHeight : 0,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
             child: const ThumbnailListView(),
           ),
-          // 控制栏
           const BottomBarControlWidget(),
+        ],
+      ),
+    );
+  }
+}
+
+class GlassBottomBarControl extends HookConsumerWidget {
+  const GlassBottomBarControl({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final gid = currentGalleryGid;
+    final currentItemIndex = ref.watch(
+      galleryProvider(gid).select((val) => val.currentPageIndex),
+    );
+    final totNum = ref.watch(
+      galleryProvider(gid).select((val) => val.images.pages.length),
+    );
+    final readNotifier = ref.read(readProvider.notifier);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: context.mediaQueryPadding.horizontal / 2 + 12,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GlassContainer(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            shape: const LiquidRoundedSuperellipse(borderRadius: 999),
+            settings: _glassSettings(isDark),
+            child: GlassViewPageSlider(
+              key: ValueKey('GlassViewPageSlider_$currentItemIndex'),
+              max: math.max(0, totNum - 1.0),
+              initValue: math.max(
+                0,
+                math.min(currentItemIndex.roundToDouble(), totNum - 1.0),
+              ),
+              onChangedEnd: (val) {
+                readNotifier.jumpToPage(val.round());
+              },
+              onChanged: (_) {},
+            ),
+          ),
+          const SizedBox(height: 8),
+          if (!context.isTablet)
+            GlassContainer(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              shape: const LiquidRoundedSuperellipse(borderRadius: 999),
+              settings: _glassSettings(isDark),
+              child: const GlassControllerButtonBar(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TabletButtonRow extends StatelessWidget {
+  const _TabletButtonRow({required this.ref});
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDark ? Colors.white : Colors.black;
+    return IconTheme(
+      data: IconThemeData(size: 22, color: iconColor),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const ReadModelButton(),
+          const AutoReadButton(),
+          IconButton(
+            onPressed: () async {
+              final nowAutoRead = ref.read(
+                readProvider.select((s) => s.autoRead),
+              );
+              if (nowAutoRead) {
+                ref.read(readProvider.notifier).stopAutoRead();
+              }
+              await showDialog(
+                context: context,
+                builder: (context) => const AlertDialog(
+                  contentPadding: EdgeInsets.symmetric(vertical: 16),
+                  content: ReadSettings(),
+                ),
+              );
+              if (nowAutoRead) {
+                ref.read(readProvider.notifier).startAutoRead();
+              }
+            },
+            icon: const Icon(Icons.settings_outlined),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GlassControllerButtonBar extends HookConsumerWidget {
+  const GlassControllerButtonBar({
+    super.key,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.mainAxisSize = MainAxisSize.max,
+  });
+
+  final MainAxisAlignment mainAxisAlignment;
+  final MainAxisSize mainAxisSize;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDark ? Colors.white : Colors.black;
+    return IconTheme(
+      data: IconThemeData(color: iconColor),
+      child: Row(
+        mainAxisAlignment: mainAxisAlignment,
+        mainAxisSize: mainAxisSize,
+        children: [
+          const ReadModelButton(),
+          const AutoReadButton(),
+          IconButton(
+            onPressed: () async {
+              final nowAutoRead = ref.read(
+                readProvider.select((s) => s.autoRead),
+              );
+              if (nowAutoRead) {
+                ref.read(readProvider.notifier).stopAutoRead();
+              }
+              await showDialog(
+                context: context,
+                builder: (context) => const AlertDialog(
+                  contentPadding: EdgeInsets.symmetric(vertical: 16),
+                  content: ReadSettings(),
+                ),
+              );
+              if (nowAutoRead) {
+                ref.read(readProvider.notifier).startAutoRead();
+              }
+            },
+            icon: const Icon(Icons.settings_outlined),
+          ),
         ],
       ),
     );
@@ -242,6 +557,85 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
           constraints: const BoxConstraints(minWidth: 30),
           alignment: Alignment.center,
           child: widget.reverse ? minText : maxText,
+        ),
+      ],
+    );
+  }
+}
+
+class GlassViewPageSlider extends StatefulWidget {
+  const GlassViewPageSlider({
+    super.key,
+    required this.max,
+    required this.initValue,
+    required this.onChangedEnd,
+    required this.onChanged,
+  });
+
+  final double max;
+  final double initValue;
+  final ValueChanged<double> onChangedEnd;
+  final ValueChanged<double> onChanged;
+
+  @override
+  State<GlassViewPageSlider> createState() => _GlassViewPageSliderState();
+}
+
+class _GlassViewPageSliderState extends State<GlassViewPageSlider> {
+  late double _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final textStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
+      color: textColor,
+      shadows: const [Shadow(blurRadius: 4, color: Colors.black54)],
+    );
+
+    return Row(
+      children: [
+        Container(
+          constraints: const BoxConstraints(minWidth: 36),
+          alignment: Alignment.center,
+          child: Text('${widget.initValue.round() + 1}', style: textStyle),
+        ),
+        Expanded(
+          child: SliderTheme(
+            data: SliderThemeData(
+              activeTrackColor: isDark ? Colors.white70 : Colors.black54,
+              inactiveTrackColor: isDark ? Colors.white24 : Colors.black12,
+              thumbColor: isDark ? Colors.white : Colors.black87,
+              overlayColor: (isDark ? Colors.white : Colors.black).withValues(
+                alpha: 0.1,
+              ),
+            ),
+            child: Slider(
+              min: 0,
+              max: widget.max,
+              value: _value,
+              label: '${_value.round() + 1}',
+              divisions: widget.max > 0 ? widget.max.round() : null,
+              onChanged: (double newValue) {
+                setState(() => _value = newValue);
+                widget.onChanged(newValue);
+              },
+              onChangeEnd: (double newValue) {
+                widget.onChangedEnd(newValue);
+              },
+            ),
+          ),
+        ),
+        Container(
+          constraints: const BoxConstraints(minWidth: 36),
+          alignment: Alignment.center,
+          child: Text('${widget.max.round() + 1}', style: textStyle),
         ),
       ],
     );
@@ -469,40 +863,42 @@ class ReadScaffold extends HookConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(readProvider.notifier).resetBottomBarHeight(context);
     });
-    return Stack(
-      children: [
-        child,
-        Consumer(
-          builder: (context, ref, child) {
-            final topBarOffset = ref.watch(
-              readProvider.select((state) => state.topBarOffset),
-            );
-            final bottomBarOffset = ref.watch(
-              readProvider.select((state) => state.bottomBarOffset),
-            );
-            logger.t(
-              'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset',
-            );
+    return LiquidGlassScope(
+      child: Stack(
+        children: [
+          GlassRefractionSource(child: child),
+          Consumer(
+            builder: (context, ref, child) {
+              final topBarOffset = ref.watch(
+                readProvider.select((state) => state.topBarOffset),
+              );
+              final bottomBarOffset = ref.watch(
+                readProvider.select((state) => state.bottomBarOffset),
+              );
+              logger.t(
+                'topBarOffset: $topBarOffset bottomBarOffset: $bottomBarOffset',
+              );
 
-            return Stack(
-              children: [
-                AnimatedPositioned(
-                  curve: Curves.fastOutSlowIn,
-                  duration: const Duration(milliseconds: 300),
-                  top: topBarOffset,
-                  child: topBar,
-                ),
-                AnimatedPositioned(
-                  curve: Curves.fastOutSlowIn,
-                  duration: const Duration(milliseconds: 300),
-                  bottom: bottomBarOffset,
-                  child: bottomBar,
-                ),
-              ],
-            );
-          },
-        ),
-      ],
+              return Stack(
+                children: [
+                  AnimatedPositioned(
+                    curve: Curves.fastOutSlowIn,
+                    duration: const Duration(milliseconds: 300),
+                    top: topBarOffset,
+                    child: topBar,
+                  ),
+                  AnimatedPositioned(
+                    curve: Curves.fastOutSlowIn,
+                    duration: const Duration(milliseconds: 300),
+                    bottom: bottomBarOffset,
+                    child: bottomBar,
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,0 +1,29 @@
+---
+description: Always clarify the user's actual scenario before analyzing — never assume or fabricate premises
+alwaysApply: true
+---
+
+# Understand Before Analyze
+
+When debugging or investigating an issue reported by the user:
+
+## Step 1: Confirm the scenario
+- **Restate the user's described scenario in your own words** and ask if you understood correctly
+- If the user's description is ambiguous, ask clarifying questions IMMEDIATELY — do NOT fill in gaps with assumptions
+- Never invent a scenario the user didn't describe
+
+## Step 2: Use evidence, not speculation
+- Prefer logs, runtime data, and actual code traces over mental deduction
+- If you need logs to confirm a hypothesis, say so and deploy logging — don't spend tokens on lengthy internal reasoning
+- Keep speculation SHORT (1-2 sentences max). If you can't confirm it quickly, get evidence instead
+
+## Step 3: Stay grounded
+- If you realize your analysis direction is wrong, STOP immediately and re-read what the user actually said
+- Do NOT continue down a wrong path just because you've already invested time in it (sunk cost)
+- When the user corrects you, acknowledge the correction and pivot — don't defend or re-explain the wrong analysis
+
+## Do NOT:
+- Spend long thinking sessions building on unverified assumptions
+- Ignore the user's exact words and substitute your own interpretation
+- Analyze a scenario the user never described
+- Continue analyzing after the user says you're wrong — stop and listen first
