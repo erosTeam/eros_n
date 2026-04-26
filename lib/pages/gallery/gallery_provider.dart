@@ -33,11 +33,17 @@ class GalleryNotifier extends _$GalleryNotifier {
   void initFromGallery(Gallery gallery) {
     logger.d('init ${gallery.toString()} ');
 
+    final savedIndex = ref
+        .read(historyGallerysProvider)
+        .firstWhereOrNull((h) => h.gid == gallery.gid)
+        ?.lastReadIndex;
+
     state = state.copyWith(
       images: gallery.images,
       gid: gallery.gid,
       title: gallery.title,
       mediaId: gallery.mediaId,
+      currentPageIndex: savedIndex ?? 0,
     );
 
     loadData();
@@ -148,6 +154,7 @@ class GalleryNotifier extends _$GalleryNotifier {
 
   void onPageChanged(int index) {
     state = state.copyWith(currentPageIndex: index);
+    ref.read(historyProvider.notifier).updateReadIndex(state.gid, index);
   }
 
   Future<void> comment() async {

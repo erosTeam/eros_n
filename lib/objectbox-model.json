@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:8148422562123602304",
-      "lastPropertyId": "10:7705130199042705259",
+      "lastPropertyId": "11:8367443845345088034",
       "name": "GalleryHistory",
       "properties": [
         {
@@ -60,6 +60,11 @@
           "indexId": "1:6591030224407181517",
           "type": 6,
           "flags": 8
+        },
+        {
+          "id": "11:8367443845345088034",
+          "name": "lastReadIndex",
+          "type": 6
         }
       ],
       "relations": []

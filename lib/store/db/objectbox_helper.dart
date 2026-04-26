@@ -46,6 +46,10 @@ class ObjectBoxHelper implements DbStore {
 
   @override
   Future<void> addHistory(GalleryHistory galleryHistory) async {
+    final existing = _historyBox.get(galleryHistory.gid);
+    if (existing != null && galleryHistory.lastReadIndex == null) {
+      galleryHistory.lastReadIndex = existing.lastReadIndex;
+    }
     _historyBox.put(galleryHistory);
   }
 
@@ -59,6 +63,15 @@ class ObjectBoxHelper implements DbStore {
   @override
   Future<void> clearHistory() async {
     _historyBox.removeAll();
+  }
+
+  @override
+  Future<void> updateHistoryReadIndex(int gid, int index) async {
+    final h = _historyBox.get(gid);
+    if (h != null) {
+      h.lastReadIndex = index;
+      _historyBox.put(h);
+    }
   }
 
   // ---------------------------------------------------------------------------

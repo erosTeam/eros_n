@@ -41,7 +41,7 @@ final class HistoryNotifierProvider
   }
 }
 
-String _$historyNotifierHash() => r'7fe5c3a46636d5c48c2ea10466c694f944a0af8c';
+String _$historyNotifierHash() => r'308722e8232fffef80b34fb04b2e17cdd92d89d5';
 
 abstract class _$HistoryNotifier extends $Notifier<ListViewState> {
   ListViewState build();
@@ -93,7 +93,7 @@ final class HistoryGallerysProvider
   }
 }
 
-String _$historyGallerysHash() => r'f1c82ad8c89f6c63639476686e604a68e5f24d3b';
+String _$historyGallerysHash() => r'0b4729dc38a3f188896e648b80834495e70594f7';
 
 abstract class _$HistoryGallerys extends $Notifier<List<GalleryHistory>> {
   List<GalleryHistory> build();

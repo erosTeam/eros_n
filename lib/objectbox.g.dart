@@ -24,7 +24,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 8148422562123602304),
     name: 'GalleryHistory',
-    lastPropertyId: const obx_int.IdUid(10, 7705130199042705259),
+    lastPropertyId: const obx_int.IdUid(11, 8367443845345088034),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -87,6 +87,12 @@ final _entities = <obx_int.ModelEntity>[
         type: 6,
         flags: 8,
         indexId: const obx_int.IdUid(1, 6591030224407181517),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 8367443845345088034),
+        name: 'lastReadIndex',
+        type: 6,
+        flags: 0,
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -284,7 +290,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final thumbUrlOffset = object.thumbUrl == null
             ? null
             : fbb.writeString(object.thumbUrl!);
-        fbb.startTable(11);
+        fbb.startTable(12);
         fbb.addInt64(0, object.gid);
         fbb.addOffset(1, mediaIdOffset);
         fbb.addOffset(2, csrfTokenOffset);
@@ -295,6 +301,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(7, object.coverImgHeight);
         fbb.addInt64(8, object.coverImgWidth);
         fbb.addInt64(9, object.lastReadTime);
+        fbb.addInt64(10, object.lastReadIndex);
         fbb.finish(fbb.endTable());
         return object.gid;
       },
@@ -340,6 +347,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
           rootOffset,
           22,
         );
+        final lastReadIndexParam = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          24,
+        );
         final object = GalleryHistory(
           gid: gidParam,
           mediaId: mediaIdParam,
@@ -351,6 +363,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           coverImgHeight: coverImgHeightParam,
           coverImgWidth: coverImgWidthParam,
           lastReadTime: lastReadTimeParam,
+          lastReadIndex: lastReadIndexParam,
         );
 
         return object;
@@ -554,6 +567,11 @@ class GalleryHistory_ {
   /// See [GalleryHistory.lastReadTime].
   static final lastReadTime = obx.QueryIntegerProperty<GalleryHistory>(
     _entities[0].properties[9],
+  );
+
+  /// See [GalleryHistory.lastReadIndex].
+  static final lastReadIndex = obx.QueryIntegerProperty<GalleryHistory>(
+    _entities[0].properties[10],
   );
 }
 

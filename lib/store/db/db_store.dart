@@ -14,6 +14,7 @@ abstract class DbStore {
   Future<void> addHistory(GalleryHistory galleryHistory);
   Future<void> removeHistory(int? gid);
   Future<void> clearHistory();
+  Future<void> updateHistoryReadIndex(int gid, int index);
 
   // TagTranslate
   Future<void> putAllTagTranslate(List<TagTranslate> tagTranslates);
