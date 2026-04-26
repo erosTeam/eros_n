@@ -20,6 +20,7 @@ import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -98,14 +99,39 @@ class _SearchPageState extends ConsumerState<SearchPage>
   Widget build(BuildContext context) {
     super.build(context);
 
+    final liquidGlass = ref.watch(
+      settingsProvider.select((s) => s.liquidGlass),
+    );
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          searchProviderNoti.searchFocusNode.unfocus();
-          searchProviderNoti.search();
-        },
-        child: const Icon(Icons.search),
-      ),
+      floatingActionButton: liquidGlass
+          ? GlassIconButton(
+              icon: Icon(
+                Icons.search,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
+              onPressed: () {
+                searchProviderNoti.searchFocusNode.unfocus();
+                searchProviderNoti.search();
+              },
+              size: 56,
+              settings: LiquidGlassSettings(
+                blur: 10,
+                thickness: 20,
+                lightIntensity: 0.05,
+                glassColor: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(60, 60, 60, 60)
+                    : const Color.fromARGB(60, 255, 255, 255),
+              ),
+            )
+          : FloatingActionButton(
+              onPressed: () {
+                searchProviderNoti.searchFocusNode.unfocus();
+                searchProviderNoti.search();
+              },
+              child: const Icon(Icons.search),
+            ),
       body: PinchGridZoom(
         child: RefreshIndicator(
           onRefresh: () => searchProviderNoti.reloadData(),

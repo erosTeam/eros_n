@@ -192,6 +192,9 @@ class GalleryPageBody extends HookConsumerWidget {
           RouteUtil.goRead(context, ref);
         },
         scrollController: scrollController,
+        liquidGlass: ref.watch(
+          settingsProvider.select((s) => s.liquidGlass),
+        ),
         label: Consumer(
           builder: (context, ref, child) {
             final currentPageIndex = ref.watch(

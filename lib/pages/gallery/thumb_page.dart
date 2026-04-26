@@ -42,6 +42,7 @@ class ThumbPage extends HookConsumerWidget {
                 RouteUtil.goRead(context, ref);
               },
               scrollController: scrollController,
+              liquidGlass: glass,
               label: Consumer(
                 builder: (context, ref, child) {
                   final currentPageIndex = ref.watch(
