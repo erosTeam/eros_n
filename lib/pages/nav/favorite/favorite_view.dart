@@ -81,7 +81,19 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
             SliverAppBar(
               title: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                child: Row(children: [Text(L10n.of(context).favorites)]),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(L10n.of(context).favorites),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                        context.router.push(SearchRoute(query: ''));
+                      },
+                    ),
+                  ],
+                ),
                 onTap: () {
                   scrollController.animateTo(
                     0,
@@ -90,6 +102,7 @@ class _FavoritePageState extends ConsumerState<FavoritePage>
                   );
                 },
               ),
+              titleSpacing: 16,
               floating: true,
               pinned: true,
               bottom: const PreferredSize(

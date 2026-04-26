@@ -176,6 +176,12 @@ class SliverGalleryListView extends HookConsumerWidget {
                             ),
                           ),
                         ),
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            context.router.push(SearchRoute(query: ''));
+                          },
+                        ),
                         LanguagesFilterPopupButton(
                           onSelected: (LanguagesFilter value) async {
                             if (value ==
