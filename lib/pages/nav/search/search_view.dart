@@ -58,8 +58,15 @@ class _SearchPageState extends ConsumerState<SearchPage>
     scrollController.addListener(_scrollListener);
 
     if (query.trim().isNotEmpty) {
-      logger.d('search query: $query');
-      searchProviderNoti.search();
+      // Defer search() until after the build phase finishes; otherwise
+      // SearchHistory.add() inside it would synchronously update a provider
+      // during widget mount and Riverpod would throw
+      // "Tried to modify a provider while the widget tree was building".
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          searchProviderNoti.search();
+        }
+      });
     }
 
     final keyboardVisibilityController = KeyboardVisibilityController();
