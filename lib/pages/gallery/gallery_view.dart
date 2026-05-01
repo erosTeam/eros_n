@@ -1306,21 +1306,22 @@ class ToolBarView extends HookConsumerWidget {
     const iconSize = 28.0;
     final gallery = ref.watch(galleryProvider(gid));
     final isUserLogin = ref.watch(userProvider.select((user) => user.isLogin));
+    final compactStyle = context.isTablet
+        ? IconButton.styleFrom(
+            minimumSize: const Size(36, 36),
+            padding: const EdgeInsets.all(4),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          )
+        : null;
     return Container(
-      padding: context.isTablet
-          ? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)
-          : const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       child: Row(
-        mainAxisAlignment: context.isTablet
-            ? MainAxisAlignment.spaceAround
-            : MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             icon: const Icon(Icons.download_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
-            // color: Colors.blue
-            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
+            style: compactStyle,
             onPressed: () {},
           ),
           IconButton(
@@ -1329,16 +1330,9 @@ class ToolBarView extends HookConsumerWidget {
               size: iconSize,
             ),
             color: Theme.of(context).colorScheme.primary,
-            // color: Colors.green
-            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
+            style: compactStyle,
             onPressed: isUserLogin
                 ? () async {
-                    // launch torrent
-                    // logger.d('launch torrent ${NHConst.baseUrl}${gallery.torrentUrl}');
-                    // launchUrlString('${NHConst.baseUrl}${gallery.torrentUrl}');
-
-                    // final savePathFB =
-                    //     path.joinAll([Global.extStorePath, gallery.gid ?? '']);
                     late String savePath;
 
                     await nhDownload(
@@ -1376,8 +1370,7 @@ class ToolBarView extends HookConsumerWidget {
                 ? const Icon(Icons.favorite, size: iconSize)
                 : const Icon(Icons.favorite_border_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
-            // color: Colors.redAccent
-            //     .harmonizeWith(Theme.of(context).colorScheme.primary),
+            style: compactStyle,
             onPressed: isUserLogin
                 ? () {
                     ref.read(galleryProvider(gid).notifier).toggleFavorite();
