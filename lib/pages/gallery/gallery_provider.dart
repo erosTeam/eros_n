@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
@@ -68,6 +69,33 @@ class GalleryNotifier extends _$GalleryNotifier {
     state = state.copyWith(currentPageIndex: page);
   }
 
+  /// Initialize minimal state from a completed download task so that the
+  /// page indicator and slider are correct even before network data arrives.
+  void initForOfflineRead(DownloadTask task) {
+    final savedIndex = ref
+        .read(historyGallerysProvider)
+        .firstWhereOrNull((h) => h.gid == task.gid)
+        ?.lastReadIndex;
+
+    // Placeholder pages with correct count so indicator/slider are correct
+    // immediately. Type defaults to 'j'; local files will be used anyway
+    // for completed downloads, so type doesn't affect offline rendering.
+    final placeholderPages = List.generate(
+      task.totalPages,
+      (_) => const GalleryImage(),
+    );
+
+    state = state.copyWith(
+      gid: task.gid,
+      mediaId: task.mediaId,
+      currentPageIndex: savedIndex ?? 0,
+      images: GalleryImages(pages: placeholderPages),
+    );
+
+    // Load full gallery data in background; preserves currentPageIndex.
+    loadData();
+  }
+
   /// Fetch detail + comments + favorite status.
   Future<void> loadData({bool refresh = false}) async {
     logger.d('loadData refresh $refresh  url: ${state.url}');
@@ -80,6 +108,7 @@ class GalleryNotifier extends _$GalleryNotifier {
     logger.d('url ${state.url}');
     try {
       final gallery = await getGalleryDetail(url: state.url, refresh: refresh);
+      if (!ref.mounted) return;
       state = gallery.copyWith(
         mediaId: gallery.mediaId ?? state.mediaId,
         currentPageIndex: state.currentPageIndex,
@@ -88,26 +117,33 @@ class GalleryNotifier extends _$GalleryNotifier {
     } on HttpException {
       rethrow;
     } finally {
-      ref
-          .read(pageStateProvider(state.gid).notifier)
-          .update((s) => s.copyWith(pageStatus: PageStatus.none));
+      if (ref.mounted) {
+        ref
+            .read(pageStateProvider(state.gid).notifier)
+            .update((s) => s.copyWith(pageStatus: PageStatus.none));
+      }
     }
 
+    if (!ref.mounted) return;
     logger.d('url ${state.url}');
     try {
       final comments = await getGalleryComments(
         gid: state.gid,
         refresh: refresh,
       );
+      if (!ref.mounted) return;
       state = state.copyWith(comments: comments);
     } on HttpException {
       rethrow;
     } finally {
-      ref
-          .read(pageStateProvider(state.gid).notifier)
-          .update((s) => s.copyWith(pageStatus: PageStatus.none));
+      if (ref.mounted) {
+        ref
+            .read(pageStateProvider(state.gid).notifier)
+            .update((s) => s.copyWith(pageStatus: PageStatus.none));
+      }
     }
 
+    if (!ref.mounted) return;
     // Resolve real favorite state via API. The SvelteKit detail HTML carries
     // no session info, so the parser leaves `isFavorited` as null and we fill
     // it in here. Best-effort: a failure just leaves the heart hollow.
@@ -117,6 +153,7 @@ class GalleryNotifier extends _$GalleryNotifier {
   Future<void> _refreshFavoriteStatus() async {
     try {
       final fav = await getGalleryFavoriteStatus(gid: state.gid);
+      if (!ref.mounted) return;
       if (fav != null && fav != state.isFavorited) {
         state = state.copyWith(isFavorited: fav);
       }

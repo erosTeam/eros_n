@@ -70,11 +70,16 @@ class ObjectBoxHelper implements DbStore {
 
   @override
   Future<void> updateHistoryReadIndex(int gid, int index) async {
-    final h = _historyBox.get(gid);
-    if (h != null) {
+    var h = _historyBox.get(gid);
+    if (h == null) {
+      // No history entry yet (e.g. opened directly from downloads without
+      // ever visiting the gallery detail page). Create a minimal stub so
+      // that subsequent onPageChanged calls can persist progress.
+      h = GalleryHistory(gid: gid)..lastReadIndex = index;
+    } else {
       h.lastReadIndex = index;
-      _historyBox.put(h);
     }
+    _historyBox.put(h);
   }
 
   // ---------------------------------------------------------------------------

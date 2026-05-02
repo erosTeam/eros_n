@@ -1,13 +1,18 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/enum.dart';
+import 'package:eros_n/common/provider/download_provider.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/component/widget/preload_photo_view_gallery.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
+import 'package:eros_n/pages/nav/history/history_provider.dart';
 import 'package:eros_n/pages/read/read_provider.dart';
 import 'package:eros_n/pages/read/read_widget.dart';
+import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -101,11 +106,28 @@ class ReadPage extends HookConsumerWidget {
       }
       readNotifier.addVolumeKeydownListen();
 
-      // ref.listen<Gallery>(galleryProvider(gid), (previous, next) {
-      //   if (next.currentPageIndex != previous?.currentPageIndex) {
-      //     logger.d('ReadPage currentPageIndex change ${next.currentPageIndex}');
-      //   }
-      // });
+      // If this gallery is a completed download and gallery state is empty
+      // (opened directly from downloads page), initialize from the download
+      // task so that the indicator, slider and offline images work correctly.
+      // Deferred to post-build to avoid "modify provider during build" assertion.
+      Future(() {
+        final task = ref.read(downloadProvider)[gid];
+        if (task != null &&
+            task.status == DownloadStatus.completed &&
+            ref.read(galleryProvider(gid)).images.pages.isEmpty) {
+          // Ensure a proper history entry exists before reading, so that
+          // onPageChanged → updateReadIndex can persist progress correctly.
+          ref.read(historyProvider.notifier).addHistoryFromTask(task);
+          ref.read(galleryProvider(gid).notifier).initForOfflineRead(task);
+          // Jump to the restored reading position after initialization,
+          // since ReadPageView's own postFrameCallback may have already
+          // fired with the old (0) index.
+          final savedIndex = ref.read(galleryProvider(gid)).currentPageIndex;
+          if (savedIndex > 0) {
+            readNotifier.jumpToPage(savedIndex);
+          }
+        }
+      });
 
       return () {
         logger.t('ReadPage dispose');
@@ -218,6 +240,27 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
   }
 
   Widget buildImage(String imageUrl, {int? index}) {
+    // Prefer local file if this gallery is fully downloaded.
+    final gid = currentGalleryGid;
+    final task = ref.read(downloadProvider)[gid];
+    logger.d(
+      '[offline] gid=$gid index=$index task=${task?.gid} '
+      'status=${task?.status} pageExtsLen=${task?.pageExts.length} '
+      'savedDir=${task?.savedDir}',
+    );
+    if (task != null &&
+        task.status == DownloadStatus.completed &&
+        index != null &&
+        index < task.pageExts.length) {
+      final localPath = '${task.savedDir}/${index + 1}.${task.pageExts[index]}';
+      final localFile = File(localPath);
+      final exists = localFile.existsSync();
+      logger.d('[offline] localPath=$localPath exists=$exists');
+      if (exists) {
+        return Image.file(localFile, fit: BoxFit.fitWidth);
+      }
+    }
+    logger.d('[offline] fallback to network: $imageUrl');
     return ErosCachedNetworkImage(
       imageUrl: imageUrl,
       fit: BoxFit.fitWidth,
@@ -254,6 +297,13 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
     final ReadNotifier readNotifier = ref.read(readProvider.notifier);
     final pages = ref.watch(galleryProvider(gid).select((g) => g.images.pages));
     final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
+    final downloadTask = ref.watch(downloadProvider.select((m) => m[gid]));
+    final isOfflineComplete = downloadTask != null &&
+        downloadTask.status == DownloadStatus.completed &&
+        downloadTask.totalPages > 0;
+    final pageCount = pages.isNotEmpty
+        ? pages.length
+        : (isOfflineComplete ? downloadTask.totalPages : 0);
 
     Widget listView = ScrollablePositionedList.separated(
       minCacheExtent: 0.0,
@@ -264,21 +314,40 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
       ),
       itemScrollController: readNotifier.itemScrollController,
       itemPositionsListener: readNotifier.itemPositionsListener,
-      itemCount: pages.length,
+      itemCount: pageCount,
       itemBuilder: (context, index) {
-        final GalleryImage page = pages[index];
-        final imageUrl = getGalleryImageUrl(
-          mediaId ?? '',
-          index,
-          NHConst.extMap[page.type] ?? '',
-        );
+        final String imageUrl;
+        if (pages.isNotEmpty) {
+          final GalleryImage page = pages[index];
+          imageUrl = getGalleryImageUrl(
+            mediaId ?? '',
+            index,
+            NHConst.extMap[page.type] ?? '',
+          );
+        } else {
+          final task = downloadTask;
+          if (task != null) {
+            final ext =
+                index < task.pageExts.length ? task.pageExts[index] : 'jpg';
+            imageUrl = getGalleryImageUrl(task.mediaId, index, ext);
+          } else {
+            imageUrl = '';
+          }
+        }
 
         ref.read(readProvider.notifier).getCompleter(index);
 
         Widget image = buildImage(imageUrl, index: index);
 
+        final double aspectRatio;
+        if (pages.isNotEmpty) {
+          final page = pages[index];
+          aspectRatio = (page.imgWidth ?? 300) / (page.imgHeight ?? 400);
+        } else {
+          aspectRatio = 300 / 400;
+        }
         image = AspectRatio(
-          aspectRatio: (page.imgWidth ?? 300) / (page.imgHeight ?? 400),
+          aspectRatio: aspectRatio,
           child: image,
         );
 
@@ -336,6 +405,16 @@ class ReadPageView extends HookConsumerWidget {
           galleryProvider(gid).select((g) => g.mediaId),
         );
 
+        final downloadTask = ref.watch(
+          downloadProvider.select((m) => m[gid]),
+        );
+        final isOfflineComplete = downloadTask != null &&
+            downloadTask.status == DownloadStatus.completed &&
+            downloadTask.totalPages > 0;
+        final pageCount = pages.isNotEmpty
+            ? pages.length
+            : (isOfflineComplete ? downloadTask.totalPages : 0);
+
         final preloadPagesCount = ref.watch(
           settingsProvider.select((s) => s.preloadPagesCount),
         );
@@ -351,26 +430,61 @@ class ReadPageView extends HookConsumerWidget {
           scrollDirection: scrollDirection,
           wantKeepAlive: false,
           builder: (BuildContext context, int index) {
-            final imageUrl = getGalleryImageUrl(
-              mediaId ?? '',
-              index,
-              NHConst.extMap[pages[index].type] ?? '',
-            );
+            final String imageUrl;
+            if (pages.isNotEmpty) {
+              imageUrl = getGalleryImageUrl(
+                mediaId ?? '',
+                index,
+                NHConst.extMap[pages[index].type] ?? '',
+              );
+            } else {
+              final task = downloadTask;
+              if (task != null) {
+                final ext = index < task.pageExts.length
+                    ? task.pageExts[index]
+                    : 'jpg';
+                imageUrl = getGalleryImageUrl(task.mediaId, index, ext);
+              } else {
+                imageUrl = '';
+              }
+            }
 
             final completer = ref
                 .read(readProvider.notifier)
                 .getCompleter(index);
 
-            final imageProvider = getErosImageProvider(imageUrl);
+            // Prefer local file if this gallery is fully downloaded.
+            final localTask = downloadTask;
+            ImageProvider imageProvider;
+            if (localTask != null &&
+                localTask.status == DownloadStatus.completed &&
+                index < localTask.pageExts.length) {
+              final localPath =
+                  '${localTask.savedDir}/${index + 1}.${localTask.pageExts[index]}';
+              final localFile = File(localPath);
+              final exists = localFile.existsSync();
+              logger.d(
+                '[offline/page] index=$index localPath=$localPath exists=$exists',
+              );
+              if (exists) {
+                imageProvider = FileImage(localFile);
+              } else {
+                logger.d('[offline/page] fallback to network: $imageUrl');
+                imageProvider = getErosImageProvider(imageUrl);
+              }
+            } else {
+              logger.d(
+                '[offline/page] no task or not complete, network: $imageUrl '
+                'task=${localTask?.gid} status=${localTask?.status}',
+              );
+              imageProvider = getErosImageProvider(imageUrl);
+            }
 
             imageProvider
                 .resolve(const ImageConfiguration())
                 .addListener(
                   ImageStreamListener((ImageInfo imageInfo, _) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      // ref
-                      //     .read(readProvider.notifier)
-                      //     .addLoadCompleteIndexSet(index);
                       if (completer?.isCompleted == false) {
                         completer?.complete();
                       }
@@ -395,7 +509,7 @@ class ReadPageView extends HookConsumerWidget {
           reverse: reverse,
           customSize: MediaQuery.of(context).size,
           preloadPagesCount: preloadPagesCount,
-          itemCount: pages.length,
+          itemCount: pageCount,
           loadingBuilder: (context, event) => Center(
             child: CircularProgressIndicator(
               value: event == null
