@@ -221,6 +221,44 @@ class ObjectBoxHelper implements DbStore {
   }
 
   @override
+  Future<Map<int, NhTag>> findNhTagsByIds(List<int> ids) async {
+    if (ids.isEmpty) return {};
+    final tags = _nhTagBox.getMany(ids).whereType<NhTag>().toList();
+    return {for (final t in tags) t.id: t};
+  }
+
+  @override
+  Future<Map<String, TagTranslate>> findTagTranslatesByNames(
+    List<String> names, {
+    String? namespace,
+  }) async {
+    if (names.isEmpty) return {};
+    final cleaned = names
+        .map((n) => n.contains('|') ? n.split('|').first.trim() : n)
+        .where((n) => n.isNotEmpty)
+        .toSet()
+        .toList();
+    if (cleaned.isEmpty) return {};
+
+    var condition = TagTranslate_.name
+        .oneOf(cleaned)
+        .and(TagTranslate_.namespace.notEquals('rows'));
+    if (namespace != null && namespace.isNotEmpty) {
+      condition = condition.and(TagTranslate_.namespace.equals(namespace));
+    }
+
+    final query = _tagTranslateBox.query(condition).build();
+    final result = query.find();
+    query.close();
+
+    final map = <String, TagTranslate>{};
+    for (final tt in result) {
+      map.putIfAbsent(tt.name, () => tt);
+    }
+    return map;
+  }
+
+  @override
   Future<List<NhTag>> getAllNhTag() async {
     return _nhTagBox.getAll();
   }

@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/parser/parse_gallery_list.dart' as listparse;
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/store/db/entity/tag_translate.dart';
 import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
@@ -11,13 +12,10 @@ import 'package:html/dom.dart' hide Comment;
 import 'package:html/parser.dart' show parse;
 
 /// Parses a gallery detail page (~80 KB HTML, ~30 tags) and returns the
-/// fully-populated `Gallery`.
+/// raw `Gallery` with tags carrying `name` but not yet `translatedName`.
 ///
-/// Detail HTML parsing dwarfed every other CPU spike on the main isolate,
-/// so we offload the entire HTML walk to a worker via `compute`. The
-/// returned object already carries every field that doesn't depend on the
-/// local ObjectBox, and we enrich `tags.translatedName` / `simpleTags`
-/// afterwards on the main isolate (which owns the ObjectBox `Store`).
+/// The caller is responsible for calling [enrichGalleryDetail] afterwards
+/// to fill in translated names and enrich related-gallery simpleTags.
 Future<Gallery> parseGalleryDetail(String html) async {
   final swParse = Stopwatch()..start();
   final raw = await compute(_parseGalleryDetailPure, html);
@@ -27,19 +25,15 @@ Future<Gallery> parseGalleryDetail(String html) async {
       'parseGalleryDetail: pure parse on isolate took ${swParse.elapsedMilliseconds}ms (html ${html.length} bytes)',
     );
   }
+  return raw;
+}
 
-  final swEnrich = Stopwatch()..start();
+/// Enriches [raw] with translated tag names and related-gallery NhTag data
+/// from the local DB using batch queries.
+///
+/// Also fires a passive [learnNhTags] to keep the local NhTag cache warm.
+Future<Gallery> enrichGalleryDetail(Gallery raw) async {
   final enriched = await _enrichGalleryDetail(raw);
-  swEnrich.stop();
-  if (swEnrich.elapsedMilliseconds > 200) {
-    logger.w(
-      'parseGalleryDetail: ObjectBox enrich took ${swEnrich.elapsedMilliseconds}ms',
-    );
-  }
-
-  // Passive learning: persist parsed tags into the local NhTag cache so
-  // search autocomplete works without depending on an external prebuilt
-  // tag dump. Fire-and-forget; failures here must not break detail load.
   unawaited(
     Future(() => objectBoxHelper.learnNhTags(enriched.tags)).catchError((
       Object e,
@@ -262,67 +256,42 @@ List<Gallery> _parseGalleryListElmRaw(List<Element> galleryElmList) {
   return (tags: tags, uploadedDateTime: uploadedDateTime);
 }
 
-/// Main-isolate enrichment: fills `translatedName` for every tag and the
-/// `simpleTags` of every related gallery. Yields periodically to keep the
-/// UI responsive during the (rare) cases where a detail page exposes many
-/// related galleries.
+/// Main-isolate enrichment using batch DB queries.
 Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
-  // Enrich top-level tags (translatedName).
-  final enrichedTags = <Tag>[];
-  for (var i = 0; i < raw.tags.length; i++) {
-    final t = raw.tags[i];
-    final translated = await objectBoxHelper.findTagTranslateAsync(
-      t.name ?? '',
-      namespace: getTagNamespace(t.type ?? ''),
-    );
-    enrichedTags.add(
-      t.copyWith(
-        translatedName: translated?.translateNameNotMD ?? t.name ?? '',
-      ),
-    );
-    if (i % 8 == 7) {
-      await Future<void>.delayed(Duration.zero);
-    }
-  }
-
-  // Enrich related galleries' simpleTags.
-  final enrichedRelated = <Gallery>[];
-  for (var i = 0; i < raw.moreLikeGallerys.length; i++) {
-    final g = raw.moreLikeGallerys[i];
-    if (g.simpleTags.isEmpty) {
-      enrichedRelated.add(g);
-      continue;
-    }
-    final tags = <Tag>[];
-    for (final st in g.simpleTags) {
-      final id = st.id ?? 0;
-      if (id == 0) {
-        tags.add(st);
-        continue;
-      }
-      final nhTag = await objectBoxHelper.findNhTagAsync(id);
-      if (nhTag == null) {
-        tags.add(st);
-        continue;
-      }
-      final translated = await objectBoxHelper.findTagTranslateAsync(
-        nhTag.name ?? '',
-        namespace: getTagNamespace(nhTag.type ?? ''),
-      );
-      tags.add(
-        st.copyWith(
-          name: nhTag.name,
-          translatedName: translated?.translateNameNotMD ?? nhTag.name ?? '',
-        ),
-      );
-    }
-    enrichedRelated.add(g.copyWith(simpleTags: tags));
-    if (i % 4 == 3) {
-      await Future<void>.delayed(Duration.zero);
-    }
-  }
-
+  final enrichedTags = await _enrichDetailTags(raw.tags);
+  final enrichedRelated = await listparse.enrichGalleryList(raw.moreLikeGallerys);
   return raw.copyWith(tags: enrichedTags, moreLikeGallerys: enrichedRelated);
+}
+
+/// Batch-enriches the top-level [tags] of a detail page.
+/// Groups by namespace so each batch query stays namespace-accurate.
+Future<List<Tag>> _enrichDetailTags(List<Tag> tags) async {
+  if (tags.isEmpty) return tags;
+
+  final byNamespace = <String, List<String>>{};
+  for (final t in tags) {
+    final name = t.name ?? '';
+    if (name.isEmpty) continue;
+    final ns = getTagNamespace(t.type ?? '') ?? '';
+    (byNamespace[ns] ??= []).add(name);
+  }
+
+  final translationCache = <String, TagTranslate>{};
+  for (final entry in byNamespace.entries) {
+    final ns = entry.key.isEmpty ? null : entry.key;
+    final batch = await objectBoxHelper.findTagTranslatesByNames(
+      entry.value,
+      namespace: ns,
+    );
+    translationCache.addAll(batch);
+  }
+
+  return tags.map((t) {
+    final translated = translationCache[t.name];
+    return t.copyWith(
+      translatedName: translated?.translateNameNotMD ?? t.name ?? '',
+    );
+  }).toList();
 }
 
 /// Parses a gallery detail from nhentai's v2 JSON API (`GET /api/v2/galleries/<id>`).

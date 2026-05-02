@@ -5,7 +5,6 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/front_provider.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
-import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -100,7 +99,6 @@ class FavoriteNotifier extends _$FavoriteNotifier {
   Future<void> loadData() async {
     final fromCache = await getGalleryData(first: true);
     if (fromCache) {
-      await 1.seconds.delay();
       await getGalleryData(refresh: true);
     }
   }

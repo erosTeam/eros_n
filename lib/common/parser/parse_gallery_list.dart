@@ -1,6 +1,5 @@
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/models/index.dart';
-import 'package:eros_n/utils/eros_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart';
@@ -203,48 +202,50 @@ Future<GallerySet> _enrichGallerySet(GallerySet raw) async {
   );
 }
 
-Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
-  if (list.isEmpty) {
-    return list;
-  }
-  final result = <Gallery>[];
-  for (var i = 0; i < list.length; i++) {
-    final g = list[i];
-    if (g.simpleTags.isEmpty) {
-      result.add(g);
-      continue;
-    }
-    final enrichedTags = <Tag>[];
-    for (final t in g.simpleTags) {
-      enrichedTags.add(await _enrichSimpleTag(t));
-    }
-    result.add(g.copyWith(simpleTags: enrichedTags));
-    // Every 5 galleries yield once, keeps frame budget reasonable even
-    // for legacy pages that emit data-tags on every entry.
-    if (i % 5 == 4) {
-      await Future<void>.delayed(Duration.zero);
-    }
-  }
-  return result;
-}
+/// Batch-enriches [simpleTags] for a list of galleries using two bulk DB
+/// queries (one for NhTag names, one for translations). Safe to call from
+/// any isolate that owns the DB store.
+Future<List<Gallery>> enrichGalleryList(List<Gallery> list) =>
+    _enrichGalleryList(list);
 
-Future<Tag> _enrichSimpleTag(Tag t) async {
-  final id = t.id ?? 0;
-  if (id == 0) {
-    return t;
-  }
-  final nhTag = await objectBoxHelper.findNhTagAsync(id);
-  if (nhTag == null) {
-    return t;
-  }
-  final translated = await objectBoxHelper.findTagTranslateAsync(
-    nhTag.name ?? '',
-    namespace: getTagNamespace(nhTag.type ?? ''),
-  );
-  return t.copyWith(
-    name: nhTag.name,
-    translatedName: translated?.translateNameNotMD ?? nhTag.name ?? '',
-  );
+Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
+  if (list.isEmpty) return list;
+
+  final allIds = list
+      .expand((g) => g.simpleTags)
+      .map((t) => t.id ?? 0)
+      .where((id) => id != 0)
+      .toSet()
+      .toList();
+  if (allIds.isEmpty) return list;
+
+  final nhTagMap = await objectBoxHelper.findNhTagsByIds(allIds);
+  if (nhTagMap.isEmpty) return list;
+
+  final names = nhTagMap.values
+      .map((t) => t.name)
+      .where((n) => n != null && n.isNotEmpty)
+      .map((n) => n!)
+      .toList();
+  final translationMap = names.isNotEmpty
+      ? await objectBoxHelper.findTagTranslatesByNames(names)
+      : <String, dynamic>{};
+
+  return list.map((g) {
+    if (g.simpleTags.isEmpty) return g;
+    final enrichedTags = g.simpleTags.map((t) {
+      final id = t.id ?? 0;
+      if (id == 0) return t;
+      final nhTag = nhTagMap[id];
+      if (nhTag == null) return t;
+      final translated = translationMap[nhTag.name];
+      return t.copyWith(
+        name: nhTag.name,
+        translatedName: translated?.translateNameNotMD ?? nhTag.name ?? '',
+      );
+    }).toList();
+    return g.copyWith(simpleTags: enrichedTags);
+  }).toList();
 }
 
 String? getLanguageCode(List<String> tagIds) {
@@ -381,23 +382,20 @@ Future<void> _backfillUnknownNhTags(
   List<Gallery> galleries,
   NhTagBackfillResolver backfill,
 ) async {
-  final unknown = <int>{};
-  for (final g in galleries) {
-    for (final t in g.simpleTags) {
-      final id = t.id ?? 0;
-      if (id == 0) {
-        continue;
-      }
-      if (await objectBoxHelper.findNhTagAsync(id) == null) {
-        unknown.add(id);
-      }
-    }
-  }
-  if (unknown.isEmpty) {
-    return;
-  }
+  final allIds = galleries
+      .expand((g) => g.simpleTags)
+      .map((t) => t.id ?? 0)
+      .where((id) => id != 0)
+      .toSet()
+      .toList();
+  if (allIds.isEmpty) return;
+
+  final known = await objectBoxHelper.findNhTagsByIds(allIds);
+  final unknown = allIds.where((id) => !known.containsKey(id)).toList();
+  if (unknown.isEmpty) return;
+
   try {
-    final fetched = await backfill(unknown.toList());
+    final fetched = await backfill(unknown);
     if (fetched.isNotEmpty) {
       await objectBoxHelper.learnNhTags(fetched);
     }

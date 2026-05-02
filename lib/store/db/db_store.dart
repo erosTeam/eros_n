@@ -31,10 +31,15 @@ abstract class DbStore {
   Future<void> putNhTag(NhTag tag);
   NhTag? findNhTag(int? id);
   Future<NhTag?> findNhTagAsync(int? id);
+  Future<Map<int, NhTag>> findNhTagsByIds(List<int> ids);
   Future<List<NhTag>> getAllNhTag();
   Future<List<NhTag>> findNhTagContains(String text, int limit);
   Future<void> updateNhTagTime(int nhTagId);
   Future<void> learnNhTags(List<Tag> tags);
+  Future<Map<String, TagTranslate>> findTagTranslatesByNames(
+    List<String> names, {
+    String? namespace,
+  });
 
   // DownloadTask
   Future<List<DownloadTask>> getAllDownloadTasks();

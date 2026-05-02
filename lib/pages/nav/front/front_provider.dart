@@ -7,7 +7,6 @@ import 'package:eros_n/component/models/gallery_set.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
-import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -178,7 +177,6 @@ class FrontNotifier extends _$FrontNotifier {
   Future<void> loadData() async {
     final fromCache = await getGalleryData(first: true);
     if (fromCache) {
-      await 1.seconds.delay();
       await reloadData();
     }
   }

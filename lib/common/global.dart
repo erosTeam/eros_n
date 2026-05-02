@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/network/api.dart';
 import 'package:eros_n/network/app_dio/app_dio.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/db_store.dart';
@@ -126,6 +127,7 @@ class Global {
 
     await HiveHelper.init();
     await objectBoxHelper.init();
+    await Api.initCacheStore(appSupportPath);
 
     userAgent = hiveHelper.getUserAgent();
     userAgent ??= NHConst.userAgent;

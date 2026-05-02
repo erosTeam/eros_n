@@ -292,8 +292,8 @@ Future<Gallery> _getGalleryDetailHtml({
     url,
     httpTransformer: HttpTransformerBuilder((response) async {
       logger.t('statusCode ${response.statusCode}');
-      final gallery = await parseGalleryDetail(response.data as String);
-      return DioHttpResponse<Gallery>.success(gallery);
+      final raw = await parseGalleryDetail(response.data as String);
+      return DioHttpResponse<Gallery>.success(await enrichGalleryDetail(raw));
     }),
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
@@ -318,9 +318,10 @@ Future<Gallery> _getGalleryDetailByApi(
   final DioHttpResponse httpResponse = await dioHttpClient.get(
     '/api/v2/galleries/$gid',
     httpTransformer: HttpTransformerBuilder((response) async {
-      final json = response.data as Map<String, dynamic>;
-      final gallery = await parseGalleryDetailFromApi(json);
-      return DioHttpResponse<Gallery>.success(gallery);
+      final raw = await parseGalleryDetailFromApi(
+        response.data as Map<String, dynamic>,
+      );
+      return DioHttpResponse<Gallery>.success(await enrichGalleryDetail(raw));
     }),
     options: getOptions(forceRefresh: refresh),
     cancelToken: cancelToken,
