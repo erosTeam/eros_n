@@ -93,6 +93,25 @@ class HiddenWebViewProxy {
     _controller = null;
   }
 
+  /// Read the freshest `access_token` from the WebView's `document.cookie`.
+  /// Returns `null` if the WebView isn't ready or no token is found.
+  Future<String?> getAccessToken() async {
+    if (!isReady) return null;
+    final controller = _controller;
+    if (controller == null) return null;
+    try {
+      final cookie = await controller.evaluateJavascript(
+        source: "document.cookie",
+      );
+      if (cookie is String) {
+        final match =
+            RegExp(r'(?:^|; )access_token=([^;]+)').firstMatch(cookie);
+        return match?.group(1);
+      }
+    } catch (_) {}
+    return null;
+  }
+
   /// Perform an HTTP request through the hidden WebView.
   ///
   /// [headers] should not include hop-by-hop entries that the browser refuses

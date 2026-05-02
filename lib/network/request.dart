@@ -18,6 +18,7 @@ import 'package:eros_n/network/api.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
 import 'package:eros_n/utils/eros_utils.dart';
+import 'package:path/path.dart' as path;
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 
@@ -688,6 +689,78 @@ Future<bool> loginNhentai({
   }
 }
 
+/// Download a torrent file via the v2 API.
+///
+/// 1. POST `/api/v2/galleries/{gid}/download?format=torrent` → returns `{ url, expires_at }`.
+/// 2. GET that URL to save the actual .torrent file.
+Future<String> downloadTorrent({
+  required int gid,
+  required String saveDirPath,
+  CancelToken? cancelToken,
+}) async {
+  final dioConfig = globalDioConfig.copyWith(
+    connectTimeout: 30000,
+    receiveTimeout: 60000,
+  );
+  final dio = DioHttpClient(dioConfig: dioConfig);
+
+  final token = await HiddenWebViewProxy.instance.getAccessToken();
+  final authHeaders = <String, dynamic>{
+    if (token != null && token.isNotEmpty) 'Authorization': 'User $token',
+  };
+
+  // Step 1: POST to issue a short-lived download URL.
+  final issueOpts = getOptions(forceRefresh: true)
+    ..headers = {...?getOptions().headers, ...authHeaders};
+  final issueResp = await dio.post(
+    '/api/v2/galleries/$gid/download',
+    queryParameters: const {'format': 'torrent'},
+    options: issueOpts,
+    cancelToken: cancelToken,
+    httpTransformer: HttpTransformerBuilder((response) {
+      return DioHttpResponse<Map<String, dynamic>>.success(
+        response.data as Map<String, dynamic>,
+      );
+    }),
+  );
+  if (!issueResp.ok || issueResp.data is! Map<String, dynamic>) {
+    throw HttpException('Failed to issue torrent download URL for gid=$gid');
+  }
+  final data = issueResp.data as Map<String, dynamic>;
+  final torrentUrl = data['url'] as String?;
+  if (torrentUrl == null || torrentUrl.isEmpty) {
+    throw HttpException('Empty download_url in response for gid=$gid');
+  }
+  logger.d('torrentUrl $torrentUrl');
+
+  // Step 2: download the actual torrent file.
+  late String savePath;
+  final downloadOptions =
+      Api.cacheOption.copyWith(policy: CachePolicy.noCache).toOptions()
+        ..responseType = ResponseType.stream
+        ..headers = authHeaders;
+  await dio.download(
+    torrentUrl,
+    (Headers headers) {
+      final disposition = headers.value('content-disposition');
+      var filename = '';
+      if (disposition != null) {
+        final raw = disposition
+            .split(RegExp(r"filename(\*=UTF-8''|=)"))
+            .last;
+        filename = Uri.decodeFull(raw).replaceAll('/', '_').trim();
+      }
+      if (filename.isEmpty) filename = '$gid.torrent';
+      savePath = path.joinAll([saveDirPath, filename]);
+      return savePath;
+    },
+    options: downloadOptions,
+    deleteOnError: true,
+    cancelToken: cancelToken,
+  );
+  return savePath;
+}
+
 Future<void> nhDownload({
   required String url,
   required savePath,
@@ -698,8 +771,6 @@ Future<void> nhDownload({
   ProgressCallback? progressCallback,
 }) async {
   late final String downloadUrl;
-  // Use longer timeouts for CDN image downloads — under high concurrency the
-  // CDN can take >10 s to start responding, which is the default connectTimeout.
   final downloadDioConfig = globalDioConfig.copyWith(
     connectTimeout: 30000,
     receiveTimeout: 60000,
@@ -712,45 +783,7 @@ Future<void> nhDownload({
   }
   logger.t('downloadUrl $downloadUrl');
 
-  // Anything served by nhentai.net *itself* is behind Cloudflare and would
-  // get blocked if dio streamed it directly. Pull it through the hidden
-  // WebView proxy so the request inherits the browser's TLS fingerprint
-  // and session cookies (needed for /g/{id}/download).
-  // Image CDN subdomains (i.nhentai.net, t.nhentai.net) are NOT behind the
-  // challenge and are already accessible via Dio; routing them through the
-  // proxy would trigger a cross-origin fetch error inside the WebView.
-  final downloadUri = Uri.parse(downloadUrl);
-  final viaProxy = downloadUri.host == 'nhentai.net';
-
   try {
-    if (viaProxy) {
-      final resp = await HiddenWebViewProxy.instance.requestBinary(
-        url: downloadUrl,
-        method: 'GET',
-      );
-      if (resp.status < 200 || resp.status >= 400) {
-        throw HttpException(
-          'nhDownload via proxy failed: ${resp.status} ${resp.statusText}',
-        );
-      }
-      // Synthesise the headers shape that the savePath callback expects
-      // so call sites that read content-disposition keep working.
-      final headersMap = <String, List<String>>{};
-      resp.headers.forEach((k, v) {
-        headersMap[k.toLowerCase()] = [v];
-      });
-      final headers = Headers.fromMap(headersMap);
-      final resolvedPath = savePath is String
-          ? savePath
-          : (savePath as String Function(Headers))(headers);
-      final file = File(resolvedPath);
-      await file.create(recursive: true);
-      await file.writeAsBytes(resp.bytes);
-      progressCallback?.call(resp.bytes.length, resp.bytes.length);
-      onDownloadComplete?.call();
-      return;
-    }
-
     // dio_cache_interceptor crashes with "Response type not supported"
     // when it tries to persist a stream response. dio's download flow
     // is always stream-based, so disable caching for these requests.
