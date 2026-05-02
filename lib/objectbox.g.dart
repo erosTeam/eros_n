@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'store/db/entity/download_task.dart';
 import 'store/db/entity/gallery_history.dart';
 import 'store/db/entity/nh_tag.dart';
 import 'store/db/entity/tag_translate.dart';
@@ -204,6 +205,82 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(4, 5739319002923772107),
+    name: 'DownloadTask',
+    lastPropertyId: const obx_int.IdUid(11, 4574782061382162135),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 4832535536188610473),
+        name: 'gid',
+        type: 6,
+        flags: 129,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 4217746635624310865),
+        name: 'title',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 653500580837528460),
+        name: 'thumbUrl',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 7863894918139742134),
+        name: 'mediaId',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 6236563853954135132),
+        name: 'totalPages',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 8870662896630103818),
+        name: 'savedDir',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 8741768140447924901),
+        name: 'downloadedPages',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 3914439121243524734),
+        name: 'createdAt',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 8411921199856026719),
+        name: 'statusValue',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 4232753576815107481),
+        name: 'pageExtsJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 4574782061382162135),
+        name: 'pageExts',
+        type: 30,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -249,7 +326,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
     // Typically, this is done with `dart run build_runner build`.
     generatorVersion: obx_int.GeneratorVersion.v2025_12_16,
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(3, 4614819919768626068),
+    lastEntityId: const obx_int.IdUid(4, 5739319002923772107),
     lastIndexId: const obx_int.IdUid(9, 6175019048317779675),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
@@ -512,6 +589,107 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    DownloadTask: obx_int.EntityDefinition<DownloadTask>(
+      model: _entities[3],
+      toOneRelations: (DownloadTask object) => [],
+      toManyRelations: (DownloadTask object) => {},
+      getId: (DownloadTask object) => object.gid,
+      setId: (DownloadTask object, int id) {
+        object.gid = id;
+      },
+      objectToFB: (DownloadTask object, fb.Builder fbb) {
+        final titleOffset = fbb.writeString(object.title);
+        final thumbUrlOffset = fbb.writeString(object.thumbUrl);
+        final mediaIdOffset = fbb.writeString(object.mediaId);
+        final savedDirOffset = fbb.writeString(object.savedDir);
+        final pageExtsJsonOffset = fbb.writeString(object.pageExtsJson);
+        final pageExtsOffset = fbb.writeList(
+          object.pageExts.map(fbb.writeString).toList(growable: false),
+        );
+        fbb.startTable(12);
+        fbb.addInt64(0, object.gid);
+        fbb.addOffset(1, titleOffset);
+        fbb.addOffset(2, thumbUrlOffset);
+        fbb.addOffset(3, mediaIdOffset);
+        fbb.addInt64(4, object.totalPages);
+        fbb.addOffset(5, savedDirOffset);
+        fbb.addInt64(6, object.downloadedPages);
+        fbb.addInt64(7, object.createdAt);
+        fbb.addInt64(8, object.statusValue);
+        fbb.addOffset(9, pageExtsJsonOffset);
+        fbb.addOffset(10, pageExtsOffset);
+        fbb.finish(fbb.endTable());
+        return object.gid;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final gidParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final titleParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final thumbUrlParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final mediaIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 10, '');
+        final totalPagesParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          0,
+        );
+        final savedDirParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 14, '');
+        final downloadedPagesParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          16,
+          0,
+        );
+        final statusValueParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          20,
+          0,
+        );
+        final pageExtsJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 22, '');
+        final createdAtParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          18,
+          0,
+        );
+        final object =
+            DownloadTask(
+                gid: gidParam,
+                title: titleParam,
+                thumbUrl: thumbUrlParam,
+                mediaId: mediaIdParam,
+                totalPages: totalPagesParam,
+                savedDir: savedDirParam,
+                downloadedPages: downloadedPagesParam,
+                statusValue: statusValueParam,
+                pageExtsJson: pageExtsJsonParam,
+                createdAt: createdAtParam,
+              )
+              ..pageExts = const fb.ListReader<String>(
+                fb.StringReader(asciiOptimization: true),
+                lazy: false,
+              ).vTableGet(buffer, rootOffset, 24, []);
+
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -641,5 +819,63 @@ class TagTranslate_ {
   /// See [TagTranslate.lastUseTime].
   static final lastUseTime = obx.QueryIntegerProperty<TagTranslate>(
     _entities[2].properties[6],
+  );
+}
+
+/// [DownloadTask] entity fields to define ObjectBox queries.
+class DownloadTask_ {
+  /// See [DownloadTask.gid].
+  static final gid = obx.QueryIntegerProperty<DownloadTask>(
+    _entities[3].properties[0],
+  );
+
+  /// See [DownloadTask.title].
+  static final title = obx.QueryStringProperty<DownloadTask>(
+    _entities[3].properties[1],
+  );
+
+  /// See [DownloadTask.thumbUrl].
+  static final thumbUrl = obx.QueryStringProperty<DownloadTask>(
+    _entities[3].properties[2],
+  );
+
+  /// See [DownloadTask.mediaId].
+  static final mediaId = obx.QueryStringProperty<DownloadTask>(
+    _entities[3].properties[3],
+  );
+
+  /// See [DownloadTask.totalPages].
+  static final totalPages = obx.QueryIntegerProperty<DownloadTask>(
+    _entities[3].properties[4],
+  );
+
+  /// See [DownloadTask.savedDir].
+  static final savedDir = obx.QueryStringProperty<DownloadTask>(
+    _entities[3].properties[5],
+  );
+
+  /// See [DownloadTask.downloadedPages].
+  static final downloadedPages = obx.QueryIntegerProperty<DownloadTask>(
+    _entities[3].properties[6],
+  );
+
+  /// See [DownloadTask.createdAt].
+  static final createdAt = obx.QueryIntegerProperty<DownloadTask>(
+    _entities[3].properties[7],
+  );
+
+  /// See [DownloadTask.statusValue].
+  static final statusValue = obx.QueryIntegerProperty<DownloadTask>(
+    _entities[3].properties[8],
+  );
+
+  /// See [DownloadTask.pageExtsJson].
+  static final pageExtsJson = obx.QueryStringProperty<DownloadTask>(
+    _entities[3].properties[9],
+  );
+
+  /// See [DownloadTask.pageExts].
+  static final pageExts = obx.QueryStringVectorProperty<DownloadTask>(
+    _entities[3].properties[10],
   );
 }

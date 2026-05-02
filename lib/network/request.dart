@@ -253,9 +253,7 @@ Future<Gallery> getGalleryDetail({
   bool refresh = false,
   CancelToken? cancelToken,
 }) async {
-  final mode = defaultTargetPlatform == TargetPlatform.ohos
-      ? GalleryFetchMode.api
-      : kGalleryFetchMode;
+  final mode = kGalleryFetchMode;
 
   if (mode == GalleryFetchMode.api) {
     final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);

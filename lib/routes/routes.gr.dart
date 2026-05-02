@@ -115,6 +115,38 @@ class CommentsRouteArgs {
 }
 
 /// generated route for
+/// [DownloadSettingPage]
+class DownloadSettingRoute extends PageRouteInfo<void> {
+  const DownloadSettingRoute({List<PageRouteInfo>? children})
+    : super(DownloadSettingRoute.name, initialChildren: children);
+
+  static const String name = 'DownloadSettingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DownloadSettingPage();
+    },
+  );
+}
+
+/// generated route for
+/// [DownloadsPage]
+class DownloadsRoute extends PageRouteInfo<void> {
+  const DownloadsRoute({List<PageRouteInfo>? children})
+    : super(DownloadsRoute.name, initialChildren: children);
+
+  static const String name = 'DownloadsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DownloadsPage();
+    },
+  );
+}
+
+/// generated route for
 /// [FavoritePage]
 class FavoriteRoute extends PageRouteInfo<void> {
   const FavoriteRoute({List<PageRouteInfo>? children})

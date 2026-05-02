@@ -57,6 +57,14 @@ class SettingsPage extends ConsumerWidget {
               erosRouter.push(const AdvancedSettingRoute());
             },
           ),
+          ListTile(
+            iconColor: Theme.of(context).colorScheme.primary,
+            leading: const Icon(Icons.download_outlined),
+            title: Text(L10n.of(context).download_settings),
+            onTap: () {
+              erosRouter.push(const DownloadSettingRoute());
+            },
+          ),
         ],
       ),
     );

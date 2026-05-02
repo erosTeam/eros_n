@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/tag.dart';
 import 'package:eros_n/objectbox.g.dart';
 import 'package:eros_n/store/db/db_store.dart';
+import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
@@ -15,6 +16,7 @@ class ObjectBoxHelper implements DbStore {
   late final Box<GalleryHistory> _historyBox;
   late final Box<TagTranslate> _tagTranslateBox;
   late final Box<NhTag> _nhTagBox;
+  late final Box<DownloadTask> _downloadBox;
 
   @override
   Future<void> init({String? path}) async {
@@ -22,6 +24,7 @@ class ObjectBoxHelper implements DbStore {
     _historyBox = Box<GalleryHistory>(_store);
     _tagTranslateBox = Box<TagTranslate>(_store);
     _nhTagBox = Box<NhTag>(_store);
+    _downloadBox = Box<DownloadTask>(_store);
   }
 
   @override
@@ -323,6 +326,39 @@ class ObjectBoxHelper implements DbStore {
     }
     if (toWrite.isNotEmpty) {
       _nhTagBox.putMany(toWrite);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // DownloadTask
+  // ---------------------------------------------------------------------------
+
+  @override
+  Future<List<DownloadTask>> getAllDownloadTasks() async {
+    return _downloadBox.getAll();
+  }
+
+  @override
+  Future<void> upsertDownloadTask(DownloadTask task) async {
+    _downloadBox.put(task);
+  }
+
+  @override
+  Future<void> deleteDownloadTask(int gid) async {
+    _downloadBox.remove(gid);
+  }
+
+  @override
+  Future<void> updateDownloadProgress(
+    int gid,
+    int downloadedPages,
+    DownloadStatus status,
+  ) async {
+    final task = _downloadBox.get(gid);
+    if (task != null) {
+      task.downloadedPages = downloadedPages;
+      task.status = status;
+      _downloadBox.put(task);
     }
   }
 }

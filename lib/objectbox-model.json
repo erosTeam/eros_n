@@ -167,9 +167,73 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "4:5739319002923772107",
+      "lastPropertyId": "11:4574782061382162135",
+      "name": "DownloadTask",
+      "properties": [
+        {
+          "id": "1:4832535536188610473",
+          "name": "gid",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:4217746635624310865",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:653500580837528460",
+          "name": "thumbUrl",
+          "type": 9
+        },
+        {
+          "id": "4:7863894918139742134",
+          "name": "mediaId",
+          "type": 9
+        },
+        {
+          "id": "5:6236563853954135132",
+          "name": "totalPages",
+          "type": 6
+        },
+        {
+          "id": "6:8870662896630103818",
+          "name": "savedDir",
+          "type": 9
+        },
+        {
+          "id": "7:8741768140447924901",
+          "name": "downloadedPages",
+          "type": 6
+        },
+        {
+          "id": "8:3914439121243524734",
+          "name": "createdAt",
+          "type": 6
+        },
+        {
+          "id": "9:8411921199856026719",
+          "name": "statusValue",
+          "type": 6
+        },
+        {
+          "id": "10:4232753576815107481",
+          "name": "pageExtsJson",
+          "type": 9
+        },
+        {
+          "id": "11:4574782061382162135",
+          "name": "pageExts",
+          "type": 30
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "3:4614819919768626068",
+  "lastEntityId": "4:5739319002923772107",
   "lastIndexId": "9:6175019048317779675",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

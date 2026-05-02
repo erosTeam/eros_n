@@ -5,6 +5,7 @@ import 'package:eros_n/pages/gallery/comments_page.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/gallery/gallery_view.dart';
 import 'package:eros_n/pages/gallery/thumb_page.dart';
+import 'package:eros_n/pages/nav/downloads/downloads_page.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
@@ -17,6 +18,7 @@ import 'package:eros_n/pages/read/read_view.dart';
 import 'package:eros_n/pages/setting/about_page.dart';
 import 'package:eros_n/pages/setting/advanced_setting_page.dart';
 import 'package:eros_n/pages/setting/appearance_setting_page.dart';
+import 'package:eros_n/pages/setting/download_setting_page.dart';
 import 'package:eros_n/pages/setting/general_setting_page.dart';
 import 'package:eros_n/pages/setting/item_width_setting_page.dart';
 import 'package:eros_n/pages/setting/license_page.dart';
@@ -54,6 +56,8 @@ class NHRoutes {
   static const String search = '/search';
   static const String more = '/more';
   static const String itemWidthSetting = '/itemWidthSetting';
+  static const String downloads = '/downloads';
+  static const String downloadSetting = '/download-setting';
 }
 
 class AppRouteObserver extends AutoRouterObserver {
@@ -95,6 +99,8 @@ class AppRouter extends RootStackRouter {
       path: NHRoutes.itemWidthSetting,
       page: ItemWidthSettingRoute.page,
     ),
+    AutoRoute(path: NHRoutes.downloads, page: DownloadsRoute.page),
+    AutoRoute(path: NHRoutes.downloadSetting, page: DownloadSettingRoute.page),
   ];
 }
 

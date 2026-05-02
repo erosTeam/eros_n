@@ -1,4 +1,5 @@
 import 'package:eros_n/component/models/tag.dart';
+import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/store/db/entity/gallery_history.dart';
 import 'package:eros_n/store/db/entity/nh_tag.dart';
 import 'package:eros_n/store/db/entity/tag_translate.dart';
@@ -34,4 +35,14 @@ abstract class DbStore {
   Future<List<NhTag>> findNhTagContains(String text, int limit);
   Future<void> updateNhTagTime(int nhTagId);
   Future<void> learnNhTags(List<Tag> tags);
+
+  // DownloadTask
+  Future<List<DownloadTask>> getAllDownloadTasks();
+  Future<void> upsertDownloadTask(DownloadTask task);
+  Future<void> deleteDownloadTask(int gid);
+  Future<void> updateDownloadProgress(
+    int gid,
+    int downloadedPages,
+    DownloadStatus status,
+  );
 }

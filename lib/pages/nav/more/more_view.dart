@@ -112,27 +112,7 @@ class _MorePageState extends ConsumerState<MorePage>
               iconColor: Theme.of(context).colorScheme.primary,
               title: Text(L10n.of(context).download),
               onTap: () {
-                // Navigator.pushNamed(context, '/download');
-                // showDialog
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text(L10n.of(context).download),
-                      content: const Text(
-                        'Feature in development, currently unavailable',
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text(L10n.of(context).ok),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
+                erosRouter.push(const DownloadsRoute());
               },
             ),
             const Divider(height: 1.0),
