@@ -422,7 +422,7 @@ class _TaskCard extends ConsumerWidget {
             fit: BoxFit.cover,
             width: 60,
             height: double.infinity,
-            errorBuilder: (_, __, ___) => _networkThumb(task, scheme),
+            errorBuilder: (_, _, _) => _networkThumb(task, scheme),
           );
         }
       }

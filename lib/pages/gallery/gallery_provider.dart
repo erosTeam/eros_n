@@ -9,6 +9,7 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_page_state.dart';
 import 'package:eros_n/pages/nav/history/history_provider.dart';
+import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
 import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';

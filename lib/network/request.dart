@@ -253,7 +253,7 @@ Future<Gallery> getGalleryDetail({
   bool refresh = false,
   CancelToken? cancelToken,
 }) async {
-  final mode = kGalleryFetchMode;
+  const mode = kGalleryFetchMode;
 
   if (mode == GalleryFetchMode.api) {
     final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);
