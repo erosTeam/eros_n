@@ -51,10 +51,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto_read_interval": MessageLookupByLibrary.simpleMessage(
       "Auto read interval",
     ),
+    "cache_calculating": MessageLookupByLibrary.simpleMessage("Calculating..."),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cdn_warn_high": m1,
     "cdn_warn_moderate": m2,
     "chinese": MessageLookupByLibrary.simpleMessage("Chinese"),
+    "clear_cache": MessageLookupByLibrary.simpleMessage("Clear Cache"),
+    "clear_cache_tip": MessageLookupByLibrary.simpleMessage(
+      "Clear all cached data? (HTTP responses, images)",
+    ),
     "clear_history": MessageLookupByLibrary.simpleMessage("Clear History"),
     "clear_history_tip": MessageLookupByLibrary.simpleMessage(
       "Are you sure to clear all history?",

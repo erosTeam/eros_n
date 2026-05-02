@@ -172,6 +172,9 @@
       "pages": {}
     }
   },
+  "clear_cache": "Clear Cache",
+  "clear_cache_tip": "Clear all cached data? (HTTP responses, images)",
+  "cache_calculating": "Calculating...",
   "cdn_warn_high": "Total concurrent requests: {total} ({galleries} × {pages}). Very likely to trigger a temporary CDN ban, causing download failures and broken thumbnails. Reduce concurrency.",
   "@cdn_warn_high": {
     "placeholders": {

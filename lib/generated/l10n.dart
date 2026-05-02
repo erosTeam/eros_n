@@ -1134,6 +1134,31 @@ class L10n {
     );
   }
 
+  /// `Clear Cache`
+  String get clear_cache {
+    return Intl.message('Clear Cache', name: 'clear_cache', desc: '', args: []);
+  }
+
+  /// `Clear all cached data? (HTTP responses, images)`
+  String get clear_cache_tip {
+    return Intl.message(
+      'Clear all cached data? (HTTP responses, images)',
+      name: 'clear_cache_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculating...`
+  String get cache_calculating {
+    return Intl.message(
+      'Calculating...',
+      name: 'cache_calculating',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Total concurrent requests: {total} ({galleries} × {pages}). Very likely to trigger a temporary CDN ban, causing download failures and broken thumbnails. Reduce concurrency.`
   String cdn_warn_high(Object total, Object galleries, Object pages) {
     return Intl.message(

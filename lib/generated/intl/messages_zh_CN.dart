@@ -48,10 +48,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "author": MessageLookupByLibrary.simpleMessage("作者"),
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "auto_read_interval": MessageLookupByLibrary.simpleMessage("自动阅读间隔"),
+    "cache_calculating": MessageLookupByLibrary.simpleMessage("计算中..."),
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
     "cdn_warn_high": m1,
     "cdn_warn_moderate": m2,
     "chinese": MessageLookupByLibrary.simpleMessage("汉语"),
+    "clear_cache": MessageLookupByLibrary.simpleMessage("清理缓存"),
+    "clear_cache_tip": MessageLookupByLibrary.simpleMessage(
+      "确定要清理所有缓存吗？（网络响应、图片缓存）",
+    ),
     "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
     "clear_history_tip": MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
     "clear_search_history_tip": MessageLookupByLibrary.simpleMessage(
