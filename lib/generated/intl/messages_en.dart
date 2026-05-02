@@ -159,6 +159,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_result": MessageLookupByLibrary.simpleMessage("No Results"),
     "none": MessageLookupByLibrary.simpleMessage("None"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "open_in_browser": MessageLookupByLibrary.simpleMessage("Open in Browser"),
     "open_supported_links": MessageLookupByLibrary.simpleMessage(
       "Open supported links",
     ),

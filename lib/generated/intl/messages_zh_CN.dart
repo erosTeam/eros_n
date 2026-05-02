@@ -136,6 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_result": MessageLookupByLibrary.simpleMessage("无搜索结果"),
     "none": MessageLookupByLibrary.simpleMessage("无"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
+    "open_in_browser": MessageLookupByLibrary.simpleMessage("在浏览器中打开"),
     "open_supported_links": MessageLookupByLibrary.simpleMessage("打开支持的链接"),
     "open_supported_links_tip": MessageLookupByLibrary.simpleMessage(
       "从 Android 12 开始, 应用只有在获得许可的情况下，才能作为网络链接的处理应用。否则会使用默认浏览器处理。您可以在此手动许可",

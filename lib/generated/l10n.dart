@@ -1159,6 +1159,16 @@ class L10n {
     );
   }
 
+  /// `Open in Browser`
+  String get open_in_browser {
+    return Intl.message(
+      'Open in Browser',
+      name: 'open_in_browser',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Total concurrent requests: {total} ({galleries} × {pages}). Very likely to trigger a temporary CDN ban, causing download failures and broken thumbnails. Reduce concurrency.`
   String cdn_warn_high(Object total, Object galleries, Object pages) {
     return Intl.message(

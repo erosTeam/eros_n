@@ -33,6 +33,7 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 @RoutePage()
@@ -213,14 +214,43 @@ class GalleryPageBody extends HookConsumerWidget {
                   settings: glassButtonSettings(context),
                 ),
                 const SizedBox(width: 8),
-                GlassIconButton(
-                  icon: Icon(Icons.more_vert,
-                      color: glassIconColor(context)),
-                  onPressed: () {},
-                  size: 36,
-                  useOwnLayer: true,
-                  settings: glassButtonSettings(context),
-                ),
+                Builder(builder: (context) {
+                  return GlassIconButton(
+                    icon: Icon(Icons.more_vert,
+                        color: glassIconColor(context)),
+                    onPressed: () async {
+                      final box =
+                          context.findRenderObject()! as RenderBox;
+                      final offset =
+                          box.localToGlobal(Offset.zero);
+                      final result = await showMenu<String>(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                          offset.dx,
+                          offset.dy + box.size.height,
+                          offset.dx + box.size.width,
+                          0,
+                        ),
+                        items: [
+                          PopupMenuItem(
+                            value: 'open_in_browser',
+                            child: Text(
+                                L10n.of(context).open_in_browser),
+                          ),
+                        ],
+                      );
+                      if (result == 'open_in_browser') {
+                        launchUrlString(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      }
+                    },
+                    size: 36,
+                    useOwnLayer: true,
+                    settings: glassButtonSettings(context),
+                  );
+                }),
                 const SizedBox(width: NavigationToolbar.kMiddleSpacing),
               ]
             : [
@@ -233,9 +263,23 @@ class GalleryPageBody extends HookConsumerWidget {
                     Share.share(shareText);
                   },
                 ),
-                IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {}),
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert),
+                  onSelected: (value) {
+                    if (value == 'open_in_browser') {
+                      launchUrlString(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'open_in_browser',
+                      child: Text(L10n.of(context).open_in_browser),
+                    ),
+                  ],
+                ),
               ],
       ),
       floatingActionButton: ScrollingFab(

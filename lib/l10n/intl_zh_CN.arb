@@ -175,6 +175,7 @@
   "clear_cache": "清理缓存",
   "clear_cache_tip": "确定要清理所有缓存吗？（网络响应、图片缓存）",
   "cache_calculating": "计算中...",
+  "open_in_browser": "在浏览器中打开",
   "cdn_warn_high": "当前并发请求数为 {total}（{galleries} × {pages}），极易触发 CDN 临时封禁，导致批量下载失败或缩略图无法加载。强烈建议降低并发。",
   "@cdn_warn_high": {
     "placeholders": {
