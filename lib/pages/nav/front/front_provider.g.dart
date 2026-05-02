@@ -145,7 +145,7 @@ final class FrontNotifierProvider
   }
 }
 
-String _$frontNotifierHash() => r'01095387922536dc65778cbab83f653e117fcd7f';
+String _$frontNotifierHash() => r'3a8f88d58402621ce60c24274ccc9c4c2f6f9c15';
 
 abstract class _$FrontNotifier extends $Notifier<ListViewState> {
   ListViewState build();

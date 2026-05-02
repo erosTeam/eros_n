@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/component/models/image.dart';
 import 'package:eros_n/component/widget/adaptive_app_bar.dart';
@@ -99,6 +98,24 @@ class ThumbBody extends StatelessWidget {
   }
 }
 
+// Fallback aspect ratio used when the computed or full-size ratio is abnormal
+// (e.g. extreme webtoon pages with ratio ~0.05).
+const kDefaultThumbAspect = 0.65;
+
+// Reasonable bounds for aspect ratio. Values outside this range are considered
+// abnormal and fall back to [kDefaultThumbAspect].
+// Lower: 0.3 covers even very tall portrait content (1:3.3).
+// Upper: 2.0 covers landscape including 16:9 (≈1.78) and slightly wider.
+const kMinThumbAspect = 0.3;
+const kMaxThumbAspect = 2.0;
+
+double sanitizeThumbAspect(double? raw) {
+  if (raw == null || !raw.isFinite || raw <= 0) return kDefaultThumbAspect;
+  return (raw >= kMinThumbAspect && raw <= kMaxThumbAspect)
+      ? raw
+      : kDefaultThumbAspect;
+}
+
 class ThumbsView extends HookConsumerWidget {
   const ThumbsView({super.key, required this.gid, this.enableHero = false});
 
@@ -108,7 +125,6 @@ class ThumbsView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.t('build thumbs $gid');
-    // final pages = ref.watch(galleryProvider(gid).select((g) => g.pages));
 
     const kHeroTagPrefix = 'thumb_';
 
@@ -127,9 +143,25 @@ class ThumbsView extends HookConsumerWidget {
     }
 
     final minRatio = pages
-        .map((image) => (image.imgWidth ?? 300) / (image.imgHeight ?? 400))
-        .min;
-    // logger.d('minRatio: $minRatio');
+        .map((image) {
+          final w = image.imgWidth ?? 300;
+          final h = image.imgHeight ?? 400;
+          return (h > 0) ? w / h : 3.0 / 4.0;
+        })
+        .where((r) => r.isFinite && r > 0)
+        .fold<double>(3.0 / 4.0, (prev, r) => r < prev ? r : prev);
+
+    final rawChildAspect = minRatio - 0.2;
+    final childAspectRatio =
+        (rawChildAspect >= kMinThumbAspect && rawChildAspect <= kMaxThumbAspect)
+        ? rawChildAspect
+        : kDefaultThumbAspect;
+
+    logger.d(
+      'ThumbsView gid=$gid minRatio=$minRatio '
+      'rawChildAspect=$rawChildAspect childAspectRatio=$childAspectRatio',
+    );
+
     return SliverPadding(
       padding: EdgeInsets.only(
         bottom: 16 + context.mediaQueryPadding.bottom,
@@ -139,49 +171,27 @@ class ThumbsView extends HookConsumerWidget {
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate((context, index) {
           final thumb = pages[index];
-          // Prefer the URL parsed off the page (handles compound suffixes
-          // like `2t.jpg.webp`); fall back to a synthesized URL when only
-          // the legacy `type` is available.
           final ext = NHConst.extMap[thumb.type] ?? 'webp';
           final imageUrl =
               thumb.imageUrl ??
               'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext';
-          final aspect =
+          final fullSizeAspect =
               (thumb.imgWidth != null &&
                   thumb.imgHeight != null &&
                   thumb.imgHeight! > 0)
               ? thumb.imgWidth! / thumb.imgHeight!
-              : 3 / 4;
-          return GestureDetector(
-            onTap: () {
-              RouteUtil.goRead(
-                context,
-                ref,
-                index: index,
-                heroTagPrefix: kHeroTagPrefix,
-              );
-            },
-            child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: aspect,
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: Hero(
-                          tag: '$kHeroTagPrefix${gid}_$index',
-                          child: ErosCachedNetworkImage(
-                            imageUrl: imageUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Text('${index + 1}'),
-              ],
+              : null;
+          final initialAspect = sanitizeThumbAspect(fullSizeAspect);
+          return _ThumbCell(
+            imageUrl: imageUrl,
+            initialAspect: initialAspect,
+            heroTag: '$kHeroTagPrefix${gid}_$index',
+            index: index,
+            onTap: () => RouteUtil.goRead(
+              context,
+              ref,
+              index: index,
+              heroTagPrefix: kHeroTagPrefix,
             ),
           );
         }, childCount: pages.length),
@@ -189,8 +199,109 @@ class ThumbsView extends HookConsumerWidget {
           maxCrossAxisExtent: 150.0,
           mainAxisSpacing: 8,
           crossAxisSpacing: 4,
-          childAspectRatio: minRatio - 0.2,
+          childAspectRatio: childAspectRatio,
         ),
+      ),
+    );
+  }
+}
+
+/// Displays a cached thumbnail image whose [AspectRatio] container
+/// dynamically updates to the actual decoded thumbnail dimensions after load,
+/// smoothly animating the transition.  The [initialAspect] (a sanitized
+/// full-size ratio) is used for the placeholder state.
+class ThumbAspectImage extends HookWidget {
+  const ThumbAspectImage({
+    super.key,
+    required this.imageUrl,
+    required this.heroTag,
+    required this.initialAspect,
+    this.cardMargin = EdgeInsets.zero,
+  });
+
+  final String imageUrl;
+  final String heroTag;
+  final double initialAspect;
+  final EdgeInsetsGeometry cardMargin;
+
+  @override
+  Widget build(BuildContext context) {
+    final aspect = useState(initialAspect);
+
+    useEffect(() {
+      final provider = getErosImageProvider(imageUrl);
+      final stream = provider.resolve(const ImageConfiguration());
+      late final ImageStreamListener listener;
+      listener = ImageStreamListener((info, _) {
+        final w = info.image.width.toDouble();
+        final h = info.image.height.toDouble();
+        if (h > 0) {
+          final actual = w / h;
+          if (actual.isFinite && actual > 0) {
+            aspect.value = actual;
+          }
+        }
+        stream.removeListener(listener);
+      });
+      stream.addListener(listener);
+      return () => stream.removeListener(listener);
+    }, [imageUrl]);
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(end: aspect.value),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) =>
+          AspectRatio(aspectRatio: value, child: child),
+      child: Card(
+        margin: cardMargin,
+        clipBehavior: Clip.antiAlias,
+        child: Hero(
+          tag: heroTag,
+          child: ErosCachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ThumbCell extends StatelessWidget {
+  const _ThumbCell({
+    required this.imageUrl,
+    required this.initialAspect,
+    required this.heroTag,
+    required this.index,
+    required this.onTap,
+  });
+
+  final String imageUrl;
+  final double initialAspect;
+  final String heroTag;
+  final int index;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: ThumbAspectImage(
+                imageUrl: imageUrl,
+                heroTag: heroTag,
+                initialAspect: initialAspect,
+              ),
+            ),
+          ),
+          Text('${index + 1}'),
+        ],
       ),
     );
   }

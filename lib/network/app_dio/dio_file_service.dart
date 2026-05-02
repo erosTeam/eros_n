@@ -36,7 +36,18 @@ class DioFileService extends FileService {
       }),
     );
 
-    return DioGetResponse(req.data as Response);
+    final data = req.data;
+    if (data == null || data is! Response) {
+      // Surface the underlying HTTP error code so callers can distinguish
+      // 429 rate-limit from generic network failures.
+      final errCode = req.error?.code;
+      final errMsg = req.error?.message ?? 'unknown';
+      throw HttpException(
+        'DioFileService: failed to load $url '
+        '(${errCode != null ? "HTTP $errCode" : errMsg})',
+      );
+    }
+    return DioGetResponse(data);
   }
 }
 

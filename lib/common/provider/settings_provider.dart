@@ -89,4 +89,13 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   void setLiquidGlass(bool value) =>
       _save(state.copyWith(liquidGlass: value));
+
+  void setMaxConcurrentGalleries(int v) =>
+      _save(state.copyWith(maxConcurrentGalleries: v));
+
+  void setMaxConcurrentPages(int v) =>
+      _save(state.copyWith(maxConcurrentPages: v));
+
+  void setCustomDownloadPath(String v) =>
+      _save(state.copyWith(customDownloadPath: v));
 }

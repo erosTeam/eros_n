@@ -253,14 +253,18 @@ Future<Gallery> getGalleryDetail({
   bool refresh = false,
   CancelToken? cancelToken,
 }) async {
-  if (kGalleryFetchMode == GalleryFetchMode.api) {
+  final mode = defaultTargetPlatform == TargetPlatform.ohos
+      ? GalleryFetchMode.api
+      : kGalleryFetchMode;
+
+  if (mode == GalleryFetchMode.api) {
     final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);
     if (gid != null) {
       return _getGalleryDetailByApi(int.parse(gid), refresh: refresh, cancelToken: cancelToken);
     }
   }
 
-  if (kGalleryFetchMode == GalleryFetchMode.html) {
+  if (mode == GalleryFetchMode.html) {
     return _getGalleryDetailHtml(url: url, refresh: refresh, cancelToken: cancelToken);
   }
 
@@ -695,7 +699,13 @@ Future<void> nhDownload({
   ProgressCallback? progressCallback,
 }) async {
   late final String downloadUrl;
-  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
+  // Use longer timeouts for CDN image downloads — under high concurrency the
+  // CDN can take >10 s to start responding, which is the default connectTimeout.
+  final downloadDioConfig = globalDioConfig.copyWith(
+    connectTimeout: 30000,
+    receiveTimeout: 60000,
+  );
+  DioHttpClient dioHttpClient = DioHttpClient(dioConfig: downloadDioConfig);
   if (!url.startsWith(RegExp(r'https?://'))) {
     downloadUrl = '${NHConst.baseUrl}$url';
   } else {
@@ -703,12 +713,15 @@ Future<void> nhDownload({
   }
   logger.t('downloadUrl $downloadUrl');
 
-  // Anything served by nhentai.net itself is behind Cloudflare and would
+  // Anything served by nhentai.net *itself* is behind Cloudflare and would
   // get blocked if dio streamed it directly. Pull it through the hidden
   // WebView proxy so the request inherits the browser's TLS fingerprint
   // and session cookies (needed for /g/{id}/download).
+  // Image CDN subdomains (i.nhentai.net, t.nhentai.net) are NOT behind the
+  // challenge and are already accessible via Dio; routing them through the
+  // proxy would trigger a cross-origin fetch error inside the WebView.
   final downloadUri = Uri.parse(downloadUrl);
-  final viaProxy = downloadUri.host.endsWith('nhentai.net');
+  final viaProxy = downloadUri.host == 'nhentai.net';
 
   try {
     if (viaProxy) {

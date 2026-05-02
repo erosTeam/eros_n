@@ -848,6 +848,301 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Downloads`
+  String get download_management {
+    return Intl.message(
+      'Downloads',
+      name: 'download_management',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading`
+  String get downloading {
+    return Intl.message('Downloading', name: 'downloading', desc: '', args: []);
+  }
+
+  /// `Paused`
+  String get download_paused {
+    return Intl.message('Paused', name: 'download_paused', desc: '', args: []);
+  }
+
+  /// `Completed`
+  String get download_completed {
+    return Intl.message(
+      'Completed',
+      name: 'download_completed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download Failed`
+  String get download_failed {
+    return Intl.message(
+      'Download Failed',
+      name: 'download_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Re-download`
+  String get download_redownload {
+    return Intl.message(
+      'Re-download',
+      name: 'download_redownload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Download`
+  String get download_delete_confirm_title {
+    return Intl.message(
+      'Delete Download',
+      name: 'download_delete_confirm_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This will delete the task record and all downloaded files. Continue?`
+  String get download_delete_confirm_message {
+    return Intl.message(
+      'This will delete the task record and all downloaded files. Continue?',
+      name: 'download_delete_confirm_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Downloads`
+  String get no_downloads {
+    return Intl.message(
+      'No Downloads',
+      name: 'no_downloads',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Results`
+  String get no_result {
+    return Intl.message('No Results', name: 'no_result', desc: '', args: []);
+  }
+
+  /// `Pending`
+  String get download_pending {
+    return Intl.message(
+      'Pending',
+      name: 'download_pending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message('Delete', name: 'delete', desc: '', args: []);
+  }
+
+  /// `{count} pages`
+  String download_total_pages(Object count) {
+    return Intl.message(
+      '$count pages',
+      name: 'download_total_pages',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{downloaded} / {total} pages`
+  String download_progress(Object downloaded, Object total) {
+    return Intl.message(
+      '$downloaded / $total pages',
+      name: 'download_progress',
+      desc: '',
+      args: [downloaded, total],
+    );
+  }
+
+  /// `Added to favorites`
+  String get favorite_added {
+    return Intl.message(
+      'Added to favorites',
+      name: 'favorite_added',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Removed from favorites`
+  String get favorite_removed {
+    return Intl.message(
+      'Removed from favorites',
+      name: 'favorite_removed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to update favorite: {error}`
+  String favorite_failed(Object error) {
+    return Intl.message(
+      'Failed to update favorite: $error',
+      name: 'favorite_failed',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Sort by`
+  String get sort_by {
+    return Intl.message('Sort by', name: 'sort_by', desc: '', args: []);
+  }
+
+  /// `Date (Newest)`
+  String get sort_date_newest {
+    return Intl.message(
+      'Date (Newest)',
+      name: 'sort_date_newest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date (Oldest)`
+  String get sort_date_oldest {
+    return Intl.message(
+      'Date (Oldest)',
+      name: 'sort_date_oldest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Title (A–Z)`
+  String get sort_title_az {
+    return Intl.message(
+      'Title (A–Z)',
+      name: 'sort_title_az',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Title (Z–A)`
+  String get sort_title_za {
+    return Intl.message(
+      'Title (Z–A)',
+      name: 'sort_title_za',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Added {date}`
+  String added_on(Object date) {
+    return Intl.message(
+      'Added $date',
+      name: 'added_on',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `Download Settings`
+  String get download_settings {
+    return Intl.message(
+      'Download Settings',
+      name: 'download_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Concurrent Downloads`
+  String get concurrent_downloads {
+    return Intl.message(
+      'Concurrent Downloads',
+      name: 'concurrent_downloads',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Simultaneous galleries`
+  String get max_concurrent_galleries {
+    return Intl.message(
+      'Simultaneous galleries',
+      name: 'max_concurrent_galleries',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pages per gallery`
+  String get max_concurrent_pages {
+    return Intl.message(
+      'Pages per gallery',
+      name: 'max_concurrent_pages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download Path`
+  String get download_path {
+    return Intl.message(
+      'Download Path',
+      name: 'download_path',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current path`
+  String get current_path {
+    return Intl.message(
+      'Current path',
+      name: 'current_path',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset to default`
+  String get reset_to_default {
+    return Intl.message(
+      'Reset to default',
+      name: 'reset_to_default',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total concurrent requests: {total} ({galleries} × {pages}). This may trigger CDN rate limiting during bulk downloads. Reduce concurrency if downloads fail.`
+  String cdn_warn_moderate(Object total, Object galleries, Object pages) {
+    return Intl.message(
+      'Total concurrent requests: $total ($galleries × $pages). This may trigger CDN rate limiting during bulk downloads. Reduce concurrency if downloads fail.',
+      name: 'cdn_warn_moderate',
+      desc: '',
+      args: [total, galleries, pages],
+    );
+  }
+
+  /// `Total concurrent requests: {total} ({galleries} × {pages}). Very likely to trigger a temporary CDN ban, causing download failures and broken thumbnails. Reduce concurrency.`
+  String cdn_warn_high(Object total, Object galleries, Object pages) {
+    return Intl.message(
+      'Total concurrent requests: $total ($galleries × $pages). Very likely to trigger a temporary CDN ban, causing download failures and broken thumbnails. Reduce concurrency.',
+      name: 'cdn_warn_high',
+      desc: '',
+      args: [total, galleries, pages],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

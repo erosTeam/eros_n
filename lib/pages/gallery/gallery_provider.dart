@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/index.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
@@ -10,6 +11,7 @@ import 'package:eros_n/pages/nav/history/history_provider.dart';
 import 'package:eros_n/utils/get_utils/extensions/duration_extensions.dart';
 import 'package:eros_n/utils/get_utils/extensions/num_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:eros_n/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -123,28 +125,42 @@ class GalleryNotifier extends _$GalleryNotifier {
     }
   }
 
-  Future<void> toggleFavorite() async {
-    late final ({bool? favorited, int? favNum}) result;
-    final csrf = state.csrfToken ?? await getCsrfTokenFromCookie();
-    if (state.isFavorited ?? false) {
-      logger.d('取消收藏');
-      result = await setFavorite(
-        gid: state.gid,
-        unfavorite: true,
-        csrfToken: csrf,
-      );
-    } else {
-      logger.d('收藏');
-      result = await setFavorite(gid: state.gid, csrfToken: csrf);
-    }
-    final int? numFavorite = result.favNum;
-    final bool? isFavorite = result.favorited;
+  bool _favoriteLoading = false;
 
-    if (isFavorite != null && numFavorite != null) {
-      state = state.copyWith(
-        isFavorited: isFavorite,
-        numFavorites: numFavorite,
+  Future<void> toggleFavorite() async {
+    if (_favoriteLoading) return;
+    _favoriteLoading = true;
+    try {
+      final csrf = state.csrfToken ?? await getCsrfTokenFromCookie();
+      final bool unfav = state.isFavorited ?? false;
+      logger.d(unfav ? '取消收藏' : '收藏');
+
+      final result = await setFavorite(
+        gid: state.gid,
+        csrfToken: csrf,
+        unfavorite: unfav,
       );
+
+      final bool? isFavorite = result.favorited;
+      final int? numFavorite = result.favNum;
+
+      if (isFavorite != null) {
+        state = state.copyWith(
+          isFavorited: isFavorite,
+          numFavorites: numFavorite ?? state.numFavorites,
+        );
+        showSimpleToast(
+          isFavorite ? L10n.current.favorite_added : L10n.current.favorite_removed,
+        );
+      } else {
+        // API returned success but no favorited field — refresh to confirm.
+        unawaited(_refreshFavoriteStatus());
+      }
+    } catch (e) {
+      logger.e('toggleFavorite error: $e');
+      showSimpleToast(L10n.current.favorite_failed(e.toString()));
+    } finally {
+      _favoriteLoading = false;
     }
   }
 

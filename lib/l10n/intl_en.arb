@@ -112,5 +112,72 @@
   "show_less": "Showing less",
   "show_more": "Showing more",
   "pinch_to_zoom_hint": "You can also pinch to adjust on the page",
-  "liquid_glass": "Liquid Glass"
+  "liquid_glass": "Liquid Glass",
+  "download_management": "Downloads",
+  "downloading": "Downloading",
+  "download_paused": "Paused",
+  "download_completed": "Completed",
+  "download_failed": "Download Failed",
+  "download_redownload": "Re-download",
+  "download_delete_confirm_title": "Delete Download",
+  "download_delete_confirm_message": "This will delete the task record and all downloaded files. Continue?",
+  "no_downloads": "No Downloads",
+  "no_result": "No Results",
+  "download_pending": "Pending",
+  "delete": "Delete",
+  "download_total_pages": "{count} pages",
+  "@download_total_pages": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "download_progress": "{downloaded} / {total} pages",
+  "@download_progress": {
+    "placeholders": {
+      "downloaded": {},
+      "total": {}
+    }
+  },
+  "favorite_added": "Added to favorites",
+  "favorite_removed": "Removed from favorites",
+  "favorite_failed": "Failed to update favorite: {error}",
+  "@favorite_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "sort_by": "Sort by",
+  "sort_date_newest": "Date (Newest)",
+  "sort_date_oldest": "Date (Oldest)",
+  "sort_title_az": "Title (A–Z)",
+  "sort_title_za": "Title (Z–A)",
+  "added_on": "Added {date}",
+  "@added_on": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "download_settings": "Download Settings",
+  "concurrent_downloads": "Concurrent Downloads",
+  "max_concurrent_galleries": "Simultaneous galleries",
+  "max_concurrent_pages": "Pages per gallery",
+  "download_path": "Download Path",
+  "current_path": "Current path",
+  "reset_to_default": "Reset to default",
+  "cdn_warn_moderate": "Total concurrent requests: {total} ({galleries} × {pages}). This may trigger CDN rate limiting during bulk downloads. Reduce concurrency if downloads fail.",
+  "@cdn_warn_moderate": {
+    "placeholders": {
+      "total": {},
+      "galleries": {},
+      "pages": {}
+    }
+  },
+  "cdn_warn_high": "Total concurrent requests: {total} ({galleries} × {pages}). Very likely to trigger a temporary CDN ban, causing download failures and broken thumbnails. Reduce concurrency.",
+  "@cdn_warn_high": {
+    "placeholders": {
+      "total": {},
+      "galleries": {},
+      "pages": {}
+    }
+  }
 }

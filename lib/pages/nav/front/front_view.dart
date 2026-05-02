@@ -560,6 +560,25 @@ class GalleryListView extends HookConsumerWidget {
         child: Center(child: CircularProgressIndicator()),
       );
     }
+
+    if (state.isLoadError && galleryList.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.refresh, size: 48),
+                onPressed: () =>
+                    ref.read(frontProvider.notifier).reloadData(),
+              ),
+              Text(state.errorMessage ?? ''),
+            ],
+          ),
+        ),
+      );
+    }
+
     return GallerySliverList(
       gallerys: galleryList,
       lastComplete: () => ref.read(frontProvider.notifier).loadNextPage(),

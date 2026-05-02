@@ -34,6 +34,9 @@ abstract class Settings with _$Settings {
     @Default(150.0) double gridMaxCrossAxisExtent,
     @Default(190.0) double waterfallMaxCrossAxisExtent,
     @Default(false) bool liquidGlass,
+    @Default(2) int maxConcurrentGalleries,
+    @Default(3) int maxConcurrentPages,
+    @Default('') String customDownloadPath,
   }) = _Settings;
 
   const Settings._();

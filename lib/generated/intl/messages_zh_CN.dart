@@ -20,11 +20,26 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_CN';
 
-  static String m0(version) => "需要下载翻译数据,当前版本: ${version}";
+  static String m0(date) => "添加于 ${date}";
+
+  static String m1(total, galleries, pages) =>
+      "当前并发请求数为 ${total}（${galleries} × ${pages}），极易触发 CDN 临时封禁，导致批量下载失败或缩略图无法加载。强烈建议降低并发。";
+
+  static String m2(total, galleries, pages) =>
+      "当前并发请求数为 ${total}（${galleries} × ${pages}），可能在批量下载时触发 CDN 限流。若遇到下载失败，请适当降低并发数量。";
+
+  static String m3(downloaded, total) => "${downloaded} / ${total} 页";
+
+  static String m4(count) => "共 ${count} 页";
+
+  static String m5(error) => "收藏操作失败：${error}";
+
+  static String m6(version) => "需要下载翻译数据,当前版本: ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("关于"),
+    "added_on": m0,
     "advanced": MessageLookupByLibrary.simpleMessage("高级"),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
     "always": MessageLookupByLibrary.simpleMessage("始终"),
@@ -34,6 +49,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "auto_read_interval": MessageLookupByLibrary.simpleMessage("自动阅读间隔"),
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+    "cdn_warn_high": m1,
+    "cdn_warn_moderate": m2,
     "chinese": MessageLookupByLibrary.simpleMessage("汉语"),
     "clear_history": MessageLookupByLibrary.simpleMessage("清除历史"),
     "clear_history_tip": MessageLookupByLibrary.simpleMessage("确定要清除所有历史记录吗?"),
@@ -45,15 +62,38 @@ class MessageLookup extends MessageLookupByLibrary {
       "评论内容需要超过10个字符",
     ),
     "comments": MessageLookupByLibrary.simpleMessage("评论"),
+    "concurrent_downloads": MessageLookupByLibrary.simpleMessage("并发下载"),
     "cover_blur": MessageLookupByLibrary.simpleMessage("封面模糊"),
     "curl_vertical": MessageLookupByLibrary.simpleMessage("垂直(连续)"),
+    "current_path": MessageLookupByLibrary.simpleMessage("当前路径"),
     "custom_layout_width": MessageLookupByLibrary.simpleMessage("自定义布局宽度"),
     "dark": MessageLookupByLibrary.simpleMessage("深色"),
+    "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "display": MessageLookupByLibrary.simpleMessage("显示"),
     "download": MessageLookupByLibrary.simpleMessage("下载"),
+    "download_completed": MessageLookupByLibrary.simpleMessage("已完成"),
+    "download_delete_confirm_message": MessageLookupByLibrary.simpleMessage(
+      "将删除任务记录及所有已下载文件，确认继续？",
+    ),
+    "download_delete_confirm_title": MessageLookupByLibrary.simpleMessage(
+      "删除下载",
+    ),
+    "download_failed": MessageLookupByLibrary.simpleMessage("下载失败"),
+    "download_management": MessageLookupByLibrary.simpleMessage("下载管理"),
+    "download_path": MessageLookupByLibrary.simpleMessage("下载路径"),
+    "download_paused": MessageLookupByLibrary.simpleMessage("已暂停"),
+    "download_pending": MessageLookupByLibrary.simpleMessage("等待中"),
+    "download_progress": m3,
+    "download_redownload": MessageLookupByLibrary.simpleMessage("重新下载"),
+    "download_settings": MessageLookupByLibrary.simpleMessage("下载设置"),
+    "download_total_pages": m4,
+    "downloading": MessageLookupByLibrary.simpleMessage("正在下载"),
     "dynamic_color": MessageLookupByLibrary.simpleMessage("动态颜色"),
     "dynamic_color_tip": MessageLookupByLibrary.simpleMessage("根据壁纸自动调整主题颜色"),
     "english": MessageLookupByLibrary.simpleMessage("英语"),
+    "favorite_added": MessageLookupByLibrary.simpleMessage("已添加到收藏"),
+    "favorite_failed": m5,
+    "favorite_removed": MessageLookupByLibrary.simpleMessage("已取消收藏"),
     "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
     "full_screen": MessageLookupByLibrary.simpleMessage("全屏"),
     "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
@@ -79,10 +119,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "login_invalid": MessageLookupByLibrary.simpleMessage("无效登录信息"),
     "login_need_captcha": MessageLookupByLibrary.simpleMessage("登录需要验证码"),
     "logout": MessageLookupByLibrary.simpleMessage("登出"),
+    "max_concurrent_galleries": MessageLookupByLibrary.simpleMessage(
+      "同时下载的画廊数量",
+    ),
+    "max_concurrent_pages": MessageLookupByLibrary.simpleMessage("每画廊同时下载的页数"),
     "more": MessageLookupByLibrary.simpleMessage("更多"),
     "more_like_this": MessageLookupByLibrary.simpleMessage("更多相似"),
     "never": MessageLookupByLibrary.simpleMessage("从不"),
     "newest": MessageLookupByLibrary.simpleMessage("最新"),
+    "no_downloads": MessageLookupByLibrary.simpleMessage("暂无下载"),
+    "no_result": MessageLookupByLibrary.simpleMessage("无搜索结果"),
     "none": MessageLookupByLibrary.simpleMessage("无"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
     "open_supported_links": MessageLookupByLibrary.simpleMessage("打开支持的链接"),
@@ -104,6 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "recent": MessageLookupByLibrary.simpleMessage("最新发布"),
     "recent_searches": MessageLookupByLibrary.simpleMessage("最近搜索"),
     "register": MessageLookupByLibrary.simpleMessage("注册"),
+    "reset_to_default": MessageLookupByLibrary.simpleMessage("重置为默认"),
     "resume": MessageLookupByLibrary.simpleMessage("继续"),
     "right_to_left": MessageLookupByLibrary.simpleMessage("从右到左"),
     "search": MessageLookupByLibrary.simpleMessage("搜索"),
@@ -116,11 +163,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "在列表中显示标签, 需要下载额外标签数据",
     ),
     "single_line": MessageLookupByLibrary.simpleMessage("单行"),
+    "sort_by": MessageLookupByLibrary.simpleMessage("排序"),
+    "sort_date_newest": MessageLookupByLibrary.simpleMessage("添加时间（最新）"),
+    "sort_date_oldest": MessageLookupByLibrary.simpleMessage("添加时间（最早）"),
+    "sort_title_az": MessageLookupByLibrary.simpleMessage("标题（A–Z）"),
+    "sort_title_za": MessageLookupByLibrary.simpleMessage("标题（Z–A）"),
     "system": MessageLookupByLibrary.simpleMessage("系统"),
     "tag": MessageLookupByLibrary.simpleMessage("标签"),
     "tag_layout_on_item": MessageLookupByLibrary.simpleMessage("列表项标签布局"),
     "tag_translation": MessageLookupByLibrary.simpleMessage("标签翻译"),
-    "tag_translation_tip": m0,
+    "tag_translation_tip": m6,
     "tag_translation_update_failed": MessageLookupByLibrary.simpleMessage(
       "翻译数据更新失败",
     ),

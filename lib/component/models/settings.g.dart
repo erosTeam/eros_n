@@ -58,6 +58,10 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   waterfallMaxCrossAxisExtent:
       (json['waterfallMaxCrossAxisExtent'] as num?)?.toDouble() ?? 190.0,
   liquidGlass: json['liquidGlass'] as bool? ?? false,
+  maxConcurrentGalleries:
+      (json['maxConcurrentGalleries'] as num?)?.toInt() ?? 2,
+  maxConcurrentPages: (json['maxConcurrentPages'] as num?)?.toInt() ?? 3,
+  customDownloadPath: json['customDownloadPath'] as String? ?? '',
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -88,6 +92,9 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'gridMaxCrossAxisExtent': instance.gridMaxCrossAxisExtent,
   'waterfallMaxCrossAxisExtent': instance.waterfallMaxCrossAxisExtent,
   'liquidGlass': instance.liquidGlass,
+  'maxConcurrentGalleries': instance.maxConcurrentGalleries,
+  'maxConcurrentPages': instance.maxConcurrentPages,
+  'customDownloadPath': instance.customDownloadPath,
 };
 
 const _$SearchSortEnumMap = {

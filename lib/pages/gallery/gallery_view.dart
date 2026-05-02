@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/global.dart';
+import 'package:eros_n/common/provider/download_provider.dart';
 import 'package:eros_n/common/provider/palette_generator.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/index.dart';
@@ -18,6 +19,7 @@ import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/gallery/thumb_page.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
@@ -997,34 +999,26 @@ class ThumbListView extends HookConsumerWidget {
               final GalleryImage image = pages[index];
               final iw = image.imgWidth;
               final ih = image.imgHeight;
-              final aspect = (iw != null && ih != null && ih > 0)
-                  ? iw / ih
-                  : 3 / 4;
+              final fullSizeAspect =
+                  (iw != null && ih != null && ih > 0) ? iw / ih : null;
+              final initialAspect = sanitizeThumbAspect(fullSizeAspect);
               final ext = NHConst.extMap[image.type] ?? 'webp';
               final builtUrl = mediaId == null
                   ? null
                   : (image.imageUrl ??
                         'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext');
+              if (builtUrl == null) return const SizedBox.shrink();
               return Consumer(
                 child: GestureDetector(
                   onTap: () async {
                     RouteUtil.goRead(context, ref, index: index);
                   },
                   child: Center(
-                    child: AspectRatio(
-                      aspectRatio: aspect,
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: Hero(
-                          tag: '${gid}_$index',
-                          child: builtUrl == null
-                              ? nil
-                              : ErosCachedNetworkImage(
-                                  imageUrl: builtUrl,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                      ),
+                    child: ThumbAspectImage(
+                      imageUrl: builtUrl,
+                      heroTag: '${gid}_$index',
+                      initialAspect: initialAspect,
+                      cardMargin: const EdgeInsets.all(4),
                     ),
                   ),
                 ),
@@ -1306,6 +1300,9 @@ class ToolBarView extends HookConsumerWidget {
     const iconSize = 28.0;
     final gallery = ref.watch(galleryProvider(gid));
     final isUserLogin = ref.watch(userProvider.select((user) => user.isLogin));
+    final downloadTask = ref.watch(
+      downloadProvider.select((m) => m[gid]),
+    );
     final compactStyle = context.isTablet
         ? IconButton.styleFrom(
             minimumSize: const Size(36, 36),
@@ -1313,16 +1310,83 @@ class ToolBarView extends HookConsumerWidget {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           )
         : null;
+
+    Widget downloadIcon = const Icon(Icons.download_outlined, size: iconSize);
+    VoidCallback? downloadOnPressed;
+
+    if (downloadTask == null) {
+      downloadIcon = const Icon(Icons.download_outlined, size: iconSize);
+      downloadOnPressed = gallery.mediaId != null
+          ? () => ref.read(downloadProvider.notifier).addDownload(gallery)
+          : null;
+    } else {
+      switch (downloadTask.status) {
+        case DownloadStatus.pending:
+          downloadIcon = Icon(
+            Icons.schedule,
+            size: iconSize,
+            color: Theme.of(context).colorScheme.outline,
+          );
+          downloadOnPressed = () => erosRouter.push(const DownloadsRoute());
+        case DownloadStatus.downloading:
+          final progress = downloadTask.totalPages > 0
+              ? downloadTask.downloadedPages / downloadTask.totalPages
+              : null;
+          downloadIcon = Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: iconSize,
+                height: iconSize,
+                child: CircularProgressIndicator(
+                  value: progress,
+                  strokeWidth: 3.0,
+                ),
+              ),
+              const Icon(Icons.download, size: iconSize * 0.65),
+            ],
+          );
+          downloadOnPressed = () => erosRouter.push(const DownloadsRoute());
+        case DownloadStatus.paused:
+          downloadIcon = Icon(
+            Icons.pause_circle_outline,
+            size: iconSize,
+            color: Theme.of(context).colorScheme.primary,
+          );
+          downloadOnPressed = () => ref
+              .read(downloadProvider.notifier)
+              .resumeDownload(gid);
+        case DownloadStatus.completed:
+          downloadIcon = Icon(
+            Icons.download_done,
+            size: iconSize,
+            color: Theme.of(context).colorScheme.primary,
+          );
+          downloadOnPressed = () {
+            RouteUtil.goRead(context, ref);
+          };
+        case DownloadStatus.failed:
+          downloadIcon = Icon(
+            Icons.error_outline,
+            size: iconSize,
+            color: Theme.of(context).colorScheme.error,
+          );
+          downloadOnPressed = () => ref
+              .read(downloadProvider.notifier)
+              .resumeDownload(gid);
+      }
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: const Icon(Icons.download_outlined, size: iconSize),
+            icon: downloadIcon,
             color: Theme.of(context).colorScheme.primary,
             style: compactStyle,
-            onPressed: () {},
+            onPressed: downloadOnPressed,
           ),
           IconButton(
             icon: const Icon(

@@ -112,5 +112,72 @@
   "show_less": "显示更少内容",
   "show_more": "显示更多内容",
   "pinch_to_zoom_hint": "也可以在页面上双指缩放调整",
-  "liquid_glass": "液态玻璃"
+  "liquid_glass": "液态玻璃",
+  "download_management": "下载管理",
+  "downloading": "正在下载",
+  "download_paused": "已暂停",
+  "download_completed": "已完成",
+  "download_failed": "下载失败",
+  "download_redownload": "重新下载",
+  "download_delete_confirm_title": "删除下载",
+  "download_delete_confirm_message": "将删除任务记录及所有已下载文件，确认继续？",
+  "no_downloads": "暂无下载",
+  "no_result": "无搜索结果",
+  "download_pending": "等待中",
+  "delete": "删除",
+  "download_total_pages": "共 {count} 页",
+  "@download_total_pages": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "download_progress": "{downloaded} / {total} 页",
+  "@download_progress": {
+    "placeholders": {
+      "downloaded": {},
+      "total": {}
+    }
+  },
+  "favorite_added": "已添加到收藏",
+  "favorite_removed": "已取消收藏",
+  "favorite_failed": "收藏操作失败：{error}",
+  "@favorite_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "sort_by": "排序",
+  "sort_date_newest": "添加时间（最新）",
+  "sort_date_oldest": "添加时间（最早）",
+  "sort_title_az": "标题（A–Z）",
+  "sort_title_za": "标题（Z–A）",
+  "added_on": "添加于 {date}",
+  "@added_on": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "download_settings": "下载设置",
+  "concurrent_downloads": "并发下载",
+  "max_concurrent_galleries": "同时下载的画廊数量",
+  "max_concurrent_pages": "每画廊同时下载的页数",
+  "download_path": "下载路径",
+  "current_path": "当前路径",
+  "reset_to_default": "重置为默认",
+  "cdn_warn_moderate": "当前并发请求数为 {total}（{galleries} × {pages}），可能在批量下载时触发 CDN 限流。若遇到下载失败，请适当降低并发数量。",
+  "@cdn_warn_moderate": {
+    "placeholders": {
+      "total": {},
+      "galleries": {},
+      "pages": {}
+    }
+  },
+  "cdn_warn_high": "当前并发请求数为 {total}（{galleries} × {pages}），极易触发 CDN 临时封禁，导致批量下载失败或缩略图无法加载。强烈建议降低并发。",
+  "@cdn_warn_high": {
+    "placeholders": {
+      "total": {},
+      "galleries": {},
+      "pages": {}
+    }
+  }
 }

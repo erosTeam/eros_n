@@ -3,12 +3,14 @@ import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
+import 'package:eros_n/component/models/gallery_set.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/nav/front/list_view_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'front_provider.g.dart';
 
@@ -113,22 +115,38 @@ class FrontNotifier extends _$FrontNotifier {
       }
 
       final filter = ref.read(settingsProvider).frontLanguagesFilter;
-      final shouldFilter = filter != LanguagesFilter.all;
+      final sort = ref.read(settingsProvider).searchSortOnFrontPage;
 
-      // Without a language filter we can use the lighter `/api/v2/galleries`
-      // endpoint (no query parsing on the server). With a filter we fall back
-      // to `/api/v2/search` so the `language:xxx` qualifier is respected.
-      final gallerySet = shouldFilter
-          ? await searchGallery(
-              refresh: refresh || next || prev,
-              page: toPage,
-              query: 'language:${filter.value}',
-              sort: ref.read(settingsProvider).searchSortOnFrontPage,
-            )
-          : await getGalleryList(
-              refresh: refresh || next || prev,
-              page: toPage,
-            );
+      // When a language filter is active, use the search endpoint with a
+      // `language:xxx` qualifier. When language is "all" but sort is
+      // non-default (i.e. not "recent"), the search endpoint is still needed
+      // to pass the sort parameter — but it rejects an empty query. Use a
+      // random UUID negative-query (`-"<uuid>"`) as a no-op filter that
+      // effectively matches all galleries while satisfying the non-empty
+      // query requirement. When both are default, use the lighter
+      // `/api/v2/galleries` endpoint with no extra params.
+      final GallerySet gallerySet;
+      if (filter != LanguagesFilter.all) {
+        gallerySet = await searchGallery(
+          refresh: refresh || next || prev,
+          page: toPage,
+          query: 'language:${filter.value}',
+          sort: sort,
+        );
+      } else if (sort != SearchSort.recent) {
+        final noopQuery = '-"${const Uuid().v4()}"';
+        gallerySet = await searchGallery(
+          refresh: refresh || next || prev,
+          page: toPage,
+          query: noopQuery,
+          sort: sort,
+        );
+      } else {
+        gallerySet = await getGalleryList(
+          refresh: refresh || next || prev,
+          page: toPage,
+        );
+      }
 
       final gallerys = gallerySet.gallerys ?? [];
 
