@@ -216,7 +216,7 @@ class ThumbAspectImage extends HookWidget {
     required this.imageUrl,
     required this.heroTag,
     required this.initialAspect,
-    this.cardMargin = EdgeInsets.zero,
+    this.cardMargin = const EdgeInsets.all(4),
   });
 
   final String imageUrl;
