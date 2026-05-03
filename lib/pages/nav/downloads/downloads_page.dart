@@ -57,21 +57,19 @@ class DownloadsPage extends HookConsumerWidget {
 
     List<DownloadTask> sorted(Iterable<DownloadTask> src) {
       final list = src.toList();
-      switch (sortMode.value) {
-        case _SortMode.dateNewest:
-          list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        case _SortMode.dateOldest:
-          list.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-        case _SortMode.titleAz:
-          list.sort((a, b) => a.title.compareTo(b.title));
-        case _SortMode.titleZa:
-          list.sort((a, b) => b.title.compareTo(a.title));
-      }
-      // Within the active section, put actually-downloading tasks before pending.
       list.sort((a, b) {
         final aScore = a.status == DownloadStatus.downloading ? 0 : 1;
         final bScore = b.status == DownloadStatus.downloading ? 0 : 1;
-        return aScore.compareTo(bScore);
+        final statusCmp = aScore.compareTo(bScore);
+        if (statusCmp != 0) {
+          return statusCmp;
+        }
+        return switch (sortMode.value) {
+          _SortMode.dateNewest => b.createdAt.compareTo(a.createdAt),
+          _SortMode.dateOldest => a.createdAt.compareTo(b.createdAt),
+          _SortMode.titleAz => a.title.compareTo(b.title),
+          _SortMode.titleZa => b.title.compareTo(a.title),
+        };
       });
       return list;
     }
