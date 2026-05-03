@@ -1198,6 +1198,121 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Comment Translation`
+  String get comment_translation {
+    return Intl.message(
+      'Comment Translation',
+      name: 'comment_translation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translation Service`
+  String get translation_service_config {
+    return Intl.message(
+      'Translation Service',
+      name: 'translation_service_config',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `API URL`
+  String get translation_api_url {
+    return Intl.message(
+      'API URL',
+      name: 'translation_api_url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `API Key`
+  String get translation_api_key {
+    return Intl.message(
+      'API Key',
+      name: 'translation_api_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Model`
+  String get translation_model {
+    return Intl.message('Model', name: 'translation_model', desc: '', args: []);
+  }
+
+  /// `Uses built-in translation service or free Google Translate when not configured`
+  String get translation_hint {
+    return Intl.message(
+      'Uses built-in translation service or free Google Translate when not configured',
+      name: 'translation_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translating...`
+  String get translating {
+    return Intl.message(
+      'Translating...',
+      name: 'translating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translation failed`
+  String get translation_failed {
+    return Intl.message(
+      'Translation failed',
+      name: 'translation_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translation Provider`
+  String get translation_provider {
+    return Intl.message(
+      'Translation Provider',
+      name: 'translation_provider',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fetch Models`
+  String get fetch_models {
+    return Intl.message(
+      'Fetch Models',
+      name: 'fetch_models',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to fetch models`
+  String get fetch_models_failed {
+    return Intl.message(
+      'Failed to fetch models',
+      name: 'fetch_models_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manual Input`
+  String get manual_input {
+    return Intl.message(
+      'Manual Input',
+      name: 'manual_input',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

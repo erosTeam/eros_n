@@ -185,5 +185,17 @@
     }
   },
   "double_back_to_exit": "Double back to exit",
-  "press_back_again_to_exit": "Press back again to exit"
+  "press_back_again_to_exit": "Press back again to exit",
+  "comment_translation": "Comment Translation",
+  "translation_service_config": "Translation Service",
+  "translation_api_url": "API URL",
+  "translation_api_key": "API Key",
+  "translation_model": "Model",
+  "translation_hint": "Uses built-in translation service or free Google Translate when not configured",
+  "translating": "Translating...",
+  "translation_failed": "Translation failed",
+  "translation_provider": "Translation Provider",
+  "fetch_models": "Fetch Models",
+  "fetch_models_failed": "Failed to fetch models",
+  "manual_input": "Manual Input"
 }

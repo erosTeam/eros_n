@@ -73,6 +73,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "comment_length_error": MessageLookupByLibrary.simpleMessage(
       "Comment must be longer than 10 characters",
     ),
+    "comment_translation": MessageLookupByLibrary.simpleMessage(
+      "Comment Translation",
+    ),
     "comments": MessageLookupByLibrary.simpleMessage("Comments"),
     "concurrent_downloads": MessageLookupByLibrary.simpleMessage(
       "Concurrent Downloads",
@@ -122,6 +125,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Removed from favorites",
     ),
     "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+    "fetch_models": MessageLookupByLibrary.simpleMessage("Fetch Models"),
+    "fetch_models_failed": MessageLookupByLibrary.simpleMessage(
+      "Failed to fetch models",
+    ),
     "full_screen": MessageLookupByLibrary.simpleMessage("Full Screen"),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
     "general": MessageLookupByLibrary.simpleMessage("General"),
@@ -148,6 +155,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Login need captcha",
     ),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "manual_input": MessageLookupByLibrary.simpleMessage("Manual Input"),
     "max_concurrent_galleries": MessageLookupByLibrary.simpleMessage(
       "Simultaneous galleries",
     ),
@@ -244,6 +252,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "thumbs": MessageLookupByLibrary.simpleMessage("Thumbs"),
     "today": MessageLookupByLibrary.simpleMessage("Today"),
     "translated": MessageLookupByLibrary.simpleMessage("Translated"),
+    "translating": MessageLookupByLibrary.simpleMessage("Translating..."),
+    "translation_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
+    "translation_api_url": MessageLookupByLibrary.simpleMessage("API URL"),
+    "translation_failed": MessageLookupByLibrary.simpleMessage(
+      "Translation failed",
+    ),
+    "translation_hint": MessageLookupByLibrary.simpleMessage(
+      "Uses built-in translation service or free Google Translate when not configured",
+    ),
+    "translation_model": MessageLookupByLibrary.simpleMessage("Model"),
+    "translation_provider": MessageLookupByLibrary.simpleMessage(
+      "Translation Provider",
+    ),
+    "translation_service_config": MessageLookupByLibrary.simpleMessage(
+      "Translation Service",
+    ),
     "use_gallery_tint": MessageLookupByLibrary.simpleMessage(
       "Use Gallery Tint",
     ),

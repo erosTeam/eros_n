@@ -38,6 +38,12 @@ abstract class Settings with _$Settings {
     @Default(3) int maxConcurrentPages,
     @Default('') String customDownloadPath,
     @Default(true) bool doubleBackToExit,
+    @Default(false) bool commentTranslation,
+    @Default(TranslationProvider.openai)
+    TranslationProvider translationProvider,
+    @Default('') String translationApiUrl,
+    @Default('') String translationApiKey,
+    @Default('') String translationModel,
   }) = _Settings;
 
   const Settings._();

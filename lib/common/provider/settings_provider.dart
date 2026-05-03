@@ -101,4 +101,19 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   void setDoubleBackToExit(bool value) =>
       _save(state.copyWith(doubleBackToExit: value));
+
+  void setCommentTranslation(bool value) =>
+      _save(state.copyWith(commentTranslation: value));
+
+  void setTranslationProvider(TranslationProvider value) =>
+      _save(state.copyWith(translationProvider: value));
+
+  void setTranslationApiUrl(String value) =>
+      _save(state.copyWith(translationApiUrl: value));
+
+  void setTranslationApiKey(String value) =>
+      _save(state.copyWith(translationApiKey: value));
+
+  void setTranslationModel(String value) =>
+      _save(state.copyWith(translationModel: value));
 }

@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "comment_length_error": MessageLookupByLibrary.simpleMessage(
       "评论内容需要超过10个字符",
     ),
+    "comment_translation": MessageLookupByLibrary.simpleMessage("评论翻译"),
     "comments": MessageLookupByLibrary.simpleMessage("评论"),
     "concurrent_downloads": MessageLookupByLibrary.simpleMessage("并发下载"),
     "cover_blur": MessageLookupByLibrary.simpleMessage("封面模糊"),
@@ -101,6 +102,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "favorite_failed": m5,
     "favorite_removed": MessageLookupByLibrary.simpleMessage("已取消收藏"),
     "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
+    "fetch_models": MessageLookupByLibrary.simpleMessage("获取模型列表"),
+    "fetch_models_failed": MessageLookupByLibrary.simpleMessage("获取模型列表失败"),
     "full_screen": MessageLookupByLibrary.simpleMessage("全屏"),
     "gallery": MessageLookupByLibrary.simpleMessage("画廊"),
     "general": MessageLookupByLibrary.simpleMessage("通用"),
@@ -125,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "login_invalid": MessageLookupByLibrary.simpleMessage("无效登录信息"),
     "login_need_captcha": MessageLookupByLibrary.simpleMessage("登录需要验证码"),
     "logout": MessageLookupByLibrary.simpleMessage("登出"),
+    "manual_input": MessageLookupByLibrary.simpleMessage("手动输入"),
     "max_concurrent_galleries": MessageLookupByLibrary.simpleMessage(
       "同时下载的画廊数量",
     ),
@@ -203,6 +207,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "thumbs": MessageLookupByLibrary.simpleMessage("缩略图"),
     "today": MessageLookupByLibrary.simpleMessage("今天"),
     "translated": MessageLookupByLibrary.simpleMessage("翻译"),
+    "translating": MessageLookupByLibrary.simpleMessage("正在翻译..."),
+    "translation_api_key": MessageLookupByLibrary.simpleMessage("API 密钥"),
+    "translation_api_url": MessageLookupByLibrary.simpleMessage("API 地址"),
+    "translation_failed": MessageLookupByLibrary.simpleMessage("翻译失败"),
+    "translation_hint": MessageLookupByLibrary.simpleMessage(
+      "未配置时使用内置翻译服务（如可用）或免费 Google 翻译",
+    ),
+    "translation_model": MessageLookupByLibrary.simpleMessage("模型"),
+    "translation_provider": MessageLookupByLibrary.simpleMessage("翻译服务商"),
+    "translation_service_config": MessageLookupByLibrary.simpleMessage(
+      "翻译服务配置",
+    ),
     "use_gallery_tint": MessageLookupByLibrary.simpleMessage("使用画廊色调"),
     "use_gallery_tint_tip": MessageLookupByLibrary.simpleMessage(
       "根据封面的颜色给画廊页面着色",

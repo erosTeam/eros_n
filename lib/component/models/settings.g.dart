@@ -63,6 +63,16 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   maxConcurrentPages: (json['maxConcurrentPages'] as num?)?.toInt() ?? 3,
   customDownloadPath: json['customDownloadPath'] as String? ?? '',
   doubleBackToExit: json['doubleBackToExit'] as bool? ?? true,
+  commentTranslation: json['commentTranslation'] as bool? ?? false,
+  translationProvider:
+      $enumDecodeNullable(
+        _$TranslationProviderEnumMap,
+        json['translationProvider'],
+      ) ??
+      TranslationProvider.openai,
+  translationApiUrl: json['translationApiUrl'] as String? ?? '',
+  translationApiKey: json['translationApiKey'] as String? ?? '',
+  translationModel: json['translationModel'] as String? ?? '',
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -97,6 +107,12 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'maxConcurrentPages': instance.maxConcurrentPages,
   'customDownloadPath': instance.customDownloadPath,
   'doubleBackToExit': instance.doubleBackToExit,
+  'commentTranslation': instance.commentTranslation,
+  'translationProvider':
+      _$TranslationProviderEnumMap[instance.translationProvider]!,
+  'translationApiUrl': instance.translationApiUrl,
+  'translationApiKey': instance.translationApiKey,
+  'translationModel': instance.translationModel,
 };
 
 const _$SearchSortEnumMap = {
@@ -142,4 +158,12 @@ const _$LanguagesFilterEnumMap = {
   LanguagesFilter.english: 'english',
   LanguagesFilter.translated: 'translated',
   LanguagesFilter.all: 'all',
+};
+
+const _$TranslationProviderEnumMap = {
+  TranslationProvider.openai: 'openai',
+  TranslationProvider.deepseek: 'deepseek',
+  TranslationProvider.groq: 'groq',
+  TranslationProvider.openrouter: 'openrouter',
+  TranslationProvider.custom: 'custom',
 };

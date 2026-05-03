@@ -52,3 +52,16 @@ enum LanguagesFilter {
   const LanguagesFilter(this.value);
   final String value;
 }
+
+enum TranslationProvider {
+  openai('OpenAI', 'https://api.openai.com', 'gpt-4o-mini'),
+  deepseek('DeepSeek', 'https://api.deepseek.com', 'deepseek-v4-flash'),
+  groq('Groq', 'https://api.groq.com', 'llama-3.3-70b-versatile'),
+  openrouter('OpenRouter', 'https://openrouter.ai/api', 'openai/gpt-4o-mini'),
+  custom('Custom', '', '');
+
+  const TranslationProvider(this.label, this.baseUrl, this.defaultModel);
+  final String label;
+  final String baseUrl;
+  final String defaultModel;
+}

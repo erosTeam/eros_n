@@ -185,5 +185,17 @@
     }
   },
   "double_back_to_exit": "双击返回退出应用",
-  "press_back_again_to_exit": "再按一次返回键退出"
+  "press_back_again_to_exit": "再按一次返回键退出",
+  "comment_translation": "评论翻译",
+  "translation_service_config": "翻译服务配置",
+  "translation_api_url": "API 地址",
+  "translation_api_key": "API 密钥",
+  "translation_model": "模型",
+  "translation_hint": "未配置时使用内置翻译服务（如可用）或免费 Google 翻译",
+  "translating": "正在翻译...",
+  "translation_failed": "翻译失败",
+  "translation_provider": "翻译服务商",
+  "fetch_models": "获取模型列表",
+  "fetch_models_failed": "获取模型列表失败",
+  "manual_input": "手动输入"
 }

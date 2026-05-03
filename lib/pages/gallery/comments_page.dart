@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/comment.dart';
 import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
+import 'package:eros_n/pages/gallery/comment_translation_provider.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
@@ -159,26 +161,49 @@ class CommentsPage extends HookConsumerWidget {
   }
 }
 
-class CommentsListView extends StatelessWidget {
+class CommentsListView extends ConsumerStatefulWidget {
   const CommentsListView({super.key, required this.comments});
 
   final List<Comment> comments;
 
   @override
+  ConsumerState<CommentsListView> createState() => _CommentsListViewState();
+}
+
+class _CommentsListViewState extends ConsumerState<CommentsListView> {
+  final Set<int> _showTranslation = {};
+
+  @override
   Widget build(BuildContext context) {
+    final commentTranslation = ref.watch(
+      settingsProvider.select((s) => s.commentTranslation),
+    );
+    final translations = ref.watch(commentTranslationProvider);
+
     return ListView.separated(
-      itemCount: comments.length,
+      itemCount: widget.comments.length,
       itemBuilder: (context, index) {
-        final comment = comments[index];
+        final comment = widget.comments[index];
+        final commentId = comment.commentId ?? index;
         final date = DateTime.fromMillisecondsSinceEpoch(
           (comment.postDate ?? 0) * 1000,
         );
         final dateFormatted = DateFormat(
           'yyyy-MM-dd HH:mm',
         ).format(date.toLocal());
+
+        final translatedText = translations[commentId];
+        final isLoading = ref
+            .read(commentTranslationProvider.notifier)
+            .isLoading(commentId);
+        final showTrans = _showTranslation.contains(commentId);
+        final originalText = comment.commentText ?? '';
+        final displayText = (showTrans && translatedText != null)
+            ? translatedText
+            : originalText;
+
         return ListTile(
           leading: Container(
-            //shadow
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(24),
@@ -187,7 +212,7 @@ class CommentsListView extends StatelessWidget {
                   color: Colors.grey.withValues(alpha: 0.2),
                   spreadRadius: 1,
                   blurRadius: 7,
-                  offset: const Offset(0, 2), // changes position of shadow
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -221,10 +246,66 @@ class CommentsListView extends StatelessWidget {
               ),
             ],
           ),
-          subtitle: Text(
-            comment.commentText ?? '',
-            style: Theme.of(context).textTheme.bodyMedium,
-            textScaler: const TextScaler.linear(0.94),
+          subtitle: AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            alignment: Alignment.topLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  displayText,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textScaler: const TextScaler.linear(0.94),
+                ),
+                if (commentTranslation && originalText.isNotEmpty)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: isLoading
+                          ? null
+                          : () {
+                              if (translatedText != null) {
+                                setState(() {
+                                  if (_showTranslation.contains(commentId)) {
+                                    _showTranslation.remove(commentId);
+                                  } else {
+                                    _showTranslation.add(commentId);
+                                  }
+                                });
+                              } else {
+                                _showTranslation.add(commentId);
+                                ref
+                                    .read(commentTranslationProvider.notifier)
+                                    .translate(commentId, originalText);
+                              }
+                            },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: isLoading
+                            ? SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                              )
+                            : Icon(
+                                Icons.translate,
+                                size: 18,
+                                color: showTrans && translatedText != null
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                              ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         );
       },
