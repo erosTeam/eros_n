@@ -51,7 +51,9 @@ class HistoryNotifier extends _$HistoryNotifier {
         .read(historyGallerysProvider)
         .where((h) => h.gid == task.gid)
         .firstOrNull;
-    if (existing != null) return;
+    if (existing != null) {
+      return;
+    }
 
     final galleryHistory = GalleryHistory(gid: task.gid)
       ..title = task.title

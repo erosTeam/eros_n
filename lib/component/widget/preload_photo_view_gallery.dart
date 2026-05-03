@@ -3,7 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:photo_view/photo_view.dart' show LoadingBuilder, PhotoView;
 import 'package:photo_view/photo_view_gallery.dart';
 
+// ignore: implementation_imports
 import 'package:photo_view/src/core/photo_view_gesture_detector.dart';
+// ignore: implementation_imports
 import 'package:photo_view/src/photo_view_scale_state.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 

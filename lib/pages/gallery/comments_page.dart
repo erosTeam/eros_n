@@ -40,7 +40,7 @@ class CommentsPage extends HookConsumerWidget {
       keyboardSubscription = keyboardVisibilityController.onChange.listen((
         visible,
       ) {
-        if (!visible) {
+        if (!visible && context.mounted) {
           FocusScope.of(context).requestFocus(FocusNode());
         }
       });

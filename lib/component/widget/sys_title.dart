@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// todo: Windows 标题
+// TODO(dev): Windows 标題
 // 没有找到好的方案 暂时搁置
 
 class DesktopTitle {

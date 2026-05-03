@@ -209,7 +209,9 @@ Future<List<Gallery>> enrichGalleryList(List<Gallery> list) =>
     _enrichGalleryList(list);
 
 Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
-  if (list.isEmpty) return list;
+  if (list.isEmpty) {
+    return list;
+  }
 
   final allIds = list
       .expand((g) => g.simpleTags)
@@ -217,10 +219,14 @@ Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
       .where((id) => id != 0)
       .toSet()
       .toList();
-  if (allIds.isEmpty) return list;
+  if (allIds.isEmpty) {
+    return list;
+  }
 
   final nhTagMap = await objectBoxHelper.findNhTagsByIds(allIds);
-  if (nhTagMap.isEmpty) return list;
+  if (nhTagMap.isEmpty) {
+    return list;
+  }
 
   final names = nhTagMap.values
       .map((t) => t.name)
@@ -232,12 +238,18 @@ Future<List<Gallery>> _enrichGalleryList(List<Gallery> list) async {
       : <String, dynamic>{};
 
   return list.map((g) {
-    if (g.simpleTags.isEmpty) return g;
+    if (g.simpleTags.isEmpty) {
+      return g;
+    }
     final enrichedTags = g.simpleTags.map((t) {
       final id = t.id ?? 0;
-      if (id == 0) return t;
+      if (id == 0) {
+        return t;
+      }
       final nhTag = nhTagMap[id];
-      if (nhTag == null) return t;
+      if (nhTag == null) {
+        return t;
+      }
       final translated = translationMap[nhTag.name];
       return t.copyWith(
         name: nhTag.name,
@@ -388,11 +400,15 @@ Future<void> _backfillUnknownNhTags(
       .where((id) => id != 0)
       .toSet()
       .toList();
-  if (allIds.isEmpty) return;
+  if (allIds.isEmpty) {
+    return;
+  }
 
   final known = await objectBoxHelper.findNhTagsByIds(allIds);
   final unknown = allIds.where((id) => !known.containsKey(id)).toList();
-  if (unknown.isEmpty) return;
+  if (unknown.isEmpty) {
+    return;
+  }
 
   try {
     final fetched = await backfill(unknown);

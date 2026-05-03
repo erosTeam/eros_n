@@ -8,6 +8,7 @@ import 'package:eros_n/network/app_dio/dio_http_cli.dart';
 import 'package:eros_n/network/app_dio/http_response.dart';
 import 'package:eros_n/network/app_dio/http_transformer.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+// ignore: implementation_imports
 import 'package:flutter_cache_manager/src/web/mime_converter.dart';
 
 class DioFileService extends FileService {

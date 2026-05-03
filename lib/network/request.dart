@@ -769,7 +769,9 @@ Future<String> downloadTorrent({
         final raw = disposition.split(RegExp(r"filename(\*=UTF-8''|=)")).last;
         filename = Uri.decodeFull(raw).replaceAll('/', '_').trim();
       }
-      if (filename.isEmpty) filename = '$gid.torrent';
+      if (filename.isEmpty) {
+        filename = '$gid.torrent';
+      }
       savePath = path.joinAll([saveDirPath, filename]);
       return savePath;
     },

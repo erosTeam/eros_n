@@ -110,7 +110,9 @@ const kMinThumbAspect = 0.3;
 const kMaxThumbAspect = 2.0;
 
 double sanitizeThumbAspect(double? raw) {
-  if (raw == null || !raw.isFinite || raw <= 0) return kDefaultThumbAspect;
+  if (raw == null || !raw.isFinite || raw <= 0) {
+    return kDefaultThumbAspect;
+  }
   return (raw >= kMinThumbAspect && raw <= kMaxThumbAspect)
       ? raw
       : kDefaultThumbAspect;

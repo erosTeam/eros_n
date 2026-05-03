@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 
-// dio 配置项
+@immutable
 class DioHttpConfig {
   const DioHttpConfig({
     this.baseUrl,

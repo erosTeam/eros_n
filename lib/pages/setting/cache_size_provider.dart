@@ -76,7 +76,9 @@ Future<int> _dirBytes(Directory dir) async {
 
 /// Formats [bytes] into a human-readable string, or null if below 1 MB.
 String? formatCacheSize(int bytes) {
-  if (bytes < 1024 * 1024) return null;
+  if (bytes < 1024 * 1024) {
+    return null;
+  }
   if (bytes < 1024 * 1024 * 1024) {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }

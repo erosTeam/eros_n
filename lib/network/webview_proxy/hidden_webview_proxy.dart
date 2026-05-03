@@ -96,9 +96,13 @@ class HiddenWebViewProxy {
   /// Read the freshest `access_token` from the WebView's `document.cookie`.
   /// Returns `null` if the WebView isn't ready or no token is found.
   Future<String?> getAccessToken() async {
-    if (!isReady) return null;
+    if (!isReady) {
+      return null;
+    }
     final controller = _controller;
-    if (controller == null) return null;
+    if (controller == null) {
+      return null;
+    }
     try {
       final cookie = await controller.evaluateJavascript(
         source: 'document.cookie',
@@ -324,7 +328,9 @@ try {
         source: "JSON.stringify(window['__proxy_$id'] || {})",
       );
 
-      if (poll == null || poll == '{}' || poll == 'null') continue;
+      if (poll == null || poll == '{}' || poll == 'null') {
+        continue;
+      }
 
       Map<String, dynamic> result;
       try {
@@ -334,7 +340,9 @@ try {
         continue;
       }
 
-      if (result['done'] != true) continue;
+      if (result['done'] != true) {
+        continue;
+      }
 
       // Clean up
       await controller.evaluateJavascript(

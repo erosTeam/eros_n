@@ -20,7 +20,9 @@ class DownloadTask {
     int? createdAt,
   }) : pageExtsJson = pageExtsJson ?? '[]',
        createdAt = createdAt ?? DateTime.now().millisecondsSinceEpoch {
-    if (status != null) statusValue = status.index;
+    if (status != null) {
+      statusValue = status.index;
+    }
   }
 
   @Id(assignable: true)

@@ -10,7 +10,7 @@ extension GetNumUtils on num {
   bool isEqual(num b) => GetUtils.isEqual(this, b);
 
   /// Utility to delay some callback (or code execution).
-  /// TODO: Add a separated implementation of delay() with the ability
+  // TODO(dev): Add a separated implementation of delay() with the ability
   /// to stop it.
   ///
   /// Sample:
@@ -48,7 +48,7 @@ extension GetNumUtils on num {
   Duration get days => Duration(hours: (this * Duration.hoursPerDay).round());
 
   //final _delayMaps = <Function, Future>{};
-  // TODO: create a proper Future and control the Timer.
+  // TODO(dev): create a proper Future and control the Timer.
   //  Future delay([double seconds = 0, VoidCallback callback]) async {
   //    final ms = (seconds * 1000).round();
   //    return Future.delayed(Duration(milliseconds: ms), callback);

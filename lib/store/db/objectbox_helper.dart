@@ -222,7 +222,9 @@ class ObjectBoxHelper implements DbStore {
 
   @override
   Future<Map<int, NhTag>> findNhTagsByIds(List<int> ids) async {
-    if (ids.isEmpty) return {};
+    if (ids.isEmpty) {
+      return {};
+    }
     final tags = _nhTagBox.getMany(ids).whereType<NhTag>().toList();
     return {for (final t in tags) t.id: t};
   }
@@ -232,13 +234,17 @@ class ObjectBoxHelper implements DbStore {
     List<String> names, {
     String? namespace,
   }) async {
-    if (names.isEmpty) return {};
+    if (names.isEmpty) {
+      return {};
+    }
     final cleaned = names
         .map((n) => n.contains('|') ? n.split('|').first.trim() : n)
         .where((n) => n.isNotEmpty)
         .toSet()
         .toList();
-    if (cleaned.isEmpty) return {};
+    if (cleaned.isEmpty) {
+      return {};
+    }
 
     var condition = TagTranslate_.name
         .oneOf(cleaned)

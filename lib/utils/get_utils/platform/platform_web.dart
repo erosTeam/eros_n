@@ -1,5 +1,5 @@
-// TODO: resolve platform/desktop by JS browser agent.
-// ignore: avoid_web_libraries_in_flutter
+// TODO(dev): resolve platform/desktop by JS browser agent.
+// ignore: deprecated_member_use, avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 import 'package:eros_n/utils/get_utils/get_utils.dart';

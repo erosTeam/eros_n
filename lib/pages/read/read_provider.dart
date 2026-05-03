@@ -152,7 +152,7 @@ class ReadNotifier extends _$ReadNotifier {
       hideAppBar();
     } else {
       await showAppBar();
-      if (ref.mounted) {
+      if (ref.mounted && context.mounted) {
         calculateBar(context);
       }
     }

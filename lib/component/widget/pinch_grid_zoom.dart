@@ -79,7 +79,9 @@ class _PinchGridZoomState extends ConsumerState<PinchGridZoom> {
     final avail = _availableWidth();
     final cols = _currentColumns();
     final target = cols + delta;
-    if (target < 1) return;
+    if (target < 1) {
+      return;
+    }
     double newExtent;
     if (_isWaterfall()) {
       const spacing = NHConst.waterfallFlowLargeCrossAxisSpacing;
@@ -87,7 +89,9 @@ class _PinchGridZoomState extends ConsumerState<PinchGridZoom> {
     } else {
       newExtent = avail / target;
     }
-    if (newExtent < _kMinExtent || newExtent > _kMaxExtent) return;
+    if (newExtent < _kMinExtent || newExtent > _kMaxExtent) {
+      return;
+    }
     _setExtent(newExtent);
     _showToast(delta < 0);
   }
@@ -99,15 +103,21 @@ class _PinchGridZoomState extends ConsumerState<PinchGridZoom> {
   }
 
   void _onScaleStart(ScaleStartDetails details) {
-    if (!_isGridOrWaterfall()) return;
-    if (_gestureActive) return;
+    if (!_isGridOrWaterfall()) {
+      return;
+    }
+    if (_gestureActive) {
+      return;
+    }
     _gestureActive = true;
     _startColumns = _currentColumns();
     _committed = false;
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    if (_startColumns == null || _committed) return;
+    if (_startColumns == null || _committed) {
+      return;
+    }
 
     if (details.scale > 1.15) {
       _applyColumnChange(-1);

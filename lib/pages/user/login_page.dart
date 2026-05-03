@@ -79,6 +79,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (e.type == NhErrorType.loginCaptcha) {
         // log in with captcha
         logger.e('login need captcha');
+        if (!mounted) {
+          return;
+        }
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
@@ -98,7 +101,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       } else if (e.type == NhErrorType.loginInvalid) {
         // log invalid
         logger.e('login invalid');
-        context.showSnackBar(L10n.of(context).login_invalid);
+        if (mounted) {
+          context.showSnackBar(L10n.of(context).login_invalid);
+        }
       } else {
         logger.e(e);
         if (mounted) {

@@ -25,7 +25,9 @@ class DownloadNotifier extends _$DownloadNotifier {
     ref.listen(settingsProvider, (prev, next) {
       final prevMax = prev?.maxConcurrentGalleries;
       final nextMax = next.maxConcurrentGalleries;
-      if (prevMax == null || prevMax == nextMax) return;
+      if (prevMax == null || prevMax == nextMax) {
+        return;
+      }
       if (nextMax > prevMax) {
         _processQueue();
       } else {
@@ -84,7 +86,9 @@ class DownloadNotifier extends _$DownloadNotifier {
   }
 
   Future<void> addDownload(Gallery gallery) async {
-    if (state.containsKey(gallery.gid)) return;
+    if (state.containsKey(gallery.gid)) {
+      return;
+    }
 
     final settings = ref.read(settingsProvider);
     final savedDir = await Global.resolveDownloadsPath(
@@ -119,7 +123,9 @@ class DownloadNotifier extends _$DownloadNotifier {
 
   Future<void> pauseDownload(int gid) async {
     final task = state[gid];
-    if (task == null) return;
+    if (task == null) {
+      return;
+    }
     _pendingQueue.remove(gid);
     _activeGids.remove(gid);
     await objectBoxHelper.updateDownloadProgress(
@@ -132,8 +138,12 @@ class DownloadNotifier extends _$DownloadNotifier {
 
   Future<void> resumeDownload(int gid) async {
     final task = state[gid];
-    if (task == null) return;
-    if (_pendingQueue.contains(gid) || _activeGids.contains(gid)) return;
+    if (task == null) {
+      return;
+    }
+    if (_pendingQueue.contains(gid) || _activeGids.contains(gid)) {
+      return;
+    }
 
     await objectBoxHelper.updateDownloadProgress(
       gid,
@@ -151,12 +161,16 @@ class DownloadNotifier extends _$DownloadNotifier {
   /// gallery info), fetches the full gallery detail first.
   Future<void> redownloadGallery(int gid) async {
     final task = state[gid];
-    if (task == null) return;
+    if (task == null) {
+      return;
+    }
     _pendingQueue.remove(gid);
     _activeGids.remove(gid);
     try {
       final dir = Directory(task.savedDir);
-      if (dir.existsSync()) dir.deleteSync(recursive: true);
+      if (dir.existsSync()) {
+        dir.deleteSync(recursive: true);
+      }
     } catch (e) {
       logger.e('redownloadGallery dir error: $e');
     }
@@ -264,7 +278,9 @@ class DownloadNotifier extends _$DownloadNotifier {
       // Build list of pages that still need downloading (resume support).
       final pending = <int>[];
       for (var i = 0; i < total; i++) {
-        if (task.pageExts.isEmpty || i >= task.pageExts.length) continue;
+        if (task.pageExts.isEmpty || i >= task.pageExts.length) {
+          continue;
+        }
         final localPath = '${task.savedDir}/${i + 1}.${task.pageExts[i]}';
         if (!File(localPath).existsSync()) {
           pending.add(i);
@@ -339,7 +355,9 @@ class DownloadNotifier extends _$DownloadNotifier {
   /// Re-reads the setting on every slot refill so limit changes take effect
   /// without restarting the gallery.
   Future<void> _runPagePool(int gid, List<int> pending) {
-    if (pending.isEmpty) return Future.value();
+    if (pending.isEmpty) {
+      return Future.value();
+    }
 
     final completer = Completer<void>();
     var active = 0;
@@ -348,7 +366,9 @@ class DownloadNotifier extends _$DownloadNotifier {
     void fill() {
       final cur = state[gid];
       if (cur == null || cur.status != DownloadStatus.downloading) {
-        if (active == 0 && !completer.isCompleted) completer.complete();
+        if (active == 0 && !completer.isCompleted) {
+          completer.complete();
+        }
         return;
       }
 
@@ -358,7 +378,9 @@ class DownloadNotifier extends _$DownloadNotifier {
         active++;
         _downloadPage(gid, idx).then((ok) {
           active--;
-          if (ok) _incrementProgress(gid);
+          if (ok) {
+            _incrementProgress(gid);
+          }
           fill();
         });
       }
@@ -376,7 +398,9 @@ class DownloadNotifier extends _$DownloadNotifier {
   /// O(1) — avoids scanning the filesystem on every page completion.
   void _incrementProgress(int gid) {
     final task = state[gid];
-    if (task == null) return;
+    if (task == null) {
+      return;
+    }
     final newCount = task.downloadedPages + 1;
     objectBoxHelper.updateDownloadProgress(
       gid,
@@ -391,7 +415,9 @@ class DownloadNotifier extends _$DownloadNotifier {
     for (var i = 0; i < task.totalPages; i++) {
       if (i < task.pageExts.length) {
         final path = '${task.savedDir}/${i + 1}.${task.pageExts[i]}';
-        if (File(path).existsSync()) count++;
+        if (File(path).existsSync()) {
+          count++;
+        }
       }
     }
     return count;
@@ -402,11 +428,15 @@ class DownloadNotifier extends _$DownloadNotifier {
   /// Never throws — all errors are caught internally.
   Future<bool> _downloadPage(int gid, int index) async {
     final task = state[gid];
-    if (task == null || index >= task.pageExts.length) return false;
+    if (task == null || index >= task.pageExts.length) {
+      return false;
+    }
 
     final ext = task.pageExts[index];
     final localPath = '${task.savedDir}/${index + 1}.$ext';
-    if (File(localPath).existsSync()) return true;
+    if (File(localPath).existsSync()) {
+      return true;
+    }
 
     final url = getGalleryImageUrl(task.mediaId, index, ext);
 
@@ -414,7 +444,9 @@ class DownloadNotifier extends _$DownloadNotifier {
     for (var attempt = 0; attempt <= maxRetries; attempt++) {
       // Abort if task was paused or deleted.
       final cur = state[gid];
-      if (cur == null || cur.status != DownloadStatus.downloading) return false;
+      if (cur == null || cur.status != DownloadStatus.downloading) {
+        return false;
+      }
 
       try {
         await nhDownload(url: url, savePath: localPath);

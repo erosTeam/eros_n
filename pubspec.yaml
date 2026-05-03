@@ -91,6 +91,7 @@ dependencies:
   clock: any
   crypto: ^3.0.0
   liquid_glass_widgets: ^0.8.4
+  meta: any
 dev_dependencies:
   # flutter pub run build_runner build --delete-conflicting-outputs
   # flutter pub run build_runner watch --delete-conflicting-outputs

@@ -43,9 +43,15 @@ class DownloadsPage extends HookConsumerWidget {
 
     bool matchesQuery(DownloadTask t) {
       final q = searchQuery.value.toLowerCase();
-      if (q.isEmpty) return true;
-      if (t.title.toLowerCase().contains(q)) return true;
-      if (t.gid.toString().contains(q)) return true;
+      if (q.isEmpty) {
+        return true;
+      }
+      if (t.title.toLowerCase().contains(q)) {
+        return true;
+      }
+      if (t.gid.toString().contains(q)) {
+        return true;
+      }
       return false;
     }
 

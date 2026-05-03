@@ -45,8 +45,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
     keyboardSubscription = keyboardVisibilityController.onChange.listen((
       bool visible,
     ) {
-      if (!visible) {
-        // unfocus
+      if (!visible && mounted) {
         FocusScope.of(context).unfocus();
       }
     });

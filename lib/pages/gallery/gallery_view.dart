@@ -219,7 +219,7 @@ class GalleryPageBody extends HookConsumerWidget {
                   onPressed: () {
                     final shareText = 'title:${title.englishTitle}\n$url';
                     logger.d(shareText);
-                    Share.share(shareText);
+                    SharePlus.instance.share(ShareParams(text: shareText));
                   },
                   size: 36,
                   useOwnLayer: true,
@@ -272,7 +272,7 @@ class GalleryPageBody extends HookConsumerWidget {
                   onPressed: () {
                     final shareText = 'title:${title.englishTitle}\n$url';
                     logger.d(shareText);
-                    Share.share(shareText);
+                    SharePlus.instance.share(ShareParams(text: shareText));
                   },
                 ),
                 PopupMenuButton<String>(
@@ -1060,7 +1060,9 @@ class ThumbListView extends HookConsumerWidget {
                   ? null
                   : (image.imageUrl ??
                         'https://t.nhentai.net/galleries/$mediaId/${index + 1}t.$ext');
-              if (builtUrl == null) return const SizedBox.shrink();
+              if (builtUrl == null) {
+                return const SizedBox.shrink();
+              }
               return Consumer(
                 child: GestureDetector(
                   onTap: () async {
@@ -1464,7 +1466,9 @@ class ToolBarView extends HookConsumerWidget {
                           '${gallery.gid}',
                         ),
                       );
-                      Share.shareXFiles([XFile(savePath)]);
+                      SharePlus.instance.share(
+                        ShareParams(files: [XFile(savePath)]),
+                      );
                     } catch (e) {
                       logger.e('torrent download failed', error: e);
                       showSimpleToast('Torrent download failed');

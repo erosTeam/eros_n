@@ -60,12 +60,18 @@ class Global {
   static late PackageInfo packageInfo;
 
   static Future<String> resolveDownloadsPath(String customPath) async {
-    if (customPath.isNotEmpty) return customPath;
-    if (Platform.isIOS) return '$appDocPath/downloads';
+    if (customPath.isNotEmpty) {
+      return customPath;
+    }
+    if (Platform.isIOS) {
+      return '$appDocPath/downloads';
+    }
     if (Platform.isAndroid) {
       try {
         final ext = await getExternalStorageDirectory();
-        if (ext != null) return '${ext.path}/Eros-N';
+        if (ext != null) {
+          return '${ext.path}/Eros-N';
+        }
       } catch (_) {}
     }
     return '$appDocPath/downloads';

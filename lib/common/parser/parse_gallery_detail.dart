@@ -268,12 +268,16 @@ Future<Gallery> _enrichGalleryDetail(Gallery raw) async {
 /// Batch-enriches the top-level [tags] of a detail page.
 /// Groups by namespace so each batch query stays namespace-accurate.
 Future<List<Tag>> _enrichDetailTags(List<Tag> tags) async {
-  if (tags.isEmpty) return tags;
+  if (tags.isEmpty) {
+    return tags;
+  }
 
   final byNamespace = <String, List<String>>{};
   for (final t in tags) {
     final name = t.name ?? '';
-    if (name.isEmpty) continue;
+    if (name.isEmpty) {
+      continue;
+    }
     final ns = getTagNamespace(t.type ?? '') ?? '';
     (byNamespace[ns] ??= []).add(name);
   }
