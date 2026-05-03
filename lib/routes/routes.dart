@@ -8,7 +8,6 @@ import 'package:eros_n/pages/gallery/thumb_page.dart';
 import 'package:eros_n/pages/nav/downloads/downloads_page.dart';
 import 'package:eros_n/pages/nav/favorite/favorite_view.dart';
 import 'package:eros_n/pages/nav/front/front_view.dart';
-import 'package:eros_n/pages/nav/history/history_provider.dart';
 import 'package:eros_n/pages/nav/history/history_view.dart';
 import 'package:eros_n/pages/nav/index/index_view.dart';
 import 'package:eros_n/pages/nav/more/more_view.dart';
@@ -114,18 +113,6 @@ class RouteUtil {
     final gid = currentGalleryGid;
     if (index != null) {
       ref.read(galleryProvider(gid).notifier).setInitialPage(index);
-    } else {
-      final entry = ref
-          .read(historyGallerysProvider)
-          .where((h) => h.gid == gid)
-          .firstOrNull;
-      if (entry != null &&
-          entry.lastReadIndex != null &&
-          entry.lastReadIndex! > 0) {
-        ref
-            .read(galleryProvider(gid).notifier)
-            .setInitialPage(entry.lastReadIndex!);
-      }
     }
 
     ref.read(thumbHeroTagPrefixProvider.notifier).set(heroTagPrefix ?? '');

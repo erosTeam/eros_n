@@ -33,20 +33,23 @@ class GalleryNotifier extends _$GalleryNotifier {
     return Gallery(gid: gid);
   }
 
+  int _getSavedReadIndex(int gid) {
+    return ref
+            .read(historyGallerysProvider)
+            .firstWhereOrNull((h) => h.gid == gid)
+            ?.lastReadIndex ??
+        0;
+  }
+
   void initFromGallery(Gallery gallery) {
     logger.d('init ${gallery.toString()} ');
-
-    final savedIndex = ref
-        .read(historyGallerysProvider)
-        .firstWhereOrNull((h) => h.gid == gallery.gid)
-        ?.lastReadIndex;
 
     state = state.copyWith(
       images: gallery.images,
       gid: gallery.gid,
       title: gallery.title,
       mediaId: gallery.mediaId,
-      currentPageIndex: savedIndex ?? 0,
+      currentPageIndex: _getSavedReadIndex(gallery.gid),
     );
 
     loadData();
@@ -58,7 +61,7 @@ class GalleryNotifier extends _$GalleryNotifier {
   void initFromGid(int gid) {
     logger.d('init $gid');
 
-    state = state.copyWith(gid: gid);
+    state = state.copyWith(gid: gid, currentPageIndex: _getSavedReadIndex(gid));
 
     loadData().then(
       (value) => ref.read(historyProvider.notifier).addHistory(state),
@@ -72,14 +75,6 @@ class GalleryNotifier extends _$GalleryNotifier {
   /// Initialize minimal state from a completed download task so that the
   /// page indicator and slider are correct even before network data arrives.
   void initForOfflineRead(DownloadTask task) {
-    final savedIndex = ref
-        .read(historyGallerysProvider)
-        .firstWhereOrNull((h) => h.gid == task.gid)
-        ?.lastReadIndex;
-
-    // Placeholder pages with correct count so indicator/slider are correct
-    // immediately. Type defaults to 'j'; local files will be used anyway
-    // for completed downloads, so type doesn't affect offline rendering.
     final placeholderPages = List.generate(
       task.totalPages,
       (_) => const GalleryImage(),
@@ -88,11 +83,10 @@ class GalleryNotifier extends _$GalleryNotifier {
     state = state.copyWith(
       gid: task.gid,
       mediaId: task.mediaId,
-      currentPageIndex: savedIndex ?? 0,
+      currentPageIndex: _getSavedReadIndex(task.gid),
       images: GalleryImages(pages: placeholderPages),
     );
 
-    // Load full gallery data in background; preserves currentPageIndex.
     loadData();
   }
 

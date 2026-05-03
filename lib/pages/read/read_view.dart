@@ -115,13 +115,8 @@ class ReadPage extends HookConsumerWidget {
         if (task != null &&
             task.status == DownloadStatus.completed &&
             ref.read(galleryProvider(gid)).images.pages.isEmpty) {
-          // Ensure a proper history entry exists before reading, so that
-          // onPageChanged → updateReadIndex can persist progress correctly.
           ref.read(historyProvider.notifier).addHistoryFromTask(task);
           ref.read(galleryProvider(gid).notifier).initForOfflineRead(task);
-          // Jump to the restored reading position after initialization,
-          // since ReadPageView's own postFrameCallback may have already
-          // fired with the old (0) index.
           final savedIndex = ref.read(galleryProvider(gid)).currentPageIndex;
           if (savedIndex > 0) {
             readNotifier.jumpToPage(savedIndex);
