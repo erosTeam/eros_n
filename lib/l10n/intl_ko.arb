@@ -197,5 +197,6 @@
   "@webview_permission_content": { "placeholders": { "kind": {} } },
   "deny": "거부",
   "allow": "허용",
-  "not_initialized": "초기화되지 않음"
+  "not_initialized": "초기화되지 않음",
+  "session_expired": "세션이 만료되었습니다. 다시 로그인해 주세요"
 }

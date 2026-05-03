@@ -234,5 +234,6 @@
   },
   "deny": "Deny",
   "allow": "Allow",
-  "not_initialized": "Not Initialized"
+  "not_initialized": "Not Initialized",
+  "session_expired": "Session expired, please re-login"
 }

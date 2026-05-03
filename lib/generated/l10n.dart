@@ -1568,6 +1568,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Session expired, please re-login`
+  String get session_expired {
+    return Intl.message(
+      'Session expired, please re-login',
+      name: 'session_expired',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

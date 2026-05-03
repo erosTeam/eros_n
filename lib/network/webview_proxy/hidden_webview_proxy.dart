@@ -93,6 +93,46 @@ class HiddenWebViewProxy {
     _controller = null;
   }
 
+  Completer<void>? _refreshCompleter;
+
+  /// Reload the WebView's bootstrap page to pick up rotated cookies.
+  ///
+  /// Multiple callers hitting this concurrently share the same reload cycle.
+  /// Returns once the page has finished loading or [timeout] is exceeded.
+  Future<void> refreshSession({
+    Duration timeout = const Duration(seconds: 15),
+  }) async {
+    if (_refreshCompleter != null) {
+      return _refreshCompleter!.future;
+    }
+    final controller = _controller;
+    if (controller == null) {
+      return;
+    }
+
+    _refreshCompleter = Completer<void>();
+
+    try {
+      _ready = Completer<void>();
+      await controller.loadUrl(
+        urlRequest: URLRequest(url: WebUri('${NHConst.baseUrl}/')),
+      );
+      await ready.timeout(
+        timeout,
+        onTimeout: () {
+          logger.w('[WebViewProxy] refreshSession timed out after $timeout');
+        },
+      );
+    } catch (e) {
+      logger.e('[WebViewProxy] refreshSession error: $e');
+    } finally {
+      if (!_refreshCompleter!.isCompleted) {
+        _refreshCompleter!.complete();
+      }
+      _refreshCompleter = null;
+    }
+  }
+
   /// Read the freshest `access_token` from the WebView's `document.cookie`.
   /// Returns `null` if the WebView isn't ready or no token is found.
   Future<String?> getAccessToken() async {

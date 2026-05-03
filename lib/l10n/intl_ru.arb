@@ -197,5 +197,6 @@
   "@webview_permission_content": { "placeholders": { "kind": {} } },
   "deny": "Отклонить",
   "allow": "Разрешить",
-  "not_initialized": "Не инициализировано"
+  "not_initialized": "Не инициализировано",
+  "session_expired": "Сессия истекла, пожалуйста, войдите снова"
 }

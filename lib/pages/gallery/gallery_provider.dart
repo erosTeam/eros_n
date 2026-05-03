@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
+import 'package:eros_n/network/app_dio/exception.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
@@ -201,6 +202,9 @@ class GalleryNotifier extends _$GalleryNotifier {
         // API returned success but no favorited field — refresh to confirm.
         unawaited(_refreshFavoriteStatus());
       }
+    } on UnauthorisedException {
+      logger.e('toggleFavorite: session expired (401)');
+      showSimpleToast(L10n.current.session_expired);
     } catch (e) {
       logger.e('toggleFavorite error: $e');
       showSimpleToast(L10n.current.favorite_failed(e.toString()));

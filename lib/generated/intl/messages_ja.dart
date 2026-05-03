@@ -213,6 +213,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "right_to_left": MessageLookupByLibrary.simpleMessage("右から左"),
     "search": MessageLookupByLibrary.simpleMessage("検索"),
     "security_challenge": MessageLookupByLibrary.simpleMessage("セキュリティチャレンジ"),
+    "session_expired": MessageLookupByLibrary.simpleMessage(
+      "セッションが期限切れです。再ログインしてください",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("設定"),
     "share": MessageLookupByLibrary.simpleMessage("共有"),
     "show_less": MessageLookupByLibrary.simpleMessage("少なく表示"),

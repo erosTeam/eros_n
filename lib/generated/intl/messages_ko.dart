@@ -211,6 +211,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "right_to_left": MessageLookupByLibrary.simpleMessage("오른쪽에서 왼쪽"),
     "search": MessageLookupByLibrary.simpleMessage("검색"),
     "security_challenge": MessageLookupByLibrary.simpleMessage("보안 인증"),
+    "session_expired": MessageLookupByLibrary.simpleMessage(
+      "세션이 만료되었습니다. 다시 로그인해 주세요",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("설정"),
     "share": MessageLookupByLibrary.simpleMessage("공유"),
     "show_less": MessageLookupByLibrary.simpleMessage("접기"),

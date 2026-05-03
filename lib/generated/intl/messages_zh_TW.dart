@@ -197,6 +197,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "right_to_left": MessageLookupByLibrary.simpleMessage("從右到左"),
     "search": MessageLookupByLibrary.simpleMessage("搜尋"),
     "security_challenge": MessageLookupByLibrary.simpleMessage("安全驗證"),
+    "session_expired": MessageLookupByLibrary.simpleMessage("工作階段已過期，請重新登入"),
     "settings": MessageLookupByLibrary.simpleMessage("設定"),
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "show_less": MessageLookupByLibrary.simpleMessage("顯示較少"),

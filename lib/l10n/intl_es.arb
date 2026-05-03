@@ -197,5 +197,6 @@
   "@webview_permission_content": { "placeholders": { "kind": {} } },
   "deny": "Denegar",
   "allow": "Permitir",
-  "not_initialized": "No inicializado"
+  "not_initialized": "No inicializado",
+  "session_expired": "Sesión expirada, inicie sesión nuevamente"
 }

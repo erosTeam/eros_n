@@ -234,5 +234,6 @@
   },
   "deny": "拒绝",
   "allow": "允许",
-  "not_initialized": "未初始化"
+  "not_initialized": "未初始化",
+  "session_expired": "会话已过期，请重新登录"
 }

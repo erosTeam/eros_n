@@ -9,6 +9,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:eros_n/common/global.dart';
 import 'package:eros_n/network/api.dart';
 import 'package:eros_n/network/app_dio/api_v2_auth_interceptor.dart';
+import 'package:eros_n/network/app_dio/auth_retry_interceptor.dart';
 import 'package:eros_n/network/app_dio/dio_user_agent.dart';
 import 'package:eros_n/network/app_dio/http_config.dart';
 import 'package:eros_n/network/app_dio/proxy.dart';
@@ -85,6 +86,10 @@ class AppDio with DioMixin implements Dio {
     // request inherits Chromium's TLS/HTTP fingerprints and is not challenged.
     // Image CDNs and stream downloads are excluded by the interceptor itself.
     interceptors.add(WebViewProxyInterceptor());
+
+    // Retry /api/v2/ requests once on 401 after refreshing the WebView
+    // session to pick up rotated access_token cookies.
+    interceptors.add(AuthRetryInterceptor());
 
     httpClientAdapter = AppHttpAdapter(proxy: dioConfig?.proxy ?? '');
 

@@ -197,5 +197,6 @@
   "@webview_permission_content": { "placeholders": { "kind": {} } },
   "deny": "拒絕",
   "allow": "允許",
-  "not_initialized": "尚未初始化"
+  "not_initialized": "尚未初始化",
+  "session_expired": "工作階段已過期，請重新登入"
 }

@@ -252,6 +252,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "security_challenge": MessageLookupByLibrary.simpleMessage(
       "Security Challenge",
     ),
+    "session_expired": MessageLookupByLibrary.simpleMessage(
+      "Session expired, please re-login",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "show_less": MessageLookupByLibrary.simpleMessage("Showing less"),

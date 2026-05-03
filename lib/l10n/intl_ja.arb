@@ -197,5 +197,6 @@
   "@webview_permission_content": { "placeholders": { "kind": {} } },
   "deny": "拒否",
   "allow": "許可",
-  "not_initialized": "未初期化"
+  "not_initialized": "未初期化",
+  "session_expired": "セッションが期限切れです。再ログインしてください"
 }
