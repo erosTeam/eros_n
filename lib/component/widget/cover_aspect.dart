@@ -38,21 +38,18 @@ double useCoverAspectRatio(String? thumbUrl, {double? hint}) {
     final provider = getErosImageProvider(url);
     final stream = provider.resolve(const ImageConfiguration());
     late ImageStreamListener listener;
-    listener = ImageStreamListener(
-      (ImageInfo info, bool _) {
-        final w = info.image.width;
-        final h = info.image.height;
-        if (w > 0 && h > 0) {
-          final ratio = w / h;
-          coverAspectCache[url] = ratio;
-          if (state.value != ratio) {
-            state.value = ratio;
-          }
+    listener = ImageStreamListener((ImageInfo info, bool _) {
+      final w = info.image.width;
+      final h = info.image.height;
+      if (w > 0 && h > 0) {
+        final ratio = w / h;
+        coverAspectCache[url] = ratio;
+        if (state.value != ratio) {
+          state.value = ratio;
         }
-        stream.removeListener(listener);
-      },
-      onError: (_, _) => stream.removeListener(listener),
-    );
+      }
+      stream.removeListener(listener);
+    }, onError: (_, _) => stream.removeListener(listener));
     stream.addListener(listener);
     return () => stream.removeListener(listener);
   }, [url]);

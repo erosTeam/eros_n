@@ -64,6 +64,7 @@ abstract class Gallery with _$Gallery {
     final ext = NHConst.extMap[images.thumbnail.type] ?? 'webp';
     return 'https://t.nhentai.net/galleries/$mediaId/thumb.$ext';
   }
+
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? get coverUrl => mediaId != null
       ? 'https://t.nhentai.net/galleries/$mediaId/cover.${NHConst.extMap[images.cover.type]}'

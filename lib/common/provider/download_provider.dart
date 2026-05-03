@@ -22,19 +22,16 @@ class DownloadNotifier extends _$DownloadNotifier {
   @override
   Map<int, DownloadTask> build() {
     // React to gallery concurrency limit changes immediately.
-    ref.listen(
-      settingsProvider,
-      (prev, next) {
-        final prevMax = prev?.maxConcurrentGalleries;
-        final nextMax = next.maxConcurrentGalleries;
-        if (prevMax == null || prevMax == nextMax) return;
-        if (nextMax > prevMax) {
-          _processQueue();
-        } else {
-          _applyGalleryConcurrencyLimit(nextMax);
-        }
-      },
-    );
+    ref.listen(settingsProvider, (prev, next) {
+      final prevMax = prev?.maxConcurrentGalleries;
+      final nextMax = next.maxConcurrentGalleries;
+      if (prevMax == null || prevMax == nextMax) return;
+      if (nextMax > prevMax) {
+        _processQueue();
+      } else {
+        _applyGalleryConcurrencyLimit(nextMax);
+      }
+    });
     _loadFromDb();
     return {};
   }
@@ -49,7 +46,10 @@ class DownloadNotifier extends _$DownloadNotifier {
       if (task != null && task.status == DownloadStatus.downloading) {
         state = {...state, gid: task.copyWith(status: DownloadStatus.pending)};
         objectBoxHelper.updateDownloadProgress(
-            gid, task.downloadedPages, DownloadStatus.pending);
+          gid,
+          task.downloadedPages,
+          DownloadStatus.pending,
+        );
         if (!_pendingQueue.contains(gid)) {
           _pendingQueue.insert(0, gid);
         }
@@ -64,7 +64,10 @@ class DownloadNotifier extends _$DownloadNotifier {
       // Tasks that were mid-download when app was killed are treated as paused.
       if (t.status == DownloadStatus.downloading) {
         await objectBoxHelper.updateDownloadProgress(
-            t.gid, t.downloadedPages, DownloadStatus.paused);
+          t.gid,
+          t.downloadedPages,
+          DownloadStatus.paused,
+        );
         map[t.gid] = t.copyWith(status: DownloadStatus.paused);
       } else {
         map[t.gid] = t;
@@ -84,8 +87,9 @@ class DownloadNotifier extends _$DownloadNotifier {
     if (state.containsKey(gallery.gid)) return;
 
     final settings = ref.read(settingsProvider);
-    final savedDir =
-        await Global.resolveDownloadsPath(settings.customDownloadPath);
+    final savedDir = await Global.resolveDownloadsPath(
+      settings.customDownloadPath,
+    );
     final dir = '$savedDir/${gallery.gid}';
 
     final pages = gallery.images.pages;
@@ -95,7 +99,8 @@ class DownloadNotifier extends _$DownloadNotifier {
 
     final task = DownloadTask(
       gid: gallery.gid,
-      title: gallery.title.prettyTitle ??
+      title:
+          gallery.title.prettyTitle ??
           gallery.title.englishTitle ??
           gallery.gid.toString(),
       thumbUrl: gallery.thumbUrl ?? '',
@@ -118,7 +123,10 @@ class DownloadNotifier extends _$DownloadNotifier {
     _pendingQueue.remove(gid);
     _activeGids.remove(gid);
     await objectBoxHelper.updateDownloadProgress(
-        gid, task.downloadedPages, DownloadStatus.paused);
+      gid,
+      task.downloadedPages,
+      DownloadStatus.paused,
+    );
     state = {...state, gid: task.copyWith(status: DownloadStatus.paused)};
   }
 
@@ -128,7 +136,10 @@ class DownloadNotifier extends _$DownloadNotifier {
     if (_pendingQueue.contains(gid) || _activeGids.contains(gid)) return;
 
     await objectBoxHelper.updateDownloadProgress(
-        gid, task.downloadedPages, DownloadStatus.pending);
+      gid,
+      task.downloadedPages,
+      DownloadStatus.pending,
+    );
     state = {...state, gid: task.copyWith(status: DownloadStatus.pending)};
 
     _pendingQueue.add(gid);
@@ -162,7 +173,9 @@ class DownloadNotifier extends _$DownloadNotifier {
         );
         final pages = gallery.images.pages;
         if (pages.isNotEmpty) {
-          resolvedExts = pages.map((p) => NHConst.extMap[p.type] ?? 'jpg').toList();
+          resolvedExts = pages
+              .map((p) => NHConst.extMap[p.type] ?? 'jpg')
+              .toList();
           resolvedTotalPages = pages.length;
           resolvedMediaId = gallery.mediaId ?? task.mediaId;
         }
@@ -184,13 +197,18 @@ class DownloadNotifier extends _$DownloadNotifier {
     updated.pageExts = resolvedExts;
 
     await objectBoxHelper.upsertDownloadTask(updated);
-    await objectBoxHelper.updateDownloadProgress(gid, 0, DownloadStatus.pending);
+    await objectBoxHelper.updateDownloadProgress(
+      gid,
+      0,
+      DownloadStatus.pending,
+    );
     state = {...state, gid: updated};
     _pendingQueue.add(gid);
     _processQueue();
   }
 
-  Future<void> deleteDownload(int gid) async {    _pendingQueue.remove(gid);
+  Future<void> deleteDownload(int gid) async {
+    _pendingQueue.remove(gid);
     _activeGids.remove(gid);
     final task = state[gid];
     if (task != null) {
@@ -208,12 +226,10 @@ class DownloadNotifier extends _$DownloadNotifier {
     state = newState;
   }
 
-  bool isDownloaded(int gid) =>
-      state[gid]?.status == DownloadStatus.completed;
+  bool isDownloaded(int gid) => state[gid]?.status == DownloadStatus.completed;
 
   void _processQueue() {
-    final maxGalleries =
-        ref.read(settingsProvider).maxConcurrentGalleries;
+    final maxGalleries = ref.read(settingsProvider).maxConcurrentGalleries;
     while (_activeGids.length < maxGalleries && _pendingQueue.isNotEmpty) {
       final gid = _pendingQueue.removeAt(0);
       if (state.containsKey(gid) &&
@@ -234,7 +250,10 @@ class DownloadNotifier extends _$DownloadNotifier {
 
     task.status = DownloadStatus.downloading;
     await objectBoxHelper.updateDownloadProgress(
-        gid, task.downloadedPages, DownloadStatus.downloading);
+      gid,
+      task.downloadedPages,
+      DownloadStatus.downloading,
+    );
     state = {...state, gid: task.copyWith(status: DownloadStatus.downloading)};
 
     try {
@@ -246,8 +265,7 @@ class DownloadNotifier extends _$DownloadNotifier {
       final pending = <int>[];
       for (var i = 0; i < total; i++) {
         if (task.pageExts.isEmpty || i >= task.pageExts.length) continue;
-        final localPath =
-            '${task.savedDir}/${i + 1}.${task.pageExts[i]}';
+        final localPath = '${task.savedDir}/${i + 1}.${task.pageExts[i]}';
         if (!File(localPath).existsSync()) {
           pending.add(i);
         }
@@ -258,7 +276,10 @@ class DownloadNotifier extends _$DownloadNotifier {
       final alreadyDone = total - pending.length;
       if (alreadyDone != task.downloadedPages) {
         await objectBoxHelper.updateDownloadProgress(
-            gid, alreadyDone, DownloadStatus.downloading);
+          gid,
+          alreadyDone,
+          DownloadStatus.downloading,
+        );
         state = {
           ...state,
           gid: (state[gid] ?? task).copyWith(downloadedPages: alreadyDone),
@@ -298,7 +319,10 @@ class DownloadNotifier extends _$DownloadNotifier {
       final taskErr = state[gid];
       if (taskErr != null) {
         await objectBoxHelper.updateDownloadProgress(
-            gid, taskErr.downloadedPages, DownloadStatus.failed);
+          gid,
+          taskErr.downloadedPages,
+          DownloadStatus.failed,
+        );
         state = {
           ...state,
           gid: taskErr.copyWith(status: DownloadStatus.failed),
@@ -355,7 +379,10 @@ class DownloadNotifier extends _$DownloadNotifier {
     if (task == null) return;
     final newCount = task.downloadedPages + 1;
     objectBoxHelper.updateDownloadProgress(
-        gid, newCount, DownloadStatus.downloading);
+      gid,
+      newCount,
+      DownloadStatus.downloading,
+    );
     state = {...state, gid: task.copyWith(downloadedPages: newCount)};
   }
 
@@ -383,8 +410,8 @@ class DownloadNotifier extends _$DownloadNotifier {
 
     final url = getGalleryImageUrl(task.mediaId, index, ext);
 
-      const maxRetries = 2;
-      for (var attempt = 0; attempt <= maxRetries; attempt++) {
+    const maxRetries = 2;
+    for (var attempt = 0; attempt <= maxRetries; attempt++) {
       // Abort if task was paused or deleted.
       final cur = state[gid];
       if (cur == null || cur.status != DownloadStatus.downloading) return false;
@@ -394,14 +421,17 @@ class DownloadNotifier extends _$DownloadNotifier {
         return true;
       } catch (e) {
         if (attempt == maxRetries) {
-          logger.e('_downloadPage gid=$gid idx=$index failed after $maxRetries retries: $e');
+          logger.e(
+            '_downloadPage gid=$gid idx=$index failed after $maxRetries retries: $e',
+          );
           return false;
         }
         // 429 via HTTP response header.
         final is429 = e is DioException && e.response?.statusCode == 429;
         // CDN bans often manifest as connection drops (unknown/null response)
         // or timeouts rather than a proper 429 reply — treat them the same.
-        final isConnectionDrop = e is DioException &&
+        final isConnectionDrop =
+            e is DioException &&
             (e.type == DioExceptionType.unknown ||
                 e.type == DioExceptionType.connectionTimeout ||
                 e.type == DioExceptionType.receiveTimeout);
@@ -410,9 +440,15 @@ class DownloadNotifier extends _$DownloadNotifier {
         final delay = isRateLimited
             ? Duration(seconds: 10 * (1 << attempt))
             : Duration(seconds: 3 * (1 << attempt));
-        logger.w('_downloadPage gid=$gid idx=$index attempt=$attempt '
-            '${is429 ? "[429]" : isConnectionDrop ? "[cdn-drop]" : "[error]"} '
-            'retrying in ${delay.inSeconds}s: ${e.runtimeType}');
+        logger.w(
+          '_downloadPage gid=$gid idx=$index attempt=$attempt '
+          '${is429
+              ? "[429]"
+              : isConnectionDrop
+              ? "[cdn-drop]"
+              : "[error]"} '
+          'retrying in ${delay.inSeconds}s: ${e.runtimeType}',
+        );
         await Future.delayed(delay);
       }
     }

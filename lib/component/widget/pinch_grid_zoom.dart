@@ -134,14 +134,14 @@ class _PinchGridZoomState extends ConsumerState<PinchGridZoom> {
       gestures: <Type, GestureRecognizerFactory>{
         _EagerScaleRecognizer:
             GestureRecognizerFactoryWithHandlers<_EagerScaleRecognizer>(
-          () => _EagerScaleRecognizer(),
-          (_EagerScaleRecognizer instance) {
-            instance
-              ..onStart = _onScaleStart
-              ..onUpdate = _onScaleUpdate
-              ..onEnd = _onScaleEnd;
-          },
-        ),
+              () => _EagerScaleRecognizer(),
+              (_EagerScaleRecognizer instance) {
+                instance
+                  ..onStart = _onScaleStart
+                  ..onUpdate = _onScaleUpdate
+                  ..onEnd = _onScaleEnd;
+              },
+            ),
       },
       behavior: HitTestBehavior.translucent,
       child: widget.child,

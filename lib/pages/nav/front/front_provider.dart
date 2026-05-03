@@ -36,8 +36,7 @@ mixin GalleryListOps<T> {
 }
 
 @Riverpod(keepAlive: true)
-class GallerysNotifier extends _$GallerysNotifier
-    with GalleryListOps<Gallery> {
+class GallerysNotifier extends _$GallerysNotifier with GalleryListOps<Gallery> {
   @override
   List<Gallery> build() => [];
 }

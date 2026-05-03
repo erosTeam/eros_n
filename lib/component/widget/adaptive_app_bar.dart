@@ -41,8 +41,8 @@ bool isLiquidGlass(WidgetRef ref) =>
 
 Color glassIconColor(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+    ? Colors.white
+    : Colors.black;
 
 LiquidGlassSettings glassAppBarSettings(BuildContext context) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -149,7 +149,9 @@ Widget glassFlexibleSpace(BuildContext context) {
   return ClipRect(
     child: BackdropFilter(
       filter: ImageFilter.blur(
-          sigmaX: kGlassBackdropSigma, sigmaY: kGlassBackdropSigma),
+        sigmaX: kGlassBackdropSigma,
+        sigmaY: kGlassBackdropSigma,
+      ),
       child: Container(color: glassAppBarColor(context)),
     ),
   );

@@ -106,10 +106,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
     return Scaffold(
       floatingActionButton: liquidGlass
           ? GlassIconButton(
-              icon: Icon(
-                Icons.search,
-                color: glassIconColor(context),
-              ),
+              icon: Icon(Icons.search, color: glassIconColor(context)),
               onPressed: () {
                 searchProviderNoti.searchFocusNode.unfocus();
                 searchProviderNoti.search();

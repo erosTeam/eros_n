@@ -119,8 +119,12 @@ class RouteUtil {
           .read(historyGallerysProvider)
           .where((h) => h.gid == gid)
           .firstOrNull;
-      if (entry != null && entry.lastReadIndex != null && entry.lastReadIndex! > 0) {
-        ref.read(galleryProvider(gid).notifier).setInitialPage(entry.lastReadIndex!);
+      if (entry != null &&
+          entry.lastReadIndex != null &&
+          entry.lastReadIndex! > 0) {
+        ref
+            .read(galleryProvider(gid).notifier)
+            .setInitialPage(entry.lastReadIndex!);
       }
     }
 

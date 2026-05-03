@@ -86,9 +86,12 @@ class _IndexPageState extends ConsumerState<IndexPage> {
                     curve: Curves.easeOutCubic,
                     child: Builder(
                       builder: (context) {
-                        final isDark = Theme.of(context).brightness == Brightness.dark;
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
                         final iconColor = isDark ? Colors.white : Colors.black;
-                        final primaryColor = Theme.of(context).colorScheme.primary;
+                        final primaryColor = Theme.of(
+                          context,
+                        ).colorScheme.primary;
                         return ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 320),
                           child: GlassBottomBar(
@@ -130,7 +133,11 @@ class _IndexPageState extends ConsumerState<IndexPage> {
                             onTabSelected: (index) {
                               ref
                                   .read(indexProvider.notifier)
-                                  .setIndex(index, context: context, jumpToPage: true);
+                                  .setIndex(
+                                    index,
+                                    context: context,
+                                    jumpToPage: true,
+                                  );
                             },
                           ),
                         );

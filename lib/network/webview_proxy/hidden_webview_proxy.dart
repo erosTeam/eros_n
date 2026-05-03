@@ -101,11 +101,12 @@ class HiddenWebViewProxy {
     if (controller == null) return null;
     try {
       final cookie = await controller.evaluateJavascript(
-        source: "document.cookie",
+        source: 'document.cookie',
       );
       if (cookie is String) {
-        final match =
-            RegExp(r'(?:^|; )access_token=([^;]+)').firstMatch(cookie);
+        final match = RegExp(
+          r'(?:^|; )access_token=([^;]+)',
+        ).firstMatch(cookie);
         return match?.group(1);
       }
     } catch (_) {}
@@ -286,11 +287,10 @@ try {
   }) async {
     final id = DateTime.now().microsecondsSinceEpoch.toString();
     final headersJson = jsonEncode(headers);
-    final bodyJs = bodyString != null
-        ? jsonEncode(bodyString)
-        : 'null';
+    final bodyJs = bodyString != null ? jsonEncode(bodyString) : 'null';
 
-    final startScript = '''
+    final startScript =
+        '''
 (function() {
   var hdr = $headersJson;
   var isApiV2 = '$fetchUrl'.indexOf('/api/v2/') >= 0;
@@ -362,10 +362,7 @@ try {
       );
     }
 
-    throw TimeoutException(
-      'WebViewProxy polling timed out',
-      timeout,
-    );
+    throw TimeoutException('WebViewProxy polling timed out', timeout);
   }
 
   /// Download a binary resource through the hidden WebView and return it as

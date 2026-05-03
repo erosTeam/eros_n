@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:eros_n/component/models/index.dart';
 import 'package:eros_n/generated/l10n.dart';
-import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
@@ -188,7 +187,9 @@ class GalleryNotifier extends _$GalleryNotifier {
           numFavorites: numFavorite ?? state.numFavorites,
         );
         showSimpleToast(
-          isFavorite ? L10n.current.favorite_added : L10n.current.favorite_removed,
+          isFavorite
+              ? L10n.current.favorite_added
+              : L10n.current.favorite_removed,
         );
       } else {
         // API returned success but no favorited field — refresh to confirm.

@@ -34,8 +34,8 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 @RoutePage()
 class GalleryPage extends StatefulHookConsumerWidget {
@@ -159,11 +159,16 @@ class GalleryPageBody extends HookConsumerWidget {
               }),
         flexibleSpace: glass
             ? ListenableBuilder(
-                listenable: Listenable.merge([scrollController, thumbScrollController]),
+                listenable: Listenable.merge([
+                  scrollController,
+                  thumbScrollController,
+                ]),
                 builder: (context, _) {
-                  final leftScrolled = scrollController.hasClients &&
+                  final leftScrolled =
+                      scrollController.hasClients &&
                       scrollController.offset > 0;
-                  final rightScrolled = thumbScrollController.hasClients &&
+                  final rightScrolled =
+                      thumbScrollController.hasClients &&
                       thumbScrollController.offset > 0;
                   if (!leftScrolled && !rightScrolled) {
                     return const SizedBox.shrink();
@@ -177,11 +182,15 @@ class GalleryPageBody extends HookConsumerWidget {
         automaticallyImplyLeading: !glass,
         leading: glass
             ? Padding(
-                padding: const EdgeInsets.only(left: NavigationToolbar.kMiddleSpacing),
+                padding: const EdgeInsets.only(
+                  left: NavigationToolbar.kMiddleSpacing,
+                ),
                 child: Center(
                   child: GlassIconButton(
-                    icon: Icon(Icons.arrow_back,
-                        color: glassIconColor(context)),
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: glassIconColor(context),
+                    ),
                     onPressed: () => Navigator.maybePop(context),
                     size: 36,
                     useOwnLayer: true,
@@ -196,18 +205,19 @@ class GalleryPageBody extends HookConsumerWidget {
           statusBarColor: Colors.transparent,
           statusBarIconBrightness:
               Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.light
-                  : Brightness.dark,
+              ? Brightness.light
+              : Brightness.dark,
         ),
         actions: glass
             ? [
                 GlassIconButton(
-                  icon: Icon(Icons.ios_share,
-                      size: 22,
-                      color: glassIconColor(context)),
+                  icon: Icon(
+                    Icons.ios_share,
+                    size: 22,
+                    color: glassIconColor(context),
+                  ),
                   onPressed: () {
-                    final shareText =
-                        'title:${title.englishTitle}\n$url';
+                    final shareText = 'title:${title.englishTitle}\n$url';
                     logger.d(shareText);
                     Share.share(shareText);
                   },
@@ -216,51 +226,51 @@ class GalleryPageBody extends HookConsumerWidget {
                   settings: glassButtonSettings(context),
                 ),
                 const SizedBox(width: 8),
-                Builder(builder: (context) {
-                  return GlassIconButton(
-                    icon: Icon(Icons.more_vert,
-                        color: glassIconColor(context)),
-                    onPressed: () async {
-                      final box =
-                          context.findRenderObject()! as RenderBox;
-                      final offset =
-                          box.localToGlobal(Offset.zero);
-                      final result = await showMenu<String>(
-                        context: context,
-                        position: RelativeRect.fromLTRB(
-                          offset.dx,
-                          offset.dy + box.size.height,
-                          offset.dx + box.size.width,
-                          0,
-                        ),
-                        items: [
-                          PopupMenuItem(
-                            value: 'open_in_browser',
-                            child: Text(
-                                L10n.of(context).open_in_browser),
+                Builder(
+                  builder: (context) {
+                    return GlassIconButton(
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: glassIconColor(context),
+                      ),
+                      onPressed: () async {
+                        final box = context.findRenderObject()! as RenderBox;
+                        final offset = box.localToGlobal(Offset.zero);
+                        final result = await showMenu<String>(
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            offset.dx,
+                            offset.dy + box.size.height,
+                            offset.dx + box.size.width,
+                            0,
                           ),
-                        ],
-                      );
-                      if (result == 'open_in_browser') {
-                        launchUrlString(
-                          url,
-                          mode: LaunchMode.externalApplication,
+                          items: [
+                            PopupMenuItem(
+                              value: 'open_in_browser',
+                              child: Text(L10n.of(context).open_in_browser),
+                            ),
+                          ],
                         );
-                      }
-                    },
-                    size: 36,
-                    useOwnLayer: true,
-                    settings: glassButtonSettings(context),
-                  );
-                }),
+                        if (result == 'open_in_browser') {
+                          launchUrlString(
+                            url,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        }
+                      },
+                      size: 36,
+                      useOwnLayer: true,
+                      settings: glassButtonSettings(context),
+                    );
+                  },
+                ),
                 const SizedBox(width: NavigationToolbar.kMiddleSpacing),
               ]
             : [
                 IconButton(
                   icon: const Icon(Icons.ios_share, size: 22),
                   onPressed: () {
-                    final shareText =
-                        'title:${title.englishTitle}\n$url';
+                    final shareText = 'title:${title.englishTitle}\n$url';
                     logger.d(shareText);
                     Share.share(shareText);
                   },
@@ -289,9 +299,7 @@ class GalleryPageBody extends HookConsumerWidget {
           RouteUtil.goRead(context, ref);
         },
         scrollController: scrollController,
-        liquidGlass: ref.watch(
-          settingsProvider.select((s) => s.liquidGlass),
-        ),
+        liquidGlass: ref.watch(settingsProvider.select((s) => s.liquidGlass)),
         label: Consumer(
           builder: (context, ref, child) {
             final currentPageIndex = ref.watch(
@@ -346,9 +354,7 @@ class GalleryPageBody extends HookConsumerWidget {
                         child: ThumbBody(
                           gid: gid,
                           scrollController: thumbScrollController,
-                          topPadding: glass
-                              ? kToolbarHeight
-                              : 0,
+                          topPadding: glass ? kToolbarHeight : 0,
                         ),
                       ),
                     ],
@@ -421,7 +427,8 @@ class GalleryDetailBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hint = (images.thumbnail.imgWidth != null &&
+    final hint =
+        (images.thumbnail.imgWidth != null &&
             images.thumbnail.imgHeight != null &&
             images.thumbnail.imgHeight! > 0)
         ? images.thumbnail.imgWidth! / images.thumbnail.imgHeight!
@@ -1044,8 +1051,9 @@ class ThumbListView extends HookConsumerWidget {
               final GalleryImage image = pages[index];
               final iw = image.imgWidth;
               final ih = image.imgHeight;
-              final fullSizeAspect =
-                  (iw != null && ih != null && ih > 0) ? iw / ih : null;
+              final fullSizeAspect = (iw != null && ih != null && ih > 0)
+                  ? iw / ih
+                  : null;
               final initialAspect = sanitizeThumbAspect(fullSizeAspect);
               final ext = NHConst.extMap[image.type] ?? 'webp';
               final builtUrl = mediaId == null
@@ -1345,9 +1353,7 @@ class ToolBarView extends HookConsumerWidget {
     const iconSize = 28.0;
     final gallery = ref.watch(galleryProvider(gid));
     final isUserLogin = ref.watch(userProvider.select((user) => user.isLogin));
-    final downloadTask = ref.watch(
-      downloadProvider.select((m) => m[gid]),
-    );
+    final downloadTask = ref.watch(downloadProvider.select((m) => m[gid]));
     final torrentLoading = useState(false);
     final favoriteLoading = useState(false);
     final compactStyle = context.isTablet
@@ -1400,9 +1406,8 @@ class ToolBarView extends HookConsumerWidget {
             size: iconSize,
             color: Theme.of(context).colorScheme.primary,
           );
-          downloadOnPressed = () => ref
-              .read(downloadProvider.notifier)
-              .resumeDownload(gid);
+          downloadOnPressed = () =>
+              ref.read(downloadProvider.notifier).resumeDownload(gid);
         case DownloadStatus.completed:
           downloadIcon = Icon(
             Icons.download_done,
@@ -1418,9 +1423,8 @@ class ToolBarView extends HookConsumerWidget {
             size: iconSize,
             color: Theme.of(context).colorScheme.error,
           );
-          downloadOnPressed = () => ref
-              .read(downloadProvider.notifier)
-              .resumeDownload(gid);
+          downloadOnPressed = () =>
+              ref.read(downloadProvider.notifier).resumeDownload(gid);
       }
     }
 
@@ -1479,15 +1483,17 @@ class ToolBarView extends HookConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2.5),
                   )
                 : (gallery.isFavorited ?? false)
-                    ? const Icon(Icons.favorite, size: iconSize)
-                    : const Icon(Icons.favorite_border_outlined, size: iconSize),
+                ? const Icon(Icons.favorite, size: iconSize)
+                : const Icon(Icons.favorite_border_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
             style: compactStyle,
             onPressed: isUserLogin && !favoriteLoading.value
                 ? () async {
                     favoriteLoading.value = true;
                     try {
-                      await ref.read(galleryProvider(gid).notifier).toggleFavorite();
+                      await ref
+                          .read(galleryProvider(gid).notifier)
+                          .toggleFavorite();
                     } finally {
                       favoriteLoading.value = false;
                     }

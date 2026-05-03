@@ -18,8 +18,8 @@ class DownloadTask {
     DownloadStatus? status,
     String? pageExtsJson,
     int? createdAt,
-  })  : pageExtsJson = pageExtsJson ?? '[]',
-        createdAt = createdAt ?? DateTime.now().millisecondsSinceEpoch {
+  }) : pageExtsJson = pageExtsJson ?? '[]',
+       createdAt = createdAt ?? DateTime.now().millisecondsSinceEpoch {
     if (status != null) statusValue = status.index;
   }
 

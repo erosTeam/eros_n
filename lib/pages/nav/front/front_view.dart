@@ -81,58 +81,57 @@ class _FrontPageState extends ConsumerState<FrontPage>
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            Theme.of(context).brightness == Brightness.dark
-                ? Brightness.light
-                : Brightness.dark,
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
       ),
       child: Scaffold(
         body: PinchGridZoom(
-        child: RefreshIndicator(
-          onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
-          edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
-          child: CustomScrollView(
-          controller: scrollController,
-          // cacheExtent: 500,
-          physics: const ClampingScrollPhysics(),
-          slivers: [
-            Builder(
-              builder: (context) {
-                final glass = isLiquidGlass(ref);
-                return SliverAppBar(
-                  floating: true,
-                  pinned: true,
-                  bottom: const PreferredSize(
-                    preferredSize: Size.fromHeight(0),
-                    child: SizedBox(height: 0),
-                  ),
-                  toolbarHeight: 0,
-                  elevation: 0,
-                  scrolledUnderElevation: glass ? 0 : null,
-                  backgroundColor: glass ? Colors.transparent : null,
-                  flexibleSpace: glass ? glassFlexibleSpace(context) : null,
-                  systemOverlayStyle: SystemUiOverlayStyle(
-                    statusBarColor: Colors.transparent,
-                    statusBarIconBrightness:
-                        Theme.of(context).brightness == Brightness.dark
+          child: RefreshIndicator(
+            onRefresh: () => ref.read(frontProvider.notifier).reloadData(),
+            edgeOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
+            child: CustomScrollView(
+              controller: scrollController,
+              // cacheExtent: 500,
+              physics: const ClampingScrollPhysics(),
+              slivers: [
+                Builder(
+                  builder: (context) {
+                    final glass = isLiquidGlass(ref);
+                    return SliverAppBar(
+                      floating: true,
+                      pinned: true,
+                      bottom: const PreferredSize(
+                        preferredSize: Size.fromHeight(0),
+                        child: SizedBox(height: 0),
+                      ),
+                      toolbarHeight: 0,
+                      elevation: 0,
+                      scrolledUnderElevation: glass ? 0 : null,
+                      backgroundColor: glass ? Colors.transparent : null,
+                      flexibleSpace: glass ? glassFlexibleSpace(context) : null,
+                      systemOverlayStyle: SystemUiOverlayStyle(
+                        statusBarColor: Colors.transparent,
+                        statusBarIconBrightness:
+                            Theme.of(context).brightness == Brightness.dark
                             ? Brightness.light
                             : Brightness.dark,
-                  ),
-                );
-              },
+                      ),
+                    );
+                  },
+                ),
+                PopularListView(scrollController: scrollController),
+                SliverGalleryListView(scrollController: scrollController),
+                Consumer(
+                  builder: (context, ref, _) {
+                    final state = ref.watch(frontProvider);
+                    return EndIndicator(loadStatus: state.status);
+                  },
+                ),
+              ],
             ),
-            PopularListView(scrollController: scrollController),
-            SliverGalleryListView(scrollController: scrollController),
-            Consumer(
-              builder: (context, ref, _) {
-                final state = ref.watch(frontProvider);
-                return EndIndicator(loadStatus: state.status);
-              },
-            ),
-          ],
+          ),
         ),
-        ),
-      ),
       ),
     );
   }
@@ -189,7 +188,8 @@ class SliverGalleryListView extends HookConsumerWidget {
                     listenable: scrollController,
                     builder: (context, _) {
                       final glass = isLiquidGlass(ref);
-                      final pinned = glass &&
+                      final pinned =
+                          glass &&
                           scrollController.hasClients &&
                           scrollController.offset > 250;
 
@@ -211,9 +211,7 @@ class SliverGalleryListView extends HookConsumerWidget {
                             ref
                                 .read(settingsProvider.notifier)
                                 .setFrontLanguagesFilter(value);
-                            await ref
-                                .read(frontProvider.notifier)
-                                .reloadData();
+                            await ref.read(frontProvider.notifier).reloadData();
                           },
                           initValue: frontLanguagesFilter,
                         ),
@@ -225,9 +223,7 @@ class SliverGalleryListView extends HookConsumerWidget {
                             ref
                                 .read(settingsProvider.notifier)
                                 .setSearchSortOnFrontPage(value);
-                            await ref
-                                .read(frontProvider.notifier)
-                                .reloadData();
+                            await ref.read(frontProvider.notifier).reloadData();
                           },
                           initValue: searchSortOnFrontPage,
                         ),
@@ -235,26 +231,24 @@ class SliverGalleryListView extends HookConsumerWidget {
 
                       final isDark =
                           Theme.of(context).brightness == Brightness.dark;
-                      final iconColor =
-                          isDark ? Colors.white : Colors.black;
+                      final iconColor = isDark ? Colors.white : Colors.black;
 
-                      final sortText = sortMap[searchSortOnFrontPage] ??
+                      final sortText =
+                          sortMap[searchSortOnFrontPage] ??
                           L10n.of(context).recent;
 
                       const dur = Duration(milliseconds: 300);
                       const curve = Curves.easeInOut;
 
-                      final bgColor =
-                          Theme.of(context).scaffoldBackgroundColor;
+                      final bgColor = Theme.of(context).scaffoldBackgroundColor;
                       return AnimatedContainer(
                         duration: dur,
                         curve: curve,
                         height: kToolbarHeight,
                         padding: EdgeInsets.symmetric(
-                            horizontal: pinned ? 8 : 16),
-                        color: pinned
-                            ? bgColor.withValues(alpha: 0)
-                            : bgColor,
+                          horizontal: pinned ? 8 : 16,
+                        ),
+                        color: pinned ? bgColor.withValues(alpha: 0) : bgColor,
                         child: Stack(
                           alignment: Alignment.centerLeft,
                           children: [
@@ -271,9 +265,9 @@ class SliverGalleryListView extends HookConsumerWidget {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           sortText,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleLarge,
                                         ),
                                       ),
                                     ),
@@ -290,47 +284,49 @@ class SliverGalleryListView extends HookConsumerWidget {
                                 ignoring: !pinned,
                                 child: IntrinsicHeight(
                                   child: Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    GlassContainer(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      shape:
-                                          const LiquidRoundedSuperellipse(
-                                              borderRadius: 999),
-                                      settings:
-                                          glassButtonSettings(context),
-                                      child: Center(
-                                        child: Text(
-                                          sortText,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge
-                                              ?.copyWith(height: 1.0),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      GlassContainer(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        shape: const LiquidRoundedSuperellipse(
+                                          borderRadius: 999,
+                                        ),
+                                        settings: glassButtonSettings(context),
+                                        child: Center(
+                                          child: Text(
+                                            sortText,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge
+                                                ?.copyWith(height: 1.0),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const Spacer(),
-                                    GlassContainer(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4),
-                                      shape:
-                                          const LiquidRoundedSuperellipse(
-                                              borderRadius: 999),
-                                      settings:
-                                          glassButtonSettings(context),
-                                      child: IconTheme(
-                                        data: IconThemeData(
-                                            size: 22, color: iconColor),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: buttons,
+                                      const Spacer(),
+                                      GlassContainer(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4,
+                                        ),
+                                        shape: const LiquidRoundedSuperellipse(
+                                          borderRadius: 999,
+                                        ),
+                                        settings: glassButtonSettings(context),
+                                        child: IconTheme(
+                                          data: IconThemeData(
+                                            size: 22,
+                                            color: iconColor,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: buttons,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -369,7 +365,8 @@ class PopularListView extends ConsumerWidget {
             child: ListenableBuilder(
               listenable: scrollController,
               builder: (context, _) {
-                final pinned = glass &&
+                final pinned =
+                    glass &&
                     scrollController.hasClients &&
                     scrollController.offset > 0;
 
@@ -379,11 +376,8 @@ class PopularListView extends ConsumerWidget {
                   duration: dur,
                   curve: Curves.easeInOut,
                   height: kToolbarHeight,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: pinned ? 8 : 16),
-                  color: pinned
-                      ? bgColor.withValues(alpha: 0)
-                      : bgColor,
+                  padding: EdgeInsets.symmetric(horizontal: pinned ? 8 : 16),
+                  color: pinned ? bgColor.withValues(alpha: 0) : bgColor,
                   alignment: Alignment.centerLeft,
                   child: Stack(
                     alignment: Alignment.centerLeft,
@@ -407,9 +401,11 @@ class PopularListView extends ConsumerWidget {
                               height: 48,
                               child: GlassContainer(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 20),
+                                  horizontal: 20,
+                                ),
                                 shape: const LiquidRoundedSuperellipse(
-                                    borderRadius: 999),
+                                  borderRadius: 999,
+                                ),
                                 settings: glassButtonSettings(context),
                                 child: Center(
                                   child: Text(
@@ -569,8 +565,7 @@ class GalleryListView extends HookConsumerWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.refresh, size: 48),
-                onPressed: () =>
-                    ref.read(frontProvider.notifier).reloadData(),
+                onPressed: () => ref.read(frontProvider.notifier).reloadData(),
               ),
               Text(state.errorMessage ?? ''),
             ],

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io' show File;
 
 import 'package:collection/collection.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -18,9 +17,9 @@ import 'package:eros_n/network/api.dart';
 import 'package:eros_n/network/app_dio/pdio.dart';
 import 'package:eros_n/network/webview_proxy/hidden_webview_proxy.dart';
 import 'package:eros_n/utils/eros_utils.dart';
-import 'package:path/path.dart' as path;
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as path;
 
 Options getOptions({bool forceRefresh = false}) {
   final options = Api.cacheOption
@@ -259,23 +258,39 @@ Future<Gallery> getGalleryDetail({
   if (mode == GalleryFetchMode.api) {
     final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);
     if (gid != null) {
-      return _getGalleryDetailByApi(int.parse(gid), refresh: refresh, cancelToken: cancelToken);
+      return _getGalleryDetailByApi(
+        int.parse(gid),
+        refresh: refresh,
+        cancelToken: cancelToken,
+      );
     }
   }
 
   if (mode == GalleryFetchMode.html) {
-    return _getGalleryDetailHtml(url: url, refresh: refresh, cancelToken: cancelToken);
+    return _getGalleryDetailHtml(
+      url: url,
+      refresh: refresh,
+      cancelToken: cancelToken,
+    );
   }
 
   // autoFallback: try HTML first, fall back to API on CF 403.
   try {
-    return await _getGalleryDetailHtml(url: url, refresh: refresh, cancelToken: cancelToken);
+    return await _getGalleryDetailHtml(
+      url: url,
+      refresh: refresh,
+      cancelToken: cancelToken,
+    );
   } on BadRequestException catch (e) {
     if (e.code == 403) {
       logger.w('getGalleryDetail CF 403, falling back to API for $url');
       final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);
       if (gid != null) {
-        return _getGalleryDetailByApi(int.parse(gid), refresh: refresh, cancelToken: cancelToken);
+        return _getGalleryDetailByApi(
+          int.parse(gid),
+          refresh: refresh,
+          cancelToken: cancelToken,
+        );
       }
     }
     rethrow;
@@ -329,7 +344,9 @@ Future<Gallery> _getGalleryDetailByApi(
   );
 
   if (!httpResponse.ok || httpResponse.data is! Gallery) {
-    logger.e('_getGalleryDetailByApi gid=$gid ${httpResponse.error.runtimeType}');
+    logger.e(
+      '_getGalleryDetailByApi gid=$gid ${httpResponse.error.runtimeType}',
+    );
     throw httpResponse.error ?? HttpException('getGalleryDetail api error');
   }
 
@@ -341,7 +358,9 @@ Future<Gallery> _getGalleryDetailByApi(
       '/api/v2/galleries/$gid/related',
       httpTransformer: HttpTransformerBuilder((response) {
         final data = response.data as Map<String, dynamic>;
-        final items = (data['result'] as List? ?? []).whereType<Map>().map((item) {
+        final items = (data['result'] as List? ?? []).whereType<Map>().map((
+          item,
+        ) {
           final id = (item['id'] as num?)?.toInt() ?? 0;
           final mediaId = item['media_id'] as String?;
           final thumbPath = item['thumbnail'] as String? ?? '';
@@ -379,7 +398,9 @@ Future<Gallery> _getGalleryDetailByApi(
       cancelToken: cancelToken,
     );
     if (relatedResponse.ok && relatedResponse.data is List<Gallery>) {
-      return gallery.copyWith(moreLikeGallerys: relatedResponse.data as List<Gallery>);
+      return gallery.copyWith(
+        moreLikeGallerys: relatedResponse.data as List<Gallery>,
+      );
     }
   } catch (e) {
     logger.w('_getGalleryDetailByApi related gid=$gid error: $e');
@@ -745,9 +766,7 @@ Future<String> downloadTorrent({
       final disposition = headers.value('content-disposition');
       var filename = '';
       if (disposition != null) {
-        final raw = disposition
-            .split(RegExp(r"filename(\*=UTF-8''|=)"))
-            .last;
+        final raw = disposition.split(RegExp(r"filename(\*=UTF-8''|=)")).last;
         filename = Uri.decodeFull(raw).replaceAll('/', '_').trim();
       }
       if (filename.isEmpty) filename = '$gid.torrent';
@@ -1144,7 +1163,8 @@ Future<List<Tag>> getTagsByIds(
 /// Returns the nhentai csrftoken cookie value from the persistent cookie jar.
 /// Used when Gallery.csrfToken is null (API mode) and a write operation needs it.
 Future<String?> getCsrfTokenFromCookie() async {
-  final cookies = await Global.cookieJar
-      .loadForRequest(Uri.parse(NHConst.baseUrl));
+  final cookies = await Global.cookieJar.loadForRequest(
+    Uri.parse(NHConst.baseUrl),
+  );
   return cookies.firstWhereOrNull((Cookie c) => c.name == 'csrftoken')?.value;
 }

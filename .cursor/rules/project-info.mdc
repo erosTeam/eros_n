@@ -40,7 +40,7 @@ alwaysApply: true
 - Commits: ohos project first, then main project only when user says "同步"
 - Do NOT push to remote unless explicitly asked
 - Use hot reload for UI iteration, do NOT reinstall the app for UI changes
-- Run `dart fix --apply` after every code change
+- Run `dart format .` and `dart fix --apply` before committing code changes
 
 ## UI Modification Rules
 

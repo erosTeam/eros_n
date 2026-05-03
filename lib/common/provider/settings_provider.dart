@@ -84,11 +84,11 @@ class SettingsNotifier extends _$SettingsNotifier {
   void setGridMaxCrossAxisExtent(double value) =>
       _save(state.copyWith(gridMaxCrossAxisExtent: value.clamp(80.0, 300.0)));
 
-  void setWaterfallMaxCrossAxisExtent(double value) =>
-      _save(state.copyWith(waterfallMaxCrossAxisExtent: value.clamp(80.0, 300.0)));
+  void setWaterfallMaxCrossAxisExtent(double value) => _save(
+    state.copyWith(waterfallMaxCrossAxisExtent: value.clamp(80.0, 300.0)),
+  );
 
-  void setLiquidGlass(bool value) =>
-      _save(state.copyWith(liquidGlass: value));
+  void setLiquidGlass(bool value) => _save(state.copyWith(liquidGlass: value));
 
   void setMaxConcurrentGalleries(int v) =>
       _save(state.copyWith(maxConcurrentGalleries: v));

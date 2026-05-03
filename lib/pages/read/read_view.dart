@@ -298,7 +298,8 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
     final pages = ref.watch(galleryProvider(gid).select((g) => g.images.pages));
     final mediaId = ref.watch(galleryProvider(gid).select((g) => g.mediaId));
     final downloadTask = ref.watch(downloadProvider.select((m) => m[gid]));
-    final isOfflineComplete = downloadTask != null &&
+    final isOfflineComplete =
+        downloadTask != null &&
         downloadTask.status == DownloadStatus.completed &&
         downloadTask.totalPages > 0;
     final pageCount = pages.isNotEmpty
@@ -327,8 +328,9 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
         } else {
           final task = downloadTask;
           if (task != null) {
-            final ext =
-                index < task.pageExts.length ? task.pageExts[index] : 'jpg';
+            final ext = index < task.pageExts.length
+                ? task.pageExts[index]
+                : 'jpg';
             imageUrl = getGalleryImageUrl(task.mediaId, index, ext);
           } else {
             imageUrl = '';
@@ -346,10 +348,7 @@ class _ReadListViewState extends ConsumerState<ReadListView> {
         } else {
           aspectRatio = 300 / 400;
         }
-        image = AspectRatio(
-          aspectRatio: aspectRatio,
-          child: image,
-        );
+        image = AspectRatio(aspectRatio: aspectRatio, child: image);
 
         return image;
       },
@@ -405,10 +404,9 @@ class ReadPageView extends HookConsumerWidget {
           galleryProvider(gid).select((g) => g.mediaId),
         );
 
-        final downloadTask = ref.watch(
-          downloadProvider.select((m) => m[gid]),
-        );
-        final isOfflineComplete = downloadTask != null &&
+        final downloadTask = ref.watch(downloadProvider.select((m) => m[gid]));
+        final isOfflineComplete =
+            downloadTask != null &&
             downloadTask.status == DownloadStatus.completed &&
             downloadTask.totalPages > 0;
         final pageCount = pages.isNotEmpty

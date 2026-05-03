@@ -12,7 +12,9 @@ abstract class TagTranslateInfo with _$TagTranslateInfo {
     String? remoteVersion,
     String? lastReleaseUrl,
     String? nhTagVersion,
-    @Default(false) @JsonKey(includeToJson: false, includeFromJson: false) bool isUpdating,
+    @Default(false)
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    bool isUpdating,
   }) = _TagTranslateInfo;
 
   factory TagTranslateInfo.fromJson(Map<String, dynamic> json) =>

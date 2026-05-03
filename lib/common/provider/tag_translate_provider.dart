@@ -194,10 +194,7 @@ _ParsedTagDb _decodeTagDbInIsolate(String gzFilePath) {
     if (dateStr != null && dateStr.isNotEmpty) {
       prettyDate = dateStr.split('T').first;
     }
-    final pretty = [
-      ?prettyDate,
-      if (sha != null) '($sha)',
-    ].join(' ');
+    final pretty = [?prettyDate, if (sha != null) '($sha)'].join(' ');
     if (pretty.isNotEmpty) {
       prettyVersion = pretty;
     }

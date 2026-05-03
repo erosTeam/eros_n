@@ -34,8 +34,8 @@ class DownloadSettingPage extends ConsumerWidget {
             child: Text(
               l.concurrent_downloads,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ),
           ListTile(
@@ -82,8 +82,8 @@ class DownloadSettingPage extends ConsumerWidget {
               child: Text(
                 l.download_path,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
             ListTile(
@@ -93,8 +93,8 @@ class DownloadSettingPage extends ConsumerWidget {
                     ? settings.customDownloadPath
                     : Global.downloadsPath,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
             Padding(
@@ -123,10 +123,7 @@ class DownloadSettingPage extends ConsumerWidget {
 // ---------------------------------------------------------------------------
 
 class _ConcurrencyWarning extends StatelessWidget {
-  const _ConcurrencyWarning({
-    required this.galleries,
-    required this.pages,
-  });
+  const _ConcurrencyWarning({required this.galleries, required this.pages});
 
   final int galleries;
   final int pages;
@@ -173,10 +170,9 @@ class _ConcurrencyWarning extends StatelessWidget {
             Expanded(
               child: Text(
                 message,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: fgColor),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: fgColor),
               ),
             ),
           ],

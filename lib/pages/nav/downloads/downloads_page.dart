@@ -70,18 +70,32 @@ class DownloadsPage extends HookConsumerWidget {
       return list;
     }
 
-    final downloading = sorted(tasks.values.where((t) =>
-        (t.status == DownloadStatus.downloading ||
-            t.status == DownloadStatus.pending) &&
-        matchesQuery(t)));
-    final paused = sorted(tasks.values
-        .where((t) => t.status == DownloadStatus.paused && matchesQuery(t)));
-    final completed = sorted(tasks.values
-        .where((t) => t.status == DownloadStatus.completed && matchesQuery(t)));
-    final failed = sorted(tasks.values
-        .where((t) => t.status == DownloadStatus.failed && matchesQuery(t)));
+    final downloading = sorted(
+      tasks.values.where(
+        (t) =>
+            (t.status == DownloadStatus.downloading ||
+                t.status == DownloadStatus.pending) &&
+            matchesQuery(t),
+      ),
+    );
+    final paused = sorted(
+      tasks.values.where(
+        (t) => t.status == DownloadStatus.paused && matchesQuery(t),
+      ),
+    );
+    final completed = sorted(
+      tasks.values.where(
+        (t) => t.status == DownloadStatus.completed && matchesQuery(t),
+      ),
+    );
+    final failed = sorted(
+      tasks.values.where(
+        (t) => t.status == DownloadStatus.failed && matchesQuery(t),
+      ),
+    );
 
-    final hasResults = downloading.isNotEmpty ||
+    final hasResults =
+        downloading.isNotEmpty ||
         paused.isNotEmpty ||
         completed.isNotEmpty ||
         failed.isNotEmpty;
@@ -95,11 +109,11 @@ class DownloadsPage extends HookConsumerWidget {
     }
 
     String sortLabel(_SortMode mode) => switch (mode) {
-          _SortMode.dateNewest => l.sort_date_newest,
-          _SortMode.dateOldest => l.sort_date_oldest,
-          _SortMode.titleAz => l.sort_title_az,
-          _SortMode.titleZa => l.sort_title_za,
-        };
+      _SortMode.dateNewest => l.sort_date_newest,
+      _SortMode.dateOldest => l.sort_date_oldest,
+      _SortMode.titleAz => l.sort_title_az,
+      _SortMode.titleZa => l.sort_title_za,
+    };
 
     final appBar = adaptiveAppBar(
       context: context,
@@ -141,10 +155,11 @@ class DownloadsPage extends HookConsumerWidget {
                         child: Row(
                           children: [
                             if (sortMode.value == mode)
-                              Icon(Icons.check,
-                                  size: 16,
-                                  color:
-                                      Theme.of(context).colorScheme.primary)
+                              Icon(
+                                Icons.check,
+                                size: 16,
+                                color: Theme.of(context).colorScheme.primary,
+                              )
                             else
                               const SizedBox(width: 16),
                             const SizedBox(width: 8),
@@ -181,26 +196,28 @@ class DownloadsPage extends HookConsumerWidget {
       body: tasks.isEmpty
           ? const _EmptyState()
           : !hasResults
-              ? const _NoResultsState()
-              : CustomScrollView(
-                  slivers: [
-                    if (glass)
-                      SliverToBoxAdapter(
-                        child: SizedBox(height: glassBodyPadding(context).top),
-                      ),
-                    if (downloading.isNotEmpty)
-                      buildSection(
-                          l.downloading, downloading.length, downloading),
-                    if (paused.isNotEmpty)
-                      buildSection(l.download_paused, paused.length, paused),
-                    if (completed.isNotEmpty)
-                      buildSection(
-                          l.download_completed, completed.length, completed),
-                    if (failed.isNotEmpty)
-                      buildSection(l.download_failed, failed.length, failed),
-                    const SliverToBoxAdapter(child: SizedBox(height: 24)),
-                  ],
-                ),
+          ? const _NoResultsState()
+          : CustomScrollView(
+              slivers: [
+                if (glass)
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: glassBodyPadding(context).top),
+                  ),
+                if (downloading.isNotEmpty)
+                  buildSection(l.downloading, downloading.length, downloading),
+                if (paused.isNotEmpty)
+                  buildSection(l.download_paused, paused.length, paused),
+                if (completed.isNotEmpty)
+                  buildSection(
+                    l.download_completed,
+                    completed.length,
+                    completed,
+                  ),
+                if (failed.isNotEmpty)
+                  buildSection(l.download_failed, failed.length, failed),
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              ],
+            ),
     );
   }
 }
@@ -227,8 +244,8 @@ class _EmptyState extends StatelessWidget {
           Text(
             L10n.of(context).no_downloads,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -258,8 +275,8 @@ class _NoResultsState extends StatelessWidget {
           Text(
             L10n.of(context).no_result,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -288,9 +305,9 @@ class _SectionHeader extends StatelessWidget {
           children: [
             Text(
               label,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: scheme.primary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(color: scheme.primary),
             ),
             const SizedBox(width: 6),
             Container(
@@ -302,8 +319,8 @@ class _SectionHeader extends StatelessWidget {
               child: Text(
                 '$count',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: scheme.onPrimaryContainer,
-                    ),
+                  color: scheme.onPrimaryContainer,
+                ),
               ),
             ),
           ],
@@ -375,9 +392,9 @@ class _TaskCard extends ConsumerWidget {
     // Date label — skip for legacy tasks with createdAt == 0
     final String? dateText = task.createdAt > 0
         ? l.added_on(
-            DateFormat('yyyy-MM-dd').format(
-              DateTime.fromMillisecondsSinceEpoch(task.createdAt),
-            ),
+            DateFormat(
+              'yyyy-MM-dd',
+            ).format(DateTime.fromMillisecondsSinceEpoch(task.createdAt)),
           )
         : null;
 
@@ -388,8 +405,11 @@ class _TaskCard extends ConsumerWidget {
       primaryActionIcon = Icon(Icons.pause, size: 28, color: scheme.primary);
       primaryAction = () => notifier.pauseDownload(task.gid);
     } else if (isPaused) {
-      primaryActionIcon =
-          Icon(Icons.play_arrow, size: 28, color: scheme.primary);
+      primaryActionIcon = Icon(
+        Icons.play_arrow,
+        size: 28,
+        color: scheme.primary,
+      );
       primaryAction = () => notifier.resumeDownload(task.gid);
     } else if (isFailed) {
       primaryActionIcon = Icon(Icons.refresh, size: 28, color: scheme.primary);
@@ -411,9 +431,7 @@ class _TaskCard extends ConsumerWidget {
 
     // Thumbnail: for completed tasks, prefer the local first page file.
     Widget buildThumb() {
-      if (isCompleted &&
-          task.pageExts.isNotEmpty &&
-          task.savedDir.isNotEmpty) {
+      if (isCompleted && task.pageExts.isNotEmpty && task.savedDir.isNotEmpty) {
         final localPath = '${task.savedDir}/1.${task.pageExts[0]}';
         final localFile = File(localPath);
         if (localFile.existsSync()) {
@@ -458,19 +476,16 @@ class _TaskCard extends ConsumerWidget {
                         task.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(height: 1.3),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(height: 1.3),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
                           Text(
                             statusText,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
+                            style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   color: isFailed
                                       ? scheme.error
@@ -480,22 +495,20 @@ class _TaskCard extends ConsumerWidget {
                           if (dateText != null) ...[
                             Text(
                               ' · ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
+                              style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
-                                    color: scheme.onSurfaceVariant
-                                        .withValues(alpha: 0.7),
+                                    color: scheme.onSurfaceVariant.withValues(
+                                      alpha: 0.7,
+                                    ),
                                   ),
                             ),
                             Text(
                               dateText,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
+                              style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
-                                    color: scheme.onSurfaceVariant
-                                        .withValues(alpha: 0.7),
+                                    color: scheme.onSurfaceVariant.withValues(
+                                      alpha: 0.7,
+                                    ),
                                   ),
                             ),
                           ],
@@ -512,8 +525,8 @@ class _TaskCard extends ConsumerWidget {
                             color: isFailed
                                 ? scheme.error
                                 : isActive
-                                    ? scheme.primary
-                                    : scheme.outline,
+                                ? scheme.primary
+                                : scheme.outline,
                           ),
                         ),
                       ],
@@ -545,21 +558,17 @@ class _TaskCard extends ConsumerWidget {
                             context: context,
                             builder: (ctx) => AlertDialog(
                               title: Text(l.download_delete_confirm_title),
-                              content:
-                                  Text(l.download_delete_confirm_message),
+                              content: Text(l.download_delete_confirm_message),
                               actions: [
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, false),
+                                  onPressed: () => Navigator.pop(ctx, false),
                                   child: Text(l.cancel),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, true),
+                                  onPressed: () => Navigator.pop(ctx, true),
                                   child: Text(
                                     l.delete,
-                                    style:
-                                        TextStyle(color: scheme.error),
+                                    style: TextStyle(color: scheme.error),
                                   ),
                                 ),
                               ],
@@ -577,8 +586,11 @@ class _TaskCard extends ConsumerWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.refresh,
-                                    size: 18, color: scheme.primary),
+                                Icon(
+                                  Icons.refresh,
+                                  size: 18,
+                                  color: scheme.primary,
+                                ),
                                 const SizedBox(width: 8),
                                 Text(l.download_redownload),
                               ],

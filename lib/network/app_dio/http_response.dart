@@ -125,7 +125,10 @@ HttpException _parseException(Exception error, {dynamic data}) {
             case 405:
               return BadRequestException(message: '405', code: errCode);
             case 429:
-              return BadRequestException(message: '429 Too Many Requests', code: errCode);
+              return BadRequestException(
+                message: '429 Too Many Requests',
+                code: errCode,
+              );
             case 500:
               return BadServiceException(message: '500', code: errCode);
             case 502:
