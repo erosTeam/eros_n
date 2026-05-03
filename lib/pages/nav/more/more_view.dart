@@ -41,6 +41,7 @@ class _MorePageState extends ConsumerState<MorePage>
         title: Row(children: [Text(L10n.of(context).more)]),
       ),
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: glass ? glassBodyPadding(context) : null,
         controller: scrollController,
         child: Column(

@@ -3,6 +3,7 @@ import 'package:eros_n/pages/nav/index/index_state.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,9 +40,16 @@ class IndexNotifier extends _$IndexNotifier {
       state.pageController.jumpToPage(index);
     }
     state = state.copyWith(selectedIndex: index);
+    showNavigationBar();
   }
 
   void hideNavigationBar() {
+    final controller = scrollControllerMap[state.selectedIndex];
+    if (controller == null ||
+        !controller.hasClients ||
+        controller.position.userScrollDirection != ScrollDirection.reverse) {
+      return;
+    }
     final hideBottomNavigationOnScroll = ref.read(
       settingsProvider.select(
         (settings) => settings.hideBottomNavigationOnScroll,
