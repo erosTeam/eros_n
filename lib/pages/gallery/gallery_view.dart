@@ -21,6 +21,7 @@ import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:eros_n/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1347,6 +1348,8 @@ class ToolBarView extends HookConsumerWidget {
     final downloadTask = ref.watch(
       downloadProvider.select((m) => m[gid]),
     );
+    final torrentLoading = useState(false);
+    final favoriteLoading = useState(false);
     final compactStyle = context.isTablet
         ? IconButton.styleFrom(
             minimumSize: const Size(36, 36),
@@ -1433,14 +1436,21 @@ class ToolBarView extends HookConsumerWidget {
             onPressed: downloadOnPressed,
           ),
           IconButton(
-            icon: const Icon(
-              Icons.energy_savings_leaf_outlined,
-              size: iconSize,
-            ),
+            icon: torrentLoading.value
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2.5),
+                  )
+                : const Icon(
+                    Icons.energy_savings_leaf_outlined,
+                    size: iconSize,
+                  ),
             color: Theme.of(context).colorScheme.primary,
             style: compactStyle,
-            onPressed: isUserLogin
+            onPressed: isUserLogin && !torrentLoading.value
                 ? () async {
+                    torrentLoading.value = true;
                     try {
                       final savePath = await downloadTorrent(
                         gid: gallery.gid,
@@ -1453,20 +1463,34 @@ class ToolBarView extends HookConsumerWidget {
                       Share.shareXFiles([XFile(savePath)]);
                     } catch (e) {
                       logger.e('torrent download failed', error: e);
+                      showSimpleToast('Torrent download failed');
+                    } finally {
+                      torrentLoading.value = false;
                     }
                   }
                 : null,
           ),
           // 收藏按钮
           IconButton(
-            icon: (gallery.isFavorited ?? false)
-                ? const Icon(Icons.favorite, size: iconSize)
-                : const Icon(Icons.favorite_border_outlined, size: iconSize),
+            icon: favoriteLoading.value
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2.5),
+                  )
+                : (gallery.isFavorited ?? false)
+                    ? const Icon(Icons.favorite, size: iconSize)
+                    : const Icon(Icons.favorite_border_outlined, size: iconSize),
             color: Theme.of(context).colorScheme.primary,
             style: compactStyle,
-            onPressed: isUserLogin
-                ? () {
-                    ref.read(galleryProvider(gid).notifier).toggleFavorite();
+            onPressed: isUserLogin && !favoriteLoading.value
+                ? () async {
+                    favoriteLoading.value = true;
+                    try {
+                      await ref.read(galleryProvider(gid).notifier).toggleFavorite();
+                    } finally {
+                      favoriteLoading.value = false;
+                    }
                   }
                 : null,
           ),
