@@ -16,12 +16,15 @@ import 'package:eros_n/network/request.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/pages/gallery/thumb_page.dart';
+import 'package:eros_n/pages/gallery/title_translation_provider.dart';
 import 'package:eros_n/pages/user/user_provider.dart';
 import 'package:eros_n/routes/routes.dart';
 import 'package:eros_n/store/db/entity/download_task.dart';
 import 'package:eros_n/utils/get_utils/get_utils.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:eros_n/utils/share_util.dart';
 import 'package:eros_n/utils/toast.dart';
+import 'package:eros_n/utils/translation/translate_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +36,6 @@ import 'package:nil/nil.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -144,6 +146,63 @@ class GalleryPageBody extends HookConsumerWidget {
     final ScrollController scrollController = useScrollController();
     final ScrollController thumbScrollController = useScrollController();
 
+    final commentTranslation = ref.watch(
+      settingsProvider.select((s) => s.commentTranslation),
+    );
+    ref.watch(titleTranslationProvider);
+    final showTranslatedTitle = useState(false);
+    final mainTitleKey = TitleTranslationNotifier.mainKey(gid);
+    final subTitleKey = TitleTranslationNotifier.subKey(gid);
+    final targetLang = getTargetLanguage();
+    final titleNotifier = ref.read(titleTranslationProvider.notifier);
+    final translatedTitle = titleNotifier.getTranslation(
+      title.englishTitle ?? '',
+      targetLang,
+    );
+    final translatedSubTitle = titleNotifier.getTranslation(
+      title.japaneseTitle ?? '',
+      targetLang,
+    );
+    final titleIsLoading =
+        titleNotifier.isLoading(mainTitleKey) ||
+        titleNotifier.isLoading(subTitleKey);
+
+    final displayTitle = (showTranslatedTitle.value && translatedTitle != null)
+        ? translatedTitle
+        : title.englishTitle ?? '';
+
+    void onTranslateTap() {
+      if (titleIsLoading) {
+        return;
+      }
+      if (translatedTitle != null) {
+        showTranslatedTitle.value = !showTranslatedTitle.value;
+      } else {
+        showTranslatedTitle.value = true;
+        final notifier = ref.read(titleTranslationProvider.notifier);
+        if ((title.englishTitle ?? '').isNotEmpty) {
+          notifier.translate(mainTitleKey, title.englishTitle!);
+        }
+        if ((title.japaneseTitle ?? '').isNotEmpty) {
+          notifier.translate(subTitleKey, title.japaneseTitle!);
+        }
+      }
+    }
+
+    void onTranslateLongPress() {
+      if (titleIsLoading) {
+        return;
+      }
+      showTranslatedTitle.value = true;
+      final notifier = ref.read(titleTranslationProvider.notifier);
+      if ((title.englishTitle ?? '').isNotEmpty) {
+        notifier.translate(mainTitleKey, title.englishTitle!, force: true);
+      }
+      if ((title.japaneseTitle ?? '').isNotEmpty) {
+        notifier.translate(subTitleKey, title.japaneseTitle!, force: true);
+      }
+    }
+
     final glass = isLiquidGlass(ref);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -210,6 +269,38 @@ class GalleryPageBody extends HookConsumerWidget {
         ),
         actions: glass
             ? [
+                if (commentTranslation)
+                  titleIsLoading
+                      ? Padding(
+                          padding: const EdgeInsets.all(9),
+                          child: SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: glassIconColor(context),
+                            ),
+                          ),
+                        )
+                      : GestureDetector(
+                          onLongPress: onTranslateLongPress,
+                          child: GlassIconButton(
+                            icon: Icon(
+                              Icons.translate,
+                              size: 20,
+                              color:
+                                  showTranslatedTitle.value &&
+                                      translatedTitle != null
+                                  ? Theme.of(context).colorScheme.primary
+                                  : glassIconColor(context),
+                            ),
+                            onPressed: onTranslateTap,
+                            size: 36,
+                            useOwnLayer: true,
+                            settings: glassButtonSettings(context),
+                          ),
+                        ),
+                if (commentTranslation) const SizedBox(width: 8),
                 GlassIconButton(
                   icon: Icon(
                     Icons.ios_share,
@@ -219,7 +310,7 @@ class GalleryPageBody extends HookConsumerWidget {
                   onPressed: () {
                     final shareText = 'title:${title.englishTitle}\n$url';
                     logger.d(shareText);
-                    SharePlus.instance.share(ShareParams(text: shareText));
+                    ShareUtil.shareText(shareText);
                   },
                   size: 36,
                   useOwnLayer: true,
@@ -267,12 +358,42 @@ class GalleryPageBody extends HookConsumerWidget {
                 const SizedBox(width: NavigationToolbar.kMiddleSpacing),
               ]
             : [
+                if (commentTranslation)
+                  titleIsLoading
+                      ? Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        )
+                      : GestureDetector(
+                          onLongPress: onTranslateLongPress,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.translate,
+                              size: 20,
+                              color:
+                                  showTranslatedTitle.value &&
+                                      translatedTitle != null
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
+                            ),
+                            onPressed: onTranslateTap,
+                          ),
+                        ),
                 IconButton(
                   icon: const Icon(Icons.ios_share, size: 22),
                   onPressed: () {
                     final shareText = 'title:${title.englishTitle}\n$url';
                     logger.d(shareText);
-                    SharePlus.instance.share(ShareParams(text: shareText));
+                    ShareUtil.shareText(shareText);
                   },
                 ),
                 PopupMenuButton<String>(
@@ -333,6 +454,11 @@ class GalleryPageBody extends HookConsumerWidget {
                   gid: gid,
                   scrollController: scrollController,
                   title: title,
+                  displayTitle: displayTitle,
+                  displaySubTitle:
+                      showTranslatedTitle.value && translatedSubTitle != null
+                      ? translatedSubTitle
+                      : null,
                   heroTag: heroTag,
                   thumbUrl: thumbUrl,
                   images: images,
@@ -409,6 +535,8 @@ class GalleryDetailBody extends HookConsumerWidget {
     required this.gid,
     required this.scrollController,
     required this.title,
+    required this.displayTitle,
+    required this.displaySubTitle,
     required this.heroTag,
     required this.thumbUrl,
     required this.images,
@@ -419,6 +547,8 @@ class GalleryDetailBody extends HookConsumerWidget {
   final int gid;
   final ScrollController scrollController;
   final GalleryTitle title;
+  final String displayTitle;
+  final String? displaySubTitle;
   final String? heroTag;
   final String? thumbUrl;
   final GalleryImages images;
@@ -462,7 +592,7 @@ class GalleryDetailBody extends HookConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SelectableText(
-                            title.englishTitle ?? '',
+                            displayTitle,
                             style: Theme.of(context).textTheme.titleLarge,
                             maxLines: context.isTablet ? 2 : 3,
                             minLines: 1,
@@ -505,6 +635,7 @@ class GalleryDetailBody extends HookConsumerWidget {
                                   child: HeadInfoView(
                                     gid: gid,
                                     context: context,
+                                    displaySubTitle: displaySubTitle,
                                   ),
                                 ),
                               ],
@@ -528,10 +659,16 @@ class GalleryDetailBody extends HookConsumerWidget {
 }
 
 class HeadInfoView extends StatelessWidget {
-  const HeadInfoView({super.key, required this.gid, required this.context});
+  const HeadInfoView({
+    super.key,
+    required this.gid,
+    required this.context,
+    this.displaySubTitle,
+  });
 
   final int gid;
   final BuildContext context;
+  final String? displaySubTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -548,8 +685,9 @@ class HeadInfoView extends StatelessWidget {
                   .watch(galleryProvider(gid))
                   .title
                   .japaneseTitle;
+              final text = displaySubTitle ?? japaneseTitle ?? '';
               return SelectableText(
-                japaneseTitle ?? '',
+                text,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
                 minLines: 1,
@@ -1466,9 +1604,7 @@ class ToolBarView extends HookConsumerWidget {
                           '${gallery.gid}',
                         ),
                       );
-                      SharePlus.instance.share(
-                        ShareParams(files: [XFile(savePath)]),
-                      );
+                      ShareUtil.shareFiles([XFile(savePath)]);
                     } catch (e) {
                       logger.e('torrent download failed', error: e);
                       showSimpleToast('Torrent download failed');

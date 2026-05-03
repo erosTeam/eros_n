@@ -197,5 +197,42 @@
   "translation_provider": "翻译服务商",
   "fetch_models": "获取模型列表",
   "fetch_models_failed": "获取模型列表失败",
-  "manual_input": "手动输入"
+  "manual_input": "手动输入",
+  "auto_translate_comments": "自动翻译评论",
+  "translation_settings": "翻译",
+  "translation_display_mode": "翻译显示模式",
+  "replace_original": "替换原文",
+  "bilingual_display": "双语显示",
+  "bilingual_style": "双语样式",
+  "bilingual_style_divider": "分割线",
+  "bilingual_style_subtle": "柔和斜体",
+  "bilingual_style_compact": "紧凑",
+  "use_google_translate": "使用 Google 翻译",
+  "use_google_translate_tip": "跳过 LLM，直接使用免费的 Google 翻译",
+  "clear_translation_cache": "清理翻译缓存",
+  "clear_translation_cache_tip": "确定要清理所有翻译缓存吗？",
+  "translation_cache_entries": "已缓存 {count} 条翻译",
+  "@translation_cache_entries": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "translation_cache_cleared": "翻译缓存已清理",
+  "custom_provider": "自定义",
+  "security_challenge": "安全挑战",
+  "logout_confirm": "确定要登出吗？",
+  "cover_blur_tip": "在列表中模糊封面图片",
+  "load_more_fail": "加载更多失败",
+  "bilingual_preview_original": "This is the original comment text.",
+  "bilingual_preview_translated": "这是翻译后的评论文本。",
+  "webview_permission_title": "WebView 权限请求",
+  "webview_permission_content": "WebView 请求了 ''{kind}'' 权限",
+  "@webview_permission_content": {
+    "placeholders": {
+      "kind": {}
+    }
+  },
+  "deny": "拒绝",
+  "allow": "允许",
+  "not_initialized": "未初始化"
 }

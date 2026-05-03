@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/webview/webview.dart' show inAppWebViewSettings;
 import 'package:eros_n/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -553,18 +554,18 @@ class _WindowsWebViewState extends State<WindowsWebView> {
     final decision = await showDialog<WebviewPermissionDecision>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text('WebView permission requested'),
-        content: Text('WebView has requested permission \'$kind\''),
+        title: Text(L10n.of(context).webview_permission_title),
+        content: Text(L10n.of(context).webview_permission_content(kind.toString())),
         actions: <Widget>[
           TextButton(
             onPressed: () =>
                 Navigator.pop(context, WebviewPermissionDecision.deny),
-            child: const Text('Deny'),
+            child: Text(L10n.of(context).deny),
           ),
           TextButton(
             onPressed: () =>
                 Navigator.pop(context, WebviewPermissionDecision.allow),
-            child: const Text('Allow'),
+            child: Text(L10n.of(context).allow),
           ),
         ],
       ),
@@ -576,8 +577,8 @@ class _WindowsWebViewState extends State<WindowsWebView> {
   @override
   Widget build(BuildContext context) {
     if (!_controller.value.isInitialized) {
-      return const Text(
-        'Not Initialized',
+      return Text(
+        L10n.of(context).not_initialized,
         style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
       );
     } else {

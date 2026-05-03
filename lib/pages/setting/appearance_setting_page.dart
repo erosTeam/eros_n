@@ -340,7 +340,7 @@ class AppearanceSettingPage extends ConsumerWidget {
               );
               return ListTile(
                 title: Text(L10n.of(context).cover_blur),
-                subtitle: const Text('Blur cover image in list'),
+                subtitle: Text(L10n.of(context).cover_blur_tip),
                 trailing: Switch(
                   activeThumbColor: Theme.of(context).colorScheme.primary,
                   value: isCoverBlur,

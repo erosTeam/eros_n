@@ -2,6 +2,7 @@ import 'package:eros_n/common/const/const.dart';
 import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/gallery.dart';
+import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/enum.dart';
 import 'package:eros_n/pages/list_view/item/item_grid_card.dart';
 import 'package:eros_n/pages/list_view/item/item_list_card.dart';
@@ -277,10 +278,10 @@ class EndIndicator extends StatelessWidget {
             case LoadStatus.error:
               return GestureDetector(
                 onTap: loadDataMore,
-                child: const Column(
+                child: Column(
                   children: <Widget>[
-                    Icon(Icons.error, size: 60),
-                    Text('Load more fail', style: TextStyle(fontSize: 12)),
+                    const Icon(Icons.error, size: 60),
+                    Text(L10n.of(context).load_more_fail, style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               );

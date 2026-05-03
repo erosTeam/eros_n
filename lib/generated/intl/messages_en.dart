@@ -37,12 +37,17 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(version) =>
       "need download tag translation data, version: ${version}";
 
+  static String m7(count) => "${count} cached translations";
+
+  static String m8(kind) => "WebView has requested permission \'\'${kind}\'\'";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("About"),
     "added_on": m0,
     "advanced": MessageLookupByLibrary.simpleMessage("Advanced"),
     "all": MessageLookupByLibrary.simpleMessage("All"),
+    "allow": MessageLookupByLibrary.simpleMessage("Allow"),
     "always": MessageLookupByLibrary.simpleMessage("Always"),
     "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
@@ -50,6 +55,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "auto": MessageLookupByLibrary.simpleMessage("Auto"),
     "auto_read_interval": MessageLookupByLibrary.simpleMessage(
       "Auto read interval",
+    ),
+    "auto_translate_comments": MessageLookupByLibrary.simpleMessage(
+      "Auto translate comments",
+    ),
+    "bilingual_display": MessageLookupByLibrary.simpleMessage("Bilingual"),
+    "bilingual_preview_original": MessageLookupByLibrary.simpleMessage(
+      "This is the original comment text.",
+    ),
+    "bilingual_preview_translated": MessageLookupByLibrary.simpleMessage(
+      "This is the translated comment text.",
+    ),
+    "bilingual_style": MessageLookupByLibrary.simpleMessage("Bilingual Style"),
+    "bilingual_style_compact": MessageLookupByLibrary.simpleMessage("Compact"),
+    "bilingual_style_divider": MessageLookupByLibrary.simpleMessage("Divider"),
+    "bilingual_style_subtle": MessageLookupByLibrary.simpleMessage(
+      "Subtle Italic",
     ),
     "cache_calculating": MessageLookupByLibrary.simpleMessage("Calculating..."),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -67,6 +88,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_search_history_tip": MessageLookupByLibrary.simpleMessage(
       "Clear all search history?",
     ),
+    "clear_translation_cache": MessageLookupByLibrary.simpleMessage(
+      "Clear Translation Cache",
+    ),
+    "clear_translation_cache_tip": MessageLookupByLibrary.simpleMessage(
+      "Clear all cached translations?",
+    ),
     "clipboard_detection": MessageLookupByLibrary.simpleMessage(
       "Clipboard link detection",
     ),
@@ -81,13 +108,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Concurrent Downloads",
     ),
     "cover_blur": MessageLookupByLibrary.simpleMessage("Cover Blur"),
+    "cover_blur_tip": MessageLookupByLibrary.simpleMessage(
+      "Blur cover image in list",
+    ),
     "curl_vertical": MessageLookupByLibrary.simpleMessage("Curl Vertical"),
     "current_path": MessageLookupByLibrary.simpleMessage("Current path"),
     "custom_layout_width": MessageLookupByLibrary.simpleMessage(
       "Custom Layout Width",
     ),
+    "custom_provider": MessageLookupByLibrary.simpleMessage("Custom"),
     "dark": MessageLookupByLibrary.simpleMessage("Dark"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+    "deny": MessageLookupByLibrary.simpleMessage("Deny"),
     "display": MessageLookupByLibrary.simpleMessage("Display"),
     "double_back_to_exit": MessageLookupByLibrary.simpleMessage(
       "Double back to exit",
@@ -148,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "list": MessageLookupByLibrary.simpleMessage("List"),
     "list_model": MessageLookupByLibrary.simpleMessage("List Model"),
     "list_style": MessageLookupByLibrary.simpleMessage("List Style"),
+    "load_more_fail": MessageLookupByLibrary.simpleMessage("Load more fail"),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "login_by_web": MessageLookupByLibrary.simpleMessage("Login by Web"),
     "login_invalid": MessageLookupByLibrary.simpleMessage("Login invalid"),
@@ -155,6 +188,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Login need captcha",
     ),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "logout_confirm": MessageLookupByLibrary.simpleMessage(
+      "Are you sure to logout?",
+    ),
     "manual_input": MessageLookupByLibrary.simpleMessage("Manual Input"),
     "max_concurrent_galleries": MessageLookupByLibrary.simpleMessage(
       "Simultaneous galleries",
@@ -169,6 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_downloads": MessageLookupByLibrary.simpleMessage("No Downloads"),
     "no_result": MessageLookupByLibrary.simpleMessage("No Results"),
     "none": MessageLookupByLibrary.simpleMessage("None"),
+    "not_initialized": MessageLookupByLibrary.simpleMessage("Not Initialized"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "open_in_browser": MessageLookupByLibrary.simpleMessage("Open in Browser"),
     "open_supported_links": MessageLookupByLibrary.simpleMessage(
@@ -203,12 +240,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "recent": MessageLookupByLibrary.simpleMessage("Recent"),
     "recent_searches": MessageLookupByLibrary.simpleMessage("Recent searches"),
     "register": MessageLookupByLibrary.simpleMessage("Register"),
+    "replace_original": MessageLookupByLibrary.simpleMessage(
+      "Replace Original",
+    ),
     "reset_to_default": MessageLookupByLibrary.simpleMessage(
       "Reset to default",
     ),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "right_to_left": MessageLookupByLibrary.simpleMessage("Right to Left"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "security_challenge": MessageLookupByLibrary.simpleMessage(
+      "Security Challenge",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "show_less": MessageLookupByLibrary.simpleMessage("Showing less"),
@@ -255,6 +298,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "translating": MessageLookupByLibrary.simpleMessage("Translating..."),
     "translation_api_key": MessageLookupByLibrary.simpleMessage("API Key"),
     "translation_api_url": MessageLookupByLibrary.simpleMessage("API URL"),
+    "translation_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "Translation cache cleared",
+    ),
+    "translation_cache_entries": m7,
+    "translation_display_mode": MessageLookupByLibrary.simpleMessage(
+      "Translation Display",
+    ),
     "translation_failed": MessageLookupByLibrary.simpleMessage(
       "Translation failed",
     ),
@@ -268,11 +318,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "translation_service_config": MessageLookupByLibrary.simpleMessage(
       "Translation Service",
     ),
+    "translation_settings": MessageLookupByLibrary.simpleMessage("Translation"),
     "use_gallery_tint": MessageLookupByLibrary.simpleMessage(
       "Use Gallery Tint",
     ),
     "use_gallery_tint_tip": MessageLookupByLibrary.simpleMessage(
       "Tint gallery pages base on the color of the cover",
+    ),
+    "use_google_translate": MessageLookupByLibrary.simpleMessage(
+      "Use Google Translate",
+    ),
+    "use_google_translate_tip": MessageLookupByLibrary.simpleMessage(
+      "Skip LLM and use free Google Translate directly",
     ),
     "username": MessageLookupByLibrary.simpleMessage("Username"),
     "version": MessageLookupByLibrary.simpleMessage("Version"),
@@ -285,6 +342,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Waterfall Flow (Compact)",
     ),
     "webtoon": MessageLookupByLibrary.simpleMessage("Webtoon"),
+    "webview_permission_content": m8,
+    "webview_permission_title": MessageLookupByLibrary.simpleMessage(
+      "WebView permission requested",
+    ),
     "wrap": MessageLookupByLibrary.simpleMessage("Wrap"),
     "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
   };

@@ -10,6 +10,7 @@ import 'package:eros_n/store/db/objectbox_helper.dart';
 import 'package:eros_n/store/kv/hive.dart';
 import 'package:eros_n/utils/clipboard_helper.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:eros_n/utils/translation/translation_cache.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart' as iaw;
 import 'package:logger/logger.dart';
@@ -132,6 +133,7 @@ class Global {
     packageInfo = await PackageInfo.fromPlatform();
 
     await HiveHelper.init();
+    await TranslationCacheService.instance.init();
     await objectBoxHelper.init();
     await Api.initCacheStore(appSupportPath);
 

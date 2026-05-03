@@ -73,6 +73,17 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   translationApiUrl: json['translationApiUrl'] as String? ?? '',
   translationApiKey: json['translationApiKey'] as String? ?? '',
   translationModel: json['translationModel'] as String? ?? '',
+  autoTranslateComments: json['autoTranslateComments'] as bool? ?? false,
+  translationDisplayMode:
+      $enumDecodeNullable(
+        _$TranslationDisplayModeEnumMap,
+        json['translationDisplayMode'],
+      ) ??
+      TranslationDisplayMode.replaceOriginal,
+  bilingualStyle:
+      $enumDecodeNullable(_$BilingualStyleEnumMap, json['bilingualStyle']) ??
+      BilingualStyle.divider,
+  useGoogleTranslate: json['useGoogleTranslate'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -113,6 +124,11 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'translationApiUrl': instance.translationApiUrl,
   'translationApiKey': instance.translationApiKey,
   'translationModel': instance.translationModel,
+  'autoTranslateComments': instance.autoTranslateComments,
+  'translationDisplayMode':
+      _$TranslationDisplayModeEnumMap[instance.translationDisplayMode]!,
+  'bilingualStyle': _$BilingualStyleEnumMap[instance.bilingualStyle]!,
+  'useGoogleTranslate': instance.useGoogleTranslate,
 };
 
 const _$SearchSortEnumMap = {
@@ -166,4 +182,15 @@ const _$TranslationProviderEnumMap = {
   TranslationProvider.groq: 'groq',
   TranslationProvider.openrouter: 'openrouter',
   TranslationProvider.custom: 'custom',
+};
+
+const _$TranslationDisplayModeEnumMap = {
+  TranslationDisplayMode.replaceOriginal: 'replaceOriginal',
+  TranslationDisplayMode.bilingual: 'bilingual',
+};
+
+const _$BilingualStyleEnumMap = {
+  BilingualStyle.divider: 'divider',
+  BilingualStyle.subtle: 'subtle',
+  BilingualStyle.compact: 'compact',
 };

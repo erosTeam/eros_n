@@ -1313,6 +1313,261 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Auto translate comments`
+  String get auto_translate_comments {
+    return Intl.message(
+      'Auto translate comments',
+      name: 'auto_translate_comments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translation`
+  String get translation_settings {
+    return Intl.message(
+      'Translation',
+      name: 'translation_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Translation Display`
+  String get translation_display_mode {
+    return Intl.message(
+      'Translation Display',
+      name: 'translation_display_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Replace Original`
+  String get replace_original {
+    return Intl.message(
+      'Replace Original',
+      name: 'replace_original',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bilingual`
+  String get bilingual_display {
+    return Intl.message(
+      'Bilingual',
+      name: 'bilingual_display',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bilingual Style`
+  String get bilingual_style {
+    return Intl.message(
+      'Bilingual Style',
+      name: 'bilingual_style',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Divider`
+  String get bilingual_style_divider {
+    return Intl.message(
+      'Divider',
+      name: 'bilingual_style_divider',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subtle Italic`
+  String get bilingual_style_subtle {
+    return Intl.message(
+      'Subtle Italic',
+      name: 'bilingual_style_subtle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Compact`
+  String get bilingual_style_compact {
+    return Intl.message(
+      'Compact',
+      name: 'bilingual_style_compact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use Google Translate`
+  String get use_google_translate {
+    return Intl.message(
+      'Use Google Translate',
+      name: 'use_google_translate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skip LLM and use free Google Translate directly`
+  String get use_google_translate_tip {
+    return Intl.message(
+      'Skip LLM and use free Google Translate directly',
+      name: 'use_google_translate_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Translation Cache`
+  String get clear_translation_cache {
+    return Intl.message(
+      'Clear Translation Cache',
+      name: 'clear_translation_cache',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear all cached translations?`
+  String get clear_translation_cache_tip {
+    return Intl.message(
+      'Clear all cached translations?',
+      name: 'clear_translation_cache_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} cached translations`
+  String translation_cache_entries(Object count) {
+    return Intl.message(
+      '$count cached translations',
+      name: 'translation_cache_entries',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Translation cache cleared`
+  String get translation_cache_cleared {
+    return Intl.message(
+      'Translation cache cleared',
+      name: 'translation_cache_cleared',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get custom_provider {
+    return Intl.message('Custom', name: 'custom_provider', desc: '', args: []);
+  }
+
+  /// `Security Challenge`
+  String get security_challenge {
+    return Intl.message(
+      'Security Challenge',
+      name: 'security_challenge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure to logout?`
+  String get logout_confirm {
+    return Intl.message(
+      'Are you sure to logout?',
+      name: 'logout_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Blur cover image in list`
+  String get cover_blur_tip {
+    return Intl.message(
+      'Blur cover image in list',
+      name: 'cover_blur_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Load more fail`
+  String get load_more_fail {
+    return Intl.message(
+      'Load more fail',
+      name: 'load_more_fail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is the original comment text.`
+  String get bilingual_preview_original {
+    return Intl.message(
+      'This is the original comment text.',
+      name: 'bilingual_preview_original',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is the translated comment text.`
+  String get bilingual_preview_translated {
+    return Intl.message(
+      'This is the translated comment text.',
+      name: 'bilingual_preview_translated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WebView permission requested`
+  String get webview_permission_title {
+    return Intl.message(
+      'WebView permission requested',
+      name: 'webview_permission_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WebView has requested permission ''{kind}''`
+  String webview_permission_content(Object kind) {
+    return Intl.message(
+      'WebView has requested permission \'\'$kind\'\'',
+      name: 'webview_permission_content',
+      desc: '',
+      args: [kind],
+    );
+  }
+
+  /// `Deny`
+  String get deny {
+    return Intl.message('Deny', name: 'deny', desc: '', args: []);
+  }
+
+  /// `Allow`
+  String get allow {
+    return Intl.message('Allow', name: 'allow', desc: '', args: []);
+  }
+
+  /// `Not Initialized`
+  String get not_initialized {
+    return Intl.message(
+      'Not Initialized',
+      name: 'not_initialized',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

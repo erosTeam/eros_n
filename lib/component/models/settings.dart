@@ -44,6 +44,11 @@ abstract class Settings with _$Settings {
     @Default('') String translationApiUrl,
     @Default('') String translationApiKey,
     @Default('') String translationModel,
+    @Default(false) bool autoTranslateComments,
+    @Default(TranslationDisplayMode.replaceOriginal)
+    TranslationDisplayMode translationDisplayMode,
+    @Default(BilingualStyle.divider) BilingualStyle bilingualStyle,
+    @Default(false) bool useGoogleTranslate,
   }) = _Settings;
 
   const Settings._();

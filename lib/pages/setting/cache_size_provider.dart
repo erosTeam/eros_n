@@ -4,6 +4,7 @@ import 'package:eros_n/common/global.dart';
 import 'package:eros_n/component/widget/eros_cached_network_image.dart';
 import 'package:eros_n/network/api.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:eros_n/utils/translation/translation_cache.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,6 +23,7 @@ class CacheSize extends _$CacheSize {
       await imageCacheManager.emptyCache();
       await DefaultCacheManager().emptyCache();
       PaintingBinding.instance.imageCache.clear();
+      await TranslationCacheService.instance.clear();
       // On some platforms emptyCache() doesn't fully remove files;
       // delete the directories as a fallback.
       await _deleteDir(Directory('${Global.tempPath}/CachedNetworkImage'));

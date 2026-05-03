@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'comment_translation_provider.dart';
+part of 'title_translation_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,28 +9,28 @@ part of 'comment_translation_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(CommentTranslationNotifier)
-final commentTranslationProvider = CommentTranslationNotifierProvider._();
+@ProviderFor(TitleTranslationNotifier)
+final titleTranslationProvider = TitleTranslationNotifierProvider._();
 
-final class CommentTranslationNotifierProvider
-    extends $NotifierProvider<CommentTranslationNotifier, int> {
-  CommentTranslationNotifierProvider._()
+final class TitleTranslationNotifierProvider
+    extends $NotifierProvider<TitleTranslationNotifier, int> {
+  TitleTranslationNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'commentTranslationProvider',
+        name: r'titleTranslationProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$commentTranslationNotifierHash();
+  String debugGetCreateSourceHash() => _$titleTranslationNotifierHash();
 
   @$internal
   @override
-  CommentTranslationNotifier create() => CommentTranslationNotifier();
+  TitleTranslationNotifier create() => TitleTranslationNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(int value) {
@@ -41,10 +41,10 @@ final class CommentTranslationNotifierProvider
   }
 }
 
-String _$commentTranslationNotifierHash() =>
-    r'f5313b89a9ac73c73a029ab42f246995c4d6c8ed';
+String _$titleTranslationNotifierHash() =>
+    r'b346eac07bf179ef49657940be60ef0d6bbc7780';
 
-abstract class _$CommentTranslationNotifier extends $Notifier<int> {
+abstract class _$TitleTranslationNotifier extends $Notifier<int> {
   int build();
   @$mustCallSuper
   @override

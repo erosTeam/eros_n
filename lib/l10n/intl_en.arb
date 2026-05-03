@@ -197,5 +197,42 @@
   "translation_provider": "Translation Provider",
   "fetch_models": "Fetch Models",
   "fetch_models_failed": "Failed to fetch models",
-  "manual_input": "Manual Input"
+  "manual_input": "Manual Input",
+  "auto_translate_comments": "Auto translate comments",
+  "translation_settings": "Translation",
+  "translation_display_mode": "Translation Display",
+  "replace_original": "Replace Original",
+  "bilingual_display": "Bilingual",
+  "bilingual_style": "Bilingual Style",
+  "bilingual_style_divider": "Divider",
+  "bilingual_style_subtle": "Subtle Italic",
+  "bilingual_style_compact": "Compact",
+  "use_google_translate": "Use Google Translate",
+  "use_google_translate_tip": "Skip LLM and use free Google Translate directly",
+  "clear_translation_cache": "Clear Translation Cache",
+  "clear_translation_cache_tip": "Clear all cached translations?",
+  "translation_cache_entries": "{count} cached translations",
+  "@translation_cache_entries": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "translation_cache_cleared": "Translation cache cleared",
+  "custom_provider": "Custom",
+  "security_challenge": "Security Challenge",
+  "logout_confirm": "Are you sure to logout?",
+  "cover_blur_tip": "Blur cover image in list",
+  "load_more_fail": "Load more fail",
+  "bilingual_preview_original": "This is the original comment text.",
+  "bilingual_preview_translated": "This is the translated comment text.",
+  "webview_permission_title": "WebView permission requested",
+  "webview_permission_content": "WebView has requested permission ''{kind}''",
+  "@webview_permission_content": {
+    "placeholders": {
+      "kind": {}
+    }
+  },
+  "deny": "Deny",
+  "allow": "Allow",
+  "not_initialized": "Not Initialized"
 }

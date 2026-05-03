@@ -81,7 +81,7 @@ class _MorePageState extends ConsumerState<MorePage>
                             logger.d('logout $user');
                             return AlertDialog(
                               title: Text(L10n.of(context).logout),
-                              content: const Text('Are you sure to logout?'),
+                              content: Text(L10n.of(context).logout_confirm),
                               actions: <Widget>[
                                 TextButton(
                                   child: Text(L10n.of(context).cancel),

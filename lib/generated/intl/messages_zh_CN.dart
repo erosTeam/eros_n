@@ -36,18 +36,35 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(version) => "需要下载翻译数据,当前版本: ${version}";
 
+  static String m7(count) => "已缓存 ${count} 条翻译";
+
+  static String m8(kind) => "WebView 请求了 \'\'${kind}\'\' 权限";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("关于"),
     "added_on": m0,
     "advanced": MessageLookupByLibrary.simpleMessage("高级"),
     "all": MessageLookupByLibrary.simpleMessage("全部"),
+    "allow": MessageLookupByLibrary.simpleMessage("允许"),
     "always": MessageLookupByLibrary.simpleMessage("始终"),
     "app_title": MessageLookupByLibrary.simpleMessage("Eros-N"),
     "appearance": MessageLookupByLibrary.simpleMessage("外观"),
     "author": MessageLookupByLibrary.simpleMessage("作者"),
     "auto": MessageLookupByLibrary.simpleMessage("自动"),
     "auto_read_interval": MessageLookupByLibrary.simpleMessage("自动阅读间隔"),
+    "auto_translate_comments": MessageLookupByLibrary.simpleMessage("自动翻译评论"),
+    "bilingual_display": MessageLookupByLibrary.simpleMessage("双语显示"),
+    "bilingual_preview_original": MessageLookupByLibrary.simpleMessage(
+      "This is the original comment text.",
+    ),
+    "bilingual_preview_translated": MessageLookupByLibrary.simpleMessage(
+      "这是翻译后的评论文本。",
+    ),
+    "bilingual_style": MessageLookupByLibrary.simpleMessage("双语样式"),
+    "bilingual_style_compact": MessageLookupByLibrary.simpleMessage("紧凑"),
+    "bilingual_style_divider": MessageLookupByLibrary.simpleMessage("分割线"),
+    "bilingual_style_subtle": MessageLookupByLibrary.simpleMessage("柔和斜体"),
     "cache_calculating": MessageLookupByLibrary.simpleMessage("计算中..."),
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
     "cdn_warn_high": m1,
@@ -62,6 +79,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear_search_history_tip": MessageLookupByLibrary.simpleMessage(
       "确定要清除全部搜索历史吗?",
     ),
+    "clear_translation_cache": MessageLookupByLibrary.simpleMessage("清理翻译缓存"),
+    "clear_translation_cache_tip": MessageLookupByLibrary.simpleMessage(
+      "确定要清理所有翻译缓存吗？",
+    ),
     "clipboard_detection": MessageLookupByLibrary.simpleMessage("剪贴板链接检测"),
     "comment_length_error": MessageLookupByLibrary.simpleMessage(
       "评论内容需要超过10个字符",
@@ -70,11 +91,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "comments": MessageLookupByLibrary.simpleMessage("评论"),
     "concurrent_downloads": MessageLookupByLibrary.simpleMessage("并发下载"),
     "cover_blur": MessageLookupByLibrary.simpleMessage("封面模糊"),
+    "cover_blur_tip": MessageLookupByLibrary.simpleMessage("在列表中模糊封面图片"),
     "curl_vertical": MessageLookupByLibrary.simpleMessage("垂直(连续)"),
     "current_path": MessageLookupByLibrary.simpleMessage("当前路径"),
     "custom_layout_width": MessageLookupByLibrary.simpleMessage("自定义布局宽度"),
+    "custom_provider": MessageLookupByLibrary.simpleMessage("自定义"),
     "dark": MessageLookupByLibrary.simpleMessage("深色"),
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
+    "deny": MessageLookupByLibrary.simpleMessage("拒绝"),
     "display": MessageLookupByLibrary.simpleMessage("显示"),
     "double_back_to_exit": MessageLookupByLibrary.simpleMessage("双击返回退出应用"),
     "download": MessageLookupByLibrary.simpleMessage("下载"),
@@ -123,11 +147,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "list": MessageLookupByLibrary.simpleMessage("列表"),
     "list_model": MessageLookupByLibrary.simpleMessage("列表模式"),
     "list_style": MessageLookupByLibrary.simpleMessage("列表样式"),
+    "load_more_fail": MessageLookupByLibrary.simpleMessage("加载更多失败"),
     "login": MessageLookupByLibrary.simpleMessage("登录"),
     "login_by_web": MessageLookupByLibrary.simpleMessage("通过网页登陆"),
     "login_invalid": MessageLookupByLibrary.simpleMessage("无效登录信息"),
     "login_need_captcha": MessageLookupByLibrary.simpleMessage("登录需要验证码"),
     "logout": MessageLookupByLibrary.simpleMessage("登出"),
+    "logout_confirm": MessageLookupByLibrary.simpleMessage("确定要登出吗？"),
     "manual_input": MessageLookupByLibrary.simpleMessage("手动输入"),
     "max_concurrent_galleries": MessageLookupByLibrary.simpleMessage(
       "同时下载的画廊数量",
@@ -140,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_downloads": MessageLookupByLibrary.simpleMessage("暂无下载"),
     "no_result": MessageLookupByLibrary.simpleMessage("无搜索结果"),
     "none": MessageLookupByLibrary.simpleMessage("无"),
+    "not_initialized": MessageLookupByLibrary.simpleMessage("未初始化"),
     "ok": MessageLookupByLibrary.simpleMessage("确定"),
     "open_in_browser": MessageLookupByLibrary.simpleMessage("在浏览器中打开"),
     "open_supported_links": MessageLookupByLibrary.simpleMessage("打开支持的链接"),
@@ -164,10 +191,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "recent": MessageLookupByLibrary.simpleMessage("最新发布"),
     "recent_searches": MessageLookupByLibrary.simpleMessage("最近搜索"),
     "register": MessageLookupByLibrary.simpleMessage("注册"),
+    "replace_original": MessageLookupByLibrary.simpleMessage("替换原文"),
     "reset_to_default": MessageLookupByLibrary.simpleMessage("重置为默认"),
     "resume": MessageLookupByLibrary.simpleMessage("继续"),
     "right_to_left": MessageLookupByLibrary.simpleMessage("从右到左"),
     "search": MessageLookupByLibrary.simpleMessage("搜索"),
+    "security_challenge": MessageLookupByLibrary.simpleMessage("安全挑战"),
     "settings": MessageLookupByLibrary.simpleMessage("设置"),
     "share": MessageLookupByLibrary.simpleMessage("分享"),
     "show_less": MessageLookupByLibrary.simpleMessage("显示更少内容"),
@@ -210,6 +239,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "translating": MessageLookupByLibrary.simpleMessage("正在翻译..."),
     "translation_api_key": MessageLookupByLibrary.simpleMessage("API 密钥"),
     "translation_api_url": MessageLookupByLibrary.simpleMessage("API 地址"),
+    "translation_cache_cleared": MessageLookupByLibrary.simpleMessage(
+      "翻译缓存已清理",
+    ),
+    "translation_cache_entries": m7,
+    "translation_display_mode": MessageLookupByLibrary.simpleMessage("翻译显示模式"),
     "translation_failed": MessageLookupByLibrary.simpleMessage("翻译失败"),
     "translation_hint": MessageLookupByLibrary.simpleMessage(
       "未配置时使用内置翻译服务（如可用）或免费 Google 翻译",
@@ -219,9 +253,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "translation_service_config": MessageLookupByLibrary.simpleMessage(
       "翻译服务配置",
     ),
+    "translation_settings": MessageLookupByLibrary.simpleMessage("翻译"),
     "use_gallery_tint": MessageLookupByLibrary.simpleMessage("使用画廊色调"),
     "use_gallery_tint_tip": MessageLookupByLibrary.simpleMessage(
       "根据封面的颜色给画廊页面着色",
+    ),
+    "use_google_translate": MessageLookupByLibrary.simpleMessage(
+      "使用 Google 翻译",
+    ),
+    "use_google_translate_tip": MessageLookupByLibrary.simpleMessage(
+      "跳过 LLM，直接使用免费的 Google 翻译",
     ),
     "username": MessageLookupByLibrary.simpleMessage("用户名"),
     "version": MessageLookupByLibrary.simpleMessage("版本"),
@@ -230,6 +271,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "waterfall": MessageLookupByLibrary.simpleMessage("瀑布流"),
     "waterfall_compact": MessageLookupByLibrary.simpleMessage("瀑布流 (紧凑)"),
     "webtoon": MessageLookupByLibrary.simpleMessage("条漫"),
+    "webview_permission_content": m8,
+    "webview_permission_title": MessageLookupByLibrary.simpleMessage(
+      "WebView 权限请求",
+    ),
     "wrap": MessageLookupByLibrary.simpleMessage("换行"),
     "yesterday": MessageLookupByLibrary.simpleMessage("昨天"),
   };

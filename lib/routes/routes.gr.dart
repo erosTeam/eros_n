@@ -607,6 +607,22 @@ class ThumbRouteArgs {
 }
 
 /// generated route for
+/// [TranslationSettingPage]
+class TranslationSettingRoute extends PageRouteInfo<void> {
+  const TranslationSettingRoute({List<PageRouteInfo>? children})
+    : super(TranslationSettingRoute.name, initialChildren: children);
+
+  static const String name = 'TranslationSettingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TranslationSettingPage();
+    },
+  );
+}
+
+/// generated route for
 /// [WebLoginPage]
 class WebLoginRoute extends PageRouteInfo<void> {
   const WebLoginRoute({List<PageRouteInfo>? children})

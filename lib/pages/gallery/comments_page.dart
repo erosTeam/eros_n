@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:eros_n/common/const/const.dart';
+import 'package:eros_n/common/enum.dart';
 import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/component/models/comment.dart';
 import 'package:eros_n/component/widget/adaptive_app_bar.dart';
@@ -13,6 +14,8 @@ import 'package:eros_n/pages/gallery/comment_translation_provider.dart';
 import 'package:eros_n/pages/gallery/gallery_provider.dart';
 import 'package:eros_n/utils/get_utils/extensions/context_extensions.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:eros_n/utils/translation/bilingual_style_helper.dart';
+import 'package:eros_n/utils/translation/translate_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -61,7 +64,7 @@ class CommentsPage extends HookConsumerWidget {
             appBar: adaptiveAppBar(
               context: context,
               ref: ref,
-              title: const Text('评论'),
+              title: Text(L10n.of(context).comments),
             ),
             body: Padding(
               padding: glass ? glassBodyPadding(context) : EdgeInsets.zero,
@@ -172,13 +175,23 @@ class CommentsListView extends ConsumerStatefulWidget {
 
 class _CommentsListViewState extends ConsumerState<CommentsListView> {
   final Set<int> _showTranslation = {};
+  final Set<int> _autoInitDone = {};
 
   @override
   Widget build(BuildContext context) {
     final commentTranslation = ref.watch(
       settingsProvider.select((s) => s.commentTranslation),
     );
-    final translations = ref.watch(commentTranslationProvider);
+    final autoTranslate = ref.watch(
+      settingsProvider.select((s) => s.autoTranslateComments),
+    );
+    final displayMode = ref.watch(
+      settingsProvider.select((s) => s.translationDisplayMode),
+    );
+    final bilingualStyle = ref.watch(
+      settingsProvider.select((s) => s.bilingualStyle),
+    );
+    ref.watch(commentTranslationProvider);
 
     return ListView.separated(
       itemCount: widget.comments.length,
@@ -192,12 +205,32 @@ class _CommentsListViewState extends ConsumerState<CommentsListView> {
           'yyyy-MM-dd HH:mm',
         ).format(date.toLocal());
 
-        final translatedText = translations[commentId];
+        final originalText = comment.commentText ?? '';
+        final targetLang = getTargetLanguage();
+        final translatedText = ref
+            .read(commentTranslationProvider.notifier)
+            .getTranslation(originalText, targetLang);
         final isLoading = ref
             .read(commentTranslationProvider.notifier)
             .isLoading(commentId);
+
+        // Auto-translate: only initialize once per comment
+        if (commentTranslation &&
+            autoTranslate &&
+            originalText.isNotEmpty &&
+            !_autoInitDone.contains(commentId)) {
+          _autoInitDone.add(commentId);
+          _showTranslation.add(commentId);
+          if (translatedText == null && !isLoading) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref
+                  .read(commentTranslationProvider.notifier)
+                  .translate(commentId, originalText);
+            });
+          }
+        }
+
         final showTrans = _showTranslation.contains(commentId);
-        final originalText = comment.commentText ?? '';
         final displayText = (showTrans && translatedText != null)
             ? translatedText
             : originalText;
@@ -244,6 +277,68 @@ class _CommentsListViewState extends ConsumerState<CommentsListView> {
                 textScaler: const TextScaler.linear(0.94),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
+              if (commentTranslation && originalText.isNotEmpty) ...[
+                const SizedBox(width: 4),
+                InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: isLoading
+                      ? null
+                      : () {
+                          if (translatedText != null) {
+                            setState(() {
+                              if (_showTranslation.contains(commentId)) {
+                                _showTranslation.remove(commentId);
+                              } else {
+                                _showTranslation.add(commentId);
+                              }
+                            });
+                          } else {
+                            _showTranslation.add(commentId);
+                            ref
+                                .read(commentTranslationProvider.notifier)
+                                .translate(commentId, originalText);
+                          }
+                        },
+                  onLongPress: isLoading
+                      ? null
+                      : () {
+                          _showTranslation.add(commentId);
+                          ref
+                              .read(commentTranslationProvider.notifier)
+                              .translate(
+                                commentId,
+                                originalText,
+                                force: true,
+                              );
+                        },
+                  child: SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: Center(
+                      child: isLoading
+                          ? SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                            )
+                          : Icon(
+                              Icons.translate,
+                              size: 16,
+                              color: showTrans && translatedText != null
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                            ),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
           subtitle: AnimatedSize(
@@ -252,57 +347,29 @@ class _CommentsListViewState extends ConsumerState<CommentsListView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  displayText,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textScaler: const TextScaler.linear(0.94),
-                ),
-                if (commentTranslation && originalText.isNotEmpty)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: isLoading
-                          ? null
-                          : () {
-                              if (translatedText != null) {
-                                setState(() {
-                                  if (_showTranslation.contains(commentId)) {
-                                    _showTranslation.remove(commentId);
-                                  } else {
-                                    _showTranslation.add(commentId);
-                                  }
-                                });
-                              } else {
-                                _showTranslation.add(commentId);
-                                ref
-                                    .read(commentTranslationProvider.notifier)
-                                    .translate(commentId, originalText);
-                              }
-                            },
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: isLoading
-                            ? SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                              )
-                            : Icon(
-                                Icons.translate,
-                                size: 18,
-                                color: showTrans && translatedText != null
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                              ),
-                      ),
+                if (showTrans &&
+                    translatedText != null &&
+                    displayMode == TranslationDisplayMode.bilingual) ...[
+                  Text(
+                    originalText,
+                    style: bilingualOriginalStyle(context),
+                    textScaler: const TextScaler.linear(
+                      bilingualTextScaleFactor,
                     ),
+                  ),
+                  bilingualSeparator(context, bilingualStyle),
+                  Text(
+                    translatedText,
+                    style: bilingualTranslatedStyle(context, bilingualStyle),
+                    textScaler: const TextScaler.linear(
+                      bilingualTextScaleFactor,
+                    ),
+                  ),
+                ] else
+                  Text(
+                    displayText,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textScaler: const TextScaler.linear(0.94),
                   ),
               ],
             ),

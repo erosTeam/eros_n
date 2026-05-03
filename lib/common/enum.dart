@@ -53,6 +53,10 @@ enum LanguagesFilter {
   final String value;
 }
 
+enum TranslationDisplayMode { replaceOriginal, bilingual }
+
+enum BilingualStyle { divider, subtle, compact }
+
 enum TranslationProvider {
   openai('OpenAI', 'https://api.openai.com', 'gpt-4o-mini'),
   deepseek('DeepSeek', 'https://api.deepseek.com', 'deepseek-v4-flash'),

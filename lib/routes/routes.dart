@@ -23,6 +23,7 @@ import 'package:eros_n/pages/setting/item_width_setting_page.dart';
 import 'package:eros_n/pages/setting/license_page.dart';
 import 'package:eros_n/pages/setting/read_setting_page.dart';
 import 'package:eros_n/pages/setting/settings_page.dart';
+import 'package:eros_n/pages/setting/translation_setting_page.dart';
 import 'package:eros_n/pages/splash/splash_view.dart';
 import 'package:eros_n/pages/user/login_page.dart';
 import 'package:eros_n/pages/user/web_login_page.dart';
@@ -57,6 +58,7 @@ class NHRoutes {
   static const String itemWidthSetting = '/itemWidthSetting';
   static const String downloads = '/downloads';
   static const String downloadSetting = '/download-setting';
+  static const String translationSetting = '/translationSetting';
 }
 
 class AppRouteObserver extends AutoRouterObserver {
@@ -100,6 +102,10 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(path: NHRoutes.downloads, page: DownloadsRoute.page),
     AutoRoute(path: NHRoutes.downloadSetting, page: DownloadSettingRoute.page),
+    AutoRoute(
+      path: NHRoutes.translationSetting,
+      page: TranslationSettingRoute.page,
+    ),
   ];
 }
 

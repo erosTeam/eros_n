@@ -116,4 +116,16 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   void setTranslationModel(String value) =>
       _save(state.copyWith(translationModel: value));
+
+  void setAutoTranslateComments(bool value) =>
+      _save(state.copyWith(autoTranslateComments: value));
+
+  void setTranslationDisplayMode(TranslationDisplayMode value) =>
+      _save(state.copyWith(translationDisplayMode: value));
+
+  void setBilingualStyle(BilingualStyle value) =>
+      _save(state.copyWith(bilingualStyle: value));
+
+  void setUseGoogleTranslate(bool value) =>
+      _save(state.copyWith(useGoogleTranslate: value));
 }
