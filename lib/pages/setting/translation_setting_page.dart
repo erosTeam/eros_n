@@ -5,8 +5,9 @@ import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/setting/setting_base.dart';
 import 'package:eros_n/utils/logger.dart';
-import 'package:eros_n/utils/translation/llm_translator.dart';
+import 'package:eros_n/utils/toast.dart';
 import 'package:eros_n/utils/translation/bilingual_style_helper.dart';
+import 'package:eros_n/utils/translation/llm_translator.dart';
 import 'package:eros_n/utils/translation/translation_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -302,9 +303,7 @@ class _TranslationCacheTileState extends State<_TranslationCacheTile> {
           await TranslationCacheService.instance.clear();
           if (mounted) {
             setState(() => _entryCount = 0);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.translation_cache_cleared)),
-            );
+            showBriefSnackBar(context, l10n.translation_cache_cleared);
           }
         }
       },
@@ -377,9 +376,7 @@ class _TranslationConfigFieldsState
     } catch (e) {
       logger.e('fetchModels error: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(L10n.of(context).fetch_models_failed)),
-        );
+        showBriefSnackBar(context, L10n.of(context).fetch_models_failed);
       }
     } finally {
       if (mounted) {

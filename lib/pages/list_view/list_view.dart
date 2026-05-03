@@ -281,7 +281,10 @@ class EndIndicator extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     const Icon(Icons.error, size: 60),
-                    Text(L10n.of(context).load_more_fail, style: const TextStyle(fontSize: 12)),
+                    Text(
+                      L10n.of(context).load_more_fail,
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
               );

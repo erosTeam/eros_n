@@ -153,7 +153,7 @@ class GalleryPageBody extends HookConsumerWidget {
     final showTranslatedTitle = useState(false);
     final mainTitleKey = TitleTranslationNotifier.mainKey(gid);
     final subTitleKey = TitleTranslationNotifier.subKey(gid);
-    final targetLang = getTargetLanguage();
+    final targetLang = getTargetLanguage(ref.read(settingsProvider).localeCode);
     final titleNotifier = ref.read(titleTranslationProvider.notifier);
     final translatedTitle = titleNotifier.getTranslation(
       title.englishTitle ?? '',

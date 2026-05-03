@@ -68,7 +68,8 @@ class _BrokenShieldState extends State<BrokenShield> {
           stream: webViewCookieInfoChangeCtrl.stream,
           builder: (context, snapshot) {
             final manualRequired = snapshot.data?.manualRequired ?? false;
-            final message = snapshot.data?.message ?? L10n.of(context).security_challenge;
+            final message =
+                snapshot.data?.message ?? L10n.of(context).security_challenge;
             final showWebView = manualRequired;
             double opacity = 0;
             if (showWebView) {

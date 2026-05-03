@@ -43,5 +43,13 @@ class NHConst {
   static const Map<String, String> localeMap = {
     'en_': 'English',
     'zh_CN': '简体中文',
+    'zh_TW': '繁體中文',
+    'ja_': '日本語',
+    'ko_': '한국어',
+    'es_': 'Español',
+    'fr_': 'Français',
+    'de_': 'Deutsch',
+    'ru_': 'Русский',
+    'pt_': 'Português',
   };
 }

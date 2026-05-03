@@ -24,7 +24,7 @@ class DownloadSettingPage extends ConsumerWidget {
       appBar: adaptiveAppBar(
         context: context,
         ref: ref,
-        title: Text(l.download_settings),
+        title: Text(l.download),
       ),
       body: ListView(
         padding: glass ? glassBodyPadding(context) : null,

@@ -1,9 +1,10 @@
 import 'package:eros_n/utils/get_utils/platform/platform.dart';
+import 'package:eros_n/utils/toast.dart';
 import 'package:flutter/material.dart';
 
 extension ContextExtensionss on BuildContext {
   void showSnackBar(String message) {
-    ScaffoldMessenger.of(this).showSnackBar(SnackBar(content: Text(message)));
+    showBriefSnackBar(this, message);
   }
 
   /// The same of [MediaQuery.of(context).size]

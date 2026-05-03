@@ -5,7 +5,7 @@ import 'package:translator/translator.dart' as gt;
 class GoogleTranslateService implements TranslationService {
   final _translator = gt.GoogleTranslator();
 
-  static const _langMapping = {'zh': 'zh-cn'};
+  static const _langMapping = {'zh-CN': 'zh-cn', 'zh-TW': 'zh-tw'};
 
   @override
   Future<String> translate(

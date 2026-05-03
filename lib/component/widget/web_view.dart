@@ -555,7 +555,9 @@ class _WindowsWebViewState extends State<WindowsWebView> {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(L10n.of(context).webview_permission_title),
-        content: Text(L10n.of(context).webview_permission_content(kind.toString())),
+        content: Text(
+          L10n.of(context).webview_permission_content(kind.toString()),
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () =>
@@ -579,7 +581,7 @@ class _WindowsWebViewState extends State<WindowsWebView> {
     if (!_controller.value.isInitialized) {
       return Text(
         L10n.of(context).not_initialized,
-        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
+        style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
       );
     } else {
       return Webview(_controller, permissionRequested: _onPermissionRequested);

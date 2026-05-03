@@ -8,6 +8,7 @@ import 'package:eros_n/component/widget/adaptive_app_bar.dart';
 import 'package:eros_n/generated/l10n.dart';
 import 'package:eros_n/pages/setting/setting_base.dart';
 import 'package:eros_n/routes/routes.dart';
+import 'package:eros_n/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -278,22 +279,18 @@ class AppearanceSettingPage extends ConsumerWidget {
                       .read(tagTranslateProvider.notifier)
                       .updateDb(force: force);
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(L10n.of(context).tag_translation_updated),
-                        duration: const Duration(seconds: 2),
-                      ),
+                    showBriefSnackBar(
+                      context,
+                      L10n.of(context).tag_translation_updated,
+                      duration: const Duration(seconds: 2),
                     );
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          '${L10n.of(context).tag_translation_update_failed}: $e',
-                        ),
-                        duration: const Duration(seconds: 4),
-                      ),
+                    showBriefSnackBar(
+                      context,
+                      '${L10n.of(context).tag_translation_update_failed}: $e',
+                      duration: const Duration(seconds: 4),
                     );
                   }
                 }

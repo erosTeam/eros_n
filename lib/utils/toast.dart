@@ -15,7 +15,7 @@ void showBriefSnackBar(
         content: Text(message),
         duration: duration,
         behavior: SnackBarBehavior.fixed,
-        showCloseIcon: false,
+        showCloseIcon: true,
       ),
     );
 }

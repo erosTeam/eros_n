@@ -8,11 +8,24 @@ import 'package:eros_n/utils/translation/translation_cache.dart';
 import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-String getTargetLanguage() {
+String getTargetLanguage(String localeCode) {
+  if (localeCode.isNotEmpty) {
+    final parts = localeCode.split('_');
+    final lang = parts.first;
+    final country = parts.length > 1 ? parts[1] : '';
+    if (lang == 'zh' && country.isNotEmpty) {
+      return 'zh-$country';
+    }
+    return lang.isEmpty ? 'en' : lang;
+  }
   final locale = WidgetsBinding.instance.platformDispatcher.locale;
   final code = locale.languageCode;
   if (code == 'zh') {
-    return 'zh';
+    final country = locale.countryCode;
+    if (country != null && country.isNotEmpty) {
+      return 'zh-$country';
+    }
+    return 'zh-CN';
   }
   return code;
 }

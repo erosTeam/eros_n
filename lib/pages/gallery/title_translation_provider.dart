@@ -1,3 +1,4 @@
+import 'package:eros_n/common/provider/settings_provider.dart';
 import 'package:eros_n/utils/logger.dart';
 import 'package:eros_n/utils/translation/translate_helper.dart';
 import 'package:eros_n/utils/translation/translation_cache.dart';
@@ -23,7 +24,7 @@ class TitleTranslationNotifier extends _$TitleTranslationNotifier {
   static String subKey(int gid) => '${gid}_sub';
 
   Future<void> translate(String key, String text, {bool force = false}) async {
-    final targetLang = getTargetLanguage();
+    final targetLang = getTargetLanguage(ref.read(settingsProvider).localeCode);
     if (!force &&
         TranslationCacheService.instance.get(text, targetLang) != null) {
       return;

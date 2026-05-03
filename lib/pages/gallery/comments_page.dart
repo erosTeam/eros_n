@@ -206,7 +206,9 @@ class _CommentsListViewState extends ConsumerState<CommentsListView> {
         ).format(date.toLocal());
 
         final originalText = comment.commentText ?? '';
-        final targetLang = getTargetLanguage();
+        final targetLang = getTargetLanguage(
+          ref.read(settingsProvider).localeCode,
+        );
         final translatedText = ref
             .read(commentTranslationProvider.notifier)
             .getTranslation(originalText, targetLang);
@@ -305,11 +307,7 @@ class _CommentsListViewState extends ConsumerState<CommentsListView> {
                           _showTranslation.add(commentId);
                           ref
                               .read(commentTranslationProvider.notifier)
-                              .translate(
-                                commentId,
-                                originalText,
-                                force: true,
-                              );
+                              .translate(commentId, originalText, force: true);
                         },
                   child: SizedBox(
                     width: 28,

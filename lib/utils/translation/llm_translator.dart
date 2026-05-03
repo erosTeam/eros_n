@@ -40,11 +40,16 @@ class LlmTranslator implements TranslationService {
     }
   }
 
+  static const _langNames = {
+    'zh-CN': 'Simplified Chinese',
+    'zh-TW': 'Traditional Chinese',
+  };
+
   @override
   Future<String> translate(
     String text, {
     String from = 'auto',
-    String to = 'zh',
+    String to = 'zh-CN',
   }) async {
     final savedBaseUrl = OpenAI.baseUrl;
     try {
@@ -54,8 +59,9 @@ class LlmTranslator implements TranslationService {
       }
       OpenAI.showLogs = false;
 
+      final langName = _langNames[to] ?? to;
       final systemPrompt =
-          'You are a translator. Translate the following text to $to. '
+          'You are a translator. Translate the following text to $langName. '
           'Output ONLY the translated text, no explanations.';
 
       final response = await OpenAI.instance.chat.create(
