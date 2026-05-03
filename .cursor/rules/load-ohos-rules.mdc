@@ -1,8 +1,0 @@
----
-description: Auto-load eros_n_ohos project rules when working on ohos files
-alwaysApply: true
----
-
-# eros_n_ohos 规则加载
-
-当对话涉及 `eros_n_ohos` 项目的文件时，必须主动用 Glob 工具找到 `eros_n_ohos` 项目下 `.cursor/rules/` 目录中的所有 `.mdc` 文件，逐个用 Read 工具读取，并遵守其中的规则。

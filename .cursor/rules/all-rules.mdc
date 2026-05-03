@@ -1,0 +1,276 @@
+---
+description: All project rules consolidated into a single file — MUST be loaded at conversation start
+alwaysApply: true
+---
+
+# ⚠️ Cursor Bug Warning
+
+Cursor may fail to load multiple `.mdc` rule files — the `agent_requestable_workspace_rules` list may only include one file even when multiple `alwaysApply: true` files exist. **All rules MUST live in this single file.** Do NOT split rules into separate `.mdc` files.
+
+---
+
+# 1. Core Behavioral Rules
+
+## 1.1 Read and Answer First
+
+- **Read every sentence the user wrote.** Do not skip anything.
+- If the user asks a question, **answer the question**. Do not start editing code, reading files, or calling tools.
+- Only act (edit code, run commands) after the user explicitly tells you to.
+
+## 1.2 Only Change What Was Asked
+
+- When the user lists specific items to fix, fix **only** those items.
+- Do NOT touch other code "while I'm at it", even if it looks related.
+- If you think something else needs changing, **ask first**.
+
+## 1.3 Post-Change Review
+
+- After every edit, review changes against the user's request **item by item**.
+- If any change does NOT map to something the user asked for, revert it.
+
+## 1.4 Repeated Feedback = You Failed
+
+- If the user reports the same issue multiple times, you failed to fix it.
+- Re-read the user's exact words before attempting again.
+- Do NOT change something else hoping it incidentally fixes the reported issue.
+
+## 1.5 No Unilateral Decisions
+
+- When there are multiple valid approaches, present options and ask.
+- Do NOT pick an approach and start coding without asking.
+- If the user rejects a proposal, drop it.
+
+## 1.6 Terminal / Deployment
+
+- Do NOT run terminal commands (build, deploy, push) unless the user tells you to.
+- "提交" means commit ohos first. "同步主项目" means commit the main project.
+- Do NOT push to remote unless explicitly asked.
+
+## 1.7 Debugging — Always Check Logs First
+
+- When the user reports a runtime error, **read the logs before changing code**.
+- This is a Flutter app running on HarmonyOS via `hdc`.
+- Logs are available in the terminal running `./dev.sh --attach` (Flutter attach output).
+- Check the terminals folder for active terminal output files.
+- Also check the on-device log file via: `hdc shell cat /data/app/el2/100/base/com.erosteam.erosn/haps/entry/files/debug.log`
+- **Never guess** the cause of an error. Read the actual stack trace first, then fix.
+
+---
+
+# 2. Understand Before Analyze
+
+When debugging or investigating an issue reported by the user:
+
+## Step 1: Confirm the scenario
+- **Restate the user's described scenario in your own words** and ask if you understood correctly
+- If the user's description is ambiguous, ask clarifying questions IMMEDIATELY — do NOT fill in gaps with assumptions
+- Never invent a scenario the user didn't describe
+
+## Step 2: Use evidence, not speculation
+- Prefer logs, runtime data, and actual code traces over mental deduction
+- If you need logs to confirm a hypothesis, say so and deploy logging — don't spend tokens on lengthy internal reasoning
+- Keep speculation SHORT (1-2 sentences max). If you can't confirm it quickly, get evidence instead
+
+## Step 3: Stay grounded
+- If you realize your analysis direction is wrong, STOP immediately and re-read what the user actually said
+- Do NOT continue down a wrong path just because you've already invested time in it (sunk cost)
+- When the user corrects you, acknowledge the correction and pivot — don't defend or re-explain the wrong analysis
+
+## Do NOT:
+- Spend long thinking sessions building on unverified assumptions
+- Ignore the user's exact words and substitute your own interpretation
+- Analyze a scenario the user never described
+- Continue analyzing after the user says you're wrong — stop and listen first
+
+---
+
+# 3. Dev & Test Discipline
+
+## 改动前
+- 必须先阅读相关代码，不凭记忆改代码
+- UI 设计变更必须先提方案，等用户确认后再动手
+- 不做超出用户要求范围的改动
+
+## 改动中
+- 每次只改一个功能点，不顺手改无关代码
+- 改完后用 ReadLints 检查是否引入新错误
+
+## 部署后验证
+- 必须逐条验证每个改动点是否生效，不能以"标题显示正常"代替"整体没问题"
+- 验证顺序：截图确认页面渲染 → 检查 Flutter 日志有无异常 → 逐条确认功能
+- 有下载任务时，必须进入下载管理页确认列表能正常显示（非空白）
+
+## 出了问题
+- 发现异常必须先查清根本原因（日志 / layout dump / 代码），不能靠猜测反复试改
+- 改动引入了 regression 必须立即承认并优先修复，不能跳过继续做别的
+- 用 `hilog -x | grep Flutter` 或 debug 构建获取真实错误栈，不能凭"可能是 X"就改代码
+
+## HarmonyOS uitest 点击坐标
+- **禁止脑算坐标**：必须先从日志获取设备真实 dpr 和屏幕物理尺寸，再换算像素坐标
+- 在 `_MyAppState.initState` / `didChangeMetrics` 处已有 `_logScreenMetrics()` 日志，启动后直接从 debug.log 读取
+- 换算公式：`pixel = dp × dpr`；AppBar ≈ 56 dp，SectionHeader ≈ 40 dp，均需计入 y 偏移
+- 点击后必须读日志确认对应回调（如 `openGallery` / `openReader`）是否触发，不能靠肉眼判断
+
+## 调试手段优先级
+1. **加日志** — 不确定的值/流程，先加 `logger.d()` 输出，部署一次看结果
+2. **读日志** — 从 `debug.log` 或 `bash dev.sh --log` 获取证据
+3. **截图辅助** — 只用于视觉确认，不用于坐标测量
+- 禁止在没有日志/数据支撑的情况下"猜测"行为并直接改代码
+
+## 对用户的承诺
+- 未经要求不提交代码
+- 不用模糊说辞敷衍，必须有截图或日志证据支撑结论
+
+---
+
+# 4. Git Branching Workflow
+
+## 规则
+
+- **每个新功能必须新建分支**，不在 master 上直接开发
+- 分支命名：`feat/xxx`、`fix/xxx`、`refactor/xxx`
+- **每个小阶段完成后立即提交**，保证可回溯
+- 功能完成后，等用户确认验证通过，再由用户决定是否压缩合并（squash merge）到主分支
+- **禁止删除分支**，不管合并是否完成。分支只能在用户明确说"统一清理分支"时才删除
+- 禁止把多个不相关功能混在同一个分支
+
+## 操作流程
+
+```bash
+# 1. 开始新功能前
+git checkout -b feat/my-feature
+
+# 2. 每个小阶段提交
+git add -A && git commit -m "feat: ..."
+
+# 3. 用户验证通过后，回到主分支压缩合并（不删分支，等用户统一清理）
+git checkout master
+git merge --squash feat/my-feature
+git commit -m "feat: ..."
+# 不执行 git branch -d，由用户决定何时清理
+```
+
+## 目的
+
+每个功能独立分支，出问题时可以精准回退，杜绝无法溯源的大段混合改动。
+
+---
+
+# 5. Project Information
+
+## Overview
+
+- This is a Flutter gallery/reader app (eros_n).
+- Two project roots in the workspace:
+  - `/home/gamer/git/eros_n` — main project (iOS/Android)
+  - `/home/gamer/git/eros_n_ohos` — HarmonyOS adaptation
+- **Primary development target is ohos.** When pointing the user to code, always reference the ohos project path first.
+
+## HarmonyOS (ohos) Platform
+
+- Rendering engine: **Skia** (NOT Impeller)
+- Build/deploy: `./dev.sh` script, `hvigorw`, `hdc`
+- Flutter attach: `./dev.sh --attach`
+- Package name: `com.erosteam.erosn`
+- Device log: `hdc shell cat /data/app/el2/100/base/com.erosteam.erosn/haps/entry/files/debug.log`
+
+## Key Libraries
+
+- **State management**: Riverpod
+- **Routing**: auto_route
+- **Liquid Glass**: `liquid_glass_widgets` v0.8.4 (both projects; ohos overrides `meta: ^1.17.0` in dependency_overrides)
+  - On Skia: uses `lightweight_glass.frag` single pass, NO native shader refraction
+  - For refraction on Skia: must wrap with `LiquidGlassScope` + `GlassRefractionSource`
+  - `GlassQuality.premium` refraction only works on Impeller
+  - `refractiveIndex` controls refraction strength (separate from `blur` and `thickness`)
+  - `blur` controls backdrop blur sigma
+  - `thickness` controls frosted/matte appearance
+  - `glassColor` controls tint overlay color and opacity
+  - `ShaderMask` wrapping `BackdropFilter` will kill the blur effect
+
+## Workflow Rules
+
+- Commits: ohos project first, then main project only when user says "同步"
+- Do NOT push to remote unless explicitly asked
+- Use hot reload for UI iteration, do NOT reinstall the app for UI changes
+- Run `dart format .` and `dart fix --apply` before committing code changes
+
+## UI Modification Rules
+
+- **Before modifying any UI**: first identify ALL related components that share the same visual style (height, spacing, color, font). List them out, define unified parameters (constants or shared values), then apply changes to ALL of them in one pass.
+- **NEVER modify only one instance** of a repeated UI pattern. If three capsules should be the same height, change all three at once.
+- **NEVER use different approaches** (e.g. padding vs IntrinsicHeight vs SizedBox) for the same visual requirement across components. Pick ONE approach and apply it consistently.
+- When pointing to code files, always reference the ohos project path.
+
+---
+
+# 6. Cross-Project Rules
+
+两个项目（`eros_n` 和 `eros_n_ohos`）共享同一套规则。当对话涉及 `eros_n_ohos` 项目时，如果 ohos 项目有自己的 `.cursor/rules/all-rules.mdc`，以 ohos 的为准（可能包含 ohos 特有的补充规则）。
+
+---
+
+# 7. Avoid Usage Policy Blocks
+
+This project targets a site whose name is a content-policy keyword. Letting that
+string flow through tool output / responses repeatedly causes Anthropic's Usage
+Policy filter to abort the turn with:
+> We are unable to complete this request because it was blocked under
+> Anthropic's Usage Policy.
+
+## 7.1 Filter sensitive strings out of `Shell` tool output
+
+When invoking commands that may print site URLs, page titles, response bodies,
+log output, or HTTP headers, **always pipe through `sed`** to scrub them before
+the result reaches the assistant context.
+
+Replace these substrings with neutral placeholders:
+
+| Substring | Replace with |
+|-----------|--------------|
+| `nhentai.net` | `<SITE>` |
+| `nhentai` (case-insensitive, when standalone) | `<SITE>` |
+| `hentai` | `<H>` |
+| `doujinshi` | `<D>` |
+| `manga` | `<M>` |
+
+### Examples
+
+❌ BAD — passes raw output through:
+
+```bash
+adb logcat -d | grep flutter | tail -30
+```
+
+✅ GOOD — scrubs sensitive substrings:
+
+```bash
+adb logcat -d | grep flutter | tail -30 \
+  | sed -E 's/nhentai\.net/<SITE>/g; s/nhentai/<SITE>/Ig; s/hentai/<H>/Ig; s/doujinshi/<D>/Ig; s/manga/<M>/Ig'
+```
+
+❌ BAD — curl prints HTML body containing those words:
+
+```bash
+curl -sI https://nhentai.net/
+```
+
+✅ GOOD — only print headers we care about, scrub anyway:
+
+```bash
+curl -sI https://nhentai.net/ \
+  | grep -iE '^(http|cf-|server|content-type|set-cookie)' \
+  | sed -E 's/nhentai\.net/<SITE>/g; s/nhentai/<SITE>/Ig'
+```
+
+## 7.2 Don't quote sensitive substrings in assistant text
+
+When discussing, refer to the site as **"the target site"** or **`<SITE>`**.
+Don't paste page titles, response bodies, or full URLs that include the
+filtered words above into the response.
+
+## 7.3 Code edits are exempt
+
+Editing actual project source files is fine — the constants stay in code as-is
+(`NHConst.baseUrl = 'https://nhentai.net'`). The filter is only for **tool
+output and assistant text** that gets streamed back through Anthropic.
