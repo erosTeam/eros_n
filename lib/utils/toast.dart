@@ -20,13 +20,18 @@ void showBriefSnackBar(
     );
 }
 
-void showSimpleToast(String msg, {Duration? displayTime}) {
+void showSimpleToast(
+  String msg, {
+  Duration? displayTime,
+  Future<bool> Function()? onBack,
+}) {
   SmartDialog.show(
     alignment: Alignment.bottomCenter,
     useAnimation: true,
     displayTime: displayTime ?? 1500.milliseconds,
     usePenetrate: true,
     clickMaskDismiss: false,
+    onBack: onBack,
     maskColor: Colors.transparent,
     builder: (context) => Container(
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 120),

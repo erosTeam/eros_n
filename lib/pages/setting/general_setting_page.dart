@@ -96,6 +96,27 @@ class GeneralSettingPage extends ConsumerWidget {
             },
           ),
 
+          // switch doubleBackToExit
+          Consumer(
+            builder: (context, ref, child) {
+              final doubleBackToExit = ref.watch(
+                settingsProvider.select(
+                  (settings) => settings.doubleBackToExit,
+                ),
+              );
+
+              return SwitchListTile(
+                title: Text(L10n.of(context).double_back_to_exit),
+                value: doubleBackToExit,
+                onChanged: (value) {
+                  ref
+                      .read(settingsProvider.notifier)
+                      .setDoubleBackToExit(value);
+                },
+              );
+            },
+          ),
+
           // open_supported_links (Android only)
           if (defaultTargetPlatform == TargetPlatform.android)
             ListTile(

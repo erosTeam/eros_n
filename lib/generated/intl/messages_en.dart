@@ -86,6 +86,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark": MessageLookupByLibrary.simpleMessage("Dark"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "display": MessageLookupByLibrary.simpleMessage("Display"),
+    "double_back_to_exit": MessageLookupByLibrary.simpleMessage(
+      "Double back to exit",
+    ),
     "download": MessageLookupByLibrary.simpleMessage("Download"),
     "download_completed": MessageLookupByLibrary.simpleMessage("Completed"),
     "download_delete_confirm_message": MessageLookupByLibrary.simpleMessage(
@@ -183,6 +186,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "popular_week": MessageLookupByLibrary.simpleMessage("Popular Week"),
     "preload_pages_count": MessageLookupByLibrary.simpleMessage(
       "Preload pages count",
+    ),
+    "press_back_again_to_exit": MessageLookupByLibrary.simpleMessage(
+      "Press back again to exit",
     ),
     "read": MessageLookupByLibrary.simpleMessage("Read"),
     "read_model": MessageLookupByLibrary.simpleMessage("Read Model"),

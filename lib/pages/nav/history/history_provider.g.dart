@@ -41,7 +41,7 @@ final class HistoryNotifierProvider
   }
 }
 
-String _$historyNotifierHash() => r'308722e8232fffef80b34fb04b2e17cdd92d89d5';
+String _$historyNotifierHash() => r'55155ec58e2435f38bbd1ee7622128c4ed1f2572';
 
 abstract class _$HistoryNotifier extends $Notifier<ListViewState> {
   ListViewState build();

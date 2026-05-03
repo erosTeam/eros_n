@@ -98,4 +98,7 @@ class SettingsNotifier extends _$SettingsNotifier {
 
   void setCustomDownloadPath(String v) =>
       _save(state.copyWith(customDownloadPath: v));
+
+  void setDoubleBackToExit(bool value) =>
+      _save(state.copyWith(doubleBackToExit: value));
 }

@@ -41,7 +41,7 @@ final class DownloadNotifierProvider
   }
 }
 
-String _$downloadNotifierHash() => r'c0756d1fe7c54614036d57a557bd304e9cea9bf7';
+String _$downloadNotifierHash() => r'd693edf7e34a6c59f6aea364b16f034502a533b6';
 
 abstract class _$DownloadNotifier extends $Notifier<Map<int, DownloadTask>> {
   Map<int, DownloadTask> build();

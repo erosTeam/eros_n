@@ -183,5 +183,7 @@
       "galleries": {},
       "pages": {}
     }
-  }
+  },
+  "double_back_to_exit": "Double back to exit",
+  "press_back_again_to_exit": "Press back again to exit"
 }

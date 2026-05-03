@@ -37,6 +37,7 @@ abstract class Settings with _$Settings {
     @Default(2) int maxConcurrentGalleries,
     @Default(3) int maxConcurrentPages,
     @Default('') String customDownloadPath,
+    @Default(true) bool doubleBackToExit,
   }) = _Settings;
 
   const Settings._();

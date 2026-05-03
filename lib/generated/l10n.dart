@@ -1178,6 +1178,26 @@ class L10n {
       args: [total, galleries, pages],
     );
   }
+
+  /// `Double back to exit`
+  String get double_back_to_exit {
+    return Intl.message(
+      'Double back to exit',
+      name: 'double_back_to_exit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Press back again to exit`
+  String get press_back_again_to_exit {
+    return Intl.message(
+      'Press back again to exit',
+      name: 'press_back_again_to_exit',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

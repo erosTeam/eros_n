@@ -183,5 +183,7 @@
       "galleries": {},
       "pages": {}
     }
-  }
+  },
+  "double_back_to_exit": "双击返回退出应用",
+  "press_back_again_to_exit": "再按一次返回键退出"
 }

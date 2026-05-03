@@ -75,6 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dark": MessageLookupByLibrary.simpleMessage("深色"),
     "delete": MessageLookupByLibrary.simpleMessage("删除"),
     "display": MessageLookupByLibrary.simpleMessage("显示"),
+    "double_back_to_exit": MessageLookupByLibrary.simpleMessage("双击返回退出应用"),
     "download": MessageLookupByLibrary.simpleMessage("下载"),
     "download_completed": MessageLookupByLibrary.simpleMessage("已完成"),
     "download_delete_confirm_message": MessageLookupByLibrary.simpleMessage(
@@ -151,6 +152,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "popular_today": MessageLookupByLibrary.simpleMessage("本日热门"),
     "popular_week": MessageLookupByLibrary.simpleMessage("本周热门"),
     "preload_pages_count": MessageLookupByLibrary.simpleMessage("预载页数"),
+    "press_back_again_to_exit": MessageLookupByLibrary.simpleMessage(
+      "再按一次返回键退出",
+    ),
     "read": MessageLookupByLibrary.simpleMessage("阅读"),
     "read_model": MessageLookupByLibrary.simpleMessage("阅读模式"),
     "recent": MessageLookupByLibrary.simpleMessage("最新发布"),

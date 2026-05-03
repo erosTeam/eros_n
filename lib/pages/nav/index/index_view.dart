@@ -8,7 +8,9 @@ import 'package:eros_n/pages/nav/index/index_provider.dart';
 import 'package:eros_n/pages/nav/more/more_view.dart';
 import 'package:eros_n/utils/get_utils/extensions/export.dart';
 import 'package:eros_n/utils/logger.dart';
+import 'package:eros_n/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
@@ -29,11 +31,38 @@ class _IndexPageState extends ConsumerState<IndexPage> {
   ];
 
   Alignment _barAlignment = Alignment.bottomCenter;
+  DateTime? _lastBackPress;
 
   @override
   void initState() {
     logger.d('initState');
     super.initState();
+  }
+
+  Future<bool> _handleBackPress() async {
+    final doubleBack = ref.read(
+      settingsProvider.select((s) => s.doubleBackToExit),
+    );
+    if (!doubleBack) {
+      SystemNavigator.pop();
+      return false;
+    }
+
+    final now = DateTime.now();
+    if (_lastBackPress != null &&
+        now.difference(_lastBackPress!) < const Duration(seconds: 2)) {
+      SystemNavigator.pop();
+      return false;
+    }
+    _lastBackPress = now;
+    showSimpleToast(
+      L10n.of(context).press_back_again_to_exit,
+      onBack: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+    );
+    return false;
   }
 
   @override
@@ -52,8 +81,10 @@ class _IndexPageState extends ConsumerState<IndexPage> {
       },
     );
 
+    Widget scaffold;
+
     if (liquidGlass) {
-      return Scaffold(
+      scaffold = Scaffold(
         body: Stack(
           children: [
             Listener(
@@ -150,45 +181,55 @@ class _IndexPageState extends ConsumerState<IndexPage> {
           ],
         ),
       );
+    } else {
+      scaffold = Scaffold(
+        body: pageView,
+        bottomNavigationBar: AnimatedContainer(
+          height: state.hideNavigationBar
+              ? 0
+              : 80 + context.mediaQueryPadding.bottom,
+          duration: 300.milliseconds,
+          curve: Curves.ease,
+          child: NavigationBar(
+            selectedIndex: state.selectedIndex,
+            destinations: [
+              NavigationDestination(
+                icon: const Icon(Icons.home_outlined),
+                selectedIcon: const Icon(Icons.home),
+                label: L10n.of(context).home,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.favorite_outline),
+                selectedIcon: const Icon(Icons.favorite),
+                label: L10n.of(context).favorites,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.history),
+                label: L10n.of(context).history,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.more_horiz),
+                label: L10n.of(context).more,
+              ),
+            ],
+            onDestinationSelected: (index) {
+              ref
+                  .read(indexProvider.notifier)
+                  .setIndex(index, context: context, jumpToPage: true);
+            },
+          ),
+        ),
+      );
     }
 
-    return Scaffold(
-      body: pageView,
-      bottomNavigationBar: AnimatedContainer(
-        height: state.hideNavigationBar
-            ? 0
-            : 80 + context.mediaQueryPadding.bottom,
-        duration: 300.milliseconds,
-        curve: Curves.ease,
-        child: NavigationBar(
-          selectedIndex: state.selectedIndex,
-          destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home),
-              label: L10n.of(context).home,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.favorite_outline),
-              selectedIcon: const Icon(Icons.favorite),
-              label: L10n.of(context).favorites,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.history),
-              label: L10n.of(context).history,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.more_horiz),
-              label: L10n.of(context).more,
-            ),
-          ],
-          onDestinationSelected: (index) {
-            ref
-                .read(indexProvider.notifier)
-                .setIndex(index, context: context, jumpToPage: true);
-          },
-        ),
-      ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _handleBackPress();
+        }
+      },
+      child: scaffold,
     );
   }
 }

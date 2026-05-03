@@ -62,6 +62,7 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
       (json['maxConcurrentGalleries'] as num?)?.toInt() ?? 2,
   maxConcurrentPages: (json['maxConcurrentPages'] as num?)?.toInt() ?? 3,
   customDownloadPath: json['customDownloadPath'] as String? ?? '',
+  doubleBackToExit: json['doubleBackToExit'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -95,6 +96,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'maxConcurrentGalleries': instance.maxConcurrentGalleries,
   'maxConcurrentPages': instance.maxConcurrentPages,
   'customDownloadPath': instance.customDownloadPath,
+  'doubleBackToExit': instance.doubleBackToExit,
 };
 
 const _$SearchSortEnumMap = {
