@@ -274,13 +274,27 @@ Future<Gallery> getGalleryDetail({
     );
   }
 
-  // autoFallback: try HTML first, fall back to API on CF 403.
+  // autoFallback: try HTML first, fall back to API on CF 403 or broken parse.
   try {
-    return await _getGalleryDetailHtml(
+    final gallery = await _getGalleryDetailHtml(
       url: url,
       refresh: refresh,
       cancelToken: cancelToken,
     );
+    if (hasBrokenHtmlGalleryDetail(gallery)) {
+      logger.w(
+        'getGalleryDetail broken HTML parse, falling back to API for $url',
+      );
+      final gid = RegExp(r'/g/(\d+)/').firstMatch(url)?.group(1);
+      if (gid != null) {
+        return _getGalleryDetailByApi(
+          int.parse(gid),
+          refresh: refresh,
+          cancelToken: cancelToken,
+        );
+      }
+    }
+    return gallery;
   } on BadRequestException catch (e) {
     if (e.code == 403) {
       logger.w('getGalleryDetail CF 403, falling back to API for $url');
@@ -296,6 +310,12 @@ Future<Gallery> getGalleryDetail({
     rethrow;
   }
 }
+
+@visibleForTesting
+bool hasBrokenHtmlGalleryDetail(Gallery gallery) =>
+    gallery.mediaId == null ||
+    gallery.tags.isEmpty ||
+    gallery.images.pages.isEmpty;
 
 Future<Gallery> _getGalleryDetailHtml({
   required String url,
